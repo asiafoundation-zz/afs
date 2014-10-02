@@ -1,0 +1,1 @@
+{"enabled":true,"author":"Avelca (www.avelca.com)","version":"2014-07-24","description":"Authenticatio and Autorization Module (Sentry)","seeder":"App\\Modules\\Avelca_User\\Seeds\\DatabaseSeeder","core":true}
