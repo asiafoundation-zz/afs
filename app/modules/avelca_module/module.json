@@ -1,1 +1,0 @@
-{"enabled":true,"author":"Avelca (www.avelca.com)","version":"2014-09-08","description":"Module to manage Avelca Module.","core":true,"seeder":"App\\Modules\\Avelca_Module\\Seeds\\DatabaseSeeder"}

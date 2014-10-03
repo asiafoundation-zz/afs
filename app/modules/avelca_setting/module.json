@@ -1,1 +1,0 @@
-{"enabled":true,"author":"Avelca (www.avelca.com)","version":"2014-07-04","description":"Avelca Setting module.","core":true,"seeder":"App\\Modules\\Avelca_Setting\\Seeds\\DatabaseSeeder"}
