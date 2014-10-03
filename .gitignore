@@ -1,0 +1,10 @@
+CONTRIBUTING.md
+/bootstrap/compiler.php
+/vendor
+composer.phar
+composer.lock
+.DS_Store
+Thumbs.db
+app/config/database.php
+app/config/app.php
+readme.md

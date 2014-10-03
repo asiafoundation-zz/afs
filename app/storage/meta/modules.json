@@ -1,0 +1,73 @@
+{
+    "avelca_user": {
+        "enabled": true,
+        "author": "Avelca (www.avelca.com)",
+        "version": "2014-07-24",
+        "description": "Authenticatio and Autorization Module (Sentry)",
+        "seeder": "App\\Modules\\Avelca_User\\Seeds\\DatabaseSeeder",
+        "core": true,
+        "name": "avelca_user",
+        "order": 0,
+        "group": "app\/modules"
+    },
+    "avelca_module": {
+        "enabled": true,
+        "author": "Avelca (www.avelca.com)",
+        "version": "2014-09-08",
+        "description": "Module to manage Avelca Module.",
+        "core": true,
+        "seeder": "App\\Modules\\Avelca_Module\\Seeds\\DatabaseSeeder",
+        "name": "avelca_module",
+        "order": 0,
+        "group": "app\/modules"
+    },
+    "avelca": {
+        "enabled": true,
+        "author": "Avelca (www.avelca.com)",
+        "version": "2014-09-27",
+        "description": "Resource module.",
+        "core": true,
+        "name": "avelca",
+        "order": 0,
+        "group": "app\/modules"
+    },
+    "avelca_installer": {
+        "enabled": true,
+        "author": "Avelca (www.avelca.com)",
+        "version": "2014-05-22",
+        "description": "Module to install this application for the first time.",
+        "name": "avelca_installer",
+        "order": 0,
+        "group": "app\/modules"
+    },
+    "avelca_setting": {
+        "enabled": true,
+        "author": "Avelca (www.avelca.com)",
+        "version": "2014-07-04",
+        "description": "Avelca Setting module.",
+        "core": true,
+        "seeder": "App\\Modules\\Avelca_Setting\\Seeds\\DatabaseSeeder",
+        "name": "avelca_setting",
+        "order": 0,
+        "group": "app\/modules"
+    },
+    "avelca_oauth_server": {
+        "enabled": false,
+        "author": "Avelca (www.avelca.com)",
+        "version": "2014-09-18",
+        "description": "oAuth Server for API.",
+        "seeder": "App\\Modules\\Avelca_Oauth_Server\\Seeds\\DatabaseSeeder",
+        "name": "avelca_oauth_server",
+        "order": 0,
+        "group": "app\/modules"
+    },
+    "avelca_rest_server": {
+        "enabled": true,
+        "author": "Avelca (www.avelca.com)",
+        "version": "2014-06-29",
+        "description": "Avelca REST Server",
+        "name": "avelca_rest_server",
+        "order": 0,
+        "group": "app\/modules"
+    }
+}
