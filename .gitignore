@@ -7,4 +7,5 @@ composer.lock
 Thumbs.db
 app/config/database.php
 app/config/app.php
+app/storage
 readme.md
