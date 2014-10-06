@@ -1,294 +1,397 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <!-- Standard Meta -->
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<html id="newhome" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!-- Site Properities -->
+    <title>{{ Setting::meta_data('general', 'name')->value }} - {{ Setting::meta_data('general', 'tag_line')->value }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Site Properities -->
-  <title>{{ Setting::meta_data('general', 'name')->value }} - {{ Setting::meta_data('general', 'tag_line')->value }}</title>
+    <!-- Loading Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/style.css') }}">
 
-  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'>
+    <script src="{{ Theme::asset('javascript/jquery-1.7.2.min.js') }}"></script>
+    <script src="{{ Theme::asset('javascript/modernizr-2.6.2.min.js') }}"></script>
 
-  <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/semantic.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/homepage.css') }}">
 
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
-  <script src="{{ Theme::asset('javascript/semantic.js') }}"></script>
-  <script src="{{ Theme::asset('javascript/homepage.js') }}"></script>
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-</head>
-<body id="home">
-  <div class="ui inverted page grid masthead segment">
-    <div class="column">
-      <div class="inverted secondary pointing ui menu">
-        <div class="header item">Cat University</div>
-        <div class="right menu">
-          <div class="ui top right pointing mobile dropdown link item">
-            Menu
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <a class="item">Classes</a>
-              <a class="item">Cocktail Hours</a>
-              <a class="item">Community</a>
-            </div>
-          </div>
-          <div class="ui dropdown link item">
-            Courses
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <a class="item">Petting</a>
-              <a class="item">Feeding</a>
-              <a class="item">Mind Reading</a>
-            </div>
-          </div>
-          <a class="item">Library</a>
-          <a class="item">Community</a>
-        </div>
-      </div>
-      <img src="{{ Theme::asset('images/cat.png') }}" class="ui medium image">
-      <div class="ui hidden transition information">
-        <h1 class="ui inverted header">
-        Your Cat is {{ ucwords(Setting::meta_data('general', 'name')->value) }}
-        </h1>
-        <p>At least he won't reach his highest potential unless you enroll him in Cat University's 2013 class.</p>
-        <div class="large basic inverted animated fade ui button">
-          <div class="visible content">Come to ICU 2013</div>
-          <div class="hidden content">Register Now</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="ui page grid overview segment">
-    <div class="ui two wide column"></div>
-    <div class="twelve wide column">
-      <div class="ui three column center aligned stackable divided grid">
-        <div class="column">
-          <div class="ui icon header">
-            <i class="circular book link icon"></i>
-            Courses 
-          </div>
-          <p>Take your kitty to a cat-ducation course and learn how to treat her well.</p>
-          <p><a class="ui teal right labeled icon button" href="#">Learn <i class="right long arrow icon"></i></a></p>
-        </div>
-        <div class="column">
-          <div class="ui icon header">
-            <i class="circular code link icon"></i>
-            Library
-          </div>
-          <p>Dig through our cat library to found out amazing things you can do with your kitty.</p>
-          <p><a class="ui teal right labeled icon button" href="#">Research <i class="right long arrow icon"></i></a></p>
-        </div>
-        <div class="column">
-          <div class="ui icon header">
-            <i class="circular user link icon"></i>
-            Community
-          </div>
-          <p>Get feedback on your cat from a community of loving pet owners on our online bulletin board system.</p>
-          <p><a class="ui teal right labeled icon button" href="#">Share <i class="right long arrow icon"></i></a></p>
-        </div>
-      </div>
-    </div>
-  </div>
+<!--
+    <script src="http://openlayers.org/en/v3.0.0/build/ol.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">
 
-  <div class="ui inverted page grid stackable relaxed feature segment">
-    <div class="row">
-      <div class="column">
-        <h1 class="center aligned ui header">
-          Cat Tips Right In Your Inbox
-        </h1>
-      </div>
-    </div>
-    <div class="row">
-      <div class="ten wide column">
-        <h2 class="ui header">How to Win Your Cats Attention</h2>
-        <p>Getting your cat to notice you is a large part of being a pet owner. Although I have a lot of patience for writing things about cats, perhaps this might be enough body copy to make this section of text look filled out.</p>
-        <p>This and other tips can be found in our newsletter, amazing right?</p>
-        <div class="ui basic inverted animated button button">
-          <div class="visible content">Read More</div>
-          <div class="hidden content"><i class="right arrow icon"></i></div>
-        </div>
-        <div class="ui inverted section divider"></div>
-        <h3 class="ui header">More articles</h3>
-        <div class="ui inverted animated selection list">
-          <div class="item">
-            How to win in a fight with a cat
-            <div class="right floated">Jan 20, 2023</div>
-          </div>
-          <div class="item">
-            A Supposedly Fun Cat Toy I will Never Buy Again
-            <div class="right floated">Jan 1, 2023</div>
-          </div>
-          <div class="item">
-            Much ado about yarn
-            <div class="right floated">Dec 20, 2022</div>
-          </div>
-        </div>
-      </div>
-      <div class="six wide column">
-        <div class="ui secondary form segment">
-          <h3 class="ui header">Get Our Amazing Newsletter Bi-Daily</h3>
-          <p>Sign up and get spammed with cats every day. We have no unsubscribe button!</p>
-          <div class="field">
-            <div class="ui left icon action input">
-              <i class="user icon"></i>
-              <input name="email" type="text" placeholder="name@email.com">
-              <div class="ui teal submit button">Sign up</div>
-            </div>
-          </div>
-          <div class="ui error message"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+-->
+    <!-- Map JS-->
+    <script src="{{ Theme::asset('javascript/leaflet.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
+    <script type="text/javascript" src="{{ Theme::asset('geojson/geojson.geojson') }}"></script>
+  </head>
 
-  <div class="ui page grid stackable segment">
-    <div class="row">
-      <div class="column">
-        <h1 class="center aligned ui header">
-          Many Companies Rely on Our Cat Knowledge
-        </h1>
-        <div class="ui horizontal divider"><i class="heart icon"></i></div>
-      </div>
-    </div>
-    <div class="center four column aligned row">
-      <div class="column">
-        <div class="ui text shape">
-          <div class="sides">
-            <div class="active side">
-              <i class="huge circular github icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular facebook icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular maxcdn icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular pinterest icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular weibo icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular flickr icon"></i>
+  <body>
+  
+  <section class="map">
+    <div class="border-top"></div>
+    <div id="map" class="map"></div>
+    <div class="container">
+      <a class="logo" href=""><img src="{{ Theme::asset('img/logo.png') }}"></a>
+
+      <div class="dropshadow">
+        <img src="{{ Theme::asset('img/dropshadow.png') }}">
+        <div class="search-wrp">
+          <div class="col-md-3">
+            <a href="">
+              <img src="{{ Theme::asset('img/add.png') }}" />
+              <span>Select Category</span>
+            </a>
+            <div class="dropdown-path">
+              <ul class="dropdown-scroll">
+                <li><a href="">Persepsi Mengenai Pemilu</a></li>
+                <li><a href=""><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
+                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
+                <li><a href="">Persepsi Mengenai Pemilu</a></li>
+                <li><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
+                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
+              </ul>
+              <span class="arrow-down"></span>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="ui text shape">
-          <div class="sides">
-            <div class="side">
-              <i class="huge circular github icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular facebook icon"></i>
-            </div>
-            <div class="active side">
-              <i class="huge circular maxcdn icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular pinterest icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular weibo icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular flickr icon"></i>
+          <div class="col-md-3">
+            <a href="">
+              <img src="{{ Theme::asset('img/add.png') }}" />
+              <span>Select Question</span>
+            </a>
+            <div class="dropdown-path">
+              <ul class="dropdown-scroll">
+                <li><a href="">Persepsi Mengenai Pemilu</a></li>
+                <li><a href=""><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
+                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
+                <li><a href="">Persepsi Mengenai Pemilu</a></li>
+                <li><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
+                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
+              </ul>
+              <span class="arrow-down"></span>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="ui text shape">
-          <div class="sides">
-            <div class="side">
-              <i class="huge circular github icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular facebook icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular maxcdn icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular pinterest icon"></i>
-            </div>
-            <div class="active side">
-              <i class="huge circular weibo icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular flickr icon"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="ui text shape">
-          <div class="sides">
-            <div class="side">
-              <i class="huge circular github icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular facebook icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular maxcdn icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular pinterest icon"></i>
-            </div>
-            <div class="side">
-              <i class="huge circular weibo icon"></i>
-            </div>
-            <div class="active side">
-              <i class="huge circular flickr icon"></i>
-            </div>
-          </div>
+          <div class="col-md-6"><a class="find-surveys" href="">Find surveys <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="ui inverted teal page grid segment">
-    <div class="ten wide column">
-      <div class="ui three column stackable grid">
-        <div class="column">
-          <div class="ui header">Courses</div>
-          <div class="ui inverted link list">
-            <a class="item">Registration</a>
-            <a class="item">Course Calendar</a>
-            <a class="item">Professors</a>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui header">Library</div>
-          <div class="ui inverted link list">
-            <a class="item">A-Z</a>
-            <a class="item">Most Popular</a>
-            <a class="item">Recently Changed</a>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui header">Community</div>
-          <div class="ui inverted link list">
-            <a class="item">BBS</a>
-            <a class="item">Careers</a>
-            <a class="item">Privacy Policy</a>
-          </div>
+  </section>
+
+  <section class="filter">
+    <div class="container">
+      <div class="col-md-12">
+        <ul>
+          <li>
+            <a href="">
+              <img src="{{ Theme::asset('img/filter.png') }}">
+              <span>Filter by age</span>
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <img src="{{ Theme::asset('img/filter.png') }}">
+              <span>Filter by income</span>
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <img src="{{ Theme::asset('img/filter.png') }}">
+              <span>Filter by education</span>
+            </a>
+          </li>
+          <li>
+            <a href="">
+              <img src="{{ Theme::asset('img/filter.png') }}">
+              <span>Filter by gender</span>
+            </a>
+          </li>
+          <li>
+            <a class="clear-all" href="">Clear all</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  
+  <section class="survey-pemilu">
+    <div class="container center">
+      <div class="col-md-12">
+        <h1>Hasil Survey Pemilu 2013/2014</h1>
+        <h3>Survey Question</h3>
+        <p>Alasan utama yang menyebabkan orang-orang tidak <br/>mengikuti Pemilihan Presiden pada bulan Juli 2014</p>
+        <div class="chart">
+          <div class="col-md-5"><div id="chartContainerPie" style="height: 225px; width: 100%;"></div></div>
+          <div class="col-md-7"><div id="chartContainer" style="height: 225px; width: 100%;"></div></div>
         </div>
       </div>
     </div>
-    <div class="six wide right floated aligned column">
-      <h3 class="ui header">Contact Us</h3>
-      <addr>
-        237 Catberry Road <br>
-        Milton Keynes, London <br>
-      </addr>
-      <p>(404) 867-5309</p>
+  </section>
+
+  <section class="compare-survey">
+    <div class="container">
+      <div class="col-md-6">
+        <h4>Lorem ipsum dolor sit amet, consectet</h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus, dignissim vel arcu sit amet, sodales dignissim nibh. Suspendisse lobortis neque sed est sollicitudin ornare.</p>
+      </div>
+      <div class="col-md-6">
+        <img src="{{ Theme::asset('img/compare.png') }}">
+        <div>
+          <h4>Compare Survey Results</h4>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
+          <a href="" class="orange-bg">COMPARE SURVEY</a>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
+  
+  <footer>
+    <div class="container center">
+      <div class="col-md-12">
+        <a href=""><img src="{{ Theme::asset('img/logo-footer.png') }}"></a>
+        <p>Survey Q Copyright 2014. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <script type="text/javascript" src="{{ Theme::asset('javascript/bootstrap.min.js') }}"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/query.ui.touch-punch.min.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/facescroll.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/canvasjs.min.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/mapbbcode.js') }}"></script>
+
+  <script type="text/javascript">
+
+    /*
+     * -----------------------------------------Map JS--------------------------
+     */
+    // Containing province id from click event
+    var ClickMapRegion = [];
+    // Removed last clicked area
+    var lastClickedLayer;
+    // Map Centering
+    var map = L.map('map');
+
+    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      id: 'examples.map-20v6611k'
+    }).addTo(map);
+
+    // get color depending on population id_provinsi value
+    function getColor(d) {
+      return d == 64 ? '#800026' :
+             d == 65  ? '#BD0026' :
+             d == 32  ? '#E31A1C' :
+             d == 15  ? '#FC4E2A' :
+             d == 75   ? '#FD8D3C' :
+             d == 31   ? '#FEB24C' :
+             d == 34   ? '#FED976' :
+                        'white';
+    }
+
+    function style(feature) {
+      return {
+        weight: 2,
+        opacity: 0.7,
+        color: '#8E73F1',
+        dashArray: '3',
+        fillOpacity: 0.7,
+        fillColor: getColor(feature.properties.id_provinsi)
+      };
+    }
+
+    function highlightFeature(e) {
+      var layer = e.target;
+
+      layer.setStyle({
+        weight: 3,
+        opacity: 1,
+        dashArray: '1',
+        fillOpacity: 0.7,
+        fillColor: "#B2B0B8"
+      });
+
+      if (!L.Browser.ie && !L.Browser.opera) {
+        layer.bringToFront();
+      }
+    }
+
+    var geojson;
+
+    function resetHighlight(e) {
+      ClickMapRegion = [];
+      geojson.resetStyle(e.target);
+    }
+
+    function AddHighlight(e) {
+      if(lastClickedLayer){
+         geojson.resetStyle(lastClickedLayer);
+      }
+
+      var layer = e.target;
+
+      ClickMapRegion = [];
+      ClickMapRegion.push(layer.feature.properties.id_provinsi);
+      highlightFeature(e);
+
+      lastClickedLayer = layer;
+
+      console.log(ClickMapRegion);
+    }
+
+    function hoverHightlight(e){
+      var layer = e.target;
+
+      L.marker([e.latlng.lat, e.latlng.lng], { icon: L.popupIcon(layer.feature.properties.nm_provinsi), clickable: false }).addTo(map);
+    }
+
+    function onEachFeature(feature, layer) {
+      layer.on({
+        mouseover: hoverHightlight,
+        click: AddHighlight,
+        dblclick: resetHighlight
+      });
+    }
+
+    geojson = L.geoJson(statesData, {
+      style: style,
+      onEachFeature: onEachFeature,
+    }).addTo(map);
+
+
+    map.attributionControl.addAttribution('Asia Survey Foundation');
+    map.fitBounds(geojson.getBounds());
+    /*
+     * -----------------------------------------End Map JS-----------------------------------------
+     */
+
+    $('.search-wrp > div > a').click(function(){
+      $(this).siblings('.dropdown-path').show();
+      return false;
+    })
+
+    $('body').click(function(){
+      $('.dropdown-path').hide();
+    })
+
+    $('.dropdown-scroll').alternateScroll({ 'vertical-bar-class': 'styled-v-bar', 'hide-bars': false });
+
+    $( window ).load(function() {
+        // PIE CHART
+        CanvasJS.addColorSet("greenShades",
+                [//colorSet Array
+
+                "#fcc45a",
+                "#ffe87a",
+                "#abd074",
+                "#fc5b3f",
+                "#1eb5b6"                
+                ]);
+
+        var chart = new CanvasJS.Chart("chartContainerPie",
+        {
+
+          colorSet: "greenShades",
+          
+          legend: {
+            verticalAlign: "bottom",
+            horizontalAlign: "center"
+          },
+          theme: "theme1",
+          data: [
+          {        
+            type: "pie",
+            indexLabelFontFamily: "Garamond",       
+            indexLabelFontSize: 0,
+            startAngle:0,
+            indexLabelFontColor: "MistyRose",       
+            indexLabelLineColor: "#fff", 
+            indexLabelPlacement: "inside", 
+            toolTipContent: "{name}: {y}hrs",
+            showInLegend: false,
+            // indexLabel: "#percent%", 
+            dataPoints: [
+              // {  y: 52, name: "Time At Work", legendMarkerType: "triangle"},
+              // {  y: 44, name: "Time At Home", legendMarkerType: "square"},
+              // {  y: 12, name: "Time Spent Out", legendMarkerType: "circle"}
+
+              { y: 2, legendMarkerType: "Tidak percaya pemilu", name: "2%" },
+              { y: 42, legendMarkerType: "Malas", name: "42%" },
+              { y: 18, legendMarkerType: "Bingung dengan pilihan", name: "18%" },
+              { y: 4, legendMarkerType: "Tidak tahu adanya pemilu", name: "4%" },                    
+              { y: 34, legendMarkerType: "Berhalangan", name: "34%" }
+            ]
+          }
+          ]
+        });
+        chart.render();
+
+
+        // BAR CHART
+
+        CanvasJS.addColorSet("greenShades",
+                [//colorSet Array
+
+                "#fcc45a",
+                "#ffe87a",
+                "#abd074",
+                "#fc5b3f",
+                "#1eb5b6"                
+                ]);
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+
+            colorSet: "greenShades",
+            axisY: {
+                tickThickness: 0,
+                lineThickness: 0,
+                valueFormatString: " ",
+                gridThickness: 0                   
+            },
+            axisX: {
+                tickThickness: 0,
+                lineThickness: 0,
+                labelFontSize: 18,
+                labelFontColor: "gray"
+
+            },
+            data: [
+            {
+                indexLabelFontSize: 24,
+                labelFontFamily: "DINNextLTPro-Regular",
+                labelFontColor: "gray",
+                labelFontSize: 18,
+                indexLabelFontColor: "gray",
+                indexLabelFontFamily: "DINNextLTPro-Regular",
+                type: "bar",
+                dataPoints: [
+                    { y: 2, label: "Tidak percaya pemilu", indexLabel: "2%" },
+                    { y: 42, label: "Malas", indexLabel: "42%" },
+                    { y: 18, label: "Bingung dengan pilihan", indexLabel: "18%" },
+                    { y: 4, label: "Tidak tahu adanya pemilu", indexLabel: "4%" },                    
+                    { y: 34, label: "Berhalangan", indexLabel: "34%" }
+
+
+                ]
+            }
+            ]
+        });
+
+        chart.render();
+    });
+  </script>
+
+  
 </body>
-
 </html>

@@ -4,6 +4,8 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
-		return View::make('home.index');
+		$data = array();
+		$data["data"] = "aaa";
+		return View::make('home.index', $data);
 	}
 }

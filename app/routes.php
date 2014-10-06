@@ -39,9 +39,5 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 
 Route::group(array('prefix' => LaravelLocalization::setLocale(), 'before' => 'frontend_theme'), function()
 {
-	Route::get('/', function(){
-		return Redirect::to('signin');
-	});
-
-	// Route::get('/', 'HomeController@getIndex');
+	Route::get('/', 'HomeController@getIndex');
 });
