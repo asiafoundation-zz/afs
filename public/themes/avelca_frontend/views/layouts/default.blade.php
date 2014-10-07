@@ -47,38 +47,33 @@
           <div class="col-md-3">
             <a href="">
               <img src="{{ Theme::asset('img/add.png') }}" />
-              <span>Select Category</span>
+              <span id="select_category_label">{{Lang::get('frontend.select_category')}}</span>
             </a>
             <div class="dropdown-path">
               <ul class="dropdown-scroll">
-                <li><a href="">Persepsi Mengenai Pemilu</a></li>
-                <li><a href=""><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
-                <li><a href="">Persepsi Mengenai Pemilu</a></li>
-                <li><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
+                <li><a onclick='select_category(1)' id="select_category_id_1" >Default Category</a></li>
               </ul>
               <span class="arrow-down"></span>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-6">
             <a href="">
               <img src="{{ Theme::asset('img/add.png') }}" />
-              <span>Select Question</span>
+              <span id="select_question_label">{{Lang::get('frontend.select_question')}}</span>
             </a>
             <div class="dropdown-path">
               <ul class="dropdown-scroll">
-                <li><a href="">Persepsi Mengenai Pemilu</a></li>
-                <li><a href=""><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
-                <li><a href="">Persepsi Mengenai Pemilu</a></li>
-                <li><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
+                <li><a onclick='select_question(1)' id="select_question_id_1" >Persepsi Mengenai Pemilu</a></li>
+                <li><a onclick='select_question(2)' id="select_question_id_2" >Kebutuhan pendidikan kewarganegaraan</a></li>
+                <li><a onclick='select_question(3)' id="select_question_id_3" >Pemahaman mengenai daftar pemilih</a></li>
+                <li><a onclick='select_question(4)' id="select_question_id_4" >Persepsi Mengenai Pemilu</a></li>
+                <li><a onclick='select_question(5)' id="select_question_id_5" >Kebutuhan pendidikan kewarganegaraan</a></li>
+                <li><a onclick='select_question(6)' id="select_question_id_6" >Pemahaman mengenai daftar pemilih</a></li>
               </ul>
               <span class="arrow-down"></span>
             </div>
           </div>
-          <div class="col-md-6"><a class="find-surveys" href="">Find surveys <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
+          <div class="col-md-3"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
         </div>
       </div>
     </div>
@@ -91,29 +86,29 @@
           <li>
             <a href="">
               <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>Filter by age</span>
+              <span>{{Lang::get('frontend.filter_by_age')}}</span>
             </a>
           </li>
           <li>
             <a href="">
               <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>Filter by income</span>
+              <span>{{Lang::get('frontend.filter_by_income')}}</span>
             </a>
           </li>
           <li>
             <a href="">
               <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>Filter by education</span>
+              <span>{{Lang::get('frontend.filter_by_education')}}</span>
             </a>
           </li>
           <li>
             <a href="">
               <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>Filter by gender</span>
+              <span>{{Lang::get('frontend.filter_by_gender')}}</span>
             </a>
           </li>
           <li>
-            <a class="clear-all" href="">Clear all</a>
+            <a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
           </li>
         </ul>
       </div>
@@ -174,7 +169,11 @@
      * -----------------------------------------Map JS--------------------------
      */
     // Containing province id from click event
-    var ClickMapRegion = [];
+    var ClickMapRegion = {
+      region:null,
+      category:null,
+      question:null,
+    };
     // Removed last clicked area
     var lastClickedLayer;
     // Map Centering
@@ -232,7 +231,7 @@
     var popupRegion;
 
     function resetHighlight(e) {
-      ClickMapRegion = [];
+      ClickMapRegion.region = null;
       geojson.resetStyle(e.target);
     }
 
@@ -243,8 +242,8 @@
 
       var layer = e.target;
 
-      ClickMapRegion = [];
-      ClickMapRegion.push(layer.feature.properties.id_provinsi);
+      ClickMapRegion.region = null;
+      ClickMapRegion.region = layer.feature.properties.id_provinsi;
       highlightFeature(e);
 
       lastClickedLayer = layer;
@@ -286,6 +285,35 @@
     map.scrollWheelZoom.disable();
     /*
      * -----------------------------------------End Map JS-----------------------------------------
+     */
+    /*
+     * -----------------------------------------Filter Category JS--------------------------
+     */
+     function find_survey()
+     {
+        alert("region choose ="+ClickMapRegion.region+";category choose ="+ClickMapRegion.category+";question choose ="+ClickMapRegion.question);
+     }
+     function select_question(question_id)
+     {
+        ClickMapRegion.question = question_id;
+        var question_text = $("#select_question_id_"+question_id).text();
+        $("#select_question_label").html(question_text);
+     }
+     function select_category(category_id)
+     {
+        ClickMapRegion.category = category_id;
+        var category_text = $("#select_category_id_"+category_id).text();
+        $("#select_category_label").html(category_text);
+     }
+     function clear_all_filter()
+     {
+      ClickMapRegion = {
+        category:null,
+        question:null,
+      };
+     }
+    /*
+     * -----------------------------------------END Filter Category  JS--------------------------
      */
 
     $('.search-wrp > div > a').click(function(){
