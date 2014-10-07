@@ -182,6 +182,7 @@
 
     L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
       maxZoom: 18,
+      zoomControl:false,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -228,6 +229,7 @@
     }
 
     var geojson;
+    var popupRegion;
 
     function resetHighlight(e) {
       ClickMapRegion = [];
@@ -253,12 +255,17 @@
     function hoverHightlight(e){
       var layer = e.target;
 
-      L.marker([e.latlng.lat, e.latlng.lng], { icon: L.popupIcon(layer.feature.properties.nm_provinsi), clickable: false }).addTo(map);
+      popupRegion = L.marker([e.latlng.lat, e.latlng.lng], { icon: L.popupIcon(layer.feature.properties.nm_provinsi), clickable: false }).addTo(map);
+    }
+
+    function outHightlight(e){
+      map.removeLayer(popupRegion);
     }
 
     function onEachFeature(feature, layer) {
       layer.on({
         mouseover: hoverHightlight,
+        mouseout: outHightlight,
         click: AddHighlight,
         dblclick: resetHighlight
       });
@@ -271,7 +278,12 @@
 
 
     map.attributionControl.addAttribution('Asia Survey Foundation');
+    // Auto Center
     map.fitBounds(geojson.getBounds());
+    // Disable drag and zoom handlers.
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
     /*
      * -----------------------------------------End Map JS-----------------------------------------
      */

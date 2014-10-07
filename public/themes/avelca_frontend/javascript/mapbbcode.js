@@ -5,7 +5,7 @@
 L.PopupIcon = L.Icon.extend({
 	options: {
 		selectable: false,
-		color: 'white',
+		color: 'black',
 		width: 150
 	},
 	
@@ -45,6 +45,7 @@ L.PopupIcon = L.Icon.extend({
 		contentDiv.style.margin = '0 auto';
 		contentDiv.style.display = 'table';
 		contentDiv.style.pointerEvents = 'auto';
+		contentDiv.style.color = 'white';
 
 		if( this.options.selectable && (!this._marker || (!this._marker.options.clickable && !this._marker.options.draggable)) ) {
 			var stop = L.DomEvent.stopPropagation;
