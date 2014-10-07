@@ -1,0 +1,18 @@
+<table class="table table-bordered table-condensed table-striped">
+	<thead>
+		<tr>
+		<?php foreach($fields as $field): ?>
+		<th class="text-center"><?php echo ucwords(str_replace('_',' ',$field)); ?></th>
+		<?php endforeach; ?>
+	</tr>
+	</thead>
+	<tbody>
+		<?php foreach($records as $record): ?>
+		<tr>
+			<?php foreach($fields as $field): ?>
+			<td><?php echo $record->$field; ?></td>
+			<?php endforeach; ?>
+		</tr>
+		<?php endforeach; ?>
+	</tbody>
+</table>
