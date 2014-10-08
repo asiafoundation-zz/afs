@@ -10,6 +10,7 @@
     <!-- Loading Bootstrap -->
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/selectik.css') }}">
 
     <script src="{{ Theme::asset('javascript/jquery-1.7.2.min.js') }}"></script>
     <script src="{{ Theme::asset('javascript/modernizr-2.6.2.min.js') }}"></script>
@@ -21,3 +22,4 @@
   </head>
 
   <body>
+

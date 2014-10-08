@@ -1,0 +1,151 @@
+/* Styles for custom selects */
+.done select{
+  height:1px;
+  width:1px;
+  border:none;
+  background:none;
+  padding:0;
+  margin:0;
+    position: relative;
+    left:-2px;
+    z-index: -10;
+  outline:none;
+  -webkit-appearance: none;
+  position: absolute;
+  }
+.select-list{
+  position:     absolute;
+  left:       0
+  }
+.custom-select-control{
+  z-index:      1
+  }
+.custom-select-control *{
+  -webkit-user-select:none;
+  -khtml-user-select: none;
+  -moz-user-select:   none;
+  -ms-user-select:  none;
+  -o-user-select:   none;
+  user-select:    none;
+  }
+.open_list{
+  z-index:      10
+  }
+.custom-select-control ul,
+.custom-select-control li{
+  margin:       0;
+  padding:      0;
+  list-style:     none
+  }
+.custom-select-control,
+.custom-select-control ul{
+  position:     relative;
+  top:        0;
+  left:       0;
+  width:        156px;
+  }
+.custom-select-control .custom-text{
+  cursor:       pointer;
+  display:      block;
+  }
+.custom-select-control li{
+  cursor:       pointer;
+  min-height:     25px;
+  width: 100%;
+  margin: 0;
+  padding: 0 15px;
+  }
+.select-scroll{
+  position:     absolute;
+  right:        2px;
+  top:        2px;
+  z-index:      2
+  }
+.default-scroll ul{
+  overflow-y:     scroll
+  }
+.custom-scroll{
+  overflow:     hidden
+  }
+.scroll-drag{
+  display:      block;
+  position:     absolute;
+  left:       1px;
+  cursor:       pointer
+  }
+.disabled *{
+    cursor:             default !important
+    }
+/* Style for example*/
+.custom-select-control .custom-text,
+.custom-select-control.disabled span.custom-text:hover{
+  overflow:     hidden;
+  height:       46px;
+  line-height:    52px;
+  padding:      0 42px 0 15px;
+  color:        #ffffff;
+  background:     url(../img/filter.png) no-repeat right center transparent;
+  text-align: left;
+  font-family: "DINNextLTPro-Bold";
+  font-size: 14px;
+  text-transform: uppercase;
+  }
+.custom-select-control span.custom-text:hover,
+.active span.custom-text{
+  background:     url(../img/filter.png) no-repeat right center transparent;
+  }
+.select-list{
+  top:        46px;
+  line-height:    34px;
+  padding:      0;
+  background-color: #ffffff;
+  color:        #a3a3a3;
+  border:       1px solid #ededed;
+  -webkit-border-radius:4px;
+  -moz-border-radius: 4px;
+  border-radius:    4px;
+  }
+.select-list.custom-scroll{
+  padding:      5px 0 10px 0;
+  left:         0;
+  right:        0;
+  position:     absolute;
+  }
+.select-list .selected,
+.select-list li:hover{
+  opacity:      0.6;
+  }
+.select-list li.disabled{
+  color:        #CCCCCC;
+  cursor:       default
+  }
+.select-scroll{
+  background-color: #73b0e2;
+  width:        12px;
+  -webkit-border-radius:2px;
+  -moz-border-radius: 2px;
+  border-radius:    2px; 
+  }
+.scroll-drag{
+  top:        0;
+  width:        10px;
+  background-color: #14609e;
+  -webkit-border-radius:2px;
+  -moz-border-radius: 2px;
+  border-radius:    2px; 
+  }
+.maxlength .scroll-drag:after{
+  display:      block;
+  content:      '≡';
+  font-size:      14px;
+  position:     relative;
+  left:       50%;
+  top:        50%;
+  margin:       -14px 0 0 -4px
+  }
+.custom-select-control .hover{
+  color:        #FFF
+  }
+.custom-select-control.disabled{
+    opacity:            0.5 !important;
+    }

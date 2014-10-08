@@ -1,50 +1,50 @@
 @include('layouts/default')
 
   <section class="map">
+    <a class="logo" href="#"><img src="{{ Theme::asset('img/logo.png') }}"></a>
     <div class="border-top"></div>
-    <div id="map" class="map-canvas"></div>
-    <div class="container">
-      <a class="logo" href=""><img src="{{ Theme::asset('img/logo.png') }}"></a>
-      <div class="top-nav">
-        <div class="right-side">
-          <p>2013</p>
-          <div class="dropdown">
-            <a href="#" class="hamburger"></a>
-          </div>
+    <div class="top-nav">
+      <div class="right-side">
+        <p>2013</p>
+        <div class="dropdown">
+          <a href="#" class="hamburger"></a>
         </div>
       </div>
-      <div class="dropshadow">
-        <img src="{{ Theme::asset('img/dropshadow.png') }}">
-        <div class="search-wrp">
-          <div class="col-md-3">
-            <a href="#" id="category">
-              <img src="{{ Theme::asset('img/add.png') }}" />
-              <span id="select_category_label">{{Lang::get('frontend.select_category')}}</span>
-            </a>
-            <div class="dropdown-path">
+    </div>
+    <div class="dropshadow">
+      <img src="{{ Theme::asset('img/dropshadow.png') }}">
+      <div class="search-wrp">
+        <div class="col-md-3">
+          <a href="#" id="category">
+            <img src="{{ Theme::asset('img/add.png') }}" />
+            <span>{{Lang::get('frontend.select_category')}}</span>
+          </a>
+          <div class="dropdown-path">
               <ul class="dropdown-scroll">
                 <li><a onclick='select_category(1)' id="select_category_id_1" >Default Category</a></li>
               </ul>
-              <span class="arrow-down"></span>
-            </div>
+            <span class="arrow-down"></span>
           </div>
-          <div class="col-md-6">
-            <a href="#" id="question">
-              <img src="{{ Theme::asset('img/add.png') }}" />
-              <span id="select_question_label">{{Lang::get('frontend.select_question')}}</span>
-            </a>
-            <div class="dropdown-path">
-              <ul class="dropdown-scroll">
+        </div>
+        <div class="col-md-3">
+          <a href="#" id="question">
+            <img src="{{ Theme::asset('img/add.png') }}" />
+            <span>{{Lang::get('frontend.select_question')}}</span>
+          </a>
+          <div class="dropdown-path">
+            <ul class="dropdown-scroll">
                 <li><a onclick='select_question(1)' id="select_question_id_1" >Persepsi Mengenai Pemilu</a></li>
                 <li><a onclick='select_question(2)' id="select_question_id_2" >Kebutuhan pendidikan kewarganegaraan</a></li>
                 <li><a onclick='select_question(3)' id="select_question_id_3" >Pemahaman mengenai daftar pemilih</a></li>
-              </ul>
-              <span class="arrow-down"></span>
-            </div>
+            </ul>
+            <span class="arrow-down"></span>
           </div>
-          <div class="col-md-3"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
         </div>
+        <div class="col-md-6"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
       </div>
+    </div>
+    <!-- <div id="map" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div> -->
+    <div id="map" class="map-canvas"></div>
   </section>
 
   <section class="filter">
@@ -126,5 +126,5 @@
       </div>
     </div>
   </section>
-  
+
 @include('layouts/footer')

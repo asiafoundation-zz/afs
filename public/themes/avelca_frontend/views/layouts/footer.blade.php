@@ -14,6 +14,7 @@
   <script type="text/javascript" src="{{ Theme::asset('javascript/canvasjs.min.js') }}"></script>
   <script type="text/javascript" src="{{ Theme::asset('javascript/mapbbcode.js') }}"></script>
   <script type="text/javascript" src="{{ Theme::asset('javascript/base.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/jquery.selectik.js') }}"></script>
   <script type="text/javascript">
     /*
      * -----------------------------------------Map JS--------------------------
