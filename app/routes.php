@@ -26,6 +26,9 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 		Route::group(array('prefix' => 'admin'), function()
 		{
 			AvelcaController::autoRoutes();
+			Route::get('survey', 'SurveyController@getIndex');
+			Route::get('survey/cycle', 'SurveyController@getCycle');
+			Route::get('survey/upload', 'SurveyController@getUpload');
 		});
 	});
 });
