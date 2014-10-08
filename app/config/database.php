@@ -55,7 +55,7 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'agusam_asia_foundation_surveys',
+			'database'  => 'agusam_asia_foundation_survey',
 			'username'  => 'agusam',
 			'password'  => 'agusam1010',
 			'charset'   => 'utf8',
@@ -63,7 +63,7 @@ return array(
 			'prefix'    => '',
 		),
 		/*
-			'database'  => 'agusam_asia_foundation_surveys',
+			'database'  => 'agusam_asia_foundation_survey',
 			'username'  => 'agusam',
 			'password'  => 'agusam1010',
 			*/
