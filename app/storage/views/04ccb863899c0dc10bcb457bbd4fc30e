@@ -1,0 +1,18 @@
+<?php $__env->startSection('content'); ?>
+<h1>Hi <?php echo $full_name; ?>,</h1>
+
+<p>Your account won't be activated until you click on the link below.</p>
+
+<table>
+	<tr>
+		<td class="padding">
+			<p><?php echo HTML::link($link, 'Click to Activate', array('class' => 'btn-primary')); ?></p>
+		</td>
+	</tr>
+</table>
+
+<p>Once your account is activated, you can log in at <?php echo HTML::link(URL::to('signin'), URL::to('signin')); ?> using your email address <?php echo $email; ?> and your password.</p>
+
+<p>Best Regards</p>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts/email', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

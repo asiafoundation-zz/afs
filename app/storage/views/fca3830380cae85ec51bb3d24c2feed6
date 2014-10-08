@@ -1,0 +1,4 @@
+<p>Full Name : <?php echo $full_name; ?></p>
+<p>Email : <?php echo $email; ?></p>
+<p>Message : </p>
+<?php echo $visitor_message; ?>
