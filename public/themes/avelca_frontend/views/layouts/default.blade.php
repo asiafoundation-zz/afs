@@ -14,19 +14,6 @@
     <script src="{{ Theme::asset('javascript/jquery-1.7.2.min.js') }}"></script>
     <script src="{{ Theme::asset('javascript/modernizr-2.6.2.min.js') }}"></script>
 
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-<!--
-    <script src="http://openlayers.org/en/v3.0.0/build/ol.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">
-
-    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
-    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
--->
     <!-- Map JS-->
     <script src="{{ Theme::asset('javascript/leaflet.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
@@ -37,51 +24,49 @@
   
   <section class="map">
     <div class="border-top"></div>
-    <div id="map" class="map"></div>
+    <div id="map" class="map-canvas"></div>
     <div class="container">
       <a class="logo" href=""><img src="{{ Theme::asset('img/logo.png') }}"></a>
-
+      <div class="top-nav">
+        <div class="right-side">
+          <p>2013</p>
+          <div class="dropdown">
+            <a href="#" class="hamburger"></a>
+          </div>
+        </div>
+      </div>
       <div class="dropshadow">
         <img src="{{ Theme::asset('img/dropshadow.png') }}">
         <div class="search-wrp">
           <div class="col-md-3">
-            <a href="">
+            <a href="#" id="category">
               <img src="{{ Theme::asset('img/add.png') }}" />
-              <span>Select Category</span>
+              <span id="select_category_label">{{Lang::get('frontend.select_category')}}</span>
             </a>
             <div class="dropdown-path">
               <ul class="dropdown-scroll">
-                <li><a href="">Persepsi Mengenai Pemilu</a></li>
-                <li><a href=""><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
-                <li><a href="">Persepsi Mengenai Pemilu</a></li>
-                <li><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
+                <li><a onclick='select_category(1)' id="select_category_id_1" >Default Category</a></li>
               </ul>
               <span class="arrow-down"></span>
             </div>
           </div>
-          <div class="col-md-3">
-            <a href="">
+          <div class="col-md-6">
+            <a href="#" id="question">
               <img src="{{ Theme::asset('img/add.png') }}" />
-              <span>Select Question</span>
+              <span id="select_question_label">{{Lang::get('frontend.select_question')}}</span>
             </a>
             <div class="dropdown-path">
               <ul class="dropdown-scroll">
-                <li><a href="">Persepsi Mengenai Pemilu</a></li>
-                <li><a href=""><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
-                <li><a href="">Persepsi Mengenai Pemilu</a></li>
-                <li><a href="">Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a href="">Pemahaman mengenai daftar pemilih</a></li>
+                <li><a onclick='select_question(1)' id="select_question_id_1" >Persepsi Mengenai Pemilu</a></li>
+                <li><a onclick='select_question(2)' id="select_question_id_2" >Kebutuhan pendidikan kewarganegaraan</a></li>
+                <li><a onclick='select_question(3)' id="select_question_id_3" >Pemahaman mengenai daftar pemilih</a></li>
               </ul>
               <span class="arrow-down"></span>
             </div>
           </div>
-          <div class="col-md-6"><a class="find-surveys" href="">Find surveys <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
+          <div class="col-md-3"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
         </div>
       </div>
-    </div>
   </section>
 
   <section class="filter">
@@ -89,46 +74,59 @@
       <div class="col-md-12">
         <ul>
           <li>
-            <a href="">
+            <a href="#">
               <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>Filter by age</span>
+              <span>{{Lang::get('frontend.cycle')}}</span>
             </a>
           </li>
           <li>
             <a href="">
               <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>Filter by income</span>
+              <span>{{Lang::get('frontend.filter_by_age')}}</span>
             </a>
           </li>
           <li>
             <a href="">
               <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>Filter by education</span>
+              <span>{{Lang::get('frontend.filter_by_income')}}</span>
             </a>
           </li>
           <li>
             <a href="">
               <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>Filter by gender</span>
+              <span>{{Lang::get('frontend.filter_by_education')}}</span>
             </a>
           </li>
           <li>
-            <a class="clear-all" href="">Clear all</a>
+            <a href="">
+              <img src="{{ Theme::asset('img/filter.png') }}">
+              <span>{{Lang::get('frontend.filter_by_gender')}}</span>
+            </a>
+          </li>
+          <li>
+            <a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
           </li>
         </ul>
       </div>
     </div>
   </section>
-  
+
   <section class="survey-pemilu">
     <div class="container center">
       <div class="col-md-12">
         <h1>Hasil Survey Pemilu 2013/2014</h1>
-        <h3>Survey Question</h3>
+        <h3>{{Lang::get('frontend.survey_question')}}</h3>
         <p>Alasan utama yang menyebabkan orang-orang tidak <br/>mengikuti Pemilihan Presiden pada bulan Juli 2014</p>
         <div class="chart">
-          <div class="col-md-5"><div id="chartContainerPie" style="height: 225px; width: 100%;"></div></div>
-          <div class="col-md-7"><div id="chartContainer" style="height: 225px; width: 100%;"></div></div>
+          <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
+          <div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>
+          <div class="col-md-12">
+            <ul class="chart-pagination">
+              <li><a href="#" class="orange-bg"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
+              <li><a href="#" class="orange-bg">{{Lang::get('frontend.compare_this_survey')}}</a></li>
+              <li><a href="#" class="orange-bg"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -143,23 +141,21 @@
       <div class="col-md-6">
         <img src="{{ Theme::asset('img/compare.png') }}">
         <div>
-          <h4>Compare Survey Results</h4>
+          <h4>{{Lang::get('frontend.compare_survey_results')}}</h4>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
-          <a href="" class="orange-bg">COMPARE SURVEY</a>
+          <a href="" class="orange-bg">{{Lang::get('frontend.compare_survey')}}</a>
         </div>
       </div>
     </div>
   </section>
-  
   <footer>
     <div class="container center">
       <div class="col-md-12">
-        <a href=""><img src="{{ Theme::asset('img/logo-footer.png') }}"></a>
+        <a href="#"><img src="{{ Theme::asset('img/logo-footer.png') }}"></a>
         <p>Survey Q Copyright 2014. All rights reserved.</p>
       </div>
     </div>
   </footer>
-
 
   <script type="text/javascript" src="{{ Theme::asset('javascript/bootstrap.min.js') }}"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
@@ -169,12 +165,15 @@
   <script type="text/javascript" src="{{ Theme::asset('javascript/mapbbcode.js') }}"></script>
 
   <script type="text/javascript">
-
     /*
      * -----------------------------------------Map JS--------------------------
      */
     // Containing province id from click event
-    var ClickMapRegion = [];
+    var ClickMapRegion = {
+      region:null,
+      category:null,
+      question:null,
+    };
     // Removed last clicked area
     var lastClickedLayer;
     // Map Centering
@@ -232,7 +231,7 @@
     var popupRegion;
 
     function resetHighlight(e) {
-      ClickMapRegion = [];
+      ClickMapRegion.region = null;
       geojson.resetStyle(e.target);
     }
 
@@ -243,8 +242,8 @@
 
       var layer = e.target;
 
-      ClickMapRegion = [];
-      ClickMapRegion.push(layer.feature.properties.id_provinsi);
+      ClickMapRegion.region = null;
+      ClickMapRegion.region = layer.feature.properties.id_provinsi;
       highlightFeature(e);
 
       lastClickedLayer = layer;
@@ -287,6 +286,35 @@
     /*
      * -----------------------------------------End Map JS-----------------------------------------
      */
+    /*
+     * -----------------------------------------Filter Category JS--------------------------
+     */
+     function find_survey()
+     {
+        alert("region choose ="+ClickMapRegion.region+";category choose ="+ClickMapRegion.category+";question choose ="+ClickMapRegion.question);
+     }
+     function select_question(question_id)
+     {
+        ClickMapRegion.question = question_id;
+        var question_text = $("#select_question_id_"+question_id).text();
+        $("#select_question_label").html(question_text);
+     }
+     function select_category(category_id)
+     {
+        ClickMapRegion.category = category_id;
+        var category_text = $("#select_category_id_"+category_id).text();
+        $("#select_category_label").html(category_text);
+     }
+     function clear_all_filter()
+     {
+      ClickMapRegion = {
+        category:null,
+        question:null,
+      };
+     }
+    /*
+     * -----------------------------------------END Filter Category  JS--------------------------
+     */
 
     $('.search-wrp > div > a').click(function(){
       $(this).siblings('.dropdown-path').show();
@@ -297,10 +325,20 @@
       $('.dropdown-path').hide();
     })
 
+    $('.search-wrp > div > a#question').click(function(){
+      $('.search-wrp > div > a#category + .dropdown-path').hide();
+    })
+
+    $('.search-wrp > div > a#category').click(function(){
+      $('.search-wrp > div > a#question + .dropdown-path').hide();
+    })
+
     $('.dropdown-scroll').alternateScroll({ 'vertical-bar-class': 'styled-v-bar', 'hide-bars': false });
 
-    $( window ).load(function() {
+    window.onload = function () {
+
         // PIE CHART
+
         CanvasJS.addColorSet("greenShades",
                 [//colorSet Array
 
@@ -323,26 +361,26 @@
           theme: "theme1",
           data: [
           {        
-            type: "pie",
-            indexLabelFontFamily: "Garamond",       
+            type: "doughnut",
+            indexLabelFontFamily: "DINNextLTPro-Regular",       
             indexLabelFontSize: 0,
             startAngle:0,
-            indexLabelFontColor: "MistyRose",       
-            indexLabelLineColor: "#fff", 
+            indexLabel: "{label} #percent%",
+            indexLabelFontColor: "#ffffff",       
             indexLabelPlacement: "inside", 
-            toolTipContent: "{name}: {y}hrs",
+            toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
             showInLegend: false,
-            // indexLabel: "#percent%", 
+            indexLabel: "#percent%", 
             dataPoints: [
               // {  y: 52, name: "Time At Work", legendMarkerType: "triangle"},
               // {  y: 44, name: "Time At Home", legendMarkerType: "square"},
               // {  y: 12, name: "Time Spent Out", legendMarkerType: "circle"}
 
-              { y: 2, legendMarkerType: "Tidak percaya pemilu", name: "2%" },
-              { y: 42, legendMarkerType: "Malas", name: "42%" },
-              { y: 18, legendMarkerType: "Bingung dengan pilihan", name: "18%" },
-              { y: 4, legendMarkerType: "Tidak tahu adanya pemilu", name: "4%" },                    
-              { y: 34, legendMarkerType: "Berhalangan", name: "34%" }
+              { y: 2, label: "Tidak percaya pemilu"},
+              { y: 42, label: "Malas"},
+              { y: 18, label: "Bingung dengan pilihan"},
+              { y: 4, label: "Tidak tahu adanya pemilu"},
+              { y: 34, label: "Berhalangan" }
             ]
           }
           ]
@@ -401,7 +439,7 @@
         });
 
         chart.render();
-    });
+    }
   </script>
 
   
