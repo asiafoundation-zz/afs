@@ -1,0 +1,179 @@
+<?php $__env->startSection('content'); ?>
+
+<?php $user = Sentry::getUser(); ?>
+
+<div class="row">
+	<div class="col-md-12">
+		<ol class="breadcrumb">
+			<li><a href="<?php echo URL::to('dashboard'); ?>">Dashboard</a></li>
+			<li class="active"><?php echo $name; ?></li>
+		</ol>
+
+		<?php $customView = 'admin.'.$routeName.'.index'; ?>
+		<?php if(View::exists($customView)): ?>
+		<?php echo $__env->make($customView, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php else: ?>
+
+
+		<div class="page-header">
+			<h1>
+				<?php echo $name; ?>
+
+				<small>List</small>
+
+				<span class="pull-right">	
+					<?php if($user->hasAccess($routeName.'.create')): ?>
+					<?php if( ! in_array('create', $disabledActions) ): ?>
+					<a href="#" class="btn theme-color" id="new_button">
+						<i class="fa fa-plus fa-fw"></i>
+						Create New
+					</a>
+					<?php endif; ?>
+					<?php endif; ?>
+				</span>
+			</h1>
+		</div>
+
+		<div class="table-responsive" id="list_page">
+
+			<span class="text-left">
+
+				<a href="javascript:;" id="filter" class="btn btn-default"><i class="fa fa-filter fa-fw"></i><span class="caret"></span></a>
+
+				<div class="btn-group">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+						<i class="fa fa-fw fa-th"></i> <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu multi-level">
+						<?php if($user->hasAccess($routeName.'.export')): ?>
+						<li><a href="<?php echo URL::to('rest/'.$routeName.'/export'); ?>" class="DTTT_button_print" id="ToolTables_index_table_0" title="Export to Excel"><span>Export Excel</span></a></li>
+						<?php endif; ?>
+
+						<?php if($user->hasAccess($routeName.'.print-pdf')): ?>
+						<li><a href="<?php echo URL::to('admin/'.$routeName.'/print-pdf'); ?>" class="DTTT_button_print" title="Export to PDF">Eport To PDF</a></li>
+						<?php endif; ?>
+
+						<?php if( count($mainButtons) > 0): ?>
+						<?php foreach($mainButtons as $action_button => $urls): ?>
+						<?php if( is_array($urls) ): ?>
+						<li class="divider"></li>
+						<li class="dropdown-submenu"><a tabindex="-1" href="#"><?php echo $action_button; ?></a>
+							<ul class="dropdown-menu">
+								<?php foreach($urls as $url => $key): ?>
+								<?php if($user->hasAccess($routeName.'.'.$key)): ?>
+								<li><a href="<?php echo URL::to('admin/'.$routeName.'/'.$key); ?>"><?php echo $url; ?></a></li>
+								<?php endif; ?>
+								<?php endforeach; ?>
+							</ul>
+						</li>
+						<?php else: ?>
+						<?php if($user->hasAccess($routeName.'.'.$urls)): ?>
+						<li><a href="<?php echo URL::to('admin/'.$routeName.'/'.$urls); ?>"><?php echo $action_button; ?></a></li>
+						<?php endif; ?>
+						<?php endif; ?>
+						<?php endforeach; ?>
+						<?php endif; ?>
+
+						<?php $customView = 'admin.'.$routeName.'.menu.main'; ?>
+						<?php if(View::exists($customView)): ?>
+						<?php echo $__env->make($customView, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+						<?php endif; ?>
+					</ul>
+				</div>
+
+				<p>&nbsp;</p>
+			</span>
+
+			<?php $customView = 'admin.'.$routeName.'.filter'; ?>
+			<?php if(View::exists($customView)): ?>
+			<?php echo $__env->make($customView, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			<?php else: ?>
+			<?php echo $__env->make('avelca::filter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			<?php endif; ?>
+
+			<table class="datatable table table-striped table-bordered" id="index_table">
+				<thead>
+					<tr>
+						<th class="text-center">No</th>
+						<?php foreach($indexFields as $field => $structure): ?>
+						<th class="text-center"><?php echo AvelcaController::tableHeader($field, $structure); ?></th>
+						<?php endforeach; ?>
+						<td id="actionColumn">&nbsp;</td>
+					</tr>
+				</thead>
+				<tbody>
+					<?php $customView = 'admin.'.$routeName.'.rowTable'; ?>
+					<?php if(View::exists($customView)): ?>
+					<?php echo $__env->make($customView, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+					<?php else: ?>
+					<?php echo $__env->make('avelca::rowTable', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+					<?php endif; ?>
+				</tbody>
+			</table>
+
+			<?php if( $records->count() > 0): ?>
+			<div class="pull-right">
+				<ul id='pagination_index'></ul>
+				<?php $customView = 'admin.'.$routeName.'.js.pagination'; ?>
+				<?php if( ! View::exists($customView)): ?>
+				<?php $customView = 'avelca::js.pagination'; ?>
+				<?php endif; ?>
+				<?php echo $records->links($customView); ?>
+
+			</div>
+			<?php endif; ?>
+
+			<?php $customView = 'admin.'.$routeName.'.additional.index'; ?>
+			<?php if(View::exists($customView)): ?>
+			<?php echo $__env->make($customView, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			<?php endif; ?>
+
+		</div>
+
+		
+		<!-- Create -->
+		<div id="create_page"></div>
+
+		<!-- View -->
+		<div class="modal fade" id="viewModal">
+			<div class="modal-dialog <?php echo $modalDialog; ?>">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+
+		<!-- Update -->
+		<div class="modal fade" id="updateModal">
+			<div class="modal-dialog <?php echo $modalDialog; ?>">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+
+		<!-- Remove -->
+		<div class="modal fade" id="removeModal">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content"></div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<?php $customView = 'admin.'.$routeName.'.js.datatable'; ?>
+<?php if(View::exists($customView)): ?>
+<?php echo $__env->make($customView, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php else: ?>
+<?php echo $__env->make('avelca::js.datatable', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php endif; ?>
+
+<?php $customView = 'admin.'.$routeName.'.js.script'; ?>
+<?php if(View::exists($customView)): ?>
+<?php echo $__env->make($customView, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php else: ?>
+<?php echo $__env->make('avelca::js.script', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php endif; ?>
+
+
+<?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make($bladeLayout, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
