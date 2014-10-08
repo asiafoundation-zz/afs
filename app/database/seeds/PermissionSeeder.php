@@ -4,7 +4,7 @@ class PermissionSeeder extends Seeder {
 
 	public function run()
 	{
-		
+		Eloquent::unguard();
 		/* Surveys */
 		$permissions = array(
 			"survey",
@@ -14,7 +14,9 @@ class PermissionSeeder extends Seeder {
 			"survey.edit",
 			"survey.delete",
 			"survey.print-pdf",
-			"survey.export"
+			"survey.export",
+			"survey.cycle",
+			"survey.upload"
 			);
 
 Permission::whereIn("name", $permissions)->delete();
