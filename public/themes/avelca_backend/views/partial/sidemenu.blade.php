@@ -6,15 +6,15 @@
 		<a href="{{ URL::to('dashboard') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
 	</li>
 	<li>
-		<a href="#">Upload Excel <span class="fa arrow"></span></a>
-		<ul class="nav nav-third-level collapse" style="height: auto;">
+		<a href="/admin/survey">Manage Survey<span class="fa"></span></a>
+		<!--ul class="nav nav-third-level collapse" style="height: auto;">
 			<li>
 				<a href="#">Upload Survey</a>
 			</li>
 			<li>
 				<a href="#">Upload Oversampling Survey</a>
 			</li>
-		</ul>
+		</ul-->
 	</li>
 
 	@include('partial.main_menu')
