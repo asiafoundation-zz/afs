@@ -43,8 +43,7 @@
         <div class="col-md-6"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
       </div>
     </div>
-    <!-- <div id="map" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div> -->
-    <div id="map" class="map-canvas"></div>
+    <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 670px"></div>
   </section>
 
   <section class="filter">
@@ -52,37 +51,42 @@
       <div class="col-md-12">
         <ul>
           <li>
-            <a href="#">
-              <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>{{Lang::get('frontend.cycle')}}</span>
-            </a>
+            <select class="select-control">
+              <option>Cycle</option>
+              <option>Option Name 1</option>
+              <option>Option Name 2</option>
+            </select><!-- Custom Select -->
           </li>
           <li>
-            <a href="">
-              <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>{{Lang::get('frontend.filter_by_age')}}</span>
-            </a>
+            <select class="select-control">
+              <option>Age</option>
+              <option>Option Name 1</option>
+              <option>Option Name 2</option>
+            </select><!-- Custom Select -->
           </li>
           <li>
-            <a href="">
-              <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>{{Lang::get('frontend.filter_by_income')}}</span>
-            </a>
+            <select class="select-control">
+              <option>Income</option>
+              <option>Option Name 1</option>
+              <option>Option Name 2</option>
+            </select><!-- Custom Select -->
           </li>
           <li>
-            <a href="">
-              <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>{{Lang::get('frontend.filter_by_education')}}</span>
-            </a>
+            <select class="select-control">
+              <option>Education</option>
+              <option>Option Name 1</option>
+              <option>Option Name 2</option>
+            </select><!-- Custom Select -->
           </li>
           <li>
-            <a href="">
-              <img src="{{ Theme::asset('img/filter.png') }}">
-              <span>{{Lang::get('frontend.filter_by_gender')}}</span>
-            </a>
+            <select class="select-control">
+              <option>Gender</option>
+              <option>Option Name 1</option>
+              <option>Option Name 2</option>
+            </select><!-- Custom Select -->
           </li>
           <li>
-            <a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
+						<a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
           </li>
         </ul>
       </div>
@@ -114,14 +118,24 @@
     <div class="container">
       <div class="col-md-6">
         <h4>Lorem ipsum dolor sit amet, consectet</h4>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus, dignissim vel arcu sit amet, sodales dignissim nibh. Suspendisse lobortis neque sed est sollicitudin ornare.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus, dignissim vel arcu sit amet, sodales dignissim nibh. Suspendisse lobortis neque sed est sollicitudin ornare.<br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus, dignissim vel arcu sit amet, sodales dignissim nibh. Suspendisse lobortis neque sed est sollicitudin ornare.</p>
       </div>
       <div class="col-md-6">
-        <img src="{{ Theme::asset('img/compare.png') }}">
-        <div>
-          <h4>{{Lang::get('frontend.compare_survey_results')}}</h4>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
-          <a href="" class="orange-bg">{{Lang::get('frontend.compare_survey')}}</a>
+        <div class="extras">
+          <img src="{{ Theme::asset('img/compare.png') }}">
+          <div>
+            <h4>Compare Survey Results</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
+            <a href="#" class="orange-bg">COMPARE SURVEY</a>
+          </div>
+        </div>
+        <div class="extras">
+          <img src="{{ Theme::asset('img/variable.png') }}">
+          <div>
+            <h4>Cross by Another Variable</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
+            <a href="#" class="orange-bg">Cross by another variable</a>
+          </div>
         </div>
       </div>
     </div>

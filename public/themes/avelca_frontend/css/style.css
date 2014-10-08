@@ -314,6 +314,9 @@ a:focus {
 .extras + .extras {
 	margin-top: 60px
 }
+.extras > img + div {
+	margin-left: 131px;
+}
 .orange-bg {
 	background: none repeat scroll 0 0 #fcc45a;
     border-radius: 17px;
