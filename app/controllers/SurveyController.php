@@ -7,6 +7,20 @@ class SurveyController extends AvelcaController {
 		parent::__construct($Model);
 	}
 	
+	public function getIndex(){
+
+		return View::make('admin.survey.index');
+	}
+
+	public function getCycle(){
+
+		return view::make('admin.survey.cycle');
+	}
+
+	public function getUpload(){
+
+		return View::make('admin.survey.upload');
+	}
 	
 	
 }
