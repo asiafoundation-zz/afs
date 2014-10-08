@@ -5,17 +5,30 @@
 	<li>
 		<a href="{{ URL::to('dashboard') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
 	</li>
+	<li>
+		<a href="#">Upload Excel <span class="fa arrow"></span></a>
+		<ul class="nav nav-third-level collapse" style="height: auto;">
+			<li>
+				<a href="#">Upload Survey</a>
+			</li>
+			<li>
+				<a href="#">Upload Oversampling Survey</a>
+			</li>
+		</ul>
+	</li>
 
 	@include('partial.main_menu')
 
 	@if( $user->hasAccess('module') )
 	<li>
 		<a href="#"><i class="glyphicon glyphicon-flash"></i> Modules<span class="fa arrow"></span></a>
+
 		<ul class="nav nav-second-level">
 
 			<li>
 				<a href="{{ URL::to('admin/module') }}">Manage</a>
 			</li>
+
 
 			@include('partial.module_list')
 
