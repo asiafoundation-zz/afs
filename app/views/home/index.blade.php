@@ -1,4 +1,4 @@
-@include('layouts/default')
+@include('layouts/header')
 
   <section class="map">
     <a class="logo" href="#"><img src="{{ Theme::asset('img/logo.png') }}"></a>
@@ -50,41 +50,16 @@
     <div class="container">
       <div class="col-md-12">
         <ul>
+          @foreach ($filters as $key_filters => $filter)
           <li>
             <select class="select-control">
-              <option>Cycle</option>
-              <option>Option Name 1</option>
-              <option>Option Name 2</option>
+              <option>{{ $key_filters }}</option>
+              @foreach ($filter as $filter_items)
+              <option>{{ $filter_items }}</option>
+              @endforeach
             </select><!-- Custom Select -->
           </li>
-          <li>
-            <select class="select-control">
-              <option>Age</option>
-              <option>Option Name 1</option>
-              <option>Option Name 2</option>
-            </select><!-- Custom Select -->
-          </li>
-          <li>
-            <select class="select-control">
-              <option>Income</option>
-              <option>Option Name 1</option>
-              <option>Option Name 2</option>
-            </select><!-- Custom Select -->
-          </li>
-          <li>
-            <select class="select-control">
-              <option>Education</option>
-              <option>Option Name 1</option>
-              <option>Option Name 2</option>
-            </select><!-- Custom Select -->
-          </li>
-          <li>
-            <select class="select-control">
-              <option>Gender</option>
-              <option>Option Name 1</option>
-              <option>Option Name 2</option>
-            </select><!-- Custom Select -->
-          </li>
+          @endforeach
           <li>
 						<a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
           </li>
@@ -141,4 +116,23 @@
     </div>
   </section>
 
-@include('layouts/footer')
+  <footer>
+    <div class="container center">
+      <div class="col-md-12">
+        <a href="#"><img src="{{ Theme::asset('img/logo-footer.png') }}"></a>
+        <p>Survey Q Copyright 2014. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript" src="{{ Theme::asset('javascript/bootstrap.min.js') }}"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/query.ui.touch-punch.min.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/facescroll.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/canvasjs.min.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/mapbbcode.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/base.js') }}"></script>
+
+  @include('home/homejs')
+</body>
+</html>

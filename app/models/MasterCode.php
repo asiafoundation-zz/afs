@@ -1,52 +1,52 @@
 <?php
-class Category extends Eloquent {
+class MasterCode extends Eloquent {
 
-	/* Soft Delete */
+	/* Soft Delete 
 	use SoftDeletingTrait;
 	protected $dates = ['deleted_at'];
+	*/
 
 	/* Eloquent */
-	public $table = "categories";
+	public $table = "master_codes";
 	public $timestamps = true;
 
-	public static $formItem = "category_items";
+	public static $formItem = "codes";
 
-	public function category_items()
+	public function codes()
 	{
-		return $this->hasMany('CategoryItem');
+		return $this->hasMany('Codes');
 	}
-				
+
 	/* Disabled Basic Actions */
 	public static $disabledActions = array();
 
 	/* Route */
-	public $route = 'category';
+	public $route = 'master_code';
 
 	/* Mass Assignment */
 	protected $fillable = array(
-		'name',
-		'code_id'
+		'master_code',
+		'attribute_code'
 		);
 	protected $guarded = array('id');
 
 	/* Rules */
 	public static $rules = array(
-		'name' => 'required',
-		'code_id' => 'required',
+		'master_code' => 'required'
+		'attribute_code' => 'required'
 		);
 
 	/* Database Structure */
 	public static function structure()
 	{
 		$fields = array(
-			'name' => array(
-				'type' => 'text',
-				'onIndex' => true
+			'master_code' => array(
+			'type' => 'text',
+			'onIndex' => true
 			),
-			'code_id' => array(
-				'type' => 'number',
-				'onIndex' => true
-			),
+			'attribute_code' => array(
+			'type' => 'number',
+			'onIndex' => true
 		);
 
 		return compact('fields');

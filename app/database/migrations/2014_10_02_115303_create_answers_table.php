@@ -16,8 +16,8 @@ class CreateAnswersTable extends Migration {
 		{
 			$table->bigIncrements("id")->unsigned();
 			$table->string("answer");
-$table->integer("question_id")->unsigned();
-$table->integer("color_id")->unsigned();
+			$table->integer("question_id")->unsigned();
+			$table->integer("color_id")->unsigned();
 			$table->timestamps();
 			$table->softDeletes();
 		});
