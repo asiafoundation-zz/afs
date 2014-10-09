@@ -136,12 +136,15 @@
         var category_text = $("#select_category_id_"+category_id).text();
         $("#select_category_label").html(category_text);
      }
+     function cycle_select(cycle_id)
+     {
+        ClickMapRegion.cycle = cycle_id;
+        var cycle_text = $("#cycle_select_"+cycle_id).text();
+        $("#select_cycle_label").html(cycle_text);
+     }
      function clear_all_filter()
      {
-      ClickMapRegion = {
-        category:null,
-        question:null,
-      };
+      window.location.reload();
      }
     /*
      * -----------------------------------------END Filter Category  JS--------------------------
@@ -172,12 +175,9 @@
 
         CanvasJS.addColorSet("greenShades",
                 [//colorSet Array
-
-                "#fcc45a",
-                "#ffe87a",
-                "#abd074",
-                "#fc5b3f",
-                "#1eb5b6"                
+                @foreach ($question as $answer)
+                  "{{ $answer->color }}",
+                @endforeach           
                 ]);
 
         var chart = new CanvasJS.Chart("chartContainerPie",
@@ -203,15 +203,15 @@
             showInLegend: false,
             indexLabel: "#percent%", 
             dataPoints: [
-              // {  y: 52, name: "Time At Work", legendMarkerType: "triangle"},
-              // {  y: 44, name: "Time At Home", legendMarkerType: "square"},
-              // {  y: 12, name: "Time Spent Out", legendMarkerType: "circle"}
+              // { y: 2, label: "Tidak percaya pemilu"},
+              // { y: 42, label: "Malas"},
+              // { y: 18, label: "Bingung dengan pilihan"},
+              // { y: 4, label: "Tidak tahu adanya pemilu"},
+              // { y: 34, label: "Berhalangan" }
 
-              { y: 2, label: "Tidak percaya pemilu"},
-              { y: 42, label: "Malas"},
-              { y: 18, label: "Bingung dengan pilihan"},
-              { y: 4, label: "Tidak tahu adanya pemilu"},
-              { y: 34, label: "Berhalangan" }
+              @foreach ($question as $answer)
+                { y: {{ $answer->amount }}, label: "{{ $answer->answer }}"},
+              @endforeach   
             ]
           }
           ]
@@ -223,12 +223,9 @@
 
         CanvasJS.addColorSet("greenShades",
                 [//colorSet Array
-
-                "#fcc45a",
-                "#ffe87a",
-                "#abd074",
-                "#fc5b3f",
-                "#1eb5b6"                
+                @foreach ($question as $answer)
+                  "{{ $answer->color }}",
+                @endforeach                 
                 ]);
 
         var chart = new CanvasJS.Chart("chartContainer", {
@@ -257,13 +254,14 @@
                 indexLabelFontFamily: "DINNextLTPro-Regular",
                 type: "bar",
                 dataPoints: [
-                    { y: 2, label: "Tidak percaya pemilu", indexLabel: "2%" },
-                    { y: 42, label: "Malas", indexLabel: "42%" },
-                    { y: 18, label: "Bingung dengan pilihan", indexLabel: "18%" },
-                    { y: 4, label: "Tidak tahu adanya pemilu", indexLabel: "4%" },                    
-                    { y: 34, label: "Berhalangan", indexLabel: "34%" }
-
-
+                    // { y: 2, label: "Tidak percaya pemilu", indexLabel: "2%" },
+                    // { y: 42, label: "Malas", indexLabel: "42%" },
+                    // { y: 18, label: "Bingung dengan pilihan", indexLabel: "18%" },
+                    // { y: 4, label: "Tidak tahu adanya pemilu", indexLabel: "4%" },                    
+                    // { y: 34, label: "Berhalangan", indexLabel: "34%" }
+                  @foreach ($question as $answer)
+                    { y: {{ $answer->amount }}, label: "{{ $answer->answer }}"},
+                  @endforeach   
                 ]
             }
             ]

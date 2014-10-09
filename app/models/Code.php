@@ -1,10 +1,9 @@
 <?php
 class Code extends Eloquent {
 
-	/* Soft Delete 
-	use SoftDeletingTrait;
-	protected $dates = ['deleted_at'];
-	*/
+	/* Soft Delete */
+	protected $softDelete = true;
+
 	/* Eloquent */
 	public $table = "codes";
 	public $timestamps = true;

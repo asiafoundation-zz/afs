@@ -9,9 +9,6 @@ class Answer extends Eloquent {
 	public $table = "answers";
 	public $timestamps = true;
 
-	
-
-	
 
 	/* Disabled Basic Actions */
 	public static $disabledActions = array();

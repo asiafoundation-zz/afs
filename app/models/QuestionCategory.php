@@ -1,32 +1,30 @@
 <?php
-class Region extends Eloquent {
+class QuestionCategory extends Eloquent {
 
-	/* Soft Delete 
-	use SoftDeletingTrait;
-	protected $dates = ['deleted_at'];
-	*/
+	/* Soft Delete */
+	protected $softDelete = true;
+
 	/* Eloquent */
-	public $table = "regions";
+	public $table = "question_categories";
 	public $timestamps = true;
-
 
 	/* Disabled Basic Actions */
 	public static $disabledActions = array();
 
 	/* Route */
-	public $route = 'region';
+	public $route = 'question_category';
 
 	/* Mass Assignment */
 	protected $fillable = array(
 		'name',
-		'code_id'
+		'survey_id'
 		);
 	protected $guarded = array('id');
 
 	/* Rules */
 	public static $rules = array(
 		'name' => 'required',
-		'code_id' => 'required',
+		'survey_id' => 'required'
 		);
 
 	/* Database Structure */
@@ -37,14 +35,12 @@ class Region extends Eloquent {
 				'type' => 'text',
 				'onIndex' => true
 			),
-			'code_id' => array(
-				'type' => 'number',
-				'onIndex' => true
+			'survey_id' => array(
+					'type' => 'number',
+					'onIndex' => true
 			)
-			);
+		);
 
 		return compact('fields');
 	}
-
-
 }

@@ -1,13 +1,18 @@
-@include('layouts/header')
+@include('layouts/default')
 
   <section class="map">
     <a class="logo" href="#"><img src="{{ Theme::asset('img/logo.png') }}"></a>
     <div class="border-top"></div>
     <div class="top-nav">
       <div class="right-side">
-        <p>2013</p>
+        <p id="select_cycle_label">2013</p>
         <div class="dropdown">
-          <a href="#" class="hamburger"></a>
+          <a href="#" data-toggle="dropdown" class="hamburger"></a>
+          <ul class="dropdown-menu">
+            @foreach ($cycles as $cycle)
+            <li><a href="#" onclick='cycle_select({{ $cycle->id }})' id="cycle_select_{{ $cycle->id }}">{{ $cycle->name }}</a></li>
+            @endforeach
+        </ul>
         </div>
       </div>
     </div>
@@ -17,30 +22,32 @@
         <div class="col-md-3">
           <a href="#" id="category">
             <img src="{{ Theme::asset('img/add.png') }}" />
-            <span>{{Lang::get('frontend.select_category')}}</span>
+            <span id="select_category_label">{{Lang::get('frontend.select_category')}}</span>
           </a>
           <div class="dropdown-path">
               <ul class="dropdown-scroll">
-                <li><a onclick='select_category(1)' id="select_category_id_1" >Default Category</a></li>
+                @foreach ($question_categories as $question_category)
+                <li><a onclick='select_category({{ $question_category->id }})' id="select_category_id_{{ $question_category->id }}" >{{ $question_category->name }}</a></li>
+                @endforeach
               </ul>
             <span class="arrow-down"></span>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
           <a href="#" id="question">
             <img src="{{ Theme::asset('img/add.png') }}" />
-            <span>{{Lang::get('frontend.select_question')}}</span>
+            <span id="select_question_label">{{Lang::get('frontend.select_question')}}</span>
           </a>
           <div class="dropdown-path">
             <ul class="dropdown-scroll">
-                <li><a onclick='select_question(1)' id="select_question_id_1" >Persepsi Mengenai Pemilu</a></li>
-                <li><a onclick='select_question(2)' id="select_question_id_2" >Kebutuhan pendidikan kewarganegaraan</a></li>
-                <li><a onclick='select_question(3)' id="select_question_id_3" >Pemahaman mengenai daftar pemilih</a></li>
+              @foreach ($question_lists as $question_list)
+                <li><a onclick='select_question({{ $question_list->id }})' id="select_question_id_{{ $question_list->id }}" >{{ $question_list->question }}</a></li>
+              @endforeach
             </ul>
             <span class="arrow-down"></span>
           </div>
         </div>
-        <div class="col-md-6"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
+        <div class="col-md-3"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
       </div>
     </div>
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 670px"></div>
@@ -71,9 +78,9 @@
   <section class="survey-pemilu">
     <div class="container center">
       <div class="col-md-12">
-        <h1>Hasil Survey Pemilu 2013/2014</h1>
+        <h1>{{ $survey->name }}</h1>
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
-        <p>Alasan utama yang menyebabkan orang-orang tidak <br/>mengikuti Pemilihan Presiden pada bulan Juli 2014</p>
+        <p>{{ $default_question }}</p>
         <div class="chart">
           <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
           <div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>

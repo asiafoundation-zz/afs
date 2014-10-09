@@ -9,17 +9,13 @@ class CategoryItem extends Eloquent {
 	public $table = "category_items";
 	public $timestamps = true;
 
-	
-
 	public static $formParent = "category";
 
-
-				public function category()
-				{
-					return $this->belongsTo('Category');
-				}
+	public function category()
+	{
+		return $this->belongsTo('Category');
+	}
 				
-
 	/* Disabled Basic Actions */
 	public static $disabledActions = array();
 

@@ -2,16 +2,11 @@
 class Questioner extends Eloquent {
 
 	/* Soft Delete */
-	use SoftDeletingTrait;
-	protected $dates = ['deleted_at'];
+	protected $softDelete = true;
 
 	/* Eloquent */
 	public $table = "questioners";
 	public $timestamps = true;
-
-	
-
-	
 
 	/* Disabled Basic Actions */
 	public static $disabledActions = array();
@@ -22,20 +17,20 @@ class Questioner extends Eloquent {
 	/* Mass Assignment */
 	protected $fillable = array(
 		'amount',
-'is_default',
-'answer_id',
-'category_item_id',
-'region_id'
+		'is_default',
+		'answer_id',
+		'category_item_id',
+		'region_id'
 		);
 	protected $guarded = array('id');
 
 	/* Rules */
 	public static $rules = array(
 		'amount' => 'required|numeric',
-'is_default' => 'required',
-'answer_id' => 'required|numeric',
-'category_item_id' => 'required|numeric',
-'region_id' => 'required|numeric'
+		'is_default' => 'required',
+		'answer_id' => 'required|numeric',
+		'category_item_id' => 'required|numeric',
+		'region_id' => 'required|numeric'
 		);
 
 	/* Database Structure */
@@ -43,26 +38,26 @@ class Questioner extends Eloquent {
 	{
 		$fields = array(
 			'amount' => array(
-			'type' => 'number',
-			'onIndex' => true
-		),
-'is_default' => array(
-			'type' => 'text',
-			'onIndex' => true
-		),
-'answer_id' => array(
-			'type' => 'number',
-			'onIndex' => true
-		),
-'category_item_id' => array(
-			'type' => 'number',
-			'onIndex' => true
-		),
-'region_id' => array(
-			'type' => 'number',
-			'onIndex' => true
-		)
-			);
+				'type' => 'number',
+				'onIndex' => true
+				),
+			'is_default' => array(
+					'type' => 'text',
+					'onIndex' => true
+				),
+			'answer_id' => array(
+					'type' => 'number',
+					'onIndex' => true
+				),
+			'category_item_id' => array(
+					'type' => 'number',
+					'onIndex' => true
+				),
+			'region_id' => array(
+					'type' => 'number',
+					'onIndex' => true
+				)
+		);
 
 		return compact('fields');
 	}
