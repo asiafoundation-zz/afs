@@ -62,22 +62,49 @@ class Question extends Eloquent {
 		return compact('fields');
 	}
 
-	public static function DefaultQuestion()
+	public static function LoadQuestion($request = array())
 	{
 		$questions =  DB::table('questions')
 			->select(
 				DB::raw(
-					'questions.question,
+					'questions.id as id_question,
+					questions.question as question,
+					question_categories.id as id_question_categories,
+					question_categories.name as question_categories,
+					cycles.id  as id_cycle,
+					cycles.name as cycle,
+					answers.id  as id_answer,
 					answers.answer as answer,
 					colors.color,
-					SUM(questioners.amount) as amount'
+					(SELECT SUM(questioners.amount) FROM questioners where questioners.answer_id = id_answer GROUP BY answer_id) AS amount'
 					)
 				)
+			->join('question_categories','question_categories.id','=','questions.question_category_id')
+			->join('cycles','cycles.id','=','questions.cycle_id')
 			->join('answers','answers.question_id','=','questions.id')
 			->join('colors','colors.id','=','answers.color_id')
-			->join('questioners','questioners.answer_id','=','questioners.id')
-			->where('questions.is_default', '=', 1)
-			->groupBy('question')
+			->join('questioners','questioners.answer_id','=','questioners.id');
+
+			if (count($request)) {
+				if (isset($request['region'])) {
+					$questions =  $questions->where('questioners.region_id', '=', $request['region']);
+				}
+				if (isset($request['category'])) {
+					$questions =  $questions->where('question_categories.id', '=', $request['category']);
+				}
+				if (isset($request['question'])) {
+					$questions =  $questions->where('questions.id', '=', $request['question']);
+				}
+				if (isset($request['cycle'])) {
+					$questions =  $questions->where('cycles.id', '=', $request['cycle']);
+				}
+			}
+			else
+			{
+				$questions =  $questions->where('questions.is_default', '=', 1);
+			}
+
+			$questions =  $questions
 			->groupBy('answer')
 			->get();
 
