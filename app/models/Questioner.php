@@ -17,9 +17,7 @@ class Questioner extends Eloquent {
 	/* Mass Assignment */
 	protected $fillable = array(
 		'amount',
-		'is_default',
 		'answer_id',
-		'category_item_id',
 		'region_id'
 		);
 	protected $guarded = array('id');
@@ -27,9 +25,7 @@ class Questioner extends Eloquent {
 	/* Rules */
 	public static $rules = array(
 		'amount' => 'required|numeric',
-		'is_default' => 'required',
 		'answer_id' => 'required|numeric',
-		'category_item_id' => 'required|numeric',
 		'region_id' => 'required|numeric'
 		);
 
@@ -41,15 +37,7 @@ class Questioner extends Eloquent {
 				'type' => 'number',
 				'onIndex' => true
 				),
-			'is_default' => array(
-					'type' => 'text',
-					'onIndex' => true
-				),
 			'answer_id' => array(
-					'type' => 'number',
-					'onIndex' => true
-				),
-			'category_item_id' => array(
 					'type' => 'number',
 					'onIndex' => true
 				),

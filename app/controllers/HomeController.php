@@ -14,7 +14,7 @@ class HomeController extends BaseController {
 			"question_lists" => Question::select('id','question')->get(),
 			"default_question" => $default_question[0]->question,
 			"question" => $default_question,
-			"regions" => Region::select('name')->get(),
+			"regions" => Region::RegionColor(),
 		);
 
 		return View::make('home.index', $data);

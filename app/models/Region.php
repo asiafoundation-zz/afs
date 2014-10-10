@@ -46,5 +46,21 @@ class Region extends Eloquent {
 		return compact('fields');
 	}
 
+	public static function RegionColor()
+	{
+		$questions =  DB::table('regions')
+			->select(
+				'questioners.region_id as region_id',
+				'questioners.answer_id as answer_id',
+				'regions.name',
+				'colors.color as color'
+				)
+			->join('questioners','questioners.region_id','=','regions.id')
+			->join('answers','answers.id','=','questioners.answer_id')
+			->join('colors','colors.id','=','answers.color_id')
+			->whereRaw('questioners.id = (SELECT MAX(amount) FROM questioners WHERE questioners.region_id = region_id AND questioners.answer_id = answer_id)')
+			->get();
 
+		return $questions;
+	}
 }
