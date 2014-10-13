@@ -6,4 +6,5 @@
   <script type="text/javascript" src="{{ Theme::asset('javascript/mapbbcode.js') }}"></script>
   <script type="text/javascript" src="{{ Theme::asset('javascript/base.js') }}"></script>
 
-  @include('home/homejs')
+  @include('home/js/mapjs')
+	@include('home/js/chartjs')

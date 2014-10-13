@@ -4,7 +4,7 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
-		$default_questions = Question::LoadQuestion(Input::get());
+		$default_questions = Question::DefaultQuestion(Input::get());
 		$default_question = reset($default_questions);
 
 		$data = array(
@@ -17,17 +17,50 @@ class HomeController extends BaseController {
 			"question" => $default_questions,
 			"regions" => Region::RegionColor(),
 		);
+
     if(Request::ajax()){
       return View::make('home.survey_pemilu',$data);
     }
-
-		return View::make('home.index', $data);
+    else
+    {
+			return View::make('home.index', $data);
+    }
 	}
 
 	public function filterSelect()
 	{
-		$selected_question = Question::DefaultQuestion(Input::get());
+		if(Request::ajax()){
+			switch (Input::get('SelectedFilter')) {
+				case 'area':
+					$question_categories_query = Region::QuestionCategoryFilterRegion(Input::get());
+					$split_data = Region::SplitQuestionsCategory($question_categories_query);
 
-		return View::make('home.index', $data);
+					$filter_category = (string)View::make('home.filter_category',$split_data)->render();
+					$filter_question = (string)View::make('home.filter_question',$split_data)->render();
+
+					$split_data = $filter_category.";".$filter_question;
+					break;
+
+				case 'survey':
+					$default_questions = Question::LoadQuestion(Input::get());
+					$default_question = reset($default_questions);
+
+					$load_filter = array();
+					$load_filter = array(
+						"survey" => Survey::find(1),
+						"default_question" => $default_question,
+						"question" => $default_questions,
+					);
+
+					return View::make('home.survey_pemilu', $load_filter);
+					break;
+
+				default:
+					# code...
+					break;
+			}
+		}
+
+		return $split_data;
 	}
 }

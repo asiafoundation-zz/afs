@@ -62,7 +62,7 @@ class Question extends Eloquent {
 		return compact('fields');
 	}
 
-	public static function LoadQuestion($request = array())
+	public static function DefaultQuestion($request = array())
 	{
 		$questions =  DB::table('questions')
 			->select(
@@ -86,15 +86,6 @@ class Question extends Eloquent {
 			->join('questioners','questioners.answer_id','=','questioners.id');
 
 			if (count($request)) {
-				if (isset($request['region'])) {
-					$questions =  $questions->where('questioners.region_id', '=', $request['region']);
-				}
-				if (isset($request['category'])) {
-					$questions =  $questions->where('question_categories.id', '=', $request['category']);
-				}
-				if (isset($request['question'])) {
-					$questions =  $questions->where('questions.id', '=', $request['question']);
-				}
 				if (isset($request['cycle'])) {
 					$questions =  $questions->where('cycles.id', '=', $request['cycle']);
 				}
@@ -110,4 +101,52 @@ class Question extends Eloquent {
 
 		return $questions;
 	}
+
+	public static function LoadQuestion($request = array())
+	{
+		$questions =  DB::table('questions')
+			->select(
+				DB::raw(
+					'questions.id as id_question,
+					questions.question as question,
+					question_categories.id as id_question_categories,
+					question_categories.name as question_categories,
+					regions.id as id_region,
+					cycles.id  as id_cycle,
+					cycles.name as cycle,
+					answers.id  as id_answer,
+					answers.answer as answer,
+					colors.color,
+					(SELECT SUM(questioners.amount) FROM questioners where questioners.answer_id = id_answer and questioners.region_id = id_region GROUP BY answer_id) AS amount'
+					)
+				)
+			->join('question_categories','question_categories.id','=','questions.question_category_id')
+			->join('cycles','cycles.id','=','questions.cycle_id')
+			->join('answers','answers.question_id','=','questions.id')
+			->join('colors','colors.id','=','answers.color_id')
+			->join('questioners','questioners.answer_id','=','questioners.id')
+			->join('regions','regions.id','=','questioners.region_id');
+
+			if (count($request)) {
+				if (!empty($request['region'])) {
+					$questions =  $questions->where('regions.name', '=', $request['region']);
+				}
+				if (!empty($request['category'])) {
+					$questions =  $questions->where('question_categories.id', '=', $request['category']);
+				}
+				if (!empty($request['question'])) {
+					$questions =  $questions->where('questions.id', '=', $request['question']);
+				}
+				if (!empty($request['cycle'])) {
+					$questions =  $questions->where('cycles.id', '=', $request['cycle']);
+				}
+			}
+
+			$questions =  $questions
+			->groupBy('question')
+			->get();
+
+		return $questions;
+	}
+
 }

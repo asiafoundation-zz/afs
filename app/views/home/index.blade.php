@@ -24,33 +24,25 @@
       <img src="{{ Theme::asset('img/dropshadow.png') }}">
       <div class="search-wrp">
         <div class="col-md-3">
-          <a href="#" id="category">
+          <a href="#" id="category" data-toggle="dropdown">
             <img src="{{ Theme::asset('img/add.png') }}" />
             <span id="select_category_label">{{ $default_question->question_categories }}</span>
           </a>
-          <div class="dropdown-path">
-              <ul class="dropdown-scroll">
-                @foreach ($question_categories as $question_category)
-                <li><a onclick='select_category({{ $question_category->id }})' id="select_category_id_{{ $question_category->id }}" >{{ $question_category->name }}</a></li>
-                @endforeach
-              </ul>
-            <span class="arrow-down"></span>
+          <div class="dropdown-path" id="div-filter-category">
+            @include('home/filter_category')
           </div>
         </div>
+
         <div class="col-md-6">
           <a href="#" id="question">
             <img src="{{ Theme::asset('img/add.png') }}" />
             <span id="select_question_label">{{$default_question->question}}</span>
           </a>
-          <div class="dropdown-path">
-            <ul class="dropdown-scroll">
-              @foreach ($question_lists as $question_list)
-                <li><a onclick='select_question({{ $question_list->id }})' id="select_question_id_{{ $question_list->id }}" >{{ $question_list->question }}</a></li>
-              @endforeach
-            </ul>
-            <span class="arrow-down"></span>
+          <div class="dropdown-path" id="div-filter-question">
+            @include('home/filter_question')
           </div>
         </div>
+
         <div class="col-md-3"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
       </div>
     </div>
@@ -98,7 +90,6 @@
         </div>
       </div>
     </div>
-    @include('home/chartjs')
   </section>
 
   <section class="compare-survey">

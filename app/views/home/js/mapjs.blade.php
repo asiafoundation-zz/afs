@@ -3,25 +3,13 @@
      * -----------------------------------------Map JS--------------------------
      */
     // Containing province id from click event
-    var FilterSelectDefault = {
-      region:null,
-      category:{{ $default_question->id_question_categories }},
-      question:{{ $default_question->id_question }},
-      cycle:{{ $default_question->id_cycle }}
-    };
     var FilterSelect = {
       region:null,
-      category:null,
-      question:null,
-      cycle:null
-    };
-
-    var cycleSelect = {
-      region:null,
       category:{{ $default_question->id_question_categories }},
       question:{{ $default_question->id_question }},
       cycle:{{ $default_question->id_cycle }}
     };
+
     // Removed last clicked area
     var lastClickedLayer;
     // Map Centering
@@ -88,17 +76,23 @@
       var layer = e.target;
 
       FilterSelect.region = null;
-      FilterSelect.region = layer.feature.properties.id_provinsi;
+      FilterSelect.region = layer.feature.properties.nm_provinsi;
       highlightFeature(e);
+      LoadDataHighligtArea(layer);
 
       lastClickedLayer = layer;
 
       console.log(FilterSelect);
     }
 
-    // Ajax Get to load new question lists 
-    function LoadAjax(e) {
-
+    // Load Queston and Categories based on Area
+    function LoadDataHighligtArea(e) {
+      $.get( "filter-select", { SelectedFilter:"area", region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+          .done(function( response ) {
+            var data = response.split(";");
+            $("#div-filter-category").html(data[0]);
+            $("#div-filter-question").html(data[1]);
+          });
     }
 
     function hoverHightlight(e){

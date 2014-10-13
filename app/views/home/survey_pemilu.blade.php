@@ -1,7 +1,7 @@
   <section class="survey-pemilu">
     <div class="container center">
       <div class="col-md-12">
-        <h1>{{ $survey }}</h1>
+        <h1>{{ $survey->name }}</h1>
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
         <p>{{ $default_question->question }}</p>
         <div class="chart">
@@ -17,5 +17,4 @@
         </div>
       </div>
     </div>
-    @include('home/chartjs')
   </section>

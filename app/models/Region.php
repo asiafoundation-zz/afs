@@ -85,4 +85,52 @@ class Region extends Eloquent {
 
 		return $regions;
 	}
+
+	public static function QuestionCategoryFilterRegion($request = array())
+	{
+		$regions =  DB::table('regions')
+			->select(
+				DB::raw(
+					'question_categories.id as id_question_categories,
+					question_categories.name as question_categories,
+					questions.id as id_question,
+					questions.question as question'
+					)
+				)
+			->join('questioners','questioners.region_id','=','regions.id')
+			->join('answers','answers.id','=','questioners.answer_id')
+			->join('questions','questions.id','=','answers.question_id')
+			->join('question_categories','questions.id','=','questions.id');
+
+			if (count($request)) {
+				if (isset($request['region'])) {
+					$regions =  $regions->where('regions.name', '=', $request['region']);
+				}
+			}
+
+			$regions =  $regions
+			->GroupBy('id_question_categories')
+			->GroupBy('id_question')
+			->get();
+
+		return $regions;
+	}
+	public static function SplitQuestionsCategory($question_categories)
+	{
+		$split_data = array();
+
+		if (count($question_categories)) {
+			foreach ($question_categories as $key_question_categories => $question_category) {
+				$split_data['question_lists'][$key_question_categories] = new stdClass;
+				$split_data['question_lists'][$key_question_categories]->id = $question_category->id_question;
+				$split_data['question_lists'][$key_question_categories]->question = $question_category->question;
+
+				$split_data['question_categories'][$question_category->id_question_categories] = new stdClass;
+				$split_data['question_categories'][$question_category->id_question_categories]->id = $question_category->id_question_categories;
+				$split_data['question_categories'][$question_category->id_question_categories]->name = $question_category->question_categories;
+
+			}
+		}
+		return $split_data;
+	}
 }
