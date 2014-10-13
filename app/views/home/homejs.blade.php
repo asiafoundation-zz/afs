@@ -3,10 +3,24 @@
      * -----------------------------------------Map JS--------------------------
      */
     // Containing province id from click event
-    var ClickMapRegion = {
+    var FilterSelectDefault = {
+      region:null,
+      category:{{ $default_question->id_question_categories }},
+      question:{{ $default_question->id_question }},
+      cycle:{{ $default_question->id_cycle }}
+    };
+    var FilterSelect = {
       region:null,
       category:null,
       question:null,
+      cycle:null
+    };
+
+    var cycleSelect = {
+      region:null,
+      category:{{ $default_question->id_question_categories }},
+      question:{{ $default_question->id_question }},
+      cycle:{{ $default_question->id_cycle }}
     };
     // Removed last clicked area
     var lastClickedLayer;
@@ -19,16 +33,16 @@
       id: 'examples.map-20v6611k'
     }).addTo(map);
 
-    // get color depending on population id_provinsi value
+    // get color depending on highest maximum vote
     function getColor(d) {
-      return d == 64 ? '#800026' :
-             d == 65  ? '#BD0026' :
-             d == 32  ? '#E31A1C' :
-             d == 15  ? '#FC4E2A' :
-             d == 75   ? '#FD8D3C' :
-             d == 31   ? '#FEB24C' :
-             d == 34   ? '#FED976' :
-                        'white';
+      var color = 'white';
+      @foreach ($regions as $key_region => $region)
+        if (d == '{{ $key_region }}')
+        {
+          color = '{{ $region["color"] }}';
+        }
+      @endforeach
+      return color;
     }
 
     function style(feature) {
@@ -38,7 +52,7 @@
         color: '#8E73F1',
         dashArray: '3',
         fillOpacity: 0.7,
-        fillColor: getColor(feature.properties.id_provinsi)
+        fillColor: getColor(feature.properties.nm_provinsi)
       };
     }
 
@@ -62,7 +76,7 @@
     var popupRegion;
 
     function resetHighlight(e) {
-      ClickMapRegion.region = null;
+      FilterSelect.region = null;
       geojson.resetStyle(e.target);
     }
 
@@ -73,13 +87,18 @@
 
       var layer = e.target;
 
-      ClickMapRegion.region = null;
-      ClickMapRegion.region = layer.feature.properties.id_provinsi;
+      FilterSelect.region = null;
+      FilterSelect.region = layer.feature.properties.id_provinsi;
       highlightFeature(e);
 
       lastClickedLayer = layer;
 
-      console.log(ClickMapRegion);
+      console.log(FilterSelect);
+    }
+
+    // Ajax Get to load new question lists 
+    function LoadAjax(e) {
+
     }
 
     function hoverHightlight(e){
@@ -117,156 +136,4 @@
     /*
      * -----------------------------------------End Map JS-----------------------------------------
      */
-    /*
-     * -----------------------------------------Filter Category JS--------------------------
-     */
-     function find_survey()
-     {
-        alert("region choose ="+ClickMapRegion.region+";category choose ="+ClickMapRegion.category+";question choose ="+ClickMapRegion.question);
-     }
-     function select_question(question_id)
-     {
-        ClickMapRegion.question = question_id;
-        var question_text = $("#select_question_id_"+question_id).text();
-        $("#select_question_label").html(question_text);
-     }
-     function select_category(category_id)
-     {
-        ClickMapRegion.category = category_id;
-        var category_text = $("#select_category_id_"+category_id).text();
-        $("#select_category_label").html(category_text);
-     }
-     function cycle_select(cycle_id)
-     {
-        ClickMapRegion.cycle = cycle_id;
-        var cycle_text = $("#cycle_select_"+cycle_id).text();
-        $("#select_cycle_label").html(cycle_text);
-     }
-     function clear_all_filter()
-     {
-      window.location.reload();
-     }
-    /*
-     * -----------------------------------------END Filter Category  JS--------------------------
-     */
-
-    $('.search-wrp > div > a').click(function(){
-      $(this).siblings('.dropdown-path').show();
-      return false;
-    })
-
-    $('body').click(function(){
-      $('.dropdown-path').hide();
-    })
-
-    $('.search-wrp > div > a#question').click(function(){
-      $('.search-wrp > div > a#category + .dropdown-path').hide();
-    })
-
-    $('.search-wrp > div > a#category').click(function(){
-      $('.search-wrp > div > a#question + .dropdown-path').hide();
-    })
-
-    $('.dropdown-scroll').alternateScroll({ 'vertical-bar-class': 'styled-v-bar', 'hide-bars': false });
-
-    window.onload = function () {
-
-        // PIE CHART
-
-        CanvasJS.addColorSet("greenShades",
-                [//colorSet Array
-                @foreach ($question as $answer)
-                  "{{ $answer->color }}",
-                @endforeach           
-                ]);
-
-        var chart = new CanvasJS.Chart("chartContainerPie",
-        {
-
-          colorSet: "greenShades",
-          
-          legend: {
-            verticalAlign: "bottom",
-            horizontalAlign: "center"
-          },
-          theme: "theme1",
-          data: [
-          {        
-            type: "doughnut",
-            indexLabelFontFamily: "DINNextLTPro-Regular",       
-            indexLabelFontSize: 0,
-            startAngle:0,
-            indexLabel: "{label} #percent%",
-            indexLabelFontColor: "#ffffff",       
-            indexLabelPlacement: "inside", 
-            toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
-            showInLegend: false,
-            indexLabel: "#percent%", 
-            dataPoints: [
-              // { y: 2, label: "Tidak percaya pemilu"},
-              // { y: 42, label: "Malas"},
-              // { y: 18, label: "Bingung dengan pilihan"},
-              // { y: 4, label: "Tidak tahu adanya pemilu"},
-              // { y: 34, label: "Berhalangan" }
-
-              @foreach ($question as $answer)
-                { y: {{ $answer->amount }}, label: "{{ $answer->answer }}"},
-              @endforeach   
-            ]
-          }
-          ]
-        });
-        chart.render();
-
-
-        // BAR CHART
-
-        CanvasJS.addColorSet("greenShades",
-                [//colorSet Array
-                @foreach ($question as $answer)
-                  "{{ $answer->color }}",
-                @endforeach                 
-                ]);
-
-        var chart = new CanvasJS.Chart("chartContainer", {
-
-            colorSet: "greenShades",
-            axisY: {
-                tickThickness: 0,
-                lineThickness: 0,
-                valueFormatString: " ",
-                gridThickness: 0                   
-            },
-            axisX: {
-                tickThickness: 0,
-                lineThickness: 0,
-                labelFontSize: 18,
-                labelFontColor: "gray"
-
-            },
-            data: [
-            {
-                indexLabelFontSize: 24,
-                labelFontFamily: "DINNextLTPro-Regular",
-                labelFontColor: "gray",
-                labelFontSize: 18,
-                indexLabelFontColor: "gray",
-                indexLabelFontFamily: "DINNextLTPro-Regular",
-                type: "bar",
-                dataPoints: [
-                    // { y: 2, label: "Tidak percaya pemilu", indexLabel: "2%" },
-                    // { y: 42, label: "Malas", indexLabel: "42%" },
-                    // { y: 18, label: "Bingung dengan pilihan", indexLabel: "18%" },
-                    // { y: 4, label: "Tidak tahu adanya pemilu", indexLabel: "4%" },                    
-                    // { y: 34, label: "Berhalangan", indexLabel: "34%" }
-                  @foreach ($question as $answer)
-                    { y: {{ $answer->amount }}, label: "{{ $answer->answer }}"},
-                  @endforeach   
-                ]
-            }
-            ]
-        });
-
-        chart.render();
-    }
   </script>

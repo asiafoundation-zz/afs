@@ -9,7 +9,7 @@
     <div class="border-top"></div>
     <div class="top-nav">
       <div class="right-side">
-        <p id="select_cycle_label">2013</p>
+        <p id="select_cycle_label">{{ $default_question->cycle }}</p>
         <div class="dropdown">
           <a href="#" data-toggle="dropdown" class="hamburger"></a>
           <ul class="dropdown-menu">
@@ -26,7 +26,7 @@
         <div class="col-md-3">
           <a href="#" id="category">
             <img src="{{ Theme::asset('img/add.png') }}" />
-            <span id="select_category_label">{{Lang::get('frontend.select_category')}}</span>
+            <span id="select_category_label">{{ $default_question->question_categories }}</span>
           </a>
           <div class="dropdown-path">
               <ul class="dropdown-scroll">
@@ -40,7 +40,7 @@
         <div class="col-md-6">
           <a href="#" id="question">
             <img src="{{ Theme::asset('img/add.png') }}" />
-            <span id="select_question_label">{{Lang::get('frontend.select_question')}}</span>
+            <span id="select_question_label">{{$default_question->question}}</span>
           </a>
           <div class="dropdown-path">
             <ul class="dropdown-scroll">
@@ -84,7 +84,7 @@
       <div class="col-md-12">
         <h1>{{ $survey->name }}</h1>
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
-        <p>{{ $default_question }}</p>
+        <p>{{ $default_question->question }}</p>
         <div class="chart">
           <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
           <div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>
@@ -98,6 +98,7 @@
         </div>
       </div>
     </div>
+    @include('home/chartjs')
   </section>
 
   <section class="compare-survey">
