@@ -29,6 +29,7 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 			Route::get('survey', 'SurveyController@getIndex');
 			Route::get('survey/cycle', 'SurveyController@getCycle');
 			Route::get('survey/upload', 'SurveyController@getUpload');
+			Route::post('survey/upload', 'SurveyController@postUpload');
 		});
 	});
 });
