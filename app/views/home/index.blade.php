@@ -8,6 +8,9 @@
     <a class="logo" href="#"><img src="{{ Theme::asset('img/logo.png') }}"></a>
     <div class="border-top"></div>
     <div class="top-nav">
+      <div class="left-side">
+        <p id="select_region_label"></p>
+      </div>
       <div class="right-side">
         <p id="select_cycle_label">{{ $default_question->cycle }}</p>
         <div class="dropdown">
@@ -76,7 +79,7 @@
       <div class="col-md-12">
         <h1>{{ $survey->name }}</h1>
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
-        <p>{{ $default_question->question }}</p>
+        <p id="question-name">{{ $default_question->question }}</p>
         <div class="chart">
           <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
           <div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>

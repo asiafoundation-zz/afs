@@ -8,9 +8,9 @@ class HomeController extends BaseController {
 		$default_question = reset($default_questions);
 
 		$data = array(
-			"survey" => Survey::find(1),
+			"survey" => Survey::first(),
 			"filters" => Code::getFilter(),
-			"cycles" => Cycles::select('id','name')->get(),
+			"cycles" => Cycle::select('id','name')->get(),
 			"question_categories" => QuestionCategory::select('id','name')->get(),
 			"question_lists" => Question::select('id','question')->get(),
 			"default_question" => $default_question,
@@ -19,10 +19,9 @@ class HomeController extends BaseController {
 		);
 
     if(Request::ajax()){
-      return View::make('home.survey_pemilu',$data);
+      return $data;
     }
-    else
-    {
+    else{
 			return View::make('home.index', $data);
     }
 	}
@@ -42,17 +41,19 @@ class HomeController extends BaseController {
 					break;
 
 				case 'survey':
-					$default_questions = Question::LoadQuestion(Input::get());
+					$default_questions = Input::get('region') != "null" ? Question::LoadQuestion(Input::get()) : Question::DefaultQuestion(Input::get());;
 					$default_question = reset($default_questions);
 
 					$load_filter = array();
 					$load_filter = array(
-						"survey" => Survey::find(1),
+						"survey" => Survey::first(),
 						"default_question" => $default_question,
-						"question" => $default_questions,
+						"question" => $default_questions
 					);
 
-					return View::make('home.survey_pemilu', $load_filter);
+					$return = count($default_questions) > 0 ? $load_filter : 0;
+
+					return $return;
 					break;
 
 				default:

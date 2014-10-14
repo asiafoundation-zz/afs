@@ -1,6 +1,9 @@
   <script type="text/javascript">
     window.onload = function () {
-      chartjs();
+      var color_set_data = color_set(null);
+      var data_points_data = data_points(null);
+
+      chartjs(color_set_data,data_points_data);
     }
 
      function find_survey()
@@ -8,9 +11,16 @@
         // Get cycles functions
         $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
           .done(function( data ) {
-            console.log(data);
-            $(".survey-pemilu").html(data);
-            chartjs();
+            if (data != false) {
+              var color_set_data = color_set(data.question);
+              var data_points_data = data_points(data.question);
+
+              chartjs(color_set_data,data_points_data);
+              $("#question-name").html(data.default_question.question);
+            }else
+            {
+              alert("{{Lang::get('frontend.empty_data')}}");
+            }
           },"html");
      }
 
@@ -21,18 +31,23 @@
 
         // Get cycles functions
         $.get( "home", {SelectedFilter:"survey",category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
-          .done(function( response ) {
+          .done(function( data ) {
+
+            var color_set_data = color_set(data.question);
+            var data_points_data = data_points(data.question);
+
+            chartjs(color_set_data,data_points_data);
+            $("#question-name").html(data.default_question.question);
+
             var cycle_text = $("#cycle_select_"+cycle_id).text();
             $("#cycle_select_"+cycle_id).html(cycle_text);
-            $(".survey-pemilu").html(response);
-            chartjs();
           },"html");
      }
 
-    function chartjs()
+    function chartjs(color_set,data_points)
     {
         // PIE CHART
-        CanvasJS.addColorSet("greenShades",color_set(null));
+        CanvasJS.addColorSet("greenShades",color_set);
 
         var chart = new CanvasJS.Chart("chartContainerPie",
         {
@@ -55,17 +70,16 @@
             toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
             showInLegend: false,
             indexLabel: "#percent%", 
-            dataPoints: data_points(null)
+            dataPoints: data_points
           }
           ]
         });
         chart.render();
 
-
         // BAR CHART
-        CanvasJS.addColorSet("greenShades",color_set(null));
+        CanvasJS.addColorSet("greenShades",color_set);
 
-        var chart = new CanvasJS.Chart("chartContainer", {
+        var chartbar = new CanvasJS.Chart("chartContainer", {
 
             colorSet: "greenShades",
             axisY: {
@@ -90,7 +104,10 @@
                 indexLabelFontColor: "gray",
                 indexLabelFontFamily: "DINNextLTPro-Regular",
                 type: "bar",
-                dataPoints: data_points(null)
+                click: function(e){
+                  e.dataPoint.answer_id
+                 },
+                dataPoints: data_points
                 // dataPoints: [
                 //     // { y: 2, label: "Tidak percaya pemilu", indexLabel: "2%" },
                 //     // { y: 42, label: "Malas", indexLabel: "42%" },
@@ -105,29 +122,56 @@
             ]
         });
 
-        chart.render();
+        chartbar.render();
+        chartbar.onclick = function(evt){
+            var activeBars = chartbar.getBarsAtEvent(evt);
+            console.log(activeBars);
+        };
     }
     function color_set(assign_color)
     {
-      return [//colorSet Array
-        @foreach ($question as $answer)
-          "{{ $answer->color }}",
-        @endforeach                 
-        ];
-      // var color_set = assign_color != null ? "aa":[//colorSet Array
-      //   @foreach ($question as $answer)
-      //     "{{ $answer->color }}",
-      //   @endforeach                 
-      //   ];
-      //   alert(color_set);
-      // return color_set;
+      if (assign_color != null) 
+      {
+        var color_set = [];
+        for (var key in assign_color) {
+          if (assign_color.hasOwnProperty(key)) {
+            color_set.push(assign_color[key]['color']);
+          }
+        }
+      }
+      else
+      {
+        var color_set = [//colorSet Array
+          @foreach ($question as $answer)
+            "{{ $answer->color }}",
+          @endforeach                 
+          ];
+      }
+
+      return color_set;
     }
-    function data_points()
+    function data_points(assign_answer)
     {
-      return [
-        @foreach ($question as $answer)
-          { y: {{ $answer->amount }}, label: "{{ $answer->answer }}"},
-        @endforeach   
-      ];
+      if (assign_answer != null) 
+      {
+        var data_points = [];
+        for (var key in assign_answer) {
+          if (assign_answer.hasOwnProperty(key)) {
+            data_points.push(
+              { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer']}
+              );
+          }
+        }
+      }
+      else
+      {
+        var data_points = [//colorSet Array
+          @foreach ($question as $answer)
+            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
+          @endforeach                  
+          ];
+      }
+
+      return data_points;
     }
 </script>

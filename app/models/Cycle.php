@@ -1,5 +1,5 @@
 <?php
-class Cycles extends Eloquent {
+class Cycle extends Eloquent {
 
 	/* Soft Delete */
 	protected $softDelete = true;

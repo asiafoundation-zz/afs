@@ -66,6 +66,7 @@
     function resetHighlight(e) {
       FilterSelect.region = null;
       geojson.resetStyle(e.target);
+      $("#select_region_label").html("");
     }
 
     function AddHighlight(e) {
@@ -81,8 +82,7 @@
       LoadDataHighligtArea(layer);
 
       lastClickedLayer = layer;
-
-      console.log(FilterSelect);
+      $("#select_region_label").html(layer.feature.properties.nm_provinsi);
     }
 
     // Load Queston and Categories based on Area

@@ -115,6 +115,7 @@ class Region extends Eloquent {
 
 		return $regions;
 	}
+
 	public static function SplitQuestionsCategory($question_categories)
 	{
 		$split_data = array();

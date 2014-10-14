@@ -86,7 +86,13 @@ class Question extends Eloquent {
 			->join('questioners','questioners.answer_id','=','questioners.id');
 
 			if (count($request)) {
-				if (isset($request['cycle'])) {
+				if (!empty($request['category'])) {
+					$questions =  $questions->where('question_categories.id', '=', $request['category']);
+				}
+				if (!empty($request['question'])) {
+					$questions =  $questions->where('questions.id', '=', $request['question']);
+				}
+				if (!empty($request['cycle'])) {
 					$questions =  $questions->where('cycles.id', '=', $request['cycle']);
 				}
 			}
@@ -125,11 +131,11 @@ class Question extends Eloquent {
 			->join('answers','answers.question_id','=','questions.id')
 			->join('colors','colors.id','=','answers.color_id')
 			->join('questioners','questioners.answer_id','=','questioners.id')
-			->join('regions','regions.id','=','questioners.region_id');
+			->leftJoin('regions','regions.id','=','questioners.region_id');
 
 			if (count($request)) {
-				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', $request['region']);
+				if ($request['region'] != "null") {
+					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
 				}
 				if (!empty($request['category'])) {
 					$questions =  $questions->where('question_categories.id', '=', $request['category']);
@@ -143,7 +149,7 @@ class Question extends Eloquent {
 			}
 
 			$questions =  $questions
-			->groupBy('question')
+			->groupBy('answer')
 			->get();
 
 		return $questions;
