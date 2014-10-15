@@ -26,7 +26,7 @@ class UpdateParticipantsAddRegionId extends Migration {
 	 */
 	public function down()
 	{
-    Schema::table('questioners', function(Blueprint $table)
+    Schema::table('participants', function(Blueprint $table)
     {
       $table->dropColumn('region_id');
       $table->integer('participant_id');
