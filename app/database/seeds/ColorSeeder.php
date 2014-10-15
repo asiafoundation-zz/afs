@@ -6,7 +6,9 @@ class ColorSeeder extends Seeder {
   {
     $colors = array(
       array("#ED3749"),
-      array("#F7CD23")
+      array("#F7CD23"),
+      array("#000"),
+      array("#0E35CF")
     );
 
     Color::truncate();

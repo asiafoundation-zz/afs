@@ -1,11 +1,11 @@
 <?php
-class FilterParticipant extends Eloquent {
+class QuestionParticipant extends Eloquent {
 
 	/* Soft Delete */
 	protected $softDelete = true;
 
 	/* Eloquent */
-	public $table = "filter_participants";
+	public $table = "question_participants";
 	public $timestamps = true;
 
 
@@ -13,7 +13,7 @@ class FilterParticipant extends Eloquent {
 	public static $disabledActions = array();
 
 	/* Route */
-	public $route = 'filter_participant';
+	public $route = 'question_participant';
 
 	/* Mass Assignment */
 	protected $fillable = array(

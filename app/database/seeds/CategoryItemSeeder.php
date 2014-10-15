@@ -5,8 +5,12 @@ class CategoryItemSeeder extends Seeder {
   public function run()
   {
     $category_items = array(
-      array("AGE","2"),
-      array("EDUCATION","3")
+      array("0-10","1"),
+      array("10-20","1"),
+      array("20-30","1"),
+      array("SD","2"),
+      array("SMP","2"),
+      array("SMA","2"),
     );
 
     CategoryItem::truncate();

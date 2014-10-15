@@ -52,6 +52,7 @@ class Region extends Eloquent {
 			->select(
 				'regions.id as region_id',
 				'answers.id as answer_id',
+				'answers.answer as answer_name',
 				'regions.name',
 				'colors.color as color',
 				'questioners.amount'
@@ -69,6 +70,7 @@ class Region extends Eloquent {
 				foreach ($region_queries as $key_region_queries => $region_query) {
 					$regions[$region_query->name]["region_id"] = $region_query->region_id;
 					$regions[$region_query->name]["name"] = $region_query->name;
+					$regions[$region_query->name]["answer_name"] = $region_query->answer_name;
 
 					if (empty($regions[$region_query->name]["amount"])) {
 						$regions[$region_query->name]["answer_id"] = $region_query->answer_id;
