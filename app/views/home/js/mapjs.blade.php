@@ -6,7 +6,7 @@
     var FilterSelect = {
       region:null,
       category:{{ $default_question->id_question_categories }},
-      question:{{ $default_question->id_question }},
+      question:"{{ $default_question->question }}",
       cycle:{{ $default_question->id_cycle }}
     };
 

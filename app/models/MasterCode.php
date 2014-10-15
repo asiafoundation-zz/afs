@@ -32,7 +32,7 @@ class MasterCode extends Eloquent {
 
 	/* Rules */
 	public static $rules = array(
-		'master_code' => 'required'
+		'master_code' => 'required',
 		'attribute_code' => 'required'
 		);
 
@@ -47,6 +47,7 @@ class MasterCode extends Eloquent {
 			'attribute_code' => array(
 			'type' => 'number',
 			'onIndex' => true
+			)
 		);
 
 		return compact('fields');

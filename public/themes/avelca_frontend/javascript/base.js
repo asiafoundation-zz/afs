@@ -3,8 +3,8 @@
      */
      function select_question(question_id)
      {
-        FilterSelect.question = question_id;
         var question_text = $("#select_question_id_"+question_id).text();
+        FilterSelect.question = question_text;
         $("#select_question_label").html(question_text);
      }
      function select_category(category_id)

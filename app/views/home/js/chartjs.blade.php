@@ -28,6 +28,7 @@
      {
         // Re declare object filter data 
         FilterSelect.cycle = cycle_id;
+        FilterSelect.question = $("#question-name").text();
 
         // Get cycles functions
         $.get( "home", {SelectedFilter:"survey",category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
@@ -40,7 +41,7 @@
             $("#question-name").html(data.default_question.question);
 
             var cycle_text = $("#cycle_select_"+cycle_id).text();
-            $("#cycle_select_"+cycle_id).html(cycle_text);
+            $("#select_cycle_label").html(cycle_text);
           },"html");
      }
 

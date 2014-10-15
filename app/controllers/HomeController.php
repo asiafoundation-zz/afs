@@ -4,15 +4,20 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
+		// Get Default Question
 		$default_questions = Question::DefaultQuestion(Input::get());
 		$default_question = reset($default_questions);
+
+		// Get catefory and question list
+		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
+		$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
 
 		$data = array(
 			"survey" => Survey::first(),
 			"filters" => Code::getFilter(),
 			"cycles" => Cycle::select('id','name')->get(),
-			"question_categories" => QuestionCategory::select('id','name')->get(),
-			"question_lists" => Question::select('id','question')->get(),
+			"question_categories" => $split_data['question_categories'],
+			"question_lists" => $split_data['question_lists'],
 			"default_question" => $default_question,
 			"question" => $default_questions,
 			"regions" => Region::RegionColor(),
@@ -31,8 +36,8 @@ class HomeController extends BaseController {
 		if(Request::ajax()){
 			switch (Input::get('SelectedFilter')) {
 				case 'area':
-					$question_categories_query = Region::QuestionCategoryFilterRegion(Input::get());
-					$split_data = Region::SplitQuestionsCategory($question_categories_query);
+					$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
+					$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
 
 					$filter_category = (string)View::make('home.filter_category',$split_data)->render();
 					$filter_question = (string)View::make('home.filter_question',$split_data)->render();

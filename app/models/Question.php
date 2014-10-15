@@ -72,6 +72,7 @@ class Question extends Eloquent {
 					question_categories.id as id_question_categories,
 					question_categories.name as question_categories,
 					cycles.id  as id_cycle,
+					cycles.id  as cycle_type,
 					cycles.name as cycle,
 					answers.id  as id_answer,
 					answers.answer as answer,
@@ -89,11 +90,11 @@ class Question extends Eloquent {
 				if (!empty($request['category'])) {
 					$questions =  $questions->where('question_categories.id', '=', $request['category']);
 				}
-				if (!empty($request['question'])) {
-					$questions =  $questions->where('questions.id', '=', $request['question']);
-				}
 				if (!empty($request['cycle'])) {
 					$questions =  $questions->where('cycles.id', '=', $request['cycle']);
+				}
+				if (!empty($request['question'])) {
+					$questions =  $questions->where('questions.question', '=', $request['question']);
 				}
 			}
 			else
@@ -119,6 +120,7 @@ class Question extends Eloquent {
 					question_categories.name as question_categories,
 					regions.id as id_region,
 					cycles.id  as id_cycle,
+					cycles.id  as cycle_type,
 					cycles.name as cycle,
 					answers.id  as id_answer,
 					answers.answer as answer,
@@ -130,7 +132,7 @@ class Question extends Eloquent {
 			->join('cycles','cycles.id','=','questions.cycle_id')
 			->join('answers','answers.question_id','=','questions.id')
 			->join('colors','colors.id','=','answers.color_id')
-			->join('questioners','questioners.answer_id','=','questioners.id')
+			->join('questioners','questioners.question_id','=','questions.id')
 			->leftJoin('regions','regions.id','=','questioners.region_id');
 
 			if (count($request)) {
@@ -141,7 +143,7 @@ class Question extends Eloquent {
 					$questions =  $questions->where('question_categories.id', '=', $request['category']);
 				}
 				if (!empty($request['question'])) {
-					$questions =  $questions->where('questions.id', '=', $request['question']);
+					$questions =  $questions->where('questions.question', '=', $request['question']);
 				}
 				if (!empty($request['cycle'])) {
 					$questions =  $questions->where('cycles.id', '=', $request['cycle']);
