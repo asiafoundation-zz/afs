@@ -15,7 +15,7 @@
      }
      function clear_all_filter()
      {
-      window.location.reload();
+        window.location.reload();
      }
     /*
      * -----------------------------------------END Filter Category  JS--------------------------

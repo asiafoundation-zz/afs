@@ -47,7 +47,9 @@ class Code extends Eloquent {
 	public static function getFilter()
 	{
 		$filter_queries = self::select(
+				'categories.id as category_id',
 				'categories.name',
+				'category_items.id as category_item_id',
 				'category_items.name as category_item_name')
 			->join('master_codes','master_codes.id','=','codes.master_code_id')
 			->join('categories','codes.id','=','categories.code_id')
@@ -58,10 +60,9 @@ class Code extends Eloquent {
 
 		$filters = array();
 		if (!$filter_queries->isEmpty()) {
-			$i=0;
 			foreach ($filter_queries as $key_filter_queries => $filter_query) {
-				$filters[$filter_query['name']][$i] = $filter_query['category_item_name'];
-				$i++;
+				$filters[$filter_query['name']][$filter_query['category_item_id']]['category_item_id'] = $filter_query['category_item_id'];
+				$filters[$filter_query['name']][$filter_query['category_item_id']]['category_item_name'] = $filter_query['category_item_name'];
 			}
 		}
 

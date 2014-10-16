@@ -17,24 +17,26 @@ class Participant extends Eloquent {
 
 	/* Mass Assignment */
 	protected $fillable = array(
-		'region_id'
+		'region_id',
+		'cycle_id'
 		);
 	protected $guarded = array('id');
 
 	/* Rules */
 	public static $rules = array(
-		'region_id' => 'required|numeric'
+		'region_id' => 'required|numeric',
+		'cycle_id' => 'required|numeric'
 		);
 
 	/* Database Structure */
 	public static function structure()
 	{
 		$fields = array(
-			'answer' => array(
-				'type' => 'text',
+			'region_id' => array(
+				'type' => 'number',
 				'onIndex' => true
 			),
-			'region_id' => array(
+			'cycle_id' => array(
 				'type' => 'number',
 				'onIndex' => true
 			),

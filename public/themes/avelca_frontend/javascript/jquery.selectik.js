@@ -82,7 +82,7 @@
 			this._clickHandler();
 
 			// give class to the selected element
-			$('li:eq('+(this.$selected.index())+')', this.$list).addClass('selected');
+			$('li:eq('+(this.$selected.index())+')', this.$list).addClass('selected_filter_option');
 
 			// give width to elements
 			this.$container.removeClass('done');
@@ -100,7 +100,8 @@
 			var html = '';
 			for (var i = 0; i < this.$collection.length; i++){
 				var $this = $(this.$collection[i]);
-				html += '<li class="'+ ($this.attr('disabled') === 'disabled' ? 'disabled' : '') +'" data-value="'+$this[0].value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
+
+				html += '<li class="'+ ($this.attr('disabled') === 'disabled' ? 'disabled' : '') +' id="filter_option_label_'+$this[0].value+'" onclick="filter_option()" data-value="'+$this[0].value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
 			 };
 			return html;
 		},
@@ -140,8 +141,8 @@
 			this.$scroll.css('height', this.heightScroll);
 
 			// if selected
-			if ($('.selected', this.$list).length > 0){
-				this._shift($('.selected', this.$list).index());
+			if ($('.selected_filter_option', this.$list).length > 0){
+				this._shift($('.selected_filter_option', this.$list).index());
 			}
 			if (this.config.customScroll){ this._scrollHandlers(); }
 		},
@@ -215,9 +216,9 @@
 		_shift: function(indexEl){
 			if (indexEl < 0 || indexEl == this.count) { return; }
 			this.topShift = (indexEl > this.count-this.config.maxItems) ? this.heightList-this.heightContainer : this.heightItem*indexEl;
-			$('.selected', this.$list).removeClass('selected');
+			$('.selected_filter_option', this.$list).removeClass('selected_filter_option');
 			var $selectedLi = $('li:nth-child('+(indexEl+1)+')', this.$list);
-			$selectedLi.addClass('selected');
+			$selectedLi.addClass('selected_filter_option');
 			if (openList && selectControl){
 				this.$text.text($selectedLi.data('value'));
 			}
@@ -322,12 +323,12 @@
 		_changeSelectedHtml: function(dataValue, textValue, index){
 			if (index > this.count || index == 0) { return false;}
 			this.change = true;
-			var $selected = $('.selected', this.$list);
-			$('option:eq('+$selected.index()+')', this.$cselect).prop('selected', false); //
-			$('option:eq('+(index-1)+')', this.$cselect).prop('selected', true);
+			var $selected = $('.selected_filter_option', this.$list);
+			$('option:eq('+$selected.index()+')', this.$cselect).prop('selected_filter_option', false); //
+			$('option:eq('+(index-1)+')', this.$cselect).prop('selected_filter_option', true);
 			this.$cselect.prop('value', dataValue).change();
-			$selected.removeClass('selected');
-			$('li:nth-child('+ index +')', this.$list).addClass('selected');
+			$selected.removeClass('selected_filter_option');
+			$('li:nth-child('+ index +')', this.$list).addClass('selected_filter_option');
 			this.$text.text(textValue);
 		},
 		// private method: show/hdie list

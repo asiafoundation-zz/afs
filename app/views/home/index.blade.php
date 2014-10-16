@@ -61,7 +61,7 @@
             <select class="select-control">
               <option>{{ $key_filters }}</option>
               @foreach ($filter as $filter_items)
-              <option>{{ $filter_items }}</option>
+              <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
               @endforeach
             </select><!-- Custom Select -->
           </li>

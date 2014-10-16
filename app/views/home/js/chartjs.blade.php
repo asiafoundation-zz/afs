@@ -1,11 +1,4 @@
   <script type="text/javascript">
-    window.onload = function () {
-      var color_set_data = color_set(null);
-      var data_points_data = data_points(null);
-
-      chartjs(color_set_data,data_points_data);
-    }
-
      function find_survey()
      {
         // Get cycles functions
@@ -31,7 +24,7 @@
         FilterSelect.question = $("#question-name").text();
 
         // Get cycles functions
-        $.get( "home", {SelectedFilter:"survey",category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+        $.get( "home", {SelectedFilter:"cycle",category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
           .done(function( data ) {
 
             var color_set_data = color_set(data.question);
@@ -42,6 +35,42 @@
 
             var cycle_text = $("#cycle_select_"+cycle_id).text();
             $("#select_cycle_label").html(cycle_text);
+
+            geojson = L.geoJson(statesData, {
+              style: style,
+              onEachFeature: onEachFeature,
+            }).addTo(map);
+              },"html");
+     }
+
+     function filter_option(category_id)
+     {
+        var option_filters = [];
+        $(".selected_filter_option").each(function(){
+          var data_value = $(this).attr("data-value");
+
+          if(data_value % 1 === 0){
+            option_filters += $(this).attr("data-value")+",";
+          }
+        });
+
+        // Get cycles functions
+        $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
+          .done(function( data ) {
+            if (data != false) {
+              var color_set_data = color_set(data.question);
+              var data_points_data = data_points(data.question);
+
+              chartjs(color_set_data,data_points_data);
+
+              geojson = L.geoJson(statesData, {
+                style: style,
+                onEachFeature: onEachFeature,
+              }).addTo(map);
+            }else
+            {
+              alert("{{Lang::get('frontend.empty_data')}}");
+            }
           },"html");
      }
 

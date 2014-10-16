@@ -61,12 +61,29 @@ class HomeController extends BaseController {
 					return $return;
 					break;
 
+				case 'filters':
+				
+					$default_questions = Question::FilterQuestion(Input::get());;
+					$default_question = reset($default_questions);
+
+					$load_filter = array();
+					$load_filter = array(
+						"survey" => Survey::first(),
+						"default_question" => $default_question,
+						"question" => $default_questions
+					);
+
+					$return = count($default_questions) > 0 ? $load_filter : 0;
+
+					return $return;
+					break;
+
 				default:
-					# code...
+					return 0;
 					break;
 			}
 		}
 
-		return $split_data;
+		return 0;
 	}
 }

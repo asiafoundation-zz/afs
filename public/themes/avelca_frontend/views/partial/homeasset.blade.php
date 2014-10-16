@@ -8,8 +8,15 @@
 
   <script type="text/javascript">
     $(document).ready(function () {
+      // Load Filter plugin
       $('.select-control').selectik({
         width: 200,
       });
+
+      // Load Chart Plugin
+      var color_set_data = color_set(null);
+      var data_points_data = data_points(null);
+
+      chartjs(color_set_data,data_points_data);
     });
   </script>
