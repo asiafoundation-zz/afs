@@ -43,6 +43,9 @@
 	{{ HTML::style(Theme::asset('css/style.css')) }}
 	{{ HTML::style(Theme::asset('css/theme.css')) }}
 
+	<!-- Custom css -->
+	{{ HTML::style(Theme::asset('css/multi-select.css')) }}	
+
 	<!-- Color Theme -->
 	<?php $theme_color = Setting::meta_data('general', 'theme_color')->value; ?>
 	<style type="text/css">
@@ -184,6 +187,10 @@
 
 	<!-- SB Admin Scripts - Include with every page -->
 	{{ HTML::script(Theme::asset('js/script.js')) }}
+
+	<!-- my custom javascript -->
+	{{ HTML::script(Theme::asset('js/custom.js')) }}
+	{{ HTML::script(Theme::asset('js/jquery.multi-select.js')) }}
 
 
 </body>
