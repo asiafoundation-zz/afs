@@ -7,6 +7,4 @@ class QuestionController extends AvelcaController {
 		parent::__construct($Model);
 	}
 	
-	
-	
 }

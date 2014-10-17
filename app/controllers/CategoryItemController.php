@@ -6,7 +6,5 @@ class CategoryItemController extends AvelcaController {
 	{
 		parent::__construct($Model);
 	}
-	
-	
-	
+		
 }
