@@ -19,16 +19,16 @@ class DashboardController extends BaseController {
 	}
 
 	
-			protected function owner()
-			{
-				return View::make("dashboard.owner");
-			}
-			
+	protected function owner()
+	{
+		return View::make("dashboard.owner");
+	}
+	
 
-			protected function admin()
-			{
-				return View::make("dashboard.admin");
-			}
+	protected function admin()
+	{
+		return View::make("dashboard.admin");
+	}
 			
 
 }
