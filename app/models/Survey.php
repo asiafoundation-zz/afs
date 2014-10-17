@@ -40,18 +40,18 @@ class Survey extends Eloquent {
 			'type' => 'text',
 			'onIndex' => true
 			),
-	'geojson_file' => array(
-				'type' => 'text',
-				'onIndex' => true
-			),
-	'baseline_file' => array(
-				'type' => 'text',
-				'onIndex' => true
-			),
-	'endline_file' => array(
-				'type' => 'text',
-				'onIndex' => true
-			)
+			'geojson_file' => array(
+						'type' => 'text',
+						'onIndex' => true
+					),
+			'baseline_file' => array(
+						'type' => 'text',
+						'onIndex' => true
+					),
+			'endline_file' => array(
+						'type' => 'text',
+						'onIndex' => true
+					)
 		);
 
 		return compact('fields');

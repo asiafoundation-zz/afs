@@ -7,6 +7,4 @@ class RegionController extends AvelcaController {
 		parent::__construct($Model);
 	}
 	
-	
-	
 }

@@ -25,14 +25,14 @@ class CategoryItem extends Eloquent {
 	/* Mass Assignment */
 	protected $fillable = array(
 		'name',
-'category_id'
+		'category_id'
 		);
 	protected $guarded = array('id');
 
 	/* Rules */
 	public static $rules = array(
 		'name' => 'required',
-'category_id' => 'required'
+		'category_id' => 'required'
 		);
 
 	/* Database Structure */
@@ -43,7 +43,7 @@ class CategoryItem extends Eloquent {
 			'type' => 'text',
 			'onIndex' => true
 		),
-'category_id' => array(
+			'category_id' => array(
 			'type' => 'number',
 			'onIndex' => true
 		)

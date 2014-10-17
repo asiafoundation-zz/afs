@@ -7,6 +7,4 @@ class ColorController extends AvelcaController {
 		parent::__construct($Model);
 	}
 	
-	
-	
 }
