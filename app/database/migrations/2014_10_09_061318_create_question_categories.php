@@ -37,7 +37,6 @@ class CreateQuestionCategories extends Migration {
 		Schema::drop('question_categories');
 		Schema::table('categories', function(Blueprint $table)
     {
-      $table->dropColumn('code_id');
       $table->integer('survey_id');
     });
 	}

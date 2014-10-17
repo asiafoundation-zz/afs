@@ -6,11 +6,12 @@ class QuestionSeeder extends Seeder {
   {
     $questions = array(
       array("0","Siapakah Calon Presiden Pilihan Anda","1","1","1"),
-      array("0","Siapakah Calon Presiden Pilihan Anda","1","2","0"),
       array("1","Siapakah Calon Wakil Presiden Pilihan Anda","1","1","0"),
-      array("1","Siapakah Calon Wakil Presiden Pilihan Anda","1","2","0"),
     );
-
+      // array("0","Siapakah Calon Presiden Pilihan Anda","1","1","1"),
+      // array("0","Siapakah Calon Presiden Pilihan Anda","1","2","0"),
+      // array("1","Siapakah Calon Wakil Presiden Pilihan Anda","1","1","0"),
+      // array("1","Siapakah Calon Wakil Presiden Pilihan Anda","1","2","0"),
     Question::truncate();
 
     foreach ($questions as $key => $question) {
