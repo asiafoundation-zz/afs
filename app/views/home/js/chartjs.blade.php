@@ -153,10 +153,10 @@
         });
 
         chartbar.render();
-        chartbar.onclick = function(evt){
-            var activeBars = chartbar.getBarsAtEvent(evt);
-            console.log(activeBars);
-        };
+        // chartbar.onclick = function(evt){
+        //     var activeBars = chartbar.getBarsAtEvent(evt);
+        //     console.log(activeBars);
+        // };
     }
     function color_set(assign_color)
     {

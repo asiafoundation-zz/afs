@@ -23,9 +23,9 @@ class HomeController extends BaseController {
 			"regions" => Region::RegionColor(),
 		);
 
-    if(Request::ajax()){
-      return $data;
-    }
+		if(Request::ajax()){
+			return $data;
+ 		}
     else{
 			return View::make('home.index', $data);
     }
@@ -64,14 +64,8 @@ class HomeController extends BaseController {
 				case 'filters':
 				
 					$default_questions = Question::FilterQuestion(Input::get());;
-					$default_question = reset($default_questions);
 
-					$load_filter = array();
-					$load_filter = array(
-						"survey" => Survey::first(),
-						"default_question" => $default_question,
-						"question" => $default_questions
-					);
+					$load_filter = array("question" => $default_questions);
 
 					$return = count($default_questions) > 0 ? $load_filter : 0;
 

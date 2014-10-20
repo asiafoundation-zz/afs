@@ -159,31 +159,6 @@ class Question extends Eloquent {
 
 	public static function FilterQuestion($request = array())
 	{
-
-		$option_filters = "";
-
-		if ($request['region'] != "null") {
-			$option_filters .=  ' and regions.name = "'.(string)$request['region'].'" ';
-		}
-		// if ($request['cycle'] != "null") {
-		// 	$option_filters .=  " and participants.cycle_id = ".$request['cycle']." ";
-		// }
-		if (count($request['option_filters'])) {
-			$option_filters_array = rtrim($request['option_filters'],",");
-			// $option_filters_array = explode(",", $option_filters_array);
-
-			// $option_filters .=  "and (";
-			// foreach ($option_filters_array as $key => $option_filters_array_single) {
-			// 	if ($key == count($option_filters_array) - 1) {
-			// 		$option_filters .= " and ";
-			// 	}
-			// 	$option_filters .= "filter_participants.category_item_id = ".$option_filters_array_single;
-			// }
-			// $option_filters .=  ") ";
-
-			$option_filters .= " and filter_participants.category_item_id IN (".(string)$option_filters_array.") ";
-		}
-
 		$questions =  DB::table('questions')
 			->select(
 				DB::raw(
@@ -193,15 +168,17 @@ class Question extends Eloquent {
 					question_categories.name as question_categories,
 					answers.id  as id_answer,
 					answers.answer as answer,
+					participants.id as participant_id,
 					colors.color,
-					(SELECT COUNT(participants.id) FROM participants inner join question_participants on question_participants.participant_id = participants.id inner join regions on participants.region_id = regions.id inner join filter_participants on filter_participants.participant_id = participants.id	where question_participants.answer_id = id_answer 
-						'.$option_filters.'
-						GROUP BY answer_id) AS amount'
+					0 AS amount'
 					)
 				)
 			->join('question_categories','questions.question_category_id','=','question_categories.id')
 			->join('answers','answers.question_id','=','questions.id')
 			->join('colors','answers.color_id','=','colors.id')
+			->join('question_participants','question_participants.participant_id','=','answers.id')
+			->join('participants','participants.id','=','question_participants.participant_id')
+			->join('filter_participants','filter_participants.participant_id','=','participants.id')
 			;
 
 			if (count($request)) {
@@ -216,10 +193,11 @@ class Question extends Eloquent {
 			$questions =  $questions
 			->groupBy('answer')
 			->get();
-print '<pre>';
-print_r($questions);
-print '<pre>';
-exit();
+
+			foreach ($questions as $key_questions => $question) {
+				$question->amount = FilterParticipant::FilterOptions($question->id_answer,$request);
+			}
+
 		return $questions;
 	}
 }
