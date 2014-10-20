@@ -13,6 +13,15 @@ class QuestionParticipantSeeder extends Seeder {
       array("6","1"),
       array("7","2"),
       array("8","1"),
+
+      array("9","1"),
+      array("10","2"),
+      array("11","2"),
+      array("12","1"),
+      array("13","2"),
+      array("14","1"),
+      array("15","1"),
+      array("16","1"),
     );
 
     QuestionParticipant::truncate();

@@ -13,6 +13,14 @@ class ParticipantSeeder extends Seeder {
       array("2","1"),
       array("2","1"),
       array("2","1"),
+      array("1","2"),
+      array("1","2"),
+      array("1","2"),
+      array("1","2"),
+      array("2","2"),
+      array("2","2"),
+      array("2","2"),
+      array("2","2"),
     );
 
     Participant::truncate();

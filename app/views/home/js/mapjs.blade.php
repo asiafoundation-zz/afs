@@ -4,10 +4,15 @@
      */
     // Containing province id from click event
     var FilterSelect = {
-      region:null,
+      region:"",
       category:{{ $default_question->id_question_categories }},
-      question:"{{ $default_question->question }}",
-      cycle:{{ $default_question->id_cycle }}
+      question: {{ $default_question->id_question }},
+      cycle:{{ $default_question->id_cycle }},
+      answers:[
+        @foreach ($question as $answer)
+          {{$answer->id_answer }},
+        @endforeach
+        ] 
     };
 
     // Removed last clicked area
@@ -64,7 +69,7 @@
     var popupRegion;
 
     function resetHighlight(e) {
-      FilterSelect.region = null;
+      FilterSelect.region = "";
       geojson.resetStyle(e.target);
       $("#select_region_label").html("");
     }
@@ -76,7 +81,7 @@
 
       var layer = e.target;
 
-      FilterSelect.region = null;
+      FilterSelect.region = "";
       FilterSelect.region = layer.feature.properties.nm_provinsi;
       highlightFeature(e);
       LoadDataHighligtArea(layer);

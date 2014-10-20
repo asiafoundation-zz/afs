@@ -23,18 +23,22 @@ class HomeController extends BaseController {
 			"regions" => Region::RegionColor(),
 		);
 
-		if(Request::ajax()){
-			return $data;
- 		}
-    else{
-			return View::make('home.index', $data);
-    }
+		return View::make('home.index', $data);
 	}
 
 	public function filterSelect()
 	{
 		if(Request::ajax()){
 			switch (Input::get('SelectedFilter')) {
+				case 'cycle':
+				
+					$default_questions = Question::DefaultQuestion(Input::get());
+					$load_filter = array("question" => $default_questions);
+					$return = count($default_questions) > 0 ? $load_filter : 0;
+
+					return $return;
+					break;
+
 				case 'area':
 					$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
 					$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
@@ -46,7 +50,7 @@ class HomeController extends BaseController {
 					break;
 
 				case 'survey':
-					$default_questions = Input::get('region') != "null" ? Question::LoadQuestion(Input::get()) : Question::DefaultQuestion(Input::get());;
+					$default_questions = Input::get('region') != "null" ? Question::DynamicQuestion(Input::get()) : Question::DefaultQuestion(Input::get());;
 					$default_question = reset($default_questions);
 
 					$load_filter = array();
@@ -62,11 +66,16 @@ class HomeController extends BaseController {
 					break;
 
 				case 'filters':
-				
 					$default_questions = Question::FilterQuestion(Input::get());;
-
 					$load_filter = array("question" => $default_questions);
+					$return = count($default_questions) > 0 ? $load_filter : 0;
 
+					return $return;
+					break;
+
+				case 'compare_cycle':
+					$default_questions = Question::CompareCycle(Input::get());
+					$load_filter = array("question" => $default_questions);
 					$return = count($default_questions) > 0 ? $load_filter : 0;
 
 					return $return;

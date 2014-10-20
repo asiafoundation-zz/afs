@@ -71,40 +71,59 @@ class Question extends Eloquent {
 					questions.question as question,
 					question_categories.id as id_question_categories,
 					question_categories.name as question_categories,
+					answers.id  as id_answer,
+					answers.answer as answer,
+					participants.id as participant_id,
+					colors.color,
 					cycles.id  as id_cycle,
 					cycles.id  as cycle_type,
 					cycles.name as cycle,
-					answers.id  as id_answer,
-					answers.answer as answer,
-					colors.color,
-					(SELECT SUM(questioners.amount) FROM questioners where questioners.answer_id = id_answer GROUP BY answer_id) AS amount'
+					0 AS amount,
+					0 AS indexlabel'
 					)
 				)
-			->join('question_categories','question_categories.id','=','questions.question_category_id')
-			->join('cycles','cycles.id','=','questions.cycle_id')
+			->join('question_categories','questions.question_category_id','=','question_categories.id')
 			->join('answers','answers.question_id','=','questions.id')
-			->join('colors','colors.id','=','answers.color_id')
-			->join('questioners','questioners.answer_id','=','questioners.id');
+			->join('colors','answers.color_id','=','colors.id')
+			->join('question_participants','question_participants.participant_id','=','answers.id')
+			->join('participants','participants.id','=','question_participants.participant_id')
+			->join('cycles','cycles.id','=','participants.cycle_id')
+			->join('filter_participants','filter_participants.participant_id','=','participants.id')
+			;
 
-			if (count($request)) {
+			if (!empty($request['cycle'])) {
+				if (!empty($request['region'])) {
+					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+				}
 				if (!empty($request['category'])) {
 					$questions =  $questions->where('question_categories.id', '=', $request['category']);
 				}
-				if (!empty($request['cycle'])) {
-					$questions =  $questions->where('cycles.id', '=', $request['cycle']);
-				}
 				if (!empty($request['question'])) {
-					$questions =  $questions->where('questions.question', '=', $request['question']);
+					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
+
 			}
-			else
-			{
-				$questions =  $questions->where('questions.is_default', '=', 1);
+			else{
+				$questions = $questions->where('cycles.cycle_type', '=',0)
+					->where('questions.is_default', '=', 1);
 			}
 
-			$questions =  $questions
-			->groupBy('answer')
+			$questions = $questions->groupBy('answer')
 			->get();
+
+			// Count question amount
+			if (count($questions)) {
+				$total_amount = 0;
+				foreach ($questions as $key_questions => $question) {
+					$question->amount = FilterParticipant::DefaultFilter($question->id_answer,$request);
+					$total_amount += $question->amount;
+				}
+
+				// Count index label percentage
+				foreach ($questions as $key_questions => $question) {
+					$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
+				}
+			}
 
 		return $questions;
 	}
@@ -118,41 +137,54 @@ class Question extends Eloquent {
 					questions.question as question,
 					question_categories.id as id_question_categories,
 					question_categories.name as question_categories,
-					regions.id as id_region,
+					answers.id  as id_answer,
+					answers.answer as answer,
+					participants.id as participant_id,
+					colors.color,
 					cycles.id  as id_cycle,
 					cycles.id  as cycle_type,
 					cycles.name as cycle,
-					answers.id  as id_answer,
-					answers.answer as answer,
-					colors.color,
-					(SELECT SUM(questioners.amount) FROM questioners where questioners.answer_id = id_answer and questioners.region_id = id_region GROUP BY answer_id) AS amount'
+					0 AS amount,
+					0 AS indexlabel'
 					)
 				)
-			->join('question_categories','question_categories.id','=','questions.question_category_id')
-			->join('cycles','cycles.id','=','questions.cycle_id')
-			->join('answers','answers.question_id','=','questions.id')
-			->join('colors','colors.id','=','answers.color_id')
-			->join('questioners','questioners.question_id','=','questions.id')
-			->leftJoin('regions','regions.id','=','questioners.region_id');
+				->join('question_categories','questions.question_category_id','=','question_categories.id')
+				->join('answers','answers.question_id','=','questions.id')
+				->join('colors','answers.color_id','=','colors.id')
+				->join('question_participants','question_participants.participant_id','=','answers.id')
+				->join('participants','participants.id','=','question_participants.participant_id')
+				->join('regions','regions.id','=','participants.region_id')
+				->join('cycles','cycles.id','=','participants.cycle_id')
+				->join('filter_participants','filter_participants.participant_id','=','participants.id')
+				;
 
 			if (count($request)) {
-				if ($request['region'] != "null") {
+				if (!empty($request['region'])) {
 					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
 				}
 				if (!empty($request['category'])) {
 					$questions =  $questions->where('question_categories.id', '=', $request['category']);
 				}
 				if (!empty($request['question'])) {
-					$questions =  $questions->where('questions.question', '=', $request['question']);
-				}
-				if (!empty($request['cycle'])) {
-					$questions =  $questions->where('cycles.id', '=', $request['cycle']);
+					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
 			}
 
 			$questions =  $questions
-			->groupBy('answer')
-			->get();
+				->groupBy('answer')
+				->get();
+
+		// Count question amount
+		$total_amount = 0;
+		foreach ($questions as $key_questions => $question) {
+			$question->amount = FilterParticipant::DefaultFilter($question->id_answer);
+			$total_amount += $question->amount;
+		}
+
+		// Count index label percentage
+		foreach ($questions as $key_questions => $question) {
+			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
+		}
 
 		return $questions;
 	}
@@ -170,7 +202,8 @@ class Question extends Eloquent {
 					answers.answer as answer,
 					participants.id as participant_id,
 					colors.color,
-					0 AS amount'
+					0 AS amount,
+					0 AS indexlabel'
 					)
 				)
 			->join('question_categories','questions.question_category_id','=','question_categories.id')
@@ -186,7 +219,7 @@ class Question extends Eloquent {
 					$questions =  $questions->where('question_categories.id', '=', $request['category']);
 				}
 				if (!empty($request['question'])) {
-					$questions =  $questions->where('questions.question', '=', $request['question']);
+					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
 			}
 
@@ -194,10 +227,98 @@ class Question extends Eloquent {
 			->groupBy('answer')
 			->get();
 
+			// Count question amount
+			$total_amount = 0;
 			foreach ($questions as $key_questions => $question) {
 				$question->amount = FilterParticipant::FilterOptions($question->id_answer,$request);
+				$total_amount += $question->amount;
+			}
+
+			// Count index label percentage
+			foreach ($questions as $key_questions => $question) {
+				$question->indexlabel = round(!$total_amount ? 0 : ($question->amount / $total_amount) * 100,2);
 			}
 
 		return $questions;
+	}
+
+	public static function CompareCycle($request = array())
+	{
+
+		$questions =  DB::table('questions')
+			->select(
+				DB::raw(
+					'questions.id as id_question,
+					questions.question as question,
+					question_categories.id as id_question_categories,
+					question_categories.name as question_categories,
+					answers.id  as id_answer,
+					answers.answer as answer,
+					participants.id as participant_id,
+					colors.color,
+					cycles.id  as id_cycle,
+					cycles.cycle_type  as cycle_type,
+					cycles.name as cycle,
+					0 AS amount,
+					0 AS indexlabel'
+					)
+				)
+				->join('question_categories','questions.question_category_id','=','question_categories.id')
+				->join('answers','answers.question_id','=','questions.id')
+				->join('colors','answers.color_id','=','colors.id')
+				->join('question_participants','question_participants.participant_id','=','answers.id')
+				->join('participants','participants.id','=','question_participants.participant_id')
+				->join('regions','regions.id','=','participants.region_id')
+				->join('cycles','cycles.id','=','participants.cycle_id')
+				->join('filter_participants','filter_participants.participant_id','=','participants.id')
+				;
+
+			if (count($request)) {
+				if (!empty($request['region'])) {
+					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+				}
+				if (!empty($request['category'])) {
+					$questions =  $questions->where('question_categories.id', '=', $request['category']);
+				}
+				if (!empty($request['question'])) {
+					$questions =  $questions->where('questions.id', '=', $request['question']);
+				}
+			}
+
+			$questions =  $questions
+				->groupBy('answer')
+				->get();
+
+		if (count($questions)) {
+			// Count question amount
+			$compare_questions = array();
+
+			foreach ($questions as $key_question => $question) {
+
+				$compare_questions['baseline'][$question->answer] = new stdClass();
+				$compare_questions['baseline'][$question->answer]->answer_id = $question->id_answer;
+				$compare_questions['baseline'][$question->answer]->cycle = $question->cycle;
+				$compare_questions['baseline'][$question->answer]->answer = $question->answer;
+				$compare_questions['baseline'][$question->answer]->color = $question->color;
+				list($compare_questions['baseline'][$question->answer]->amount,
+					$compare_questions['baseline'][$question->answer]->cycle,
+					$compare_questions['baseline'][$question->answer]->cycle_type
+					)
+					 = FilterParticipant::CompareQuestion($question->id_answer,0);
+
+				$compare_questions['endline'][$question->answer] = new stdClass();
+				$compare_questions['endline'][$question->answer]->answer_id = $question->id_answer;
+				$compare_questions['endline'][$question->answer]->cycle = $question->cycle;
+				$compare_questions['endline'][$question->answer]->answer = $question->answer;
+				$compare_questions['endline'][$question->answer]->color = $question->color;
+				list($compare_questions['baseline'][$question->answer]->amount,
+					$compare_questions['endline'][$question->answer]->cycle,
+					$compare_questions['endline'][$question->answer]->cycle_type
+					)
+					 = FilterParticipant::CompareQuestion($question->id_answer,1);
+			}
+		}
+
+		return $compare_questions;
 	}
 }
