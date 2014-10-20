@@ -66,7 +66,20 @@ class SurveyController extends AvelcaController {
 	}
 
 	public function postUpload(){
-		return Input::file('file')->getClientOriginalName();
+		
+		$filename = Input::file('file')->getClientOriginalName();
+
+		if(!file_exists($filename))
+		{
+			$uploaded = Input::file('file')->move('uploads/', $filename);	
+		}
+		
+	    $inputFileName = 'uploads/'.$filename;
+
+	    $results = array();
+	    $results = Excel::selectSheetsByIndex(0)->load($inputFileName, function($reader){})->get()->toArray();
+
+	    return Response::json($results);
 	}
 
 	public function getEndline()
@@ -164,7 +177,7 @@ class SurveyController extends AvelcaController {
 						}
 						$counter++;	
 					}
-				}
+				}	
 
 				if(strpos($dataval,'Code') !== false)
 				{
