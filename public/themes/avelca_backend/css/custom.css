@@ -1,0 +1,11 @@
+.ms-container{
+	width: 800px !important;
+}
+
+.ms-container .ms-selectable, .ms-container .ms-selection{
+	width : 48% !important;
+}
+
+.ms-container .ms-list{
+	height: 500px !important;
+}
