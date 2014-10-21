@@ -22,7 +22,10 @@ class HomeController extends BaseController {
 			"question" => $default_questions,
 			"regions" => Region::RegionColor(),
 		);
-
+print '<pre>';
+print_r($data);
+print '<pre>';
+exit();
 		return View::make('home.index', $data);
 	}
 

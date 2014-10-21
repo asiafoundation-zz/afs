@@ -20,7 +20,8 @@ class Answer extends Eloquent {
 	protected $fillable = array(
 		'answer',
 		'question_id',
-		'color_id'
+		'color_id',
+		'cycle_id'
 		);
 	protected $guarded = array('id');
 
@@ -28,7 +29,8 @@ class Answer extends Eloquent {
 	public static $rules = array(
 		'answer' => 'required',
 		'question_id' => 'required|numeric',
-		'color_id' => 'required|numeric'
+		'color_id' => 'required|numeric',
+		'cycle_id' => 'required|numeric'
 		);
 
 	/* Database Structure */
@@ -44,6 +46,10 @@ class Answer extends Eloquent {
 					'onIndex' => true
 			),
 			'color_id' => array(
+						'type' => 'number',
+						'onIndex' => true
+			),
+			'cycle_id' => array(
 						'type' => 'number',
 						'onIndex' => true
 			)

@@ -19,7 +19,6 @@ class Question extends Eloquent {
 		'code',
 		'question',
 		'question_category_id',
-		'cycle_id',
 		'is_default'
 		);
 	protected $guarded = array('id');
@@ -29,7 +28,6 @@ class Question extends Eloquent {
 		'code' => 'required',
 		'question' => 'required',
 		'question_category_id' => 'required',
-		'cycle_id' => 'required',
 		'is_default' => 'required'
 		);
 
@@ -48,10 +46,6 @@ class Question extends Eloquent {
 			'question_category_id' => array(
 					'type' => 'number',
 					'onIndex' => true
-			),
-			'cycle_id' => array(
-				'type' => 'number',
-				'onIndex' => true
 			),
 			'is_default' => array(
 				'type' => 'number',
@@ -73,10 +67,9 @@ class Question extends Eloquent {
 					question_categories.name as question_categories,
 					answers.id  as id_answer,
 					answers.answer as answer,
-					participants.id as participant_id,
 					colors.color,
 					cycles.id  as id_cycle,
-					cycles.id  as cycle_type,
+					cycles.cycle_type  as cycle_type,
 					cycles.name as cycle,
 					0 AS amount,
 					0 AS indexlabel'
@@ -84,38 +77,32 @@ class Question extends Eloquent {
 				)
 			->join('question_categories','questions.question_category_id','=','question_categories.id')
 			->join('answers','answers.question_id','=','questions.id')
+			->join('cycles','cycles.id','=','answers.cycle_id')
 			->join('colors','answers.color_id','=','colors.id')
-			->join('question_participants','question_participants.participant_id','=','answers.id')
-			->join('participants','participants.id','=','question_participants.participant_id')
-			->join('cycles','cycles.id','=','participants.cycle_id')
-			->join('filter_participants','filter_participants.participant_id','=','participants.id')
-			;
+			->where('questions.is_default', '=', 1);
 
 			if (!empty($request['cycle'])) {
-				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
-				}
 				if (!empty($request['category'])) {
 					$questions =  $questions->where('question_categories.id', '=', $request['category']);
 				}
 				if (!empty($request['question'])) {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
-
 			}
 			else{
 				$questions = $questions->where('cycles.cycle_type', '=',0)
 					->where('questions.is_default', '=', 1);
 			}
 
-			$questions = $questions->groupBy('answer')
+			$questions = $questions
+			->groupBy('answer')
 			->get();
 
 			// Count question amount
 			if (count($questions)) {
 				$total_amount = 0;
 				foreach ($questions as $key_questions => $question) {
-					$question->amount = FilterParticipant::DefaultFilter($question->id_answer,$request);
+					$question->amount = QuestionParticipant::DefaultQuestion($question->id_answer,$request);
 					$total_amount += $question->amount;
 				}
 

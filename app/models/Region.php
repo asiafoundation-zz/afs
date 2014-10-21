@@ -50,18 +50,24 @@ class Region extends Eloquent {
 	{
 		$region_queries =  DB::table('regions')
 			->select(
-				'regions.id as region_id',
-				'answers.id as answer_id',
-				'answers.answer as answer_name',
-				'regions.name',
-				'colors.color as color',
-				'questioners.amount'
+				DB::raw(
+					'regions.id as region_id,
+					answers.id as id_answer,
+					answers.answer as answer_name,
+					regions.name,
+					colors.color as color,
+					0 AS amount'
+					)
 			)
-			->join('questioners','questioners.region_id','=','regions.id')
-			->join('answers','answers.id','=','questioners.answer_id')
+			->join('question_participants','question_participants.region_id','=','regions.id')
+			->join('answers','answers.id','=','question_participants.answer_id')
 			->join('colors','colors.id','=','answers.color_id')
 			->get();
 
+print '<pre>';
+print_r($region_queries);
+print '<pre>';
+exit();
 			/*
 			 * Get regions with maximum values votes
 			 */

@@ -56,8 +56,6 @@ class QuestionCategory extends Eloquent {
 					)
 				)
 			->join('questions','questions.question_category_id','=','question_categories.id')
-			->join('cycles','cycles.id','=','questions.cycle_id')
-			->where('cycles.cycle_type','=',0)
 			->GroupBy('id_question_categories')
 			->GroupBy('id_question')
 			->get();
