@@ -63,11 +63,30 @@ class QuestionParticipant extends Eloquent {
 			->join('participants','participants.id','=','question_participants.participant_id')
 			->join('regions','regions.id','=','question_participants.region_id')
 			->join('filter_participants','filter_participants.participant_id','=','participants.id')
-			->where('question_participants.answer_id', '=',2)
+			->where('question_participants.answer_id', '=',$answer_id)
 			->GroupBy('id_participant')
 			->get();
 
 				$data_result = count($filter_queries);
+
+			return $data_result;
+	}
+	public static function CompareQuestion($answer_id,$cycle_type)
+	{
+		$filter_queries =  DB::table('question_participants')
+			->select(
+				DB::raw(
+					'participants.id as id_participant'
+					)
+				)
+			->join('participants','participants.id','=','question_participants.participant_id')
+			->join('regions','regions.id','=','question_participants.region_id')
+			->join('filter_participants','filter_participants.participant_id','=','participants.id')
+			->where('question_participants.answer_id', '=',$answer_id)
+			->GroupBy('id_participant')
+			->get();
+
+			$data_result = count($filter_queries);
 
 			return $data_result;
 	}
