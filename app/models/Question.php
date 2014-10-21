@@ -244,7 +244,6 @@ class Question extends Eloquent {
 
 	public static function CompareCycle($request = array())
 	{
-
 		$questions =  DB::table('questions')
 			->select(
 				DB::raw(
@@ -293,32 +292,92 @@ class Question extends Eloquent {
 			// Count question amount
 			$compare_questions = array();
 
+			$i = 0;
 			foreach ($questions as $key_question => $question) {
 
-				$compare_questions['baseline'][$question->answer] = new stdClass();
-				$compare_questions['baseline'][$question->answer]->answer_id = $question->id_answer;
-				$compare_questions['baseline'][$question->answer]->cycle = $question->cycle;
-				$compare_questions['baseline'][$question->answer]->answer = $question->answer;
-				$compare_questions['baseline'][$question->answer]->color = $question->color;
-				list($compare_questions['baseline'][$question->answer]->amount,
-					$compare_questions['baseline'][$question->answer]->cycle,
-					$compare_questions['baseline'][$question->answer]->cycle_type
+				$compare_questions[$i] = new stdClass();
+				$compare_questions[$i]->answer_id = $question->id_answer;
+				$compare_questions[$i]->cycle = $question->cycle;
+				$compare_questions[$i]->answer = $question->answer;
+				$compare_questions[$i]->color = $question->color;
+				list($compare_questions[$i]->amount,
+					$compare_questions[$i]->cycle,
+					$compare_questions[$i]->cycle_type
 					)
 					 = FilterParticipant::CompareQuestion($question->id_answer,0);
 
-				$compare_questions['endline'][$question->answer] = new stdClass();
-				$compare_questions['endline'][$question->answer]->answer_id = $question->id_answer;
-				$compare_questions['endline'][$question->answer]->cycle = $question->cycle;
-				$compare_questions['endline'][$question->answer]->answer = $question->answer;
-				$compare_questions['endline'][$question->answer]->color = $question->color;
-				list($compare_questions['baseline'][$question->answer]->amount,
-					$compare_questions['endline'][$question->answer]->cycle,
-					$compare_questions['endline'][$question->answer]->cycle_type
+					 $i++;
+				$compare_questions[$i] = new stdClass();
+				$compare_questions[$i]->answer_id = $question->id_answer;
+				$compare_questions[$i]->cycle = $question->cycle;
+				$compare_questions[$i]->answer = $question->answer;
+				$compare_questions[$i]->color = $question->color;
+				list($compare_questions[$i]->amount,
+					$compare_questions[$i]->cycle,
+					$compare_questions[$i]->cycle_type
 					)
 					 = FilterParticipant::CompareQuestion($question->id_answer,1);
+					 $i++;
 			}
 		}
 
 		return $compare_questions;
+	}
+
+	public static function NextQuestion($request = array())
+	{
+		if (($request['FilterMove'] == "backward")) {
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(id) from questions where questions.id > ".$request['question'].")")->first();
+			$request['question'] = $request['question']->id;
+		}
+		if (($request['FilterMove'] == "forward")) {
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(id) from questions where questions.id > ".$request['question'].")")->first();
+			$request['question'] = $request['question']->id;
+		}
+
+		$questions =  DB::table('questions')
+			->select(
+				DB::raw(
+					'questions.id as id_question,
+					questions.question as question,
+					question_categories.id as id_question_categories,
+					question_categories.name as question_categories,
+					answers.id  as id_answer,
+					answers.answer as answer,
+					participants.id as participant_id,
+					colors.color,
+					cycles.id  as id_cycle,
+					cycles.cycle_type  as cycle_type,
+					cycles.name as cycle,
+					0 AS amount,
+					0 AS indexlabel'
+					)
+				)
+				->join('question_categories','questions.question_category_id','=','question_categories.id')
+				->join('answers','answers.question_id','=','questions.id')
+				->join('colors','answers.color_id','=','colors.id')
+				->join('question_participants','question_participants.participant_id','=','answers.id')
+				->join('participants','participants.id','=','question_participants.participant_id')
+				->join('regions','regions.id','=','participants.region_id')
+				->join('cycles','cycles.id','=','participants.cycle_id')
+				->join('filter_participants','filter_participants.participant_id','=','participants.id')
+				;
+
+			if (count($request)) {
+				if (!empty($request['region'])) {
+					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+				}
+				if (!empty($request['category'])) {
+					$questions =  $questions->where('question_categories.id', '=', $request['category']);
+				}
+				if (!empty($request['question'])) {
+					$questions =  $questions->where('questions.id', '=', $request['question']);
+				}
+			}
+
+			$questions =  $questions
+				->groupBy('answer')
+				->get();
+
 	}
 }

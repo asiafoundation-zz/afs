@@ -52,8 +52,9 @@
           .done(function( data ) {
             if (data != false) {
               var color_set_data = color_set(data.question);
+              var data_points_data = data_points(data.question);
 
-              chartjs(color_set_data,data);
+              chartjs(color_set_data,data_points_data);
             }else
             {
               alert("{{Lang::get('frontend.empty_data')}}");

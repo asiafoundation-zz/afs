@@ -140,7 +140,6 @@ class FilterParticipant extends Eloquent {
 	public static function CompareQuestion($answer_id,$cycle_type)
 	{
 		$cycle_name = "";
-		$cycle_type = "";
 		$filter_queries =  DB::table('filter_participants')
 			->select(
 				DB::raw(
@@ -164,7 +163,6 @@ class FilterParticipant extends Eloquent {
 			if (count($filter_queries)) {
 				$filter_query = reset($filter_queries);
 				$cycle_name = $filter_query->cycle;
-				$cycle_type = $filter_query->cycle_type;
 			}
 
 			return array($data_result,$cycle_name,$cycle_type);

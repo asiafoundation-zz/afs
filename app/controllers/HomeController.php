@@ -81,6 +81,14 @@ class HomeController extends BaseController {
 					return $return;
 					break;
 
+				case 'next_question':
+					$default_questions = Question::NextQuestion(Input::get());
+					$load_filter = array("question" => $default_questions);
+					$return = count($default_questions) > 0 ? $load_filter : 0;
+
+					return $return;
+					break;
+
 				default:
 					return 0;
 					break;

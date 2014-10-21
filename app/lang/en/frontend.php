@@ -17,5 +17,6 @@ return array(
 	"compare_survey_results" => "Compare Survey Results",
 	"survey_question" => "Survey Question",
 	"compare_survey" => "COMPARE SURVEY",
-	"empty_data" => "Data Not Found"
+	"empty_data" => "Data Not Found",
+	"comparing_cycle" => "Comparing"
 );

@@ -87,9 +87,9 @@
           </div>
           <div class="col-md-12">
             <ul class="chart-pagination">
-              <li><a href="#" class="orange-bg"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
+              <li><a class="orange-bg" onclick="next_question('backward')"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
               <li><a class="orange-bg" onclick="compare_cycle()">{{Lang::get('frontend.compare_this_survey')}}</a></li>
-              <li><a href="#" class="orange-bg"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
+              <li><a class="orange-bg" onclick="next_question('forward')"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
             </ul>
           </div>
         </div>
