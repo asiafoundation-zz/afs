@@ -20,12 +20,9 @@ class HomeController extends BaseController {
 			"question_lists" => $split_data['question_lists'],
 			"default_question" => $default_question,
 			"question" => $default_questions,
-			"regions" => Region::RegionColor(),
+			"regions" => Region::RegionColor($default_question->id_cycle),
 		);
-print '<pre>';
-print_r($data);
-print '<pre>';
-exit();
+
 		return View::make('home.index', $data);
 	}
 
@@ -53,7 +50,7 @@ exit();
 					break;
 
 				case 'survey':
-					$default_questions = Input::get('region') != "null" ? Question::DynamicQuestion(Input::get()) : Question::DefaultQuestion(Input::get());;
+					$default_questions = Question::LoadQuestion(Input::get());
 					$default_question = reset($default_questions);
 
 					$load_filter = array();
@@ -87,6 +84,7 @@ exit();
 				case 'next_question':
 					$default_questions = Question::NextQuestion(Input::get());
 					$load_filter = array("question" => $default_questions);
+
 					$return = count($default_questions) > 0 ? $load_filter : 0;
 
 					return $return;

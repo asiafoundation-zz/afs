@@ -59,13 +59,12 @@ class FilterParticipant extends Eloquent {
 			->select(
 				DB::raw(
 					'participants.id as id_participant,
-					participants.cycle_id as id_cycle,
 					filter_participants.category_item_id as id_category_item'
 					)
 				)
 			->join('participants','participants.id','=','filter_participants.participant_id')
-			->join('regions','regions.id','=','participants.region_id')
 			->join('question_participants','question_participants.participant_id','=','participants.id')
+			->join('regions','regions.id','=','question_participants.region_id')
 			->where('question_participants.answer_id', '=',$answer_id)
 			;
 
@@ -73,14 +72,69 @@ class FilterParticipant extends Eloquent {
 				$filter_queries = $filter_queries->where('regions.name', '=',$request['region']);
 			}
 
-			if ($request['cycle']) {
-				$filter_queries = $filter_queries->where('participants.cycle_id', '=',$request['cycle']);
+			$filter_queries = $filter_queries
+				->whereIn('filter_participants.category_item_id',$option_filters_array)
+				->get();
+
+			$data_merge = array();
+			$data_result = 0;
+			if (count($filter_queries)) {
+				foreach ($filter_queries as $key_filter_queries => $filter_query) {
+
+					// Grouping query result according it's id participant
+					if(empty($data_merge[$filter_query->id_participant])){
+						$data_merge[$filter_query->id_participant] = 0;
+					}
+					$data_merge[$filter_query->id_participant]++;
+
+					// Compare valid filter category item choosen and total category item data merge 
+					if(count($option_filters_array) == $data_merge[$filter_query->id_participant]){
+						$data_result++;
+					}
+				}
+			}
+			else
+			{
+				$data_result = 0;
+			}
+
+			return $data_result;
+	}
+
+	public static function FilterOptions2($answer_id,$request = array())
+	{
+		$option_filters = "";
+
+		if (count($request['option_filters'])) {
+			$option_filters_trim = rtrim($request['option_filters'],",");
+			$option_filters_array = explode(",", $option_filters_trim);
+			$option_filters .= " and filter_participants.category_item_id IN (".(string)$option_filters_trim.") ";
+		}
+
+		$filter_queries =  DB::table('filter_participants')
+			->select(
+				DB::raw(
+					'participants.id as id_participant,
+					filter_participants.category_item_id as id_category_item'
+					)
+				)
+			->join('participants','participants.id','=','filter_participants.participant_id')
+			->join('question_participants','question_participants.participant_id','=','participants.id')
+			->join('regions','regions.id','=','question_participants.region_id')
+			->where('question_participants.answer_id', '=',$answer_id)
+			;
+
+			if ($request['region']) {
+				$filter_queries = $filter_queries->where('regions.name', '=',$request['region']);
 			}
 
 			$filter_queries = $filter_queries
 				->whereIn('filter_participants.category_item_id',$option_filters_array)
 				->get();
-
+print '<pre>';
+print_r($filter_queries);
+print '<pre>';
+exit();
 			$data_merge = array();
 			$data_result = 0;
 			if (count($filter_queries)) {

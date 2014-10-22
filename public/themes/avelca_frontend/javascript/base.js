@@ -19,11 +19,11 @@ function next_question(move)
   $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move} )
     .done(function( data ) {
       if (data != false) {
-        // var color_set_data = color_set(data.question);
-        // var data_points_data = data_points(data.question);
+        var color_set_data = color_set(data.question);
+        var data_points_data = data_points(data.question);
 
-        // chartjs(color_set_data,data_points_data);
-        // $("#question-name").html(data.default_question.question);
+        chartjs(color_set_data,data_points_data);
+        $("#question-name").html(data.default_question.question);
       }else
       {
         alert("{{Lang::get('frontend.empty_data')}}");

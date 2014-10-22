@@ -46,7 +46,7 @@ class Region extends Eloquent {
 		return compact('fields');
 	}
 
-	public static function RegionColor()
+	public static function RegionColor($cycle_id)
 	{
 		$region_queries =  DB::table('regions')
 			->select(
@@ -54,6 +54,7 @@ class Region extends Eloquent {
 					'regions.id as region_id,
 					answers.id as id_answer,
 					answers.answer as answer_name,
+					question_participants.id as question_participant_id,
 					regions.name,
 					colors.color as color,
 					0 AS amount'
@@ -61,13 +62,11 @@ class Region extends Eloquent {
 			)
 			->join('question_participants','question_participants.region_id','=','regions.id')
 			->join('answers','answers.id','=','question_participants.answer_id')
+			->join('cycles','cycles.id','=','answers.cycle_id')
 			->join('colors','colors.id','=','answers.color_id')
+			->where('answers.cycle_id','=',$cycle_id)
 			->get();
 
-print '<pre>';
-print_r($region_queries);
-print '<pre>';
-exit();
 			/*
 			 * Get regions with maximum values votes
 			 */
@@ -79,12 +78,12 @@ exit();
 					$regions[$region_query->name]["answer_name"] = $region_query->answer_name;
 
 					if (empty($regions[$region_query->name]["amount"])) {
-						$regions[$region_query->name]["answer_id"] = $region_query->answer_id;
+						$regions[$region_query->name]["answer_id"] = $region_query->id_answer;
 						$regions[$region_query->name]["amount"] = $region_query->amount;
 						$regions[$region_query->name]["color"] = $region_query->color;
 					}
 					if ($region_query->amount > $regions[$region_query->name]["amount"]) {
-						$regions[$region_query->name]["answer_id"] = $region_query->answer_id;
+						$regions[$region_query->name]["answer_id"] = $region_query->id_answer;
 						$regions[$region_query->name]["amount"] = $region_query->amount;
 						$regions[$region_query->name]["color"] = $region_query->color;
 					}
