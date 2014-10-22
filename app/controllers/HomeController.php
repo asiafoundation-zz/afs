@@ -20,7 +20,7 @@ class HomeController extends BaseController {
 			"question_lists" => $split_data['question_lists'],
 			"default_question" => $default_question,
 			"question" => $default_questions,
-			"regions" => Region::RegionColor($default_question->id_cycle),
+			"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
 		);
 
 		return View::make('home.index', $data);
@@ -47,6 +47,10 @@ class HomeController extends BaseController {
 					$filter_question = (string)View::make('home.filter_question',$split_data)->render();
 
 					$split_data = $filter_category.";".$filter_question;
+
+					$return = count($question_categories_query) > 0 ? $split_data : 0;
+
+					return $return;
 					break;
 
 				case 'survey':
@@ -57,7 +61,8 @@ class HomeController extends BaseController {
 					$load_filter = array(
 						"survey" => Survey::first(),
 						"default_question" => $default_question,
-						"question" => $default_questions
+						"question" => $default_questions,
+						"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
 					);
 
 					$return = count($default_questions) > 0 ? $load_filter : 0;
@@ -83,13 +88,33 @@ class HomeController extends BaseController {
 
 				case 'next_question':
 					$default_questions = Question::NextQuestion(Input::get());
-					$load_filter = array("question" => $default_questions);
+					$default_question = reset($default_questions);
+					$load_filter = array(
+						"survey" => Survey::first(),
+						"default_question" => $default_question,
+						"question" => $default_questions,
+						"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
+					);
 
 					$return = count($default_questions) > 0 ? $load_filter : 0;
 
 					return $return;
 					break;
 
+				case 'survey_area_dynamic':
+					$default_questions = Question::LoadQuestion(Input::get());
+					$default_question = reset($default_questions);
+
+					$load_filter = array();
+					$load_filter = array(
+						"default_question" => $default_question,
+						"question" => $default_questions,
+					);
+
+					$return = count($default_questions) > 0 ? $load_filter : 0;
+
+					return $return;
+					break;
 				default:
 					return 0;
 					break;

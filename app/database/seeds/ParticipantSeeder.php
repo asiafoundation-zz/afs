@@ -4,34 +4,53 @@ class ParticipantSeeder extends Seeder {
 
   public function run()
   {
-    $participants = array(
-      array("1","1"),
-      array("1","1"),
-      array("1","1"),
-      array("1","1"),
-      array("2","1"),
-      array("2","1"),
-      array("2","1"),
-      array("2","1"),
-      array("1","2"),
-      array("1","2"),
-      array("1","2"),
-      array("1","2"),
-      array("2","2"),
-      array("2","2"),
-      array("2","2"),
-      array("2","2"),
-    );
+    $participants = array();
+
+    for ($i=0; $i < 500; $i++) { 
+      $participants[$i] = '0';
+    }
 
     Participant::truncate();
 
     foreach ($participants as $key => $participant) {
-      Participant::create(
-        array(
-          "region_id" => $participant[0],
-          "cycle_id" => $participant[1],
-        )
+      $participant_id = DB::table('participants')->insertGetId(
+        array("sample_type" => $participant[0])
       );
+
+      // Create question_participant
+      $question_participants = array();
+
+      for ($i=0; $i < 12; $i++) { 
+        $question_participants[0] = array($participant_id,rand(1,2),rand(1,34));
+        $question_participants[1] = array($participant_id,rand(3,4),rand(1,34));
+        $question_participants[2] = array($participant_id,rand(5,8),rand(1,34));
+        $question_participants[3] = array($participant_id,rand(9,12),rand(1,34));
+      }
+
+      foreach ($question_participants as $key => $question_participant) {
+        QuestionParticipant::create(
+          array(
+            "participant_id" => $question_participant[0],
+            "answer_id" => $question_participant[1],
+            "region_id" => $question_participant[2],
+          )
+        );
+      }
+
+      // Create filter_participant
+      $filter_participant = array();
+
+      $filter_participants[0] = array(rand(1,3),$participant_id);
+      $filter_participants[1] = array(rand(4,6),$participant_id);
+
+      foreach ($filter_participants as $key => $filter_participant) {
+        FilterParticipant::create(
+          array(
+          "category_item_id" => $filter_participant[0],
+          "participant_id" => $filter_participant[1],
+          )
+        );
+      }
     }
   }
 }

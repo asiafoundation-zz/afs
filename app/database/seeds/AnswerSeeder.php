@@ -5,8 +5,18 @@ class AnswerSeeder extends Seeder {
   public function run()
   {
     $answers = array(
-      array("JOKOWI","1","1"),
-      array("PRABOWO","1","2"),
+      array("JOKOWI","1","1","1"),
+      array("PRABOWO","1","2","1"),
+      array("JOKOWI","1","1","2"),
+      array("PRABOWO","1","2","2"),
+      array("JUSUF KALLA","2","1","1"),
+      array("HATTA RAJASA","2","2","1"),
+      array("JUSUF KALLA","2","1","2"),
+      array("HATTA RAJASA","2","2","2"),
+      array("DIN SYAMSUDIN","2","3","1"),
+      array("AMIEN RAIS","2","4","1"),
+      array("DIN SYAMSUDIN","2","3","2"),
+      array("AMIEN RAIS","2","4","2"),
     );
 
       // array("JOKOWI","1","1"),
@@ -30,6 +40,7 @@ class AnswerSeeder extends Seeder {
           "answer" => $answer[0],
           "question_id" => $answer[1],
           "color_id" => $answer[2],
+          "cycle_id" => $answer[3],
         )
       );
     }
