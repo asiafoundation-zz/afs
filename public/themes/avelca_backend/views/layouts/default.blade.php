@@ -45,6 +45,7 @@
 
 	<!-- Custom css -->
 	{{ HTML::style(Theme::asset('css/multi-select.css')) }}	
+	{{ HTML::style(Theme::asset('css/custom.css')) }}	
 
 	<!-- Color Theme -->
 	<?php $theme_color = Setting::meta_data('general', 'theme_color')->value; ?>

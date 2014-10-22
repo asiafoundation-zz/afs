@@ -1,4 +1,8 @@
 $(document).ready(function(){
+	$('#header-select').multiSelect();
+	$('.ms-visible').hide();
+	$('.progress').hide();
+
 	$('.excel-upload').change(function(){
 		var file = this.files[0];
 	    var name = file.name;
@@ -14,13 +18,9 @@ $(document).ready(function(){
 	        url: '/admin/survey/upload',  //Server script to process data
 	        type: 'POST',
 	        xhr: function() {  // Custom XMLHttpRequest
-	            // var myXhr = $.ajaxSettings.xhr();
-	            // if(myXhr.upload){ // Check if upload property exists
-	            //     myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
-	            // }
-	            // return myXhr;
 
 	            var xhr = $.ajaxSettings.xhr() ;
+	            $('.progress').show();
 
                 // set the onprogress event handler
                 xhr.upload.onprogress = function(evt){
@@ -38,7 +38,11 @@ $(document).ready(function(){
 	        //Ajax events
 	        // beforeSend: beforeSendHandler,
 	        success: function(data){
-	        	console.log(data);
+	        	$('.ms-visible').show().fadeIn("slow");
+	        	$('.upload-form').hide().fadeOut("slow");
+	        	$.each(data, function(index, obj){
+	        		$('#header-select').multiSelect('addOption', { value : obj.name, text : obj.label });
+	        	});
 	        },
 	        // error: errorHandler,
 	        //Options to tell jQuery not to process data or worry about content-type.
@@ -48,11 +52,4 @@ $(document).ready(function(){
 		})
 	});
 
-	function progressHandlingFunction(e){
-	    if(e.lengthComputable){
-	        $('progress').attr({value:e.loaded,max:e.total});
-	    }
-	}
-
-	$('#my-select').multiSelect();
 });
