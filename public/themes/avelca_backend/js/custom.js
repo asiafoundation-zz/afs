@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	$('#header-select').multiSelect();
-	$('.ms-visible').hide();
+	// $('.ms-visible').hide();
 	$('.progress').hide();
 
 	$('.excel-upload').change(function(){
@@ -33,16 +33,16 @@ $(document).ready(function(){
                 // return the customized object
                 return xhr;
 	        },
-	        // Form data
 	        data: formData,
-	        //Ajax events
 	        // beforeSend: beforeSendHandler,
 	        success: function(data){
-	        	$('.ms-visible').show().fadeIn("slow");
-	        	$('.upload-form').hide().fadeOut("slow");
+	        	// console.log(data)
+	        	$('.excel-upload').after('<input type="hidden" name="uploaded_file" value="'+ data +'">');
+	        	/*$('.ms-visible').show().fadeIn("slow");
+	        	$('.upload-field').hide().fadeOut("slow");
 	        	$.each(data, function(index, obj){
-	        		$('#header-select').multiSelect('addOption', { value : obj.name, text : obj.label });
-	        	});
+	        		$('#header-select').multiSelect('addOption', { value : obj.header1 +';'+ obj.header3, text : obj.header3 });
+	        	});*/
 	        },
 	        // error: errorHandler,
 	        //Options to tell jQuery not to process data or worry about content-type.
