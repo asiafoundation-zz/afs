@@ -81,6 +81,7 @@ class HomeController extends BaseController {
 				case 'compare_cycle':
 					$default_questions = Question::CompareCycle(Input::get());
 					$load_filter = array("question" => $default_questions);
+
 					$return = count($default_questions) > 0 ? $load_filter : 0;
 
 					return $return;
@@ -105,7 +106,6 @@ class HomeController extends BaseController {
 					$default_questions = Question::LoadQuestion(Input::get());
 					$default_question = reset($default_questions);
 
-					$load_filter = array();
 					$load_filter = array(
 						"default_question" => $default_question,
 						"question" => $default_questions,
@@ -115,6 +115,21 @@ class HomeController extends BaseController {
 
 					return $return;
 					break;
+
+				case 'detail_chart':
+					$default_questions = Category::DetailParticipant(Input::get());
+					$default_question = reset($default_questions);
+
+					$load_filter = array(
+						"default_question" => $default_question,
+						"question" => $default_questions,
+					);
+
+					$return = count($default_questions) > 0 ? $load_filter : 0;
+
+					return $return;
+					break;
+
 				default:
 					return 0;
 					break;

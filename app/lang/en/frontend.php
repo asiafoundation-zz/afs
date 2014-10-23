@@ -14,9 +14,10 @@ return array(
 	"clear_all" => "Clear All",
 	"cycle" => "Cycle",
 	"compare_this_survey" => "compare this survey",
+	"return" => "Back",
 	"compare_survey_results" => "Compare Survey Results",
 	"survey_question" => "Survey Question",
 	"compare_survey" => "COMPARE SURVEY",
-	"empty_data" => "Data Not Found",
+	"empty_data" => "There is no survey data",
 	"comparing_cycle" => "Comparing"
 );

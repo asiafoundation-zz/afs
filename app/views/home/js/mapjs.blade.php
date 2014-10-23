@@ -106,11 +106,17 @@
       FilterSelect.region = "";
       geojson.resetStyle(e.target);
       $("#select_region_label").html("");
+
+      find_survey();
     }
 
     function AddHighlight(e) {
+      // Reser selected area map
       if(lastClickedLayer){
          geojson.resetStyle(lastClickedLayer);
+         resetHighlight(e);
+         lastClickedLayer = layer;
+         return false;
       }
 
       var layer = e.target;
@@ -152,8 +158,7 @@
       layer.on({
         mouseover: hoverHightlight,
         mouseout: outHightlight,
-        click: AddHighlight,
-        dblclick: resetHighlight
+        click: AddHighlight
       });
     }
 
@@ -173,38 +178,4 @@
     /*
      * -----------------------------------------End Map JS-----------------------------------------
      */
-
-  function next_question(move)
-  {
-    // Get cycles functions
-    $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move} )
-      .done(function( data ) {
-        if (data != false) {
-          var color_set_data = color_set(data.question);
-          var data_points_data = data_points(data.question);
-
-          chartjs(color_set_data,data_points_data);
-          $("#question-name").html(data.default_question.question);
-          $("#select_category_label").html(data.default_question.question_categories);
-          $("#select_question_label").html(data.default_question.question);
-
-          // Re assingn Filter data
-          FilterSelect.question = data.default_question.id_question;
-          DefaultSelectAssign(FilterSelect);
-
-          // Re assign map
-          dynamicRegions = data.regions;
-          // Load New map
-          geojson = L.geoJson(statesData, {
-            style: styleDynamic,
-            onEachFeature: onEachFeature,
-          }).addTo(map);
-        }else
-        {
-          alert("Data Not Found");
-          // Re assingn Filter data
-          DefaultSelectAssign(DefaultSelect);
-        }
-      },"html");
-  }
   </script>
