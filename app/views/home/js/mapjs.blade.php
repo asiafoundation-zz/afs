@@ -106,11 +106,17 @@
       FilterSelect.region = "";
       geojson.resetStyle(e.target);
       $("#select_region_label").html("");
+
+      find_survey();
     }
 
     function AddHighlight(e) {
+      // Reser selected area map
       if(lastClickedLayer){
          geojson.resetStyle(lastClickedLayer);
+         resetHighlight(e);
+         lastClickedLayer = layer;
+         return false;
       }
 
       var layer = e.target;
@@ -152,8 +158,7 @@
       layer.on({
         mouseover: hoverHightlight,
         mouseout: outHightlight,
-        click: AddHighlight,
-        dblclick: resetHighlight
+        click: AddHighlight
       });
     }
 

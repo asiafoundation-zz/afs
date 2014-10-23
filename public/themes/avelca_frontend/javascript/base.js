@@ -1,7 +1,7 @@
 /*
 * -----------------------------------------Chart JS--------------------------
 */
-function chartjs(color_set,data_points)
+function chartjs(color_set,data_points,data_points_pie)
 {
   // PIE CHART
   CanvasJS.addColorSet("greenShades",color_set);
@@ -27,7 +27,7 @@ function chartjs(color_set,data_points)
       toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
       showInLegend: false,
       indexLabel: "#percent%", 
-      dataPoints: data_points
+      dataPoints: data_points_pie
     }
     ]
   });

@@ -56,7 +56,7 @@ class Question extends Eloquent {
 		return compact('fields');
 	}
 
-	public static function DefaultLoad()
+	public static function DefaultLoad($request)
 	{
 		$questions =  DB::table('questions');
 
@@ -115,7 +115,7 @@ class Question extends Eloquent {
 	public static function DefaultQuestion($request = array())
 	{
 		// Load Question
-		$questions =  self::DefaultLoad();
+		$questions =  self::DefaultLoad($request);
 
 			if (!empty($request['cycle'])) {
 				$questions = $questions->where('answers.cycle_id', '=',$request['cycle']);
@@ -157,7 +157,7 @@ class Question extends Eloquent {
 	public static function LoadQuestion($request = array())
 	{
 		// Load Question
-		$questions =  self::DefaultLoad();
+		$questions =  self::DefaultLoad($request);
 
 			if (count($request)) {
 				if (!empty($request['category'])) {
@@ -246,13 +246,16 @@ class Question extends Eloquent {
 				$question->indexlabel = round(!$total_amount ? 0 : ($question->amount / $total_amount) * 100,2);
 			}
 
+		// Is questions not exist
+		$questions = $total_amount > 0 ? $questions : array();
+		
 		return $questions;
 	}
 
 	public static function CompareCycle($request = array())
 	{
 		// Load Question
-		$questions =  self::DefaultLoad();
+		$questions =  self::DefaultLoad($request);
 
 			if (count($request)) {
 				if (!empty($request['category'])) {
@@ -295,7 +298,7 @@ class Question extends Eloquent {
 		}
 
 		// Load Question
-		$questions =  self::DefaultLoad();
+		$questions =  self::DefaultLoad($request);
 
 			if (count($request)) {
 				if (!empty($request['category'])) {

@@ -16,7 +16,8 @@
       // Load Chart Plugin
       var color_set_data = color_set(null);
       var data_points_data = data_points(null);
+      var data_points_pie_data = data_points_pie(null);
 
-      chartjs(color_set_data,data_points_data);
+      chartjs(color_set_data,data_points_data,data_points_pie_data);
     }
   </script>
