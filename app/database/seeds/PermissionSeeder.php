@@ -15,8 +15,8 @@ class PermissionSeeder extends Seeder {
 			"survey.delete",
 			"survey.print-pdf",
 			"survey.export",
-			"survey.baseline",
-			"survey.endline",
+			"survey.cycle",
+			"survey.import",
 			"survey.upload"
 			);
 

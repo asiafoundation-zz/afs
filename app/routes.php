@@ -27,10 +27,10 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 		{
 			AvelcaController::autoRoutes();
 			Route::get('survey', 'SurveyController@getIndex');
-			Route::get('survey/baseline', 'SurveyController@getBaseline');
-			Route::post('survey/baseline', 'SurveyController@postBaseline');
-			Route::get('survey/endline', 'SurveyController@getEndline');
-			Route::post('survey/endline', 'SurveyController@postEndline');
+			Route::get('survey/cycle', 'SurveyController@getCycle');
+			Route::post('survey/cycle', 'SurveyController@postCycle');
+			Route::get('survey/import/{id}', 'SurveyController@getImport');
+			Route::post('survey/import', 'SurveyController@postImport');
 			Route::post('survey/upload', 'SurveyController@postEndline');
 		});
 	});
