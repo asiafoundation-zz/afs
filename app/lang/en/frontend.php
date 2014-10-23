@@ -14,6 +14,7 @@ return array(
 	"clear_all" => "Clear All",
 	"cycle" => "Cycle",
 	"compare_this_survey" => "compare this survey",
+	"return" => "return",
 	"compare_survey_results" => "Compare Survey Results",
 	"survey_question" => "Survey Question",
 	"compare_survey" => "COMPARE SURVEY",

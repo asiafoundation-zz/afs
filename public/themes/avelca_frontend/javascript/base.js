@@ -1,25 +1,3 @@
-function compare_cycle(category_id)
-{
-  // Get cycles functions
-  $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answers:FilterSelect.answers} )
-    .done(function( data ) {
-      if (data != false) {
-
-        // Build chart
-        $("#chart_canvas").html('<div class="col-md-12"><div id="compareChart" style="height: 345px; width: 100%;"></div></div>');
-        compare_chart(data.question);
-
-        // Re assingn Filter data
-        DefaultSelectAssign(FilterSelect);
-
-      }else
-      {
-        alert("Data Not Found");
-        // Re assingn Filter data
-        DefaultSelectAssign(DefaultSelect);
-      }
-    },"html");
-}
 /*
 * -----------------------------------------Chart JS--------------------------
 */
@@ -84,7 +62,7 @@ function chartjs(color_set,data_points)
           indexLabelFontFamily: "DINNextLTPro-Regular",
           type: "bar",
           click: function(e){
-            e.dataPoint.answer_id
+            detail_chart(e.dataPoint.answer_id,0,0)
            },
           dataPoints: data_points
       }
@@ -98,30 +76,30 @@ function compare_chart(data)
 {
   var baseline_list = [];
   var endline_list = [];
+  var colorSet = []
 
   for (i = 0; i < data.length; i++) {
     if (data[i].cycle_type == 0) {
       var baseline_text = data[i].cycle;
-      baseline_list.push({ y: data[i].amount, label: data[i].answer});
+      baseline_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
+
+      colorSet.push(data[i].color);
     }
     if (data[i].cycle_type == 1) {
       var endline_text = data[i].cycle;
-      endline_list.push({ y: data[i].amount, label: data[i].answer});
+      endline_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
     }
   };
 
-  CanvasJS.addColorSet("greenShades",[//colorSet Array
-        "#fcc45a",
-        "#ffe87a",
-        "#abd074",
-        "#fc5b3f",
-        "#1eb5b6"                
-        ]);
+  CanvasJS.addColorSet("greenShades",colorSet);
 
   var chart = new CanvasJS.Chart("compareChart",
   {
       title:{
         text: "Compares "+baseline_text+" and "+endline_text
+      },
+      legend: {
+        fontSize: 24,
       },
       colorSet: "greenShades",
       data: [
@@ -138,6 +116,55 @@ function compare_chart(data)
         dataPoints: endline_list
       }
       ]
+  });
+
+  chart.render();
+}
+
+function detail_chart_js(data)
+{
+  var data_list = [];
+
+  for (i = 0; i < data.length; i++) {
+    var data_text = data[i].category_name;
+    data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: data[i].category_item_name});
+  };
+
+  CanvasJS.addColorSet("hellowYellow",
+  [//colorSet Array
+    "#ffe87a"              
+  ]);
+
+  var chart = new CanvasJS.Chart("detailChart",
+  {
+    theme: "theme1",
+    title:{
+      text: data_text,
+      fontSize: 24,
+      fontWeight: "lighter",
+      margin: 30,
+      padding: 0
+    },
+    axisY: {
+      maximum: 100,
+      interval: 20,
+      tickLength: 0,
+      gridThickness: 1
+    },
+    axisX: {
+      labelFontSize: 18,
+      tickLength: 10
+    },
+    colorSet: "hellowYellow",
+    data: [
+    {        
+      type: "column",  
+      showInLegend: false, 
+      indexLabelPlacement: "outside",  
+      labelFontFamily: "DINNextLTPro-Regular",
+      dataPoints: data_list
+    }   
+    ]
   });
 
   chart.render();
