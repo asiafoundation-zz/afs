@@ -5,14 +5,21 @@
         $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
           .done(function( data ) {
             if (data != false) {
+              // Build chart
               var color_set_data = color_set(data.question);
               var data_points_data = data_points(data.question);
-
               chartjs(color_set_data,data_points_data);
-              $("#question-name").html(data.default_question.question);
+
+              var cycle_text = $("#cycle_select_"+cycle_id).text();
+              $("#select_cycle_label").html(cycle_text);
+
+              // Re assingn Filter data
+              DefaultSelectAssign(FilterSelect);
             }else
             {
               alert("{{Lang::get('frontend.empty_data')}}");
+              // Re assingn Filter data
+              DefaultSelectAssign(DefaultSelect);
             }
           },"html");
      }
@@ -25,15 +32,25 @@
         // Get cycles functions
         $.get( "filter-select", {SelectedFilter:"cycle",category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
           .done(function( data ) {
+            if (data != false) {
 
-            var color_set_data = color_set(data.question);
-            var data_points_data = data_points(data.question);
+              // Build chart
+              var color_set_data = color_set(data.question);
+              var data_points_data = data_points(data.question);
+              chartjs(color_set_data,data_points_data);
 
-            chartjs(color_set_data,data_points_data);
+              var cycle_text = $("#cycle_select_"+cycle_id).text();
+              $("#select_cycle_label").html(cycle_text);
 
-            var cycle_text = $("#cycle_select_"+cycle_id).text();
-            $("#select_cycle_label").html(cycle_text);
-              },"html");
+              // Re assingn Filter data
+              DefaultSelectAssign(FilterSelect);
+            }else
+            {
+              alert("{{Lang::get('frontend.empty_data')}}");
+              // Re assingn Filter data
+              DefaultSelectAssign(DefaultSelect);
+            }
+        },"html");
      }
 
      function filter_option(category_id)
@@ -51,16 +68,44 @@
         $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
           .done(function( data ) {
             if (data != false) {
+              // Build chart
               var color_set_data = color_set(data.question);
               var data_points_data = data_points(data.question);
-
               chartjs(color_set_data,data_points_data);
+
+              // Re assingn Filter data
+              DefaultSelectAssign(FilterSelect);
             }else
             {
               alert("{{Lang::get('frontend.empty_data')}}");
+              // Re assingn Filter data
+              DefaultSelectAssign(DefaultSelect);
             }
           },"html");
      }
+
+     function find_survey_dynamic()
+     {
+        // Get cycles functions
+        $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+          .done(function( data ) {
+            if (data != false) {
+              // Build chart
+              var color_set_data = color_set(data.question);
+              var data_points_data = data_points(data.question);
+              chartjs(color_set_data,data_points_data);
+
+              // Re assingn Filter data
+              DefaultSelectAssign(FilterSelect);
+            }else
+            {
+              alert("{{Lang::get('frontend.empty_data')}}");
+              // Re assingn Filter data
+              DefaultSelectAssign(DefaultSelect);
+            }
+          },"html");
+     }
+
 
     function color_set(assign_color)
     {

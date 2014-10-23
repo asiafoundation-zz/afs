@@ -4,29 +4,19 @@ function compare_cycle(category_id)
   $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answers:FilterSelect.answers} )
     .done(function( data ) {
       if (data != false) {
+
+        // Build chart
         $("#chart_canvas").html('<div class="col-md-12"><div id="compareChart" style="height: 345px; width: 100%;"></div></div>');
         compare_chart(data.question);
+
+        // Re assingn Filter data
+        DefaultSelectAssign(FilterSelect);
+
       }else
       {
-        alert("{{Lang::get('frontend.empty_data')}}");
-      }
-    },"html");
-}
-
-function next_question(move)
-{
-  // Get cycles functions
-  $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move} )
-    .done(function( data ) {
-      if (data != false) {
-        var color_set_data = color_set(data.question);
-        var data_points_data = data_points(data.question);
-
-        chartjs(color_set_data,data_points_data);
-        $("#question-name").html(data.default_question.question);
-      }else
-      {
-        alert("{{Lang::get('frontend.empty_data')}}");
+        alert("Data Not Found");
+        // Re assingn Filter data
+        DefaultSelectAssign(DefaultSelect);
       }
     },"html");
 }
@@ -161,7 +151,7 @@ function compare_chart(data)
 function select_question(question_id)
 {
   var question_text = $("#select_question_id_"+question_id).text();
-  FilterSelect.question = question_text;
+  FilterSelect.question = question_id;
   $("#select_question_label").html(question_text);
 }
 

@@ -25,12 +25,12 @@ class DatabaseSeeder extends Seeder {
 		$this->call("MasterCodeSeeder");
 		$this->call("QuestionCategorySeeder");
 		$this->call("QuestionSeeder");
-		$this->call("QuestionerSeeder");
+		// $this->call("QuestionerSeeder");
 		$this->call("RegionSeeder");
 		$this->call("SurveySeeder");
 		$this->call("ParticipantSeeder");
-		$this->call("FilterParticipantSeeder");
-		$this->call("QuestionParticipantSeeder");
+		// $this->call("FilterParticipantSeeder");
+		// $this->call("QuestionParticipantSeeder");
 	}
 
 }
