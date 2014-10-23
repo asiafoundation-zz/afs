@@ -16,6 +16,9 @@ class PermissionSeeder extends Seeder {
 			"survey.print-pdf",
 			"survey.export",
 			"survey.cycle",
+			"survey.category",
+			"survey.region",
+			"survey.oversample",
 			"survey.import",
 			"survey.upload"
 			);
