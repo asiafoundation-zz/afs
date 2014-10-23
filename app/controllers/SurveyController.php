@@ -78,16 +78,158 @@ class SurveyController extends AvelcaController {
 	    return Response::json($filename);
 	}
 
-	public function getImport($id)
+	public function getCategory($id)
 	{
 		$cycle = Cycle::where('id', '=', $id)->first();
 		
 		$header = $this->readHeader($cycle->excel_file, 'E', 0);
 
-		return View::make('admin.survey.import')->with('header', $header);
+		$content = array("Select Category Filter","Please select select category with clicking a list on the left");
+
+		$form_action = "/admin/survey/category";
+
+		$button_value = "Next";
+
+		return View::make('admin.survey.import')
+				->with('header', $header)
+				->with('content', $content)
+				->with('action', $form_action)
+				->with('button', $button_value)
+				->with('base_header', true);
 	}
 
-	public function postImport()
+	public function postCategory(){
+		$headers = Input::get('header');
+		$questions = Input::get('unselected');
+
+		$header_code = array();
+		foreach($headers as $header)
+		{
+			$header_content = explode(';', $header);
+			$header_code[] = $header_content[0];
+		}
+
+		$id_question_category = 0;
+		foreach($questions as $question)
+		{
+			$question_content = explode(';', $question);
+			$question_exist = in_array($question_content[1], $header_code);
+			
+			if(empty($question_exist))
+			{
+				if(!empty($question_content[0]))
+				{
+					$select_question_category = QuestionCategory::where('name', '=', $question_content[0])->first();
+					if(!isset($select_question_category))
+					{
+						$question_category = QuestionCategory::create(array('name' => $question_content[0], 'survey_id' => 1));
+						$id_question_category = $question_category->id;
+					}
+					else{ $id_question_category = $select_question_category->id; }
+				}
+				
+				$question = Question::where('code', '=', $question_content[1])->first();
+				if(!isset($question))
+				{
+					Question::create(array('code' => $question_content[1], 'question' => $question_content[2], 'question_category_id' => $id_question_category));
+				}
+			}
+		}
+
+		$content = array("Select Region", "Please select region with clicking a list on the left");
+
+		$form_action = "/admin/survey/region";
+
+		$button_value = "Next";
+
+		return View::make('admin.survey.import')
+				->with('header', $headers)
+				->with('content', $content)
+				->with('action', $form_action)
+				->with('button', $button_value)
+				->with('id_cycle', Input::get('id_cycle'))
+				->with('base_header', false);
+	}
+
+	public function postRegion(){
+		$categories = Input::get('unselected');
+		$region = Input::get('header');
+
+		foreach($region as $value)
+		{
+			$region_piece = explode(';',$value);
+			$code = Code::where('code','=',$region_piece[0])->first();
+			if(!isset($code))
+			{
+				$code = Code::create(array('code' => $region_piece[0]));
+				$code_id = $code->id;
+			}
+
+			$category = Category::where('name', '=', $region_piece[1])->first();
+			if(!isset($category))
+			{
+				Category::create(array('name' => $region_piece[1], 'code_id' => $code_id));
+			}
+		}
+
+		$region_exist = array_search($region[0], $categories);
+		if($region_exist)
+		{
+			unset($categories[$region_exist]);
+			$categories = array_values($categories);
+		}
+
+		$cycle = Cycle::where('id', '=', Input::get('id_cycle'))->first();
+		$filename = 'uploads/'.$cycle->excel_file;
+		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(250, function($results)
+		{
+			$region = Input::get('header');
+
+			$region_piece = explode(';', $region[0]);
+
+			$data = array();
+
+			$arr_data = $results->toArray();
+
+			foreach($arr_data as $data)
+			{
+				foreach($data as $key => $value)
+				{
+					if($key == strtolower($region_piece[0]))
+					{
+						$s_region = Region::where('name', '=', $value)->first();
+						if(!isset($s_region))
+						{
+							$code = Code::where('code', '=', $region_piece[0])->first();
+							$region = Region::create(array('name' => $value, 'code_id' => $code->id));
+							$region_id = $region->id;
+						}
+					}
+				}
+			}
+		});	
+
+		$content = array("Select Oversample", "Please select Oversample data with clicking a list on the left");
+
+		$form_action = "/admin/survey/oversample";
+
+		$button_value = "Next";
+
+		return View::make('admin.survey.import')
+				->with('header', $categories)
+				->with('content', $content)
+				->with('action', $form_action)
+				->with('button', $button_value)
+				->with('id_cycle', Input::get('id_cycle'))
+				->with('base_header', false);
+
+	}
+
+	public function postOversample(){
+		return "I am here";
+	}
+
+	public function Import()
 	{
 		$headers = Input::get('header');
 		$questions = Input::get('question');
