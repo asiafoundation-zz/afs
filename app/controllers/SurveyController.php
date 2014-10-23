@@ -25,7 +25,7 @@ class SurveyController extends AvelcaController {
 
 			if($survey)
 			{
-				return Redirect::to('/admin/survey/baseline');
+				return Redirect::to('/admin/survey/cycle');
 			}
 		}
 		else
@@ -34,13 +34,13 @@ class SurveyController extends AvelcaController {
 		}
 	}
 
-	public function getBaseline()
+	public function getCycle()
 	{
 
-		return view::make('admin.survey.baseline');
+		return view::make('admin.survey.cycle');
 	}
 
-	public function postBaseline()
+	public function postCycle()
 	{
 		$rule = array(
 				'cycle_name' => 'Required',
@@ -51,17 +51,18 @@ class SurveyController extends AvelcaController {
 
 		if($validator->passes())
 		{
-			$cycle = Cycles::create(array('name' => Input::get('cycle_name')));
+			
+			$cycle = Cycle::create(array('name' => Input::get('cycle_name'), 'excel_file' => Input::get('uploaded_file')));
 
 			if($cycle)
 			{
-				$this->import_excel($cycle->id, Input::file('excel'));
-				return Redirect::to('/admin/survey/endline');
+				return Redirect::to('/admin/survey/import/'. $cycle->id);
 			}
+
 		}
 		else
 		{
-			return Redirect::to('/admin/survey/baseline')->withErrors($validator)->withInput();
+			return Redirect::to('/admin/survey/cycle')->withErrors($validator)->withInput();
 		}
 	}
 
@@ -74,32 +75,124 @@ class SurveyController extends AvelcaController {
 			$uploaded = Input::file('file')->move('uploads/', $filename);	
 		}
 		
-	    $inputFileName = 'uploads/'.$filename;
-
-	    $results = array();
-	    $results = Excel::selectSheetsByIndex(0)->load($inputFileName, function($reader){})->get()->toArray();
-
-	    return Response::json($results);
+	    return Response::json($filename);
 	}
 
-	public function getEndline()
+	public function getImport($id)
 	{
+		$cycle = Cycle::where('id', '=', $id)->first();
+		
+		$header = $this->readHeader($cycle->excel_file, 'E', 0);
 
-		return View::make('admin.survey.endline');
+		return View::make('admin.survey.import')->with('header', $header);
+	}
+
+	public function postImport()
+	{
+		$headers = Input::get('header');
+		$questions = Input::get('question');
+
+		$string = array();
+
+		/*INSERT FILTER*/
+
+		foreach($headers as $header)
+		{
+			$string = explode(';', $header);
+			$select_code = Code::where('code', '=', $string[0])->first();
+			if(!isset($select_code))
+			{
+				$code = Code::create(array('code' => $string[0]));
+				if($code)
+				{
+					$select_categories = Category::where('name', '=', $string[1])->first();
+					if(!isset($select_categories))
+					{
+						$categories = Category::create(array('name' => $string[1], 'code_id' => $code->id));	
+					}
+				}	
+			}
+		}
+
+		/*INSERT QUESTION*/
+
+		foreach($questions as $question)
+		{
+			$string = explode(';', $question);
+			$code = Code::where('code', '=', $string[0])->first();
+			if(!isset($code))
+			{
+				$question = Question::where('code', '=', $string[0])->first();
+				if(!isset($question)){
+					Question::create(array('code' => $string[0], 'question' => $string[1]));
+				}
+			}
+		}
+
+		/*IMPORT DATA*/
+
+		$cycle = Cycle::where('id', '=', Input::get('id_cycle'))->first();
+		$filename = 'uploads/'.$cycle->excel_file;
+		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(250, function($results)
+		{
+			$data = array();
+
+			$arr_data = $results->toArray();
+
+			foreach($arr_data as $data)
+			{
+				foreach($data as $key => $value)
+				{
+					$code = Code::where('code', '=', $key)->first();
+					if(isset($code))
+					{
+						
+						if(strpos($value, '. ') !== false){
+							$string = array();
+							$string = explode('. ', $value);
+							$value = $string[1];
+						}
+
+						$s_category_item = CategoryItem::where('name', '=', $value)->first();
+						if(!isset($s_category_item))
+						{
+							if($value != ""){
+								$category_item = CategoryItem::create(array('name' => $value, 'category_id' => $code->id));
+								$category_id = $category_item->id;	
+							}
+						}
+						
+						if($code->code == 'SFL_PROV')
+						{
+							$s_region = Region::where('name', '=', $value)->first();
+							if(!isset($s_region))
+							{
+								$region = Region::create(array('name' => $value, 'code_id' => $code->id));
+								$region_id = $region->id;
+							}
+						}
+
+					}
+
+					$question = Question::where('code', '=', $key)->first();
+					if(isset($question)){
+						// echo $value.'<br>';
+						if($value != ""){
+							$answer = Answer::create(array('answer' => $value, 'question_id' => $question->id, 'cycle_id' => Input::get('id_cycle')));	
+						}
+					}
+				}
+			}
+
+		});
 	}
 	
-	public function import_excel($cycle_id, $file)
-	{
-		$filename = $file->getClientOriginalName();
 
-		if(!file_exists($filename))
-		{
-			$uploaded = $file->move('uploads/', $filename);	
-		}
-		
-	    $inputFileName = '../public/uploads/'.$filename;
-	    
-	    try
+	public function readHeader($inputFileName, $highest_column, $sheet)
+	{
+		$inputFileName = '../public/uploads/'.$inputFileName;
+
+		try
 	    {
 	      $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
 	      $objReader = PHPExcel_IOFactory::createReader($inputFileType);
@@ -110,108 +203,25 @@ class SurveyController extends AvelcaController {
 	        die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
 	    }
 
-	    $objWorksheet = $objPHPExcel->getSheet(0);
+	    if($highest_column == strtoupper('highes column')){
+	    	$highest_column = $objWorksheet->getHighestColumn();
+	    }
+
+	    $objWorksheet = $objPHPExcel->getSheet($sheet);
 	    $highestRow = $objWorksheet->getHighestRow();
-	    $highestColumn = $objWorksheet->getHighestColumn();
+	    $highestColumn = $highest_column;
 	    $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
 
-	    for ($row = 3; $row <= 3; ++$row)
-	    {
-	    	for($col = 0; $col <= $highestColumnIndex; ++$col)
-	    	{
-	    		$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+	    for($row = 5; $row <= $highestRow; ++$row){
+		
+			for($col = 0; $col <= $highestColumnIndex; ++$col){
 
-    			if($col == 1)
-    			{
-    				$province_string = 'ANSWER';
-    			}
-
-    			$province_string = $this->read_string($dataval, '.', 'NO_PARAM', +2, strlen($dataval));
-		        $arr_province[] = $province_string;
-		        $province = Region::where('name', '=', $province_string)->first();
-
-		        if($province_string != '')
-		        {
-		        	if(!isset($province))
-		        	{
-		        		Region::create(array('name' => $province_string));
-		        	}
-		        	else
-		        	{
-			        	if($province->name != $province_string)
-			        	{
-			        		Region::create(array('name' => $province_string));
-			        	}
-			        }
-		        }
-	      	}
-	    }
-
-	    $select_region = Region::all();
-	    $question_id = 0;
-	    $answer_id = 0;
-	    for($row = 0; $row <= $highestRow; ++$row)
-	    {
-			$rowdata = $row;
-	      
-	    	$counter = 0;
-			for($col = 0; $col <= $highestColumnIndex; ++$col)
-			{
-
-				$dataval = $objWorksheet->getCellByColumnAndRow($col, $rowdata)->getValue();
-				if($question_id != 0){
-					$answer_data = $objWorksheet->getCellByColumnAndRow(1, $rowdata)->getValue();
-					if($answer_data != "")
-					{
-						$answer = Answer::create(array('question_id' => $question_id, 'answer' => $answer_data));
-						$answer_id = $answer->id;
-					}
-					
-					foreach($select_region as $region){
-						if($counter == $select_region->count()) break;
-
-						$amount_data = 	$objWorksheet->getCellByColumnAndRow(array_search($region->name, $arr_province), $rowdata)->getValue();
-						if($amount_data != '')
-						{
-							Questioner::create(array('answer_id' => $answer_id, 'amount' => $amount_data, 'region_id' => $region->id));
-						}
-						$counter++;	
-					}
-				}	
-
-				if(strpos($dataval,'Code') !== false)
-				{
-					$question_string = $this->read_string($dataval, '.', 'NO_PARAM', +2, strlen($dataval));
-					$unique_code = $this->read_string($dataval, '[', ']', +1, -6);
-					$code = $this->read_string($dataval, '[', 'NO_PARAM', +1, 3);
-					$code_number = $this->read_string($dataval, '[', ']', +4, -9);
-
-					$question_select = Question::where('code', '=', $unique_code)->first();
-					if(!isset($question_select))
-					{
-						$question = Question::create(array('question' => $question_string, 'code' => $unique_code, 'cycle_id' => $cycle_id));
-					}
-					else
-					{
-						if($question_select->unique_code != $unique_code)
-						{
-							$question = Question::create(array('question' => $question_string, 'code' => $unique_code, 'cycle_id' => $cycle_id));
-						}
-					}
-
-					$question_id = isset($question->id) ? $question->id : $question_select->id;
-				  	$row = $row + 2;
-				  	break;
-				}
-
-				break;			
+				$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+				$data[$row]['header'.$col] = $dataval;
 			}
+		}
 
-			$rowdata++;
-	    }
-	    unset($data);
-	    unset($startrow);
-	    unset($objPHPExcel);
+	    return $data;
 	}
 
 	public function read_string($string, $key_start, $key_end, $str_start, $str_end){
