@@ -90,7 +90,29 @@ class Question extends Eloquent {
 	public static function DefaultQuestion($request = array())
 	{
 		// Load Question
-		$questions =  self::DefaultLoad();
+		$questions =  DB::table('questions')
+			->select(
+				DB::raw(
+					'questions.id as id_question,
+					questions.question as question,
+					question_categories.id as id_question_categories,
+					question_categories.name as question_categories,
+					answers.id  as id_answer,
+					answers.answer as answer,
+					colors.color,
+					cycles.id  as id_cycle,
+					cycles.cycle_type  as cycle_type,
+					cycles.name as cycle,
+					(SELECT count(id) from question_participants where question_participants.answer_id = id_answer) AS amount,
+					0 AS indexlabel'
+					)
+				)
+			->join('question_categories','questions.question_category_id','=','question_categories.id')
+			->join('answers','answers.question_id','=','questions.id')
+			->join('cycles','cycles.id','=','answers.cycle_id')
+			->join('colors','answers.color_id','=','colors.id')
+			->join('question_participants','question_participants.answer_id','=','answers.id')
+			;
 
 			if (!empty($request['cycle'])) {
 				$questions = $questions->where('answers.cycle_id', '=',$request['cycle']);
@@ -99,9 +121,6 @@ class Question extends Eloquent {
 				}
 				if (!empty($request['question'])) {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
-				}
-				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
 				}
 			}
 			else{

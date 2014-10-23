@@ -7,7 +7,7 @@
     <script type="text/javascript" src="{{ Theme::asset('geojson/geojson.geojson') }}"></script>
 
   <script type="text/javascript">
-    $(document).ready(function () {
+    window.onload = function () {
       // Load Filter plugin
       $('.select-control').selectik({
         width: 200,
@@ -18,5 +18,5 @@
       var data_points_data = data_points(null);
 
       chartjs(color_set_data,data_points_data);
-    });
+    }
   </script>

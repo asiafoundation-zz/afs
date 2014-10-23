@@ -4,10 +4,14 @@ class ParticipantSeeder extends Seeder {
 
   public function run()
   {
+    DB::table('participants')->truncate();
+    DB::table('question_participants')->truncate();
+    DB::table('filter_participants')->truncate();
+
     $participants = array();
 
     for ($i=0; $i < 500; $i++) { 
-      $participants[$i] = '0';
+      $participants[$i] = array('0');
     }
 
     Participant::truncate();
@@ -20,12 +24,10 @@ class ParticipantSeeder extends Seeder {
       // Create question_participant
       $question_participants = array();
 
-      for ($i=0; $i < 12; $i++) { 
-        $question_participants[0] = array($participant_id,rand(1,2),rand(1,34));
-        $question_participants[1] = array($participant_id,rand(3,4),rand(1,34));
-        $question_participants[2] = array($participant_id,rand(5,8),rand(1,34));
-        $question_participants[3] = array($participant_id,rand(9,12),rand(1,34));
-      }
+      $question_participants[0] = array($participant_id,rand(1,2),rand(1,34));
+      $question_participants[1] = array($participant_id,rand(3,4),rand(1,34));
+      $question_participants[2] = array($participant_id,rand(5,8),rand(1,34));
+      $question_participants[3] = array($participant_id,rand(9,12),rand(1,34));
 
       foreach ($question_participants as $key => $question_participant) {
         QuestionParticipant::create(
