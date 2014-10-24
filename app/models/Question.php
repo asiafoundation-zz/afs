@@ -304,7 +304,7 @@ class Question extends Eloquent {
 			->groupBy('id_answer')
 			->get();
 
-		return array($questions,$is_next_available);
+		return $questions;
 	}
 
 	public static function NextQuestion($request = array())
