@@ -28,6 +28,8 @@ class ParticipantSeeder extends Seeder {
       $question_participants[1] = array($participant_id,rand(3,4),rand(1,34));
       $question_participants[2] = array($participant_id,rand(5,8),rand(1,34));
       $question_participants[3] = array($participant_id,rand(9,12),rand(1,34));
+      $question_participants[4] = array($participant_id,rand(13,14),rand(1,34));
+      $question_participants[5] = array($participant_id,rand(15,16),rand(1,34));
 
       foreach ($question_participants as $key => $question_participant) {
         QuestionParticipant::create(

@@ -5,8 +5,9 @@ class QuestionSeeder extends Seeder {
   public function run()
   {
     $questions = array(
-      array("0","Siapakah Calon Presiden Pilihan Anda","1","1"),
+      array("7","Siapakah Calon Presiden Pilihan Anda","1","1"),
       array("1","Siapakah Calon Wakil Presiden Pilihan Anda","1","0"),
+      array("7","Siapakah Ketua MPR Pilihan Anda","1","0"),
     );
       // array("0","Siapakah Calon Presiden Pilihan Anda","1","1","1"),
       // array("0","Siapakah Calon Presiden Pilihan Anda","1","2","0"),

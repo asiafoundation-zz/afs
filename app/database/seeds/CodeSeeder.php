@@ -11,6 +11,7 @@ class CodeSeeder extends Seeder {
       array("SES","1"),
       array("AREA","1"),
       array("GENDER","1"),
+      array("Compare","2"),
     );
 
     Code::truncate();

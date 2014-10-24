@@ -17,6 +17,11 @@ class AnswerSeeder extends Seeder {
       array("AMIEN RAIS","2","4","1"),
       array("DIN SYAMSUDIN","2","3","2"),
       array("AMIEN RAIS","2","4","2"),
+
+      array("Oesman Sapta","3","3","1"),
+      array("Andi Mapetahang","3","4","1"),
+      array("Oesman Sapta","3","3","2"),
+      array("Andi Mapetahang","3","4","2"),
     );
 
       // array("JOKOWI","1","1"),
