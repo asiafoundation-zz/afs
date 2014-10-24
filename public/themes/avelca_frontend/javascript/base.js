@@ -72,31 +72,18 @@ function chartjs(color_set,data_points,data_points_pie)
   chartbar.render();
 }
 
-function compare_chart(data)
+function compare_chart(first_list, end_list, colorSet, baseline_text,endline_text)
 {
-  var baseline_list = [];
-  var endline_list = [];
-  var colorSet = []
-
-  for (i = 0; i < data.length; i++) {
-    if (data[i].cycle_type == 0) {
-      var baseline_text = data[i].cycle;
-      baseline_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
-
-      colorSet.push(data[i].color);
-    }
-    if (data[i].cycle_type == 1) {
-      var endline_text = data[i].cycle;
-      endline_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
-    }
-  };
-
   CanvasJS.addColorSet("greenShades",colorSet);
 
   var chart = new CanvasJS.Chart("compareChart",
   {
       title:{
-        text: "Compares "+baseline_text+" and "+endline_text
+        text: 'Compare "'+baseline_text+'" dan "'+endline_text+'"'
+      },
+      axisY: {
+        valueFormatString: " ",
+        tickLength: 0
       },
       legend: {
         fontSize: 24,
@@ -107,13 +94,13 @@ function compare_chart(data)
         type: "bar",
         showInLegend: true,
         legendText: baseline_text,
-        dataPoints: baseline_list
+        dataPoints: first_list
       },
       {
         type: "bar",
         showInLegend: true,
         legendText: endline_text,
-        dataPoints: endline_list
+        dataPoints: end_list
       }
       ]
   });
@@ -124,9 +111,11 @@ function compare_chart(data)
 function detail_chart_js(data)
 {
   var data_list = [];
+  var total_participant = 0;
 
   for (i = 0; i < data.length; i++) {
     var data_text = data[i].category_name;
+    total_participant += parseInt(data[i].amount); 
     data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: data[i].category_item_name});
   };
 
@@ -146,8 +135,8 @@ function detail_chart_js(data)
       padding: 0
     },
     axisY: {
-      maximum: 100,
-      interval: 20,
+      maximum: total_participant,
+      interval: 100,
       tickLength: 0,
       gridThickness: 1
     },

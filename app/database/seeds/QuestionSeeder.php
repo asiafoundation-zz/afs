@@ -18,7 +18,7 @@ class QuestionSeeder extends Seeder {
     foreach ($questions as $key => $question) {
       Question::create(
         array(
-          "code" => $question[0],
+          "code_id" => $question[0],
           "question" => $question[1],
           "question_category_id" => $question[2],
           "is_default" => $question[3],

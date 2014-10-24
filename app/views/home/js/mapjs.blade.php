@@ -7,6 +7,7 @@
       region:"",
       category:{{ $default_question->id_question_categories }},
       question: {{ $default_question->id_question }},
+      question_code: {{ $default_question->question_code }},
       cycle:{{ $default_question->id_cycle }}
     };
 
@@ -14,6 +15,7 @@
       region:"",
       category:{{ $default_question->id_question_categories }},
       question: {{ $default_question->id_question }},
+      question_code: {{ $default_question->question_code }},
       cycle:{{ $default_question->id_cycle }}
     };
 
@@ -25,6 +27,7 @@
         region: data.region,
         category: data.category,
         question: data.question,
+        question_code: data.question_code,
         cycle: data.cycle
       };
     }

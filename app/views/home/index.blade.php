@@ -88,7 +88,7 @@
           <div class="col-md-12">
             <ul class="chart-pagination">
               <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
-              <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle()">{{Lang::get('frontend.compare_this_survey')}}</a></li>
+              <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
               <li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
             </ul>
           </div>
@@ -107,17 +107,17 @@
         <div class="extras">
           <img src="{{ Theme::asset('img/compare.png') }}">
           <div>
-            <h4>Compare Survey Results</h4>
+            <h4>{{Lang::get('frontend.compare_survey_results')}}</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
-            <a href="#" class="orange-bg">COMPARE SURVEY</a>
+            <a onclick='compare_cycle(2)' class="orange-bg">{{Lang::get('frontend.compare_survey')}}</a>
           </div>
         </div>
         <div class="extras">
           <img src="{{ Theme::asset('img/variable.png') }}">
           <div>
-            <h4>Cross by Another Variable</h4>
+            <h4>{{Lang::get('frontend.cross_by_another_variable')}}</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
-            <a href="#" class="orange-bg">Cross by another variable</a>
+            <a href="#" class="orange-bg">{{Lang::get('frontend.cross_by_another_variable')}}</a>
           </div>
         </div>
       </div>

@@ -80,9 +80,8 @@ class HomeController extends BaseController {
 
 				case 'compare_cycle':
 					$default_questions = Question::CompareCycle(Input::get());
-					$load_filter = array("question" => $default_questions);
 
-					$return = count($default_questions) > 0 ? $load_filter : 0;
+					$return = count($default_questions) > 0 ? $default_questions : 0;
 
 					return $return;
 					break;
@@ -130,16 +129,10 @@ class HomeController extends BaseController {
 					return $return;
 					break;
 
-				case 'compare_question':
-					$default_questions = Question::CompareQuestion(Input::get());
-					$default_question = reset($default_questions);
+				case 'compare_all_cycle':
+					$default_questions = Question::CompareCycle(Input::get());
 
-					$load_filter = array(
-						"default_question" => $default_question,
-						"question" => $default_questions,
-					);
-
-					$return = count($default_questions) > 0 ? $load_filter : 0;
+					$return = count($default_questions) > 0 ? $default_questions : 0;
 
 					return $return;
 					break;
