@@ -60,6 +60,7 @@ function chartjs(color_set,data_points,data_points_pie)
           labelFontSize: 18,
           indexLabelFontColor: "gray",
           indexLabelFontFamily: "DINNextLTPro-Regular",
+          indexLabelPlacement:"inside",
           type: "bar",
           click: function(e){
             detail_chart(e.dataPoint.answer_id,0,0)
