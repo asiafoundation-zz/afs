@@ -409,4 +409,5 @@ class Question extends Eloquent {
 
 		return $questions;
 	}
+
 }
