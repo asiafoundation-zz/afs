@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DeleteParticipantTable extends Migration {
+class DeleteSampleTypeOnParticipantsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,7 +12,9 @@ class DeleteParticipantTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::drop('participants');
+		Schema::table('participants', function($table){
+			$table->dropColumn('sample_type');
+		});
 	}
 
 	/**
@@ -22,7 +24,9 @@ class DeleteParticipantTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::table('participants', function($table){
+			$table->integer('sample_type');
+		});
 	}
 
 }
