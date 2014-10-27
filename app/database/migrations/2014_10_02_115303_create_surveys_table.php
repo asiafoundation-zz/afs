@@ -16,9 +16,9 @@ class CreateSurveysTable extends Migration {
 		{
 			$table->bigIncrements("id")->unsigned();
 			$table->string("name");
-$table->string("geojson_file");
-$table->string("baseline_file");
-$table->string("endline_file");
+			$table->string("geojson_file");
+			$table->string("baseline_file");
+			$table->string("endline_file");
 			$table->timestamps();
 			$table->softDeletes();
 		});
