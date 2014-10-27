@@ -38,4 +38,22 @@ class Cycle extends Eloquent {
 
 		return compact('fields');
 	}
+
+	public static function QuestionCycle($default_question)
+	{
+		$question_cycle =  DB::table('cycles')
+			->select(
+				'cycles.id',
+				'name',
+				'cycle_type'
+				)
+			->join('answers','answers.cycle_id','=','cycles.id')
+			->join('questions','questions.id','=','answers.question_id')
+			->where('questions.id', '=',$default_question->id_question)
+			->GroupBy('name')
+			->orderBy('cycle_type', 'asc')
+			->get();
+
+			return $question_cycle;
+	}
 }

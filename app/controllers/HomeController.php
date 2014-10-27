@@ -4,6 +4,7 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
+		$survey = Survey::first();
 		// Get Default Question
 		$default_questions = Question::DefaultQuestion(Input::get());
 		$default_question = reset($default_questions);
@@ -13,9 +14,9 @@ class HomeController extends BaseController {
 		$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
 
 		$data = array(
-			"survey" => Survey::first(),
+			"survey" => $survey,
 			"filters" => Code::getFilter(),
-			"cycles" => Cycle::select('id','name')->get(),
+			"cycles" => Cycle::QuestionCycle($default_question),
 			"question_categories" => $split_data['question_categories'],
 			"question_lists" => $split_data['question_lists'],
 			"default_question" => $default_question,
@@ -33,7 +34,13 @@ class HomeController extends BaseController {
 				case 'cycle':
 				
 					$default_questions = Question::DefaultQuestion(Input::get());
-					$load_filter = array("question" => $default_questions);
+					$default_question = reset($default_questions);
+
+					$load_filter = array(
+						"question" => $default_questions,
+						"default_question" => $default_question,
+						"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
+						);
 					$return = count($default_questions) > 0 ? $load_filter : 0;
 
 					return $return;
@@ -62,6 +69,7 @@ class HomeController extends BaseController {
 						"survey" => Survey::first(),
 						"default_question" => $default_question,
 						"question" => $default_questions,
+						"cycles" => Cycle::QuestionCycle($default_question),
 						"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
 					);
 
@@ -80,8 +88,16 @@ class HomeController extends BaseController {
 
 				case 'compare_cycle':
 					$default_questions = Question::CompareCycle(Input::get());
+					$default_question = reset($default_questions);
 
-					$return = count($default_questions) > 0 ? $default_questions : 0;
+					$load_filter = array();
+					$load_filter = array(
+						"default_question" => $default_question,
+						"question" => $default_questions,
+						"cycles" => Cycle::QuestionCycle($default_question),
+					);
+
+					$return = count($default_questions) > 0 ? $load_filter : 0;
 
 					return $return;
 					break;

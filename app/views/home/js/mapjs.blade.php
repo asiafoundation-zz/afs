@@ -47,7 +47,7 @@
     function getColor(d) {
       var color = 'white';
       @foreach ($regions as $key_region => $region)
-        if (d == '{{ $region["name"] }}')
+        if (d === '{{ $region["name"] }}')
         {
           color = '{{ $region["color"] }}';
         }

@@ -51,33 +51,6 @@ class QuestionParticipant extends Eloquent {
 		return compact('fields');
 	}
 
-// Will be removed
-	// public static function DefaultQuestion($answer_id,$request = array())
-	// {
-	// 	$filter_queries =  DB::table('question_participants')
-	// 		->select(
-	// 			DB::raw(
-	// 				'participants.id as id_participant,
-	// 				regions.name,
-	// 				question_participants.id as question_participants'
-	// 				)
-	// 			)
-	// 		->join('participants','participants.id','=','question_participants.participant_id')
-	// 		->leftjoin('regions','regions.id','=','question_participants.region_id')
-	// 		->where('question_participants.answer_id', '=',$answer_id);
-
-	// 		if (!empty($request['region'])) {
-	// 			$filter_queries =  $filter_queries->where('regions.name', '=', (string)$request['region']);
-	// 		}
-
-	// 		$filter_queries =  $filter_queries->GroupBy('id_participant')
-	// 		->get();
-
-	// 		$data_result = count($filter_queries);
-
-	// 		return $data_result;
-	// }
-
 	public static function CompareQuestion($answer_id,$cycle_type)
 	{
 		$filter_queries =  DB::table('question_participants')
@@ -100,9 +73,8 @@ class QuestionParticipant extends Eloquent {
 
 	public static function RegionColor($cycle_id,$default_questions)
 	{
-		$regions = array();
 		foreach ($default_questions as $key_default_question => $default_question) {
-			$region_queries =  DB::table('question_participants')
+			$region_queries[$key_default_question] =  DB::table('question_participants')
 				->select(
 					DB::raw(
 						'regions.id as id_region,
@@ -121,25 +93,37 @@ class QuestionParticipant extends Eloquent {
 				->GroupBy('id_region')
 				->GroupBy('id_answer')
 				->get();
+		}
 
-			if (count($region_queries)) {
-				foreach ($region_queries as $key_region_queries => $region_query) {
-					$regions[$key_region_queries]["region_id"] = $region_query->id_region;
-					$regions[$key_region_queries]["name"] = $region_query->name;
+		$regions_array = array();
+		$regions = array();
+		if (count($region_queries)) {
+			// Compare
+			foreach ($region_queries as $key => $region_query_lists) {
+				foreach ($region_query_lists as $key_region_queries => $region_query) {
+					$regions_array[$region_query->id_region]["region_id"] = $region_query->id_region;
+					$regions_array[$region_query->id_region]["name"] = $region_query->name;
 
-					if (empty($regions[$key_region_queries]["amount"])) {
-						$regions[$key_region_queries]["answer_name"] = $region_query->answer_name;
-						$regions[$key_region_queries]["answer_id"] = $region_query->id_answer;
-						$regions[$key_region_queries]["amount"] = $region_query->amount;
-						$regions[$key_region_queries]["color"] = $region_query->color;
+					if (empty($regions_array[$region_query->id_region]["amount"])) {
+						$regions_array[$region_query->id_region]["answer_name"] = $region_query->answer_name;
+						$regions_array[$region_query->id_region]["answer_id"] = $region_query->id_answer;
+						$regions_array[$region_query->id_region]["amount"] = $region_query->amount;
+						$regions_array[$region_query->id_region]["color"] = $region_query->color;
 					}
-					if ((int)$region_query->amount > (int)$regions[$key_region_queries]["amount"]) {
-						$regions[$key_region_queries]["answer_name"] = $region_query->answer_name;
-						$regions[$key_region_queries]["answer_id"] = $region_query->id_answer;
-						$regions[$key_region_queries]["amount"] = $region_query->amount;
-						$regions[$key_region_queries]["color"] = $region_query->color;
+					if ((int)$region_query->amount > (int)$regions_array[$region_query->id_region]["amount"] 
+						and $region_query->id_region  == $regions_array[$region_query->id_region]["region_id"] ) {
+						$regions_array[$region_query->id_region]["answer_name"] = $region_query->answer_name;
+						$regions_array[$region_query->id_region]["answer_id"] = $region_query->id_answer;
+						$regions_array[$region_query->id_region]["amount"] = $region_query->amount;
+						$regions_array[$region_query->id_region]["color"] = $region_query->color;
 					}
 				}
+			}
+			// Sort arry with number
+			$i=0;
+			foreach ($regions_array as $key_regions_array => $value) {
+				$regions[$i] = $value;
+				$i++;
 			}
 		}
 

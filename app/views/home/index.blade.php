@@ -15,7 +15,7 @@
         <p id="select_cycle_label">{{ $default_question->cycle }}</p>
         <div class="dropdown">
           <a href="#" data-toggle="dropdown" class="hamburger"></a>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" id="cycle_list">
             @foreach ($cycles as $cycle)
             <li><a href="#" onclick='cycle_select({{ $cycle->id }})' id="cycle_select_{{ $cycle->id }}">{{ $cycle->name }}</a></li>
             @endforeach
@@ -87,9 +87,11 @@
           </div>
           <div class="col-md-12">
             <ul class="chart-pagination">
+            @if(count($cycles) > 2)
               <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
               <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
               <li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
+            @endif
             </ul>
           </div>
         </div>

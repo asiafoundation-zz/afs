@@ -15,10 +15,22 @@
 
             // Re declare object filter data 
             cycle_id = FilterSelect.cycle;
+
+            // cycle list
+            var cycle_list = "";
+            var data_cycles = data.cycles;
+            for (var key in data_cycles) {
+              if (data_cycles.hasOwnProperty(key)) {
+                  cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'aaa</a></li>'; 
+              }
+            }
+
             var cycle_text = $("#cycle_select_"+cycle_id).text();
+            $("#cycle_list").html(cycle_list);
+
             $("#question-name").html(data.default_question.question);
             $("#select_cycle_label").html(cycle_text);
-            $(".chart-pagination").html('<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle()">{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+            $(".chart-pagination").html('<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
 
             // Re assign map
             dynamicRegions = data.regions;
@@ -59,6 +71,14 @@
 
               var cycle_text = $("#cycle_select_"+cycle_id).text();
               $("#select_cycle_label").html(cycle_text);
+
+              // Re assign map
+              dynamicRegions = data.regions;
+              // Load New map
+              geojson = L.geoJson(statesData, {
+                style: styleDynamic,
+                onEachFeature: onEachFeature,
+              }).addTo(map);
 
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
@@ -122,20 +142,20 @@
             var endline_text = "";
             var question_text = "";
 
-            for (i = 0; i < data.length; i++) {
-              if (data[i].cycle_type == 0) {
+            for (i = 0; i < data.question.length; i++) {
+              if (data.question[i].cycle_type == 0) {
 
-                baseline_text = data[i].cycle;
-                question_text = data[i].question;
-                FilterSelect.question = data[i].id_question;
+                baseline_text = data.question[i].cycle;
+                question_text = data.question[i].question;
+                FilterSelect.question = data.question[i].id_question;
 
-                first_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
+                first_list.push({ y: parseInt(data.question[i].amount), label: data.question[i].answer});
 
-                colorSet.push(data[i].color);
+                colorSet.push(data.question[i].color);
               }
-              if (data[i].cycle_type == 1) {
-                endline_text = data[i].cycle;
-                end_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
+              if (data.question[i].cycle_type == 1) {
+                endline_text = data.question[i].cycle;
+                end_list.push({ y: parseInt(data.question[i].amount), label: data.question[i].answer});
               }
             }
 
@@ -146,7 +166,9 @@
             }else{
               $("#question-name").html(question_text);
 
-              $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+              if (Object.keys(data.cycles).length > 1) {
+                $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+              }
             }
 
             // Re assingn Filter data
