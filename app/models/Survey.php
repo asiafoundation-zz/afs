@@ -20,7 +20,8 @@ class Survey extends Eloquent {
 		'name',
 		'geojson_file',
 		'baseline_file',
-		'endline_file'
+		'endline_file',
+		'publish'
 		);
 	protected $guarded = array('id');
 
@@ -29,7 +30,8 @@ class Survey extends Eloquent {
 		'name' => 'required',
 		'geojson_file' => 'required',
 		'baseline_file' => 'required',
-		'endline_file' => 'required'
+		'endline_file' => 'required',
+		'publish' => 'required'
 		);
 
 	/* Database Structure */
@@ -50,6 +52,10 @@ class Survey extends Eloquent {
 					),
 			'endline_file' => array(
 						'type' => 'text',
+						'onIndex' => true
+					),
+			'publish' => array(
+						'type' => 'number',
 						'onIndex' => true
 					)
 		);

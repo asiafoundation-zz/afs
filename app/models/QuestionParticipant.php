@@ -95,6 +95,7 @@ class QuestionParticipant extends Eloquent {
 				->get();
 		}
 
+
 		$regions_array = array();
 		$regions = array();
 		if (count($region_queries)) {

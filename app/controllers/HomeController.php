@@ -4,7 +4,11 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
-		$survey = Survey::first();
+		$survey = DB::table('surveys')->first();
+
+		if (!$survey->publish) {
+			return View::make('error.404');
+		}
 		// Get Default Question
 		$default_questions = Question::DefaultQuestion(Input::get());
 		$default_question = reset($default_questions);
