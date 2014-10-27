@@ -21,7 +21,7 @@
             var data_cycles = data.cycles;
             for (var key in data_cycles) {
               if (data_cycles.hasOwnProperty(key)) {
-                  cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'aaa</a></li>'; 
+                  cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'</a></li>'; 
               }
             }
 

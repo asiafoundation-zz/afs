@@ -25,7 +25,6 @@ class DatabaseSeeder extends Seeder {
 		$this->call("MasterCodeSeeder");
 		$this->call("QuestionCategorySeeder");
 		$this->call("QuestionSeeder");
-		// $this->call("QuestionerSeeder");
 		$this->call("RegionSeeder");
 		$this->call("SurveySeeder");
 		$this->call("ParticipantSeeder");
