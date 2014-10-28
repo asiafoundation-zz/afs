@@ -38,7 +38,7 @@
 					<?php
 						if($base_header == true)
 						{
-							echo "<input type='hidden' name='id_cycle' value='". Request::segment(4) ."''>";
+							echo "<input type='hidden' name='survey_id' value='". Request::segment(4) ."''>";
 
 							foreach($header as $value){
 								echo "<input type='hidden' name='unselected[]' value='". $value['header0'] .";". $value['header1'] .";". $value['header3'] ."'>";
@@ -46,7 +46,7 @@
 						}
 						else
 						{
-							echo "<input type='hidden' name='id_cycle' value='". $id_cycle ."'>";
+							echo "<input type='hidden' name='survey_id' value='". $survey_id ."'>";
 
 							foreach($header as $value){
 								echo "<input type='hidden' name='unselected[]' value='". $value ."'>";
