@@ -149,7 +149,12 @@ class SurveyController extends AvelcaController {
 					}
 				}
 			}
+
 		}
+
+		$question = Question::find(1);
+		$question->is_default = 1;
+		$question->save();
 
 		$content = array("Select Region", "Please select region with clicking a list on the left");
 
@@ -170,6 +175,7 @@ class SurveyController extends AvelcaController {
 		$categories = Input::get('unselected');
 		$region = Input::get('header');
 		$code_id = 0;
+		$master_code_id = 0;
 
 		foreach($region as $value)
 		{
@@ -424,7 +430,13 @@ class SurveyController extends AvelcaController {
 			}
 
 		});
+		
+		return Redirect::to('/admin/survey/managesurvey');
+	}
 
+	public function getManagesurvey(){
+
+		return View::make('admin.survey.managesurvey');
 	}
 
 	public function readHeader($inputFileName, $highest_column, $sheet)
