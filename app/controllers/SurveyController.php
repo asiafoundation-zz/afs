@@ -434,7 +434,6 @@ class SurveyController extends AvelcaController {
 
 	public function getManagesurvey(){
 		$question = Question::all();
-
 		return View::make('admin.survey.managesurvey')->with('question', $question);
 	}
 
