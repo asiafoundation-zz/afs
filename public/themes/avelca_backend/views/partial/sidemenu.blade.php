@@ -6,7 +6,20 @@
 		<a href="{{ URL::to('dashboard') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
 	</li>
 	<li>
-		<a href="/admin/survey">Manage Survey<span class="fa"></span></a>
+		<?php
+			$survey = Survey::all();
+
+			if($survey->count() > 0){
+				?>
+				<a href="/admin/survey/managesurvey">Manage Survey<span class="fa"></span></a>		
+				<?php
+			}else{
+				?>
+				<a href="/admin/survey/">Manage Survey<span class="fa"></span></a>
+				<?php
+			}
+		?>
+		
 		<!--ul class="nav nav-third-level collapse" style="height: auto;">
 			<li>
 				<a href="#">Upload Survey</a>
