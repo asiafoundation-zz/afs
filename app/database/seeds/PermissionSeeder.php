@@ -20,6 +20,7 @@ class PermissionSeeder extends Seeder {
 			"survey.region",
 			"survey.oversample",
 			"survey.import",
+			"survey.managesurvey",
 			"survey.upload"
 			);
 
