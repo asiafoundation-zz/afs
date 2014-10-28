@@ -21,11 +21,11 @@ class SurveyController extends AvelcaController {
 
 		if($validator->passes())
 		{
-			$survey = Survey::create(array('name' => Input::get('survey_name')));
+			$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'publish' => 1));
 
 			if($survey)
 			{
-				return Redirect::to('/admin/survey/cycle');
+				return Redirect::to('/admin/survey/category/'. $survey->id);
 			}
 		}
 		else
@@ -34,7 +34,7 @@ class SurveyController extends AvelcaController {
 		}
 	}
 
-	public function getCycle()
+	/*public function getCycle()
 	{
 
 		return view::make('admin.survey.cycle');
@@ -65,7 +65,7 @@ class SurveyController extends AvelcaController {
 			return Redirect::to('/admin/survey/cycle')->withErrors($validator)->withInput();
 		}
 	}
-
+*/
 	public function postUpload(){
 		
 		$filename = Input::file('file')->getClientOriginalName();
@@ -80,9 +80,9 @@ class SurveyController extends AvelcaController {
 
 	public function getCategory($id)
 	{
-		$cycle = Cycle::where('id', '=', $id)->first();
+		$survey = Survey::where('id', '=', $id)->first();
 		
-		$header = $this->readHeader($cycle->excel_file, 'E', 0);
+		$header = $this->readHeader($survey->baseline_file, 'E', 0);
 
 		$content = array("Select Category Filter","Please select select category with clicking a list on the left");
 
@@ -127,11 +127,26 @@ class SurveyController extends AvelcaController {
 					}
 					else{ $id_question_category = $select_question_category->id; }
 				}
-				
-				$question = Question::where('code', '=', $question_content[1])->first();
-				if(!isset($question))
-				{
-					Question::create(array('code' => $question_content[1], 'question' => $question_content[2], 'question_category_id' => $id_question_category));
+
+				$arr_master_code = explode('_', $question_content[1]);
+				$s_master_code = MasterCode::where('master_code', '=', $arr_master_code[0])->first();
+				if(!isset($s_master_code))
+				{	
+					$master_code = MasterCode::create(array('master_code' => $arr_master_code[0]));
+
+					if($master_code)
+					{
+						if(empty($arr_master_code[1])){ 
+							$code_content = "-"; 
+						}else{
+							$code_content = $arr_master_code[1];	
+						}
+						
+
+						$code = Code::create(array('code' => $code_content, 'master_code_id' => $master_code->id));
+						
+						Question::create(array('code_id' => $code->id, 'question' => $question_content[2], 'question_category_id' => $id_question_category));	
+					}
 				}
 			}
 		}
@@ -147,21 +162,32 @@ class SurveyController extends AvelcaController {
 				->with('content', $content)
 				->with('action', $form_action)
 				->with('button', $button_value)
-				->with('id_cycle', Input::get('id_cycle'))
+				->with('survey_id', Input::get('survey_id'))
 				->with('base_header', false);
 	}
 
 	public function postRegion(){
 		$categories = Input::get('unselected');
 		$region = Input::get('header');
+		$code_id = 0;
 
 		foreach($region as $value)
 		{
 			$region_piece = explode(';',$value);
-			$code = Code::where('code','=',$region_piece[0])->first();
+
+			$code_piece = explode('_', $region_piece[0]);
+
+			$s_master_code = MasterCode::where('master_code','=', $code_piece[0])->first();
+			if(!isset($s_master_code))
+			{
+				$master_code = MasterCode::create(array('master_code' => $code_piece[0]));
+				$master_code_id = $master_code->id;
+			}
+
+			$code = Code::where('code','=',$code_piece[1])->first();
 			if(!isset($code))
 			{
-				$code = Code::create(array('code' => $region_piece[0]));
+				$code = Code::create(array('code' => $code_piece[1], 'master_code_id' => $master_code_id));
 				$code_id = $code->id;
 			}
 
@@ -179,14 +205,13 @@ class SurveyController extends AvelcaController {
 			$categories = array_values($categories);
 		}
 
-		$cycle = Cycle::where('id', '=', Input::get('id_cycle'))->first();
-		$filename = 'uploads/'.$cycle->excel_file;
+		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
+		$filename = 'uploads/'.$survey->baseline_file;
 		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(250, function($results)
 		{
 			$region = Input::get('header');
-
 			$region_piece = explode(';', $region[0]);
-
+			$code_piece = explode('_', $region_piece[0]);
 			$data = array();
 
 			$arr_data = $results->toArray();
@@ -195,15 +220,23 @@ class SurveyController extends AvelcaController {
 			{
 				foreach($data as $key => $value)
 				{
-					if($key == strtolower($region_piece[0]))
+					$key_piece = explode('_', $key);
+					
+					if(!empty($key_piece[1]))
 					{
-						$s_region = Region::where('name', '=', $value)->first();
-						if(!isset($s_region))
+						
+						if($key_piece[1] == strtolower($code_piece[1]))
 						{
-							$code = Code::where('code', '=', $region_piece[0])->first();
-							$region = Region::create(array('name' => $value, 'code_id' => $code->id));
-							$region_id = $region->id;
-						}
+							$region_name = explode('. ', $value);
+
+							$s_region = Region::where('name', '=', $region_name[1])->first();
+							if(!isset($s_region))
+							{
+								$code = Code::where('code', '=', strtolower($key_piece[1]))->first();
+
+								$region = Region::create(array('name' => $region_name[1], 'code_id' => $code->id));
+							}
+						}	
 					}
 				}
 			}
@@ -220,7 +253,7 @@ class SurveyController extends AvelcaController {
 				->with('content', $content)
 				->with('action', $form_action)
 				->with('button', $button_value)
-				->with('id_cycle', Input::get('id_cycle'))
+				->with('survey_id', Input::get('survey_id'))
 				->with('base_header', false);
 
 	}
@@ -238,187 +271,161 @@ class SurveyController extends AvelcaController {
 
 		foreach($categories as $category){
 			$arr_category = explode(';',$category);
+			$arr_code = explode('_', $arr_category[0]);
 
-			$s_code = Code::where('code', '=', $arr_category[0])->first();
-			if(!isset($s_code))
-			{
-				$code = Code::create(array('code' => $arr_category[0]));
-
-				if($code)
+			$s_master_code = MasterCode::where('master_code', '=', $arr_code[0])->first();
+			if(isset($s_master_code)){
+				$s_code = Code::where('code', '=', $arr_code[1])->first();
+				if(!isset($s_code))
 				{
+					$code = Code::create(array('code' => $arr_code[1], 'master_code_id' => $s_master_code->id));
+
 					$s_category = Category::where('name', '=', $arr_category[1])->first();
 					if(!isset($s_category))
 					{
 						Category::create(array('name' => $arr_category[1], 'code_id' => $code->id));
-					}
-				}
-			}
-		}
-
-		$cycle = Cycle::where('id', '=', Input::get('id_cycle'))->first();
-		$filename = 'uploads/'.$cycle->excel_file;
-		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(250, function($results)
-		{
-			$data = array();
-			$oversample = Input::get('header');
-			$arr_data = $results->toArray();
-			$region_id = 0; 
-			$sample_type = null;
-
-			foreach($arr_data as $data)
-			{
-				foreach($data as $key => $value)
-				{
-					$code = Code::where('code', '=', $key)->first();
-					if(isset($code))
-					{
-
-						$s_region = Region::join('codes', 'regions.code_id', '=', 'codes.id')->where('code', '=', strtoupper($key))->first();
-						if(isset($s_region))
-						{
-							$region_id = $s_region->id;
-						}
-						else
-						{
-							$s_category_item = CategoryItem::where('name', '=', $value)->first();
-							if(!isset($s_category_item))
-							{
-								if($value != "")
-								{
-									$category_item = CategoryItem::create(array('name' => $value, 'category_id' => $code->id));
-									$category_id = $category_item->id;	
-								}
-							}	
-						}
-					}
-
-					$arr_oversample = explode(';',$oversample[0]);
-					if(strtolower($arr_oversample[0]) == $key){
-						$sample_type = 1;
-						$arr_value = explode('. ', $value);
-						if(strtolower($arr_value[1]) == 'sample utama'){
-							$sample_type = 0;
-							
-						}
-					}
-
-					$question = Question::where('code', '=', $key)->first();
-					if(isset($question))
-					{
-						if($value != "")
-						{
-							$answer = Answer::create(array('answer' => $value, 'question_id' => $question->id, 'cycle_id' => Input::get('id_cycle')));
-
-							$question_participant = QuestionParticipant::create(array('answer_id' => $answer->id, 'region_id' => $region_id, 'sample_type' => $sample_type));
-						}
-					}
-				}
-			}
-
-		});
-
-	}
-
-	public function Import()
-	{
-		$headers = Input::get('header');
-		$questions = Input::get('question');
-
-		$string = array();
-
-		/*INSERT FILTER*/
-
-		foreach($headers as $header)
-		{
-			$string = explode(';', $header);
-			$select_code = Code::where('code', '=', $string[0])->first();
-			if(!isset($select_code))
-			{
-				$code = Code::create(array('code' => $string[0]));
-				if($code)
-				{
-					$select_categories = Category::where('name', '=', $string[1])->first();
-					if(!isset($select_categories))
-					{
-						$categories = Category::create(array('name' => $string[1], 'code_id' => $code->id));	
-					}
+					}	
 				}	
 			}
 		}
 
-		/*INSERT QUESTION*/
-
-		foreach($questions as $question)
-		{
-			$string = explode(';', $question);
-			$code = Code::where('code', '=', $string[0])->first();
-			if(!isset($code))
-			{
-				$question = Question::where('code', '=', $string[0])->first();
-				if(!isset($question)){
-					Question::create(array('code' => $string[0], 'question' => $string[1]));
-				}
-			}
-		}
-
-		/*IMPORT DATA*/
-
-		$cycle = Cycle::where('id', '=', Input::get('id_cycle'))->first();
-		$filename = 'uploads/'.$cycle->excel_file;
+		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
+		$filename = 'uploads/'.$survey->baseline_file;
 		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(250, function($results)
 		{
+			
+			$oversample = Input::get('header');
+			$categories = Input::get('unselected');
+
 			$data = array();
+			$region_id = 0; 
+			$category_item_id = 0;
+			$cycle_id = 0;
+			$sample_type = null;
+			$participant_count = 1;
+
+			// $code = array();
+			// $filter = array();
+			foreach($categories as $category)
+			{
+				$arr_category = explode(';', $category);
+				$code_piece = explode('_', $arr_category[0]);
+				$master_code = $code_piece[0];
+				$filter[] = $arr_category[1];
+			}
 
 			$arr_data = $results->toArray();
 
+			$index = 0;
 			foreach($arr_data as $data)
-			{
+			{	
+				$participant = Participant::create(array('id' => $participant_count));
+				$participant_id = $participant->id;
+
 				foreach($data as $key => $value)
-				{
-					$code = Code::where('code', '=', $key)->first();
-					if(isset($code))
+				{	
+					$key_piece = explode('_', $key);
+
+					if(strtolower($master_code) == $key_piece[0])
 					{
-						
-						if(strpos($value, '. ') !== false){
-							$string = array();
-							$string = explode('. ', $value);
-							$value = $string[1];
-						}
-
-						$s_category_item = CategoryItem::where('name', '=', $value)->first();
-						if(!isset($s_category_item))
+						if(!empty($key_piece[1]))
 						{
-							if($value != ""){
-								$category_item = CategoryItem::create(array('name' => $value, 'category_id' => $code->id));
-								$category_id = $category_item->id;	
-							}
-						}
-						
-						if($code->code == 'SFL_PROV')
-						{
-							$s_region = Region::where('name', '=', $value)->first();
-							if(!isset($s_region))
+							if($key_piece[1] == strtolower($filter[0]))
 							{
-								$region = Region::create(array('name' => $value, 'code_id' => $code->id));
-								$region_id = $region->id;
+								$cycle_type = 0;
+
+								if(strtolower($value) == 'endline')
+								{
+									$cycle_type = 1;
+								}
+
+								$s_cycle = Cycle::where('name','=', strtolower($value))->first();
+								if(!isset($s_cycle))
+								{
+									$cycle = Cycle::create(array('name' => strtolower($value), 'cycle_type' => $cycle_type));
+									$cycle_id = $cycle->id;
+								}	
+							}
+
+							$code = Code::where('code', '=', $key_piece[1])->first();
+							if(isset($code))
+							{
+								$s_region = DB::table('regions')
+											->select(DB::raw('regions.id as region_id'))
+											->join('codes', 'regions.code_id', '=', 'codes.id')
+											->where('codes.code', '=', strtoupper($key_piece[1]))
+											->first();
+
+								if(isset($s_region))
+								{
+									$region_id = $s_region->region_id;
+								}
+								else
+								{
+									$s_category_item = CategoryItem::where('name', '=', $value)->first();
+									if(!isset($s_category_item))
+									{
+										if($value != "")
+										{
+											$category_id = Category::where('code_id', '=', $code->id)->first()->id;
+
+											$category_item = CategoryItem::create(array('name' => $value, 'category_id' => $category_id));
+											$category_item_id = $category_item->id;
+										}
+									}
+								}
+
+								$s_category_item = CategoryItem::where('name', '=', $value)->first();
+								if(isset($s_category_item)){
+									FilterParticipant::create(array('participant_id' => $participant_id, 'category_item_id' => $s_category_item->id));
+								}
 							}
 						}
-
 					}
+					
+					$arr_oversample = explode(';',$oversample[0]);
+					$oversample_code = explode('_', $arr_oversample[0]);
 
-					$question = Question::where('code', '=', $key)->first();
-					if(isset($question)){
-						// echo $value.'<br>';
-						if($value != ""){
-							$answer = Answer::create(array('answer' => $value, 'question_id' => $question->id, 'cycle_id' => Input::get('id_cycle')));	
+					if(!empty($key_piece[1]))
+					{
+						if(strtolower($oversample_code[1]) == $key_piece[1]){
+							$sample_type = 1;
+							$arr_value = explode('. ', $value);
+							if(strtolower($arr_value[1]) == 'sample utama'){
+								$sample_type = 0;
+							}
+						}	
+					}
+					
+
+					$question = DB::table('questions')
+								->select(
+										DB::raw('questions.id as question_id')
+									)
+								->join('codes', 'codes.id', '=', 'questions.code_id')
+								->join('master_codes', 'master_codes.id', '=', 'codes.master_code_id') 
+								->where('master_code', '=', $key_piece[0])->first();
+
+					if(isset($question))
+					{
+						if($value != "")
+						{
+							// if($cycle_id != 0){
+								$answer = Answer::create(array('answer' => $value, 'question_id' => $question->question_id, 'cycle_id' => $cycle_id, 'color_id' => 1));
+
+								$question_participant = QuestionParticipant::create(array('answer_id' => $answer->id, 'region_id' => $region_id, 'sample_type' => $sample_type, 'participant_id' => $participant_id));
+							// }
 						}
 					}
+
 				}
+				$index ++;
+				$participant_count ++;
 			}
 
 		});
+
 	}
-	
 
 	public function readHeader($inputFileName, $highest_column, $sheet)
 	{

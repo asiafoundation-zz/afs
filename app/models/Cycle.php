@@ -17,7 +17,8 @@ class Cycle extends Eloquent {
 	/* Mass Assignment */
 	protected $fillable = array(
 		'name',
-		'excel_file'
+		'excel_file',
+		'cycle_type'
 		);
 	protected $guarded = array('id');
 

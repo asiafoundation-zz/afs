@@ -16,7 +16,7 @@ class Question extends Eloquent {
 
 	/* Mass Assignment */
 	protected $fillable = array(
-		'code',
+		'code_id',
 		'question',
 		'question_category_id',
 		'is_default'
