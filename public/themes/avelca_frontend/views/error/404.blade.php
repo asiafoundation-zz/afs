@@ -31,7 +31,6 @@
         <p>
           We apologize for the inconvenience, but we are unable to process your request at this time. Our detective have been notified of this problem and will work to resolve it.
         </p>
-        <a href="#" class="orange-bg">bring me back home</a>
       </div>
     </div>
   </section>

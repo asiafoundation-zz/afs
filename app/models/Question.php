@@ -114,9 +114,9 @@ class Question extends Eloquent {
 
 		return $questions;
 	}
+
 	public static function DifferentAnswer($questions, $request)
 	{
-		$questions_diff = array();
 		$answer_diff = array();
 
 		foreach ($questions as $key_questions => $question) {
@@ -392,11 +392,11 @@ class Question extends Eloquent {
 				->get();
 
 		if (count($questions)) {
-			if (!empty($request['answers'])) {
-				if (count($questions) != count($request['answers'])) {
-					$questions = self::DifferentAnswer($questions,$request);
-				}
-			}
+			// if (!empty($request['answers'])) {
+			// 	if (count($questions) != count($request['answers'])) {
+			// 		$questions = self::DifferentAnswer($questions,$request);
+			// 	}
+			// }
 
 			$questions = self::IndexLabel($questions);
 		}
