@@ -46,7 +46,9 @@
 						</tr>
 					</tfoot-->
 			</table>
+			{{ $question->links() }}
 		</div>
+
 	</div>			
 </div>
 <div class="modal-footer">

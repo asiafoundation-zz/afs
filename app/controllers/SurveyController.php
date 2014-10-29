@@ -69,14 +69,15 @@ class SurveyController extends AvelcaController {
 	}
 */
 	public function postUpload(){
-		
+		ini_set("memory_limit","100M");
+
 		$filename = Input::file('file')->getClientOriginalName();
 
 		if(!file_exists($filename))
 		{
 			$uploaded = Input::file('file')->move('uploads/', $filename);	
 		}
-		
+
 	    return Response::json($filename);
 	}
 
@@ -274,8 +275,11 @@ class SurveyController extends AvelcaController {
 	}
 
 	public function postOversample(){
+		DB::table('categories')->truncate();
+
 		$categories = Input::get('unselected');
 		$oversample = Input::get('header');
+
 
 		$oversample_exist = array_search($oversample[0], $categories);
 		if($oversample_exist)
@@ -290,6 +294,8 @@ class SurveyController extends AvelcaController {
 
 			$s_master_code = MasterCode::where('master_code', '=', $arr_code[0])->first();
 			if(isset($s_master_code)){
+				echo $s_master_code->id.'<br>';
+
 				$s_code = Code::where('code', '=', $arr_code[1])->first();
 				if(!isset($s_code))
 				{
@@ -313,6 +319,8 @@ class SurveyController extends AvelcaController {
 			DB::table('question_participants')->truncate();
 			DB::table('filter_participants')->truncate();
 			DB::table('answers')->truncate();
+			DB::table('cycles')->truncate();
+			DB::table('category_items')->truncate();
 
 			$oversample = Input::get('header');
 			$categories = Input::get('unselected');
@@ -370,6 +378,7 @@ class SurveyController extends AvelcaController {
 							$code = Code::where('code', '=', $key_piece[1])->first();
 							if(isset($code))
 							{
+								echo $key_piece[1].' | '. $code->id. '<br>';
 								$s_region = DB::table('regions')
 											->select(DB::raw('regions.id as region_id'))
 											->join('codes', 'regions.code_id', '=', 'codes.id')
@@ -446,7 +455,7 @@ class SurveyController extends AvelcaController {
 	}
 
 	public function getManagesurvey(){
-		$question = Question::all();
+		$question = Question::paginate(5);
 		return View::make('admin.survey.managesurvey')->with('question', $question);
 	}
 
@@ -458,7 +467,7 @@ class SurveyController extends AvelcaController {
 	}
 
 	Public function readHeader($inputFileName, $highest_column, $sheet)
-	{
+	{		
 		$inputFileName = '../public/uploads/'.$inputFileName;
 
 		try
