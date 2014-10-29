@@ -467,6 +467,8 @@ class SurveyController extends AvelcaController {
 
 	Public function readHeader($inputFileName, $highest_column, $sheet)
 	{
+		set_time_limit(0);
+		
 		$inputFileName = '../public/uploads/'.$inputFileName;
 
 		try
