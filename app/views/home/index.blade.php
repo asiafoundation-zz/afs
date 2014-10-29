@@ -87,7 +87,7 @@
           </div>
           <div class="col-md-12">
             <ul class="chart-pagination">
-            @if(count($cycles) > 2)
+            @if(count($cycles) > 1)
               <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
               <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
               <li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
