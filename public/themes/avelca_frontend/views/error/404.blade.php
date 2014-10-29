@@ -1,19 +1,43 @@
-@extends('layouts/default')
+<!DOCTYPE html>
+<html id="newhome" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SURVEY Q - Oops!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Loading Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/style.css') }}">
 
-@section('content')
+    <script src="{{ Theme::asset('javascript/jquery-1.7.2.min.js') }}"></script>
+    <script src="{{ Theme::asset('javascript/modernizr-2.6.2.min.js') }}"></script>
 
-<div class="content">
-	<div class="content-tittle">
-		<div class="container">
-			<h1>Page not Found</h1>
-		</div>
-	</div>
-	<div class="content-inner">
-		<div class="container">
-			<p>This page you were trying to reach at this address doesn't seem to exist. This is usually the result of a bad or outdated link. We apologize for any inconvenience.</p>
-			<p>Please go back to <a href="{{ URL::to('/') }}">Home</a></p>
-		</div>
-	</div>
-</div>
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-@stop
+  </head>
+
+  <body>
+  
+  <section class="maintenance">
+    <a class="logo" href="#"><img src="img/logo.png"></a>
+    <div class="container">
+      <div class="col-md-6">
+        <i class="detective"></i>
+      </div>
+      <div class="col-md-6">
+        <h1>SurveyQ Will Be Back Soon</h1>
+        <p>
+          We apologize for the inconvenience, but we are unable to process your request at this time. Our detective have been notified of this problem and will work to resolve it.
+        </p>
+        <a href="#" class="orange-bg">bring me back home</a>
+      </div>
+    </div>
+  </section>
+
+  <script type="text/javascript" src="{{ Theme::asset('javascript/bootstrap.min.js') }}"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+  
+</body>
+</html>

@@ -6,6 +6,9 @@ class HomeController extends BaseController {
 	{
 		$survey = DB::table('surveys')->first();
 
+		if (!count($survey)) {
+			return View::make('error.404');
+		}
 		if (!$survey->publish) {
 			return View::make('error.404');
 		}
