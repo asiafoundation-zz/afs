@@ -21,6 +21,8 @@ class SurveyController extends AvelcaController {
 
 		if($validator->passes())
 		{
+			DB::table('surveys')->truncate();
+
 			$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'publish' => 1));
 
 			if($survey)
@@ -102,6 +104,11 @@ class SurveyController extends AvelcaController {
 		$headers = Input::get('header');
 		$questions = Input::get('unselected');
 
+		DB::table('questions')->truncate();
+		DB::table('question_categories')->truncate();
+		DB::table('master_codes')->truncate();
+		DB::table('codes')->truncate();
+
 		$header_code = array();
 		foreach($headers as $header)
 		{
@@ -172,6 +179,8 @@ class SurveyController extends AvelcaController {
 	}
 
 	public function postRegion(){
+		DB::table('regions')->truncate();
+
 		$categories = Input::get('unselected');
 		$region = Input::get('header');
 		$code_id = 0;
@@ -300,8 +309,14 @@ class SurveyController extends AvelcaController {
 		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(250, function($results)
 		{
 			
+			DB::table('participants')->truncate();
+			DB::table('question_participants')->truncate();
+			DB::table('filter_participants')->truncate();
+			DB::table('answers')->truncate();
+
 			$oversample = Input::get('header');
 			$categories = Input::get('unselected');
+
 
 			$data = array();
 			$region_id = 0; 
@@ -310,8 +325,6 @@ class SurveyController extends AvelcaController {
 			$sample_type = null;
 			$participant_count = 1;
 
-			// $code = array();
-			// $filter = array();
 			foreach($categories as $category)
 			{
 				$arr_category = explode(';', $category);
@@ -338,6 +351,7 @@ class SurveyController extends AvelcaController {
 						{
 							if($key_piece[1] == strtolower($filter[0]))
 							{
+								// $cycle_type = strtolower($value) == 'endline' ? 1 : 0;
 								$cycle_type = 0;
 
 								if(strtolower($value) == 'endline')
@@ -423,7 +437,6 @@ class SurveyController extends AvelcaController {
 					}
 
 				}
-				$index ++;
 				$participant_count ++;
 			}
 
@@ -437,7 +450,14 @@ class SurveyController extends AvelcaController {
 		return View::make('admin.survey.managesurvey')->with('question', $question);
 	}
 
-	public function readHeader($inputFileName, $highest_column, $sheet)
+	public function postDefaultQuestion(){
+		$update_question = Question::where('id', '=', Input::get('id_question'))->update(array('is_default' => 1));
+		$update_another_question = Question::whereNotIn('id', array(Input::get('id_question')))->update(array('is_default' => 0));
+
+		return Redirect::to('/admin/survey/managesurvey');
+	}
+
+	Public function readHeader($inputFileName, $highest_column, $sheet)
 	{
 		$inputFileName = '../public/uploads/'.$inputFileName;
 

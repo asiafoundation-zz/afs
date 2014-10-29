@@ -27,6 +27,7 @@
   </div>
   <div class="float-container">
   {{ Form::open(array('url' => 'signin', 'method' => 'post')) }}
+    {{ Widget::get('form-validation') }}
     <h6>welcome administrator</h6>
     <div class="form-group">
       <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus value="{{ Input::old('email') }}" />

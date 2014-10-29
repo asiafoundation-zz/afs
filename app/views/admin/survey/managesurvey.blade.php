@@ -13,7 +13,7 @@
 			<li><a href="{{ URL::to('admin/group') }}">Group</a></li>
 			<li class="active">{{ Lang::get('general.list') }}</li>
 		</ol-->
-		
+
 		<div class="table-responsive">
 			<table class="datatable table table-striped table-bordered">
 				<thead>
@@ -26,11 +26,14 @@
 					</thead>
 					<tbody>
 					@foreach($question as $value)
+						<?php
+							$default_question = $value->is_default == 1 ? "Default" : "-";
+						?>
 						<tr>
 							<td>{{ $value->id }}</td>
 							<td>{{ $value->question }}</td>
 							<td>{{ $value->updated_at }}</td>
-							<td></td>
+							<td>{{ $default_question }}</td>
 						</tr>
 					@endforeach
 					</tbody>
@@ -42,9 +45,13 @@
 							<th>&nbsp;</th>
 						</tr>
 					</tfoot-->
-					</table>
-				</div>
-			</div>
+			</table>
 		</div>
+	</div>			
+</div>
+<div class="modal-footer">
+	<button class="btn btn-defaultquestion" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">Manage default question</button>
+	<button class="btn btn-reupload" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;" onclick="window.location.href = '/admin/survey/'">Reupload survey</button>
+</div>
 
-		@stop
+@stop

@@ -34,9 +34,27 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 			Route::post('survey/upload', 'SurveyController@postEndline');
 			Route::post('survey/region', 'SurveyController@postRegion');
 			Route::post('survey/managesurvey', 'SurveyController@getManagesurvey');
+			// Route::get('survey/irfan', 'SurveyController@getQuestionCategory');			
 		});
 	});
+	
+	Route::post('/admin/defaultquestion', 'SurveyController@postDefaultQuestion');
+
+	Route::get('/admin/questioncategory', function(){
+		$question_category = QuestionCategory::all();
+		return Response::json($question_category);
+	});
+
+	Route::get('/admin/question', function(){
+		$question = Question::where('question_category_id', '=', Input::get('id_category'))->get();
+		return Response::json($question);
+	});
+
 });
+
+
+
+
 
 
 /*
