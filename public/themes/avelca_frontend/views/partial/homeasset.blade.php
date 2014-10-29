@@ -10,7 +10,7 @@
     window.onload = function () {
       // Load Filter plugin
       $('.select-control').selectik({
-        width: 200,
+        width: 150,
       });
 
       // Load Chart Plugin

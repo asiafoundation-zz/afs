@@ -77,7 +77,8 @@ a:hover {
 }
 
 .map {
-	height: 680px;
+/*	height: 680px;*/
+height: 580px;
 	position: relative;
 }
 .map .border-top {
@@ -415,11 +416,14 @@ a:focus {
 .survey-pemilu h1 {
 	color: #555555;
 	font-family: 'DIN-Pro-Medium'; 
-	margin-top: 60px;
+		margin-top: 30px;
+/*	margin-top: 60px;*/
 }
 .survey-pemilu h3 {
-	margin-bottom: 30px;
-    margin-top: 60px;
+	margin-bottom: 15px;
+    margin-top: 30px;
+/*	margin-bottom: 30px;
+    margin-top: 60px;*/
 }
 .survey-pemilu p {
 	color: #a3a3a3;
@@ -428,7 +432,8 @@ a:focus {
 }
 .chart {
 	height: 225px;
-    margin: 125px 0;
+/*    margin: 125px 0;*/
+    margin: 55px 0;
 }
 .canvasjs-chart-container a.canvasjs-chart-credit {
 	opacity: 0;
@@ -463,6 +468,35 @@ a:focus {
 }
 .col-md-12 + .col-md-12 {
 	margin-top: 30px
+}
+
+/*MAINTENANCE*/
+.maintenance {
+	background:-webkit-gradient(radial, 50% 50%, 0, 50% 50%, 465, from(#75d2d3), to(#1fb6b7));
+	background-color: #1fb6b7;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	color: #ffffff;
+	padding-top: 180px;
+}
+.maintenance .logo {
+	top: 0;
+}
+.maintenance h1 {
+	margin: 70px 0 0;
+}
+.maintenance p {
+	margin: 50px 0;
+	font-size: 24px;
+}
+.maintenance .detective {
+	width: 448px;
+	height: 417px;
+	background: url(../img/detective.png) no-repeat top center;
+	display: block;
 }
 
 /*FOOTER*/
