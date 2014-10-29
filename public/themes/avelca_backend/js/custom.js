@@ -11,45 +11,77 @@ $(document).ready(function(){
 	    var formData = new FormData();
 	    formData.append('file', this.files[0]);
 
-	    // console.log(file);
-	    // return false;
-
-		$.ajax({
-	        url: '/admin/survey/upload',  //Server script to process data
+   		$.ajax({
+	        url: '/admin/survey/upload',
 	        type: 'POST',
-	        xhr: function() {  // Custom XMLHttpRequest
+	        xhr: function(){
 
 	            var xhr = $.ajaxSettings.xhr() ;
 	            $('.progress').show();
 
-                // set the onprogress event handler
                 xhr.upload.onprogress = function(evt){
                     var progress = evt.loaded/evt.total*100;
                     $('.progress-bar').css('width', progress+'%' ).html(progress+'%').attr('aria-valuenow',progress);
-                    /*console.log('progress', evt.loaded/evt.total*100);*/
                 } ;
-                // set the onload event handler
+
                 xhr.upload.onload = function(){/*console.log('DONE!');*/$('.progress-bar').parent().fadeOut("slow");} ;
-                // return the customized object
                 return xhr;
 	        },
 	        data: formData,
-	        // beforeSend: beforeSendHandler,
 	        success: function(data){
-	        	// console.log(data)
-	        	$('.excel-upload').after('<input type="hidden" name="uploaded_file" value="'+ data +'">');
-	        	/*$('.ms-visible').show().fadeIn("slow");
-	        	$('.upload-field').hide().fadeOut("slow");
-	        	$.each(data, function(index, obj){
-	        		$('#header-select').multiSelect('addOption', { value : obj.header1 +';'+ obj.header3, text : obj.header3 });
-	        	});*/
+	        	$('.excel-upload').after('<input type="hidden" name="uploaded_file" value="'+ data +'">');	        	
 	        },
-	        // error: errorHandler,
-	        //Options to tell jQuery not to process data or worry about content-type.
 	        cache: false,
 	        contentType: false,
 	        processData: false
 		})
+	});
+	
+	$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+
+	$('.btn-defaultquestion').click(function(){
+		$('#default-question').modal('show');
+
+		$.ajax({
+			type : 'GET',
+			url : '/admin/questioncategory',
+			dataType : 'json',
+			data : {},
+			success : function(data){
+				console.log(data);
+				$('#default-question #select-question-category option').remove()
+				$('#default-question #select-question-category').append('<option></option>');
+				$.each(data, function(index, obj){
+					$('#default-question #select-question-category').append('<option value="'+ obj.id +'">'+ obj.name +'</option>');
+				});
+			}
+		});
+	});
+
+	$('#default-question #select-question-category').click(function(){
+		var id_category = $(this).val();
+
+		$.ajax({
+			type : 'GET',
+			url : '/admin/question',
+			dataType : 'json',
+			data : { id_category : id_category },
+			success : function(data){
+				$('#default-question #select-question option').remove()
+				$('#default-question #select-question').append('<option></option>');
+				$.each(data, function(index, obj){
+					$('#default-question #select-question').append('<option value="'+ obj.id +'">'+ obj.question +'</option>');
+				});
+			}
+		});
+	});
+
+	$(function(){
+	    $('#select-question-category').select2({});
+	});
+
+	$(function(){
+	    $('#select-question').select2({});
 	});
 
 });
