@@ -2,9 +2,28 @@
      function find_survey()
      {
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answers: FilterSelect.answers} )
         .done(function( data ) {
           if (data != false) {
+            // Re declare object filter data 
+            cycle_id = FilterSelect.cycle;
+
+            FilterSelect.answers = [];
+            for (var key in data.question) {
+              if (data.question.hasOwnProperty(key)) {
+                FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
+              }
+            }
+
+            // cycle list
+            var cycle_list = "";
+            var data_cycles = data.cycles;
+            for (var key in data_cycles) {
+              if (data_cycles.hasOwnProperty(key)) {
+                cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'</a></li>'; 
+              }
+            }
+
             // Build chart
             var color_set_data = color_set(data.question);
             var data_points_data = data_points(data.question);
@@ -13,23 +32,13 @@
             $("#chart_canvas").html('<div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div><div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>');
             chartjs(color_set_data,data_points_data,data_points_pie_data);
 
-            // Re declare object filter data 
-            cycle_id = FilterSelect.cycle;
-
-            // cycle list
-            var cycle_list = "";
-            var data_cycles = data.cycles;
-            for (var key in data_cycles) {
-              if (data_cycles.hasOwnProperty(key)) {
-                  cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'</a></li>'; 
-              }
-            }
-
             var cycle_text = $("#cycle_select_"+cycle_id).text();
             $("#cycle_list").html(cycle_list);
 
             $("#question-name").html(data.default_question.question);
             $("#select_cycle_label").html(cycle_text);
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,20)+" ...");
+            $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
             $(".chart-pagination").html('<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
 
             // Re assign map
@@ -57,9 +66,19 @@
         FilterSelect.cycle = cycle_id;
 
         // Get cycles functions
-        $.get( "filter-select", {SelectedFilter:"cycle",category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+        $.get( "filter-select", {SelectedFilter:"cycle",category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answers: FilterSelect.answers} )
           .done(function( data ) {
             if (data != false) {
+
+              var cycle_text = $("#cycle_select_"+cycle_id).text();
+              $("#select_cycle_label").html(cycle_text);
+
+              FilterSelect.answers = [];
+              for (var key in data.question) {
+                if (data.question.hasOwnProperty(key)) {
+                  FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
+                }
+              }
 
               // Build chart
               var color_set_data = color_set(data.question);
@@ -68,9 +87,6 @@
 
               $("#chart_canvas").html('<div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div><div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>');
               chartjs(color_set_data,data_points_data,data_points_pie_data);
-
-              var cycle_text = $("#cycle_select_"+cycle_id).text();
-              $("#select_cycle_label").html(cycle_text);
 
               // Re assign map
               dynamicRegions = data.regions;
@@ -186,22 +202,29 @@
     function next_question(move)
     {
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move} )
+      $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move, answers: FilterSelect.answers} )
         .done(function( data ) {
           if (data != false) {
+
+            $("#question-name").html(data.default_question.question);
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,20)+" ...");
+            $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
+
+            // Re assingn Filter data
+            FilterSelect.question = data.default_question.id_question;
+            FilterSelect.answers = [];
+            for (var key in data.question) {
+              if (data.question.hasOwnProperty(key)) {
+                FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
+              }
+            }
+
+            DefaultSelectAssign(FilterSelect);
 
             var color_set_data = color_set(data.question);
             var data_points_data = data_points(data.question);
             var data_points_pie_data = data_points_pie(data.question);
             chartjs(color_set_data,data_points_data,data_points_pie_data);
-
-            $("#question-name").html(data.default_question.question);
-            $("#select_category_label").html(data.default_question.question_categories);
-            $("#select_question_label").html(data.default_question.question);
-
-            // Re assingn Filter data
-            FilterSelect.question = data.default_question.id_question;
-            DefaultSelectAssign(FilterSelect);
 
             // Re assign map
             dynamicRegions = data.regions;
@@ -222,17 +245,24 @@
     function find_survey_dynamic()
     {
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,answers: FilterSelect.answers} )
         .done(function( data ) {
           if (data != false) {
+            // Re assingn Filter data
+            FilterSelect.question = data.default_question.id_question;
+            FilterSelect.answers = [];
+            for (var key in data.question) {
+              if (data.question.hasOwnProperty(key)) {
+                FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
+              }
+            }
+
+            DefaultSelectAssign(FilterSelect);
             // Build chart
             var color_set_data = color_set(data.question);
             var data_points_data = data_points(data.question);
             var data_points_pie_data = data_points_pie(data.question);
             chartjs(color_set_data,data_points_data,data_points_pie_data);
-
-            // Re assingn Filter data
-            DefaultSelectAssign(FilterSelect);
           }else
           {
             alert("{{Lang::get('frontend.empty_data')}}");
@@ -369,7 +399,7 @@
         var data_points = [];
         for (i = 0; i < data_list.length; i++) {
           if (data_list[i].y != 0) {
-            data_points.push(data_list[i]);
+            data_points.push(data_list[i]);    
           }
         }
       }

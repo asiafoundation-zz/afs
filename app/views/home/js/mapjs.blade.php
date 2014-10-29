@@ -8,7 +8,12 @@
       category:{{ $default_question->id_question_categories }},
       question: {{ $default_question->id_question }},
       question_code: {{ $default_question->question_code }},
-      cycle:{{ $default_question->id_cycle }}
+      cycle:{{ $default_question->id_cycle }},
+      answers:[
+        @foreach ($question as $key_answers => $answer)
+          { id: {{ $answer->id_answer }} ,answer: "{{ $answer->answer }}"},
+        @endforeach
+      ]
     };
 
     var DefaultSelect = {
@@ -16,7 +21,12 @@
       category:{{ $default_question->id_question_categories }},
       question: {{ $default_question->id_question }},
       question_code: {{ $default_question->question_code }},
-      cycle:{{ $default_question->id_cycle }}
+      cycle:{{ $default_question->id_cycle }},
+      answers:[
+        @foreach ($question as $key_answers => $answer)
+          { id: {{ $answer->id_answer }} ,answer: "{{ $answer->answer }}"},
+        @endforeach
+      ]
     };
 
     var dynamicRegions = [];
@@ -28,7 +38,8 @@
         category: data.category,
         question: data.question,
         question_code: data.question_code,
-        cycle: data.cycle
+        cycle: data.cycle,
+        answers:data.answers
       };
     }
 

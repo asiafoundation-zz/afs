@@ -77,7 +77,8 @@ a:hover {
 }
 
 .map {
-	height: 680px;
+/*	height: 680px;*/
+height: 580px;
 	position: relative;
 }
 .map .border-top {
@@ -415,11 +416,14 @@ a:focus {
 .survey-pemilu h1 {
 	color: #555555;
 	font-family: 'DIN-Pro-Medium'; 
-	margin-top: 60px;
+		margin-top: 30px;
+/*	margin-top: 60px;*/
 }
 .survey-pemilu h3 {
-	margin-bottom: 30px;
-    margin-top: 60px;
+	margin-bottom: 15px;
+    margin-top: 30px;
+/*	margin-bottom: 30px;
+    margin-top: 60px;*/
 }
 .survey-pemilu p {
 	color: #a3a3a3;
@@ -428,7 +432,8 @@ a:focus {
 }
 .chart {
 	height: 225px;
-    margin: 125px 0;
+/*    margin: 125px 0;*/
+    margin: 55px 0;
 }
 .canvasjs-chart-container a.canvasjs-chart-credit {
 	opacity: 0;

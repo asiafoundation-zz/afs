@@ -29,7 +29,7 @@
         <div class="col-md-3">
           <a href="#" id="category" data-toggle="dropdown">
             <img src="{{ Theme::asset('img/add.png') }}" />
-            <span id="select_category_label">{{ $default_question->question_categories }}</span>
+            <span id="select_category_label">{{ Str::limit($default_question->question_categories, 20) }}</span>
           </a>
           <div class="dropdown-path" id="div-filter-category">
             @include('home/filter_category')
@@ -39,7 +39,7 @@
         <div class="col-md-6">
           <a href="#" id="question">
             <img src="{{ Theme::asset('img/add.png') }}" />
-            <span id="select_question_label">{{$default_question->question}}</span>
+            <span id="select_question_label">{{ Str::limit($default_question->question, 40) }}</span>
           </a>
           <div class="dropdown-path" id="div-filter-question">
             @include('home/filter_question')
@@ -49,7 +49,7 @@
         <div class="col-md-3"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
       </div>
     </div>
-    <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 670px"></div>
+    <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 570px"></div>
   </section>
 
   <section class="filter">
@@ -59,7 +59,7 @@
           @foreach ($filters as $key_filters => $filter)
           <li>
             <select class="select-control">
-              <option>{{ $key_filters }}</option>
+              <option>{{ Str::limit($key_filters, 4) }}</option>
               @foreach ($filter as $filter_items)
               <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
               @endforeach

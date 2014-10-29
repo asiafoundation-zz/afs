@@ -16,7 +16,7 @@ class Question extends Eloquent {
 
 	/* Mass Assignment */
 	protected $fillable = array(
-		'code_id',
+		'code',
 		'question',
 		'question_category_id',
 		'is_default'
@@ -114,6 +114,51 @@ class Question extends Eloquent {
 
 		return $questions;
 	}
+	public static function DifferentAnswer($questions, $request)
+	{
+		$questions_diff = array();
+		$answer_diff = array();
+
+		foreach ($questions as $key_questions => $question) {
+			foreach ($request['answers'] as $key_answer => $answer) {
+				$answer_diff[$answer['id']] = new stdClass();
+				$answer_diff[$answer['id']]->id_answer = $answer['id'];
+				$answer_diff[$answer['id']]->answer = $answer['answer'];
+				$answer_diff[$answer['id']]->id_question = $question->id_question;
+				$answer_diff[$answer['id']]->question_code = $question->question_code;
+				$answer_diff[$answer['id']]->question = $question->question;
+				$answer_diff[$answer['id']]->id_question_categories = $question->id_question_categories;
+				$answer_diff[$answer['id']]->question_categories = $question->question_categories;
+				$answer_diff[$answer['id']]->name = $question->name;
+				$answer_diff[$answer['id']]->color = $question->color;
+				$answer_diff[$answer['id']]->question_code = $question->cycle_type;
+				$answer_diff[$answer['id']]->cycle = $question->cycle;
+				$answer_diff[$answer['id']]->question = $question->cycle;
+				$answer_diff[$answer['id']]->id_region = !empty($question->id_region) ? $question->id_region : "";
+
+				$answer_diff[$answer['id']]->amount = 0;
+			}
+			$answer_diff[$answer['id']]->amount = $question->amount;
+		}
+
+		return $answer_diff;
+	}
+
+	public static function IndexLabel($questions)
+	{
+		// Count question amount
+		$total_amount = 0;
+		foreach ($questions as $key_questions => $question) {
+			$total_amount += $question->amount;
+		}
+
+		// Count index label percentage
+		foreach ($questions as $key_questions => $question) {
+			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
+		}
+		return $questions;
+	}
+
 	public static function DefaultQuestion($request = array())
 	{
 		// Load Question
@@ -140,17 +185,14 @@ class Question extends Eloquent {
 			->groupBy('answer')
 			->get();
 
-			// Count question amount
 			if (count($questions)) {
-				$total_amount = 0;
-				foreach ($questions as $key_questions => $question) {
-					$total_amount += $question->amount;
+				if (!empty($request['answers'])) {
+					if (count($questions) != count($request['answers'])) {
+						$questions = self::DifferentAnswer($questions,$request);
+					}
 				}
 
-				// Count index label percentage
-				foreach ($questions as $key_questions => $question) {
-					$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
-				}
+				$questions = self::IndexLabel($questions);
 			}
 
 		return $questions;
@@ -180,15 +222,14 @@ class Question extends Eloquent {
 				->groupBy('answer')
 				->get();
 
-		// Count question amount
-		$total_amount = 0;
-		foreach ($questions as $key_questions => $question) {
-			$total_amount += $question->amount;
-		}
+		if (count($questions)) {
+			if (!empty($request['answers'])) {
+				if (count($questions) != count($request['answers'])) {
+					$questions = self::DifferentAnswer($questions,$request);
+				}
+			}
 
-		// Count index label percentage
-		foreach ($questions as $key_questions => $question) {
-			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
+			$questions = self::IndexLabel($questions);
 		}
 
 		return $questions;
@@ -285,24 +326,24 @@ class Question extends Eloquent {
 			$request['question'] = $request['question']->id;
 		}
 
-		// Load Question
-		$questions =  self::DefaultLoad($request);
+	// Load Question
+	$questions =  self::DefaultLoad($request);
 
-			if (count($request)) {
-				if (!empty($request['category'])) {
-					$questions =  $questions->where('question_categories.id', '=', $request['category']);
-				}
-				if (!empty($request['question'])) {
-					$questions =  $questions->where('questions.id', '=', $request['question']);
-				}
-				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
-				}
+		if (count($request)) {
+			if (!empty($request['category'])) {
+				$questions =  $questions->where('question_categories.id', '=', $request['category']);
 			}
+			if (!empty($request['question'])) {
+				$questions =  $questions->where('questions.id', '=', $request['question']);
+			}
+			if (!empty($request['region'])) {
+				$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+			}
+		}
 
-			$questions =  $questions
-			->groupBy('id_answer')
-			->get();
+		$questions =  $questions
+		->groupBy('id_answer')
+		->get();
 
 		return $questions;
 	}
@@ -350,15 +391,15 @@ class Question extends Eloquent {
 				->groupBy('answer')
 				->get();
 
-			$total_amount = 0;
-			foreach ($questions as $key_questions => $question) {
-				$total_amount += $question->amount;
+		if (count($questions)) {
+			if (!empty($request['answers'])) {
+				if (count($questions) != count($request['answers'])) {
+					$questions = self::DifferentAnswer($questions,$request);
+				}
 			}
 
-			// Count index label percentage
-			foreach ($questions as $key_questions => $question) {
-				$question->indexlabel = round(!$total_amount ? 0 : ($question->amount / $total_amount) * 100,2);
-			}
+			$questions = self::IndexLabel($questions);
+		}
 
 		return $questions;
 	}
@@ -388,24 +429,24 @@ class Question extends Eloquent {
 		// Load Question
 		$questions =  self::DefaultLoad($request);
 
-			if (count($request)) {
-				if (!empty($request['category'])) {
-					$questions =  $questions->where('question_categories.id', '=', $request['category']);
-				}
-				if (!empty($request['question'])) {
-					$questions =  $questions->whereRaw("(questions.id = ".$request['question']." or questions.id = ".$request['question_move'].")");
-				}
-				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
-				}
-				if (!empty($request['cycle'])) {
-					$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
-				}
+		if (count($request)) {
+			if (!empty($request['category'])) {
+				$questions =  $questions->where('question_categories.id', '=', $request['category']);
 			}
+			if (!empty($request['question'])) {
+				$questions =  $questions->whereRaw("(questions.id = ".$request['question']." or questions.id = ".$request['question_move'].")");
+			}
+			if (!empty($request['region'])) {
+				$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+			}
+			if (!empty($request['cycle'])) {
+				$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
+			}
+		}
 
-			$questions =  $questions
-			->groupBy('id_answer')
-			->get();
+		$questions =  $questions
+		->groupBy('id_answer')
+		->get();
 
 		return $questions;
 	}
