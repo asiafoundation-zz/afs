@@ -69,7 +69,7 @@ class SurveyController extends AvelcaController {
 	}
 */
 	public function postUpload(){
-		set_time_limit(0);
+		ini_set("memory_limit","100M");
 
 		$filename = Input::file('file')->getClientOriginalName();
 
@@ -78,7 +78,6 @@ class SurveyController extends AvelcaController {
 			$uploaded = Input::file('file')->move('uploads/', $filename);	
 		}
 
-		set_time_limit(60);
 	    return Response::json($filename);
 	}
 
