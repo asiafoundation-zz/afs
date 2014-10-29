@@ -21,6 +21,8 @@ class PermissionSeeder extends Seeder {
 			"survey.oversample",
 			"survey.import",
 			"survey.managesurvey",
+			"survey.question",
+			"survey.defaultquestion",
 			"survey.upload"
 			);
 
