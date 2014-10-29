@@ -30,10 +30,11 @@
 		</ul-->
 	</li>
 
-	@include('partial.main_menu')
+
+	<?php // @include('partial.main_menu') ?>
 
 	@if( $user->hasAccess('module') )
-	<li>
+	<!--li>
 		<a href="#"><i class="glyphicon glyphicon-flash"></i> Modules<span class="fa arrow"></span></a>
 
 		<ul class="nav nav-second-level">
@@ -46,7 +47,7 @@
 			@include('partial.module_list')
 
 		</ul>
-	</li>
+	</li-->
 	@endif
 
 
@@ -57,20 +58,12 @@
 
 			@if( $user->hasAccess('user') || $user->hasAccess('group') )
 			<li>
-				<a href="#">Access Control <span class="fa arrow"></span></a>
-				<ul class="nav nav-third-level">
-					@if( $user->hasAccess('user') )
-					<li>
-						<a href="{{ URL::to('admin/user') }}">User</a>
-					</li>
-					@endif
-					@if( $user->hasAccess('group') )
-					<li>
-						<a href="{{ URL::to('admin/group') }}">Group</a>
-					</li>
-					@endif
-				</ul>
-				<!-- /.nav-third-level -->
+				@if( $user->hasAccess('user') )
+				
+					<a href="{{ URL::to('admin/user') }}">User</a>
+				
+				@endif
+				
 			</li>
 			@endif
 
