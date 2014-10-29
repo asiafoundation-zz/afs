@@ -45,7 +45,8 @@
 
 	<!-- Custom css -->
 	{{ HTML::style(Theme::asset('css/multi-select.css')) }}	
-	{{ HTML::style(Theme::asset('css/custom.css')) }}	
+	{{ HTML::style(Theme::asset('css/custom.css')) }}
+	{{ HTML::style(Theme::asset('css/select2.css')) }}	
 
 	<!-- Color Theme -->
 	<?php $theme_color = Setting::meta_data('general', 'theme_color')->value; ?>
@@ -165,6 +166,33 @@
 	</div>
 	<!-- /#wrapper -->
 
+	<div class="modal fade" id="default-question" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Modal title</h4>
+				</div>
+				{{ Form::open(array('url' => '/admin/defaultquestion', 'class' => 'form-horizontal')) }}
+				<div class="modal-body">
+					<p>Select Category</p>
+					<select data-required="1" id="select-question-category" style="width:100%" placeholder="Select question category" name="id_category">
+		            	<option></option>
+		          	</select>
+		          	<p>Select Question</p>
+					<select data-required="1" id="select-question" style="width:100%" placeholder="Select question" name="id_question">
+		            	<option></option>
+		          	</select>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="submut" class="btn btn-primary">Save changes</button>
+				</div>
+				{{ Form::close() }}
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
 	<!-- Page-Level Plugin Scripts - Tables -->
 	{{ HTML::script(Theme::asset('js/plugins/dataTables/jquery.dataTables.js')) }}
 	{{ HTML::script(Theme::asset('js/plugins/dataTables/dataTables.bootstrap.js')) }}
@@ -192,6 +220,7 @@
 	<!-- my custom javascript -->
 	{{ HTML::script(Theme::asset('js/custom.js')) }}
 	{{ HTML::script(Theme::asset('js/jquery.multi-select.js')) }}
+	{{ HTML::script(Theme::asset('js/select2.js')) }}
 
 
 </body>
