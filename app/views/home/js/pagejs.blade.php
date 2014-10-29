@@ -177,6 +177,7 @@
 
             compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
 
+            FilterSelect.answers = [];
             if (move == 0) {
               $('.chart-pagination').html('<li><a class="orange-bg"><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" ><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li>');
             }else{
@@ -212,13 +213,18 @@
 
             // Re assingn Filter data
             FilterSelect.question = data.default_question.id_question;
-            FilterSelect.answers = [];
             for (var key in data.question) {
               if (data.question.hasOwnProperty(key)) {
                 FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
               }
             }
 
+            FilterSelect.answers = [];
+            for (var key in data.question) {
+              if (data.question.hasOwnProperty(key)) {
+                FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
+              }
+            }
             DefaultSelectAssign(FilterSelect);
 
             var color_set_data = color_set(data.question);
