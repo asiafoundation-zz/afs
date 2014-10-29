@@ -69,14 +69,16 @@ class SurveyController extends AvelcaController {
 	}
 */
 	public function postUpload(){
-		
+		set_time_limit(0);
+
 		$filename = Input::file('file')->getClientOriginalName();
 
 		if(!file_exists($filename))
 		{
 			$uploaded = Input::file('file')->move('uploads/', $filename);	
 		}
-		
+
+		set_time_limit(60);
 	    return Response::json($filename);
 	}
 
@@ -466,9 +468,7 @@ class SurveyController extends AvelcaController {
 	}
 
 	Public function readHeader($inputFileName, $highest_column, $sheet)
-	{
-		set_time_limit(0);
-		
+	{		
 		$inputFileName = '../public/uploads/'.$inputFileName;
 
 		try
