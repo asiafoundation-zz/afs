@@ -70,7 +70,7 @@ class SurveyController extends AvelcaController {
 */
 	public function postUpload(){
 		ini_set("memory_limit","100M");
-
+		
 		$filename = Input::file('file')->getClientOriginalName();
 
 		if(!file_exists($filename))
