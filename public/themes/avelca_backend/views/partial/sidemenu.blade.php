@@ -5,17 +5,24 @@
 	<li>
 		<a href="{{ URL::to('dashboard') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
 	</li>
-	<li>
+	
 		<?php
 			$survey = Survey::all();
 
 			if($survey->count() > 0){
 				?>
-				<a href="/admin/survey/managesurvey">Manage Survey<span class="fa"></span></a>		
+				<li>
+					<a href="/admin/survey/managesurvey">Manage Survey<span class="fa"></span></a>
+				</li>
+				<li>
+					<a href="/admin/filter">Manage Filter<span class="fa"></span></a>
+				</li>
 				<?php
 			}else{
 				?>
-				<a href="/admin/survey/">Manage Survey<span class="fa"></span></a>
+				<li>
+					<a href="/admin/survey/">Manage Survey<span class="fa"></span></a>
+				</li>
 				<?php
 			}
 		?>
@@ -28,28 +35,6 @@
 				<a href="#">Upload Oversampling Survey</a>
 			</li>
 		</ul-->
-	</li>
-
-
-	<?php // @include('partial.main_menu') ?>
-
-	@if( $user->hasAccess('module') )
-	<!--li>
-		<a href="#"><i class="glyphicon glyphicon-flash"></i> Modules<span class="fa arrow"></span></a>
-
-		<ul class="nav nav-second-level">
-
-			<li>
-				<a href="{{ URL::to('admin/module') }}">Manage</a>
-			</li>
-
-
-			@include('partial.module_list')
-
-		</ul>
-	</li-->
-	@endif
-
 
 	@if( $user->hasAccess('setting') || $user->hasAccess('user') || $user->hasAccess('group') )
 	<li>
