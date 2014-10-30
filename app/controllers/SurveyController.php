@@ -23,7 +23,7 @@ class SurveyController extends AvelcaController {
 		{
 			DB::table('surveys')->truncate();
 
-			$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'publish' => 1));
+			$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'geojson_file' => Input::get('geojson'),'publish' => 1));
 
 			if($survey)
 			{
@@ -142,16 +142,15 @@ class SurveyController extends AvelcaController {
 				{	
 					$master_code = MasterCode::create(array('master_code' => $arr_master_code[0]));
 
-					if($master_code)
+					if(isset($master_code))
 					{
 						if(empty($arr_master_code[1])){ 
-							$code_content = "-"; 
+							$code_content = ""; 
 						}else{
 							$code_content = $arr_master_code[1];	
 						}
 						
-
-						$code = Code::create(array('code' => $code_content, 'master_code_id' => $master_code->id));
+						$code = Code::create(array('code' => $code_content, 'master_code_id' => $master_code->id,'type' => 0));
 						
 						Question::create(array('code_id' => $code->id, 'question' => $question_content[2], 'question_category_id' => $id_question_category));	
 					}
@@ -179,7 +178,7 @@ class SurveyController extends AvelcaController {
 				->with('base_header', false);
 	}
 
-	public function postRegion(){
+public function postRegion(){
 		DB::table('regions')->truncate();
 
 		$categories = Input::get('unselected');
@@ -231,6 +230,7 @@ class SurveyController extends AvelcaController {
 			$data = array();
 
 			$arr_data = $results->toArray();
+			$arr_data = reset($arr_data);
 
 			foreach($arr_data as $data)
 			{
@@ -286,27 +286,25 @@ class SurveyController extends AvelcaController {
 		{
 			unset($categories[$oversample_exist]);
 			$categories = array_values($categories);
-		}
 
-		foreach($categories as $category){
-			$arr_category = explode(';',$category);
-			$arr_code = explode('_', $arr_category[0]);
+			foreach($categories as $category){
+				$arr_category = explode(';',$category);
+				$arr_code = explode('_', $arr_category[0]);
 
-			$s_master_code = MasterCode::where('master_code', '=', $arr_code[0])->first();
-			if(isset($s_master_code)){
-				echo $s_master_code->id.'<br>';
+				$s_master_code = MasterCode::where('master_code', '=', $arr_code[0])->first();
+				if(isset($s_master_code)){
 
-				$s_code = Code::where('code', '=', $arr_code[1])->first();
-				if(!isset($s_code))
-				{
-					$code = Code::create(array('code' => $arr_code[1], 'master_code_id' => $s_master_code->id));
-
+					$code = Code::where('code', '=', $arr_code[1])->first();
+					if(!isset($code))
+					{
+						$code = Code::create(array('code' => $arr_code[1], 'master_code_id' => $s_master_code->id,'type' => 1));
+					}	
 					$s_category = Category::where('name', '=', $arr_category[1])->first();
 					if(!isset($s_category))
 					{
 						Category::create(array('name' => $arr_category[1], 'code_id' => $code->id));
 					}	
-				}	
+				}
 			}
 		}
 
@@ -342,6 +340,7 @@ class SurveyController extends AvelcaController {
 			}
 
 			$arr_data = $results->toArray();
+			$arr_data = reset($arr_data);
 
 			$index = 0;
 			foreach($arr_data as $data)
@@ -376,9 +375,9 @@ class SurveyController extends AvelcaController {
 							}
 
 							$code = Code::where('code', '=', $key_piece[1])->first();
+
 							if(isset($code))
 							{
-								echo $key_piece[1].' | '. $code->id. '<br>';
 								$s_region = DB::table('regions')
 											->select(DB::raw('regions.id as region_id'))
 											->join('codes', 'regions.code_id', '=', 'codes.id')
@@ -392,14 +391,17 @@ class SurveyController extends AvelcaController {
 								else
 								{
 									$s_category_item = CategoryItem::where('name', '=', $value)->first();
+
 									if(!isset($s_category_item))
 									{
 										if($value != "")
 										{
-											$category_id = Category::where('code_id', '=', $code->id)->first()->id;
-
-											$category_item = CategoryItem::create(array('name' => $value, 'category_id' => $category_id));
-											$category_item_id = $category_item->id;
+											$category = Category::where('code_id', '=', $code->id)->first();
+											if (isset($category)) {
+												$category_id = $category->id;
+												$category_item = CategoryItem::create(array('name' => $value, 'category_id' => $category_id));
+												$category_item_id = $category_item->id;
+											}
 										}
 									}
 								}
@@ -414,8 +416,9 @@ class SurveyController extends AvelcaController {
 					
 					$arr_oversample = explode(';',$oversample[0]);
 					$oversample_code = explode('_', $arr_oversample[0]);
+					$sample_type = 0;
 
-					if(!empty($key_piece[1]))
+					if(!empty($key_piece[1]) && !empty($oversample_code[0]))
 					{
 						if(strtolower($oversample_code[1]) == $key_piece[1]){
 							$sample_type = 1;
@@ -426,7 +429,6 @@ class SurveyController extends AvelcaController {
 						}	
 					}
 					
-
 					$question = DB::table('questions')
 								->select(
 										DB::raw('questions.id as question_id')
@@ -444,7 +446,6 @@ class SurveyController extends AvelcaController {
 							$question_participant = QuestionParticipant::create(array('answer_id' => $answer->id, 'region_id' => $region_id, 'sample_type' => $sample_type, 'participant_id' => $participant_id));
 						}
 					}
-
 				}
 				$participant_count ++;
 			}

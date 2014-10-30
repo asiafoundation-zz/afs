@@ -17,14 +17,16 @@ class Code extends Eloquent {
 	/* Mass Assignment */
 	protected $fillable = array(
 		'code',
-		'master_code_id'
+		'master_code_id',
+		'type'
 		);
 	protected $guarded = array('id');
 
 	/* Rules */
 	public static $rules = array(
 		'code' => 'required',
-		'master_code_id' => 'required'
+		'master_code_id' => 'required',
+		'type' => 'required'
 		);
 
 	/* Database Structure */
@@ -36,6 +38,10 @@ class Code extends Eloquent {
 				'onIndex' => true
 			),
 			'master_code_id' => array(
+				'type' => 'number',
+				'onIndex' => true
+			),
+			'type' => array(
 				'type' => 'number',
 				'onIndex' => true
 			),
