@@ -16,18 +16,18 @@ class DatabaseSeeder extends Seeder {
 		$this->call("GroupSeeder");
 		$this->call("UserSeeder");
 
-		$this->call("AnswerSeeder");
-		$this->call("CategoryItemSeeder");
-		$this->call("CategorySeeder");
-		$this->call("CodeSeeder");
+		// $this->call("AnswerSeeder");
+		// $this->call("CategoryItemSeeder");
+		// $this->call("CategorySeeder");
+		// $this->call("CodeSeeder");
 		$this->call("ColorSeeder");
-		$this->call("CycleSeeder");
-		$this->call("MasterCodeSeeder");
-		$this->call("QuestionCategorySeeder");
-		$this->call("QuestionSeeder");
-		$this->call("RegionSeeder");
-		$this->call("SurveySeeder");
-		$this->call("ParticipantSeeder");
+		// $this->call("CycleSeeder");
+		// $this->call("MasterCodeSeeder");
+		// $this->call("QuestionCategorySeeder");
+		// $this->call("QuestionSeeder");
+		// $this->call("RegionSeeder");
+		// $this->call("SurveySeeder");
+		// $this->call("ParticipantSeeder");
 		// $this->call("FilterParticipantSeeder");
 		// $this->call("QuestionParticipantSeeder");
 	}
