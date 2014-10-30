@@ -491,15 +491,17 @@ class SurveyController extends AvelcaController {
 	    $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
 
 	    for($row = 5; $row <= $highestRow; ++$row){
-		
 			for($col = 0; $col <= $highestColumnIndex; ++$col){
 
 				$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
 				$data[$row]['header'.$col] = $dataval;
 			}
-		}
 
-	    return $data;
+			if (empty($data[$row]['header1'])) {
+				break;
+			}
+		}
+	  return $data;
 	}
 
 	public function read_string($string, $key_start, $key_end, $str_start, $str_end){
