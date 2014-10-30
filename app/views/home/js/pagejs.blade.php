@@ -158,6 +158,7 @@
             var endline_text = "";
             var question_text = "";
 
+            FilterSelect.answers = [];
             for (i = 0; i < data.question.length; i++) {
               if (data.question[i].cycle_type == 0) {
 
@@ -168,6 +169,7 @@
                 first_list.push({ y: parseInt(data.question[i].amount), label: data.question[i].answer});
 
                 colorSet.push(data.question[i].color);
+                FilterSelect.answers.push({ id: data.question[i].id_answer, answer: data.question[i].answer});
               }
               if (data.question[i].cycle_type == 1) {
                 endline_text = data.question[i].cycle;
@@ -177,7 +179,6 @@
 
             compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
 
-            FilterSelect.answers = [];
             if (move == 0) {
               $('.chart-pagination').html('<li><a class="orange-bg"><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" ><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li>');
             }else{
@@ -190,7 +191,6 @@
 
             // Re assingn Filter data
             DefaultSelectAssign(FilterSelect);
-
           }else
           {
             alert("{{Lang::get('frontend.empty_data')}}");
@@ -219,12 +219,6 @@
               }
             }
 
-            FilterSelect.answers = [];
-            for (var key in data.question) {
-              if (data.question.hasOwnProperty(key)) {
-                FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
-              }
-            }
             DefaultSelectAssign(FilterSelect);
 
             var color_set_data = color_set(data.question);

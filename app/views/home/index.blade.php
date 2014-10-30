@@ -77,9 +77,9 @@
   <section class="survey-pemilu">
     <div class="container center">
       <div class="col-md-12">
-        <h1>{{ $survey->name }}</h1>
+        <h1>" {{ $survey->name }} "</h1>
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
-        <p id="question-name">{{ $default_question->question }}</p>
+        <p id="question-name">" {{ $default_question->question }} "</p>
         <div class="chart">
           <div id="chart_canvas">
             <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
