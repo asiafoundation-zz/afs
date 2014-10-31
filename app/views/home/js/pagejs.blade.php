@@ -37,7 +37,7 @@
 
             $("#question-name").html(data.default_question.question);
             $("#select_cycle_label").html(cycle_text);
-            $("#select_category_label").html(data.default_question.question_categories.slice(0,20)+" ...");
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,15)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
             $(".chart-pagination").html('<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
 
@@ -208,7 +208,7 @@
           if (data != false) {
 
             $("#question-name").html(data.default_question.question);
-            $("#select_category_label").html(data.default_question.question_categories.slice(0,20)+" ...");
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
 
             // Re assingn Filter data
