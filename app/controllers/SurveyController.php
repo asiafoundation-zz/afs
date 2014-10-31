@@ -452,7 +452,7 @@ public function postRegion(){
 
 							if (!isset($answer)) {
 
-								$answer = Answer::create(array('answer' => $value, 'question_id' => $question->question_id, 'cycle_id' => $cycle_id, 'color_id' => 1));
+								$answer = Answer::create(array('answer' => $value, 'question_id' => $question->question_id, 'cycle_id' => $cycle_id, 'color_id' => rand(1,4)));
 							}
 
 							$question_participant = QuestionParticipant::where('answer_id','=', $answer->id)->where('region_id','=', $region_id)->where('participant_id','=', $participant_id)->first();
