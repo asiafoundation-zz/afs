@@ -187,6 +187,19 @@ class HomeController extends BaseController {
 					return $return;
 					break;
 
+				case 'change_question':
+					$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
+					$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
+
+					$filter_question = (string)View::make('home.filter_question',$split_data)->render();
+
+					$split_data = $filter_question;
+
+					$return = count($question_categories_query) > 0 ? $split_data : 0;
+
+					return $return;
+					break;
+
 				default:
 					return 0;
 					break;

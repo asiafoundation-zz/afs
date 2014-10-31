@@ -175,8 +175,12 @@ function select_question(question_id)
 function select_category(category_id)
 {
   FilterSelect.category = category_id;
+  var question_text = "Select Category";
+  FilterSelect.question = 0;
   var category_text = $("#select_category_id_"+category_id).text();
   $("#select_category_label").html(category_text.slice(0,15)+" ...");
+  $("#select_question_label").html(question_text);
+  change_category();
 }
 
 function clear_all_filter()

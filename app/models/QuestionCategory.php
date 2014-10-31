@@ -55,8 +55,14 @@ class QuestionCategory extends Eloquent {
 					questions.question as question'
 					)
 				)
-			->join('questions','questions.question_category_id','=','question_categories.id')
-			->GroupBy('id_question_categories')
+			->join('questions','questions.question_category_id','=','question_categories.id');
+			if (!empty($request['region'])) {
+				$question_categories = $question_categories->where('question_categories','=',$request['region']);
+			}
+			if (!empty($request['category'])) {
+				$question_categories = $question_categories->where('question_categories.id','=',$request['category']);
+			}
+			$question_categories = $question_categories->GroupBy('id_question_categories')
 			->GroupBy('id_question')
 			->get();
 

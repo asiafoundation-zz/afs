@@ -293,50 +293,22 @@
           },"html");
      }
 
-    // function compare_question(move)
-    // {
-    //   // Get cycles functions
-    //   $.get( "filter-select", { SelectedFilter:"compare_all_cycle",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
-    //     .done(function( data ) {
-    //       if (data != false) {
-
-    //         // Build chart
-    //         $("#chart_canvas").html('<div class="col-md-12"><div id="compareChart" style="height: 345px; width: 100%;"></div></div>');
-
-    //         var first_list = [];
-    //         var end_list = [];
-    //         var colorSet = [];
-    //         var baseline_text = "";
-    //         var endline_text = "";
-
-    //         for (i = 0; i < data.length; i++) {
-    //           if (data[i].cycle_type == 0) {
-    //             baseline_text = data[i].cycle;
-    //             first_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
-
-    //             colorSet.push(data[i].color);
-    //           }
-    //           if (data[i].cycle_type == 1) {
-    //             endline_text = data[i].cycle;
-    //             end_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
-    //           }
-    //         }
-
-    //         compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
-
-    //         $('.chart-pagination').html('<li><a class="orange-bg" onclick="find_survey(1)><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" ><img src="{{ Theme::asset('img/footer-bg.png') }}" onclick="find_survey(2)></a></li>');
-
-    //         // Re assingn Filter data
-    //         DefaultSelectAssign(FilterSelect);
-
-    //       }else
-    //       {
-    //         alert("{{Lang::get('frontend.empty_data')}}");
-    //         // Re assingn Filter data
-    //         DefaultSelectAssign(DefaultSelect);
-    //       }
-    //     },"html");
-    // }
+     function change_category()
+     {
+        // Get cycles functions
+        $.get( "filter-select", { SelectedFilter:"change_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cyclee} )
+          .done(function( data ) {
+            if (data != false) {
+              $("#div-filter-question").html(data);
+              DefaultSelectAssign(FilterSelect);
+            }else
+            {
+              alert("{{Lang::get('frontend.empty_data')}}");
+              // Re assingn Filter data
+              DefaultSelectAssign(DefaultSelect);
+            }
+          },"html");
+     }
 
     function color_set(assign_color)
     {
