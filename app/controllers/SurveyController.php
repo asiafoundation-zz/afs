@@ -179,6 +179,7 @@ class SurveyController extends AvelcaController {
 	}
 
 public function postRegion(){
+		set_time_limit(0) ;
 		DB::table('regions')->truncate();
 
 		$categories = Input::get('unselected');
@@ -192,12 +193,12 @@ public function postRegion(){
 
 			$code_piece = explode('_', $region_piece[0]);
 
-			$s_master_code = MasterCode::where('master_code','=', $code_piece[0])->first();
-			if(!isset($s_master_code))
+			$master_code = MasterCode::where('master_code','=', $code_piece[0])->first();
+			if(!isset($master_code))
 			{
 				$master_code = MasterCode::create(array('master_code' => $code_piece[0]));
-				$master_code_id = $master_code->id;
 			}
+			$master_code_id = $master_code->id;
 
 			$code = Code::where('code','=',$code_piece[1])->first();
 			if(!isset($code))
@@ -222,7 +223,7 @@ public function postRegion(){
 
 		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
 		$filename = 'uploads/'.$survey->baseline_file;
-		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(250, function($results)
+		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(3000, function($results)
 		{
 			$region = Input::get('header');
 			$region_piece = explode(';', $region[0]);
@@ -232,27 +233,28 @@ public function postRegion(){
 			$arr_data = $results->toArray();
 			$arr_data = reset($arr_data);
 
-			foreach($arr_data as $data)
-			{
-				foreach($data as $key => $value)
+			if (count($arr_data) > 1) {
+				foreach($arr_data as $data_list)
 				{
-					$key_piece = explode('_', $key);
-					
-					if(!empty($key_piece[1]))
+					foreach($data_list as $key => $value)
 					{
+						$key_piece = explode('_', $key);
 						
-						if($key_piece[1] == strtolower($code_piece[1]))
+						if(!empty($key_piece[1]))
 						{
-							$region_name = explode('. ', $value);
-
-							$s_region = Region::where('name', '=', $region_name[1])->first();
-							if(!isset($s_region))
+							if(strtolower($key_piece[1]) == strtolower($code_piece[1]))
 							{
-								$code = Code::where('code', '=', strtolower($key_piece[1]))->first();
+								$region_name = explode('. ', $value);
 
-								$region = Region::create(array('name' => $region_name[1], 'code_id' => $code->id));
-							}
-						}	
+								$s_region = Region::where('name', '=', $region_name[1])->first();
+								if(!isset($s_region))
+								{
+									$code = Code::where('code', '=', strtolower($key_piece[1]))->first();
+
+									$region = Region::create(array('name' => $region_name[1], 'code_id' => $code->id));
+								}
+							}	
+						}
 					}
 				}
 			}
@@ -275,6 +277,7 @@ public function postRegion(){
 	}
 
 	public function postOversample(){
+		set_time_limit(0);
 		DB::table('categories')->truncate();
 
 		$categories = Input::get('unselected');
@@ -310,7 +313,7 @@ public function postRegion(){
 
 		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
 		$filename = 'uploads/'.$survey->baseline_file;
-		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(250, function($results)
+		Excel::selectSheetsByIndex(1)->filter('chunk')->load($filename)->chunk(3000, function($results)
 		{
 			
 			DB::table('participants')->truncate();
@@ -349,14 +352,14 @@ public function postRegion(){
 				$participant_id = $participant->id;
 
 				foreach($data as $key => $value)
-				{	
+				{
 					$key_piece = explode('_', $key);
 
-					if(strtolower($master_code) == $key_piece[0])
+					if(strtolower($master_code) == strtolower($key_piece[0]))
 					{
 						if(!empty($key_piece[1]))
 						{
-							if($key_piece[1] == strtolower($filter[0]))
+							if(strtolower($key_piece[1]) == strtolower($filter[0]))
 							{
 								// $cycle_type = strtolower($value) == 'endline' ? 1 : 0;
 								$cycle_type = 0;
@@ -420,7 +423,7 @@ public function postRegion(){
 
 					if(!empty($key_piece[1]) && !empty($oversample_code[0]))
 					{
-						if(strtolower($oversample_code[1]) == $key_piece[1]){
+						if(strtolower($oversample_code[1]) == strtolower($key_piece[1])){
 							$sample_type = 1;
 							$arr_value = explode('. ', $value);
 							if(strtolower($arr_value[1]) == 'sample utama'){

@@ -7,7 +7,7 @@
 	  <li><a href="#">Create a survey</a></li>
 	  <li class="active">Import baseline cycle</li>
 	  <li class="active">Import endline cycle</li>
-	  <!--li><a href="#">Create survey</a></li-->
+	  <!--li><a href="#">Create survey</a></li
 	</ol> -->
 	
 	<!--h4 style="text-align:center">You don't have any survey yet <a class="label label-primary" href="#">click here to create a new survey</a></h4-->

@@ -32,6 +32,7 @@ class HomeController extends BaseController {
 			"question_lists" => $split_data['question_lists'],
 			"default_question" => $default_question,
 			"question" => $default_questions,
+			"public_path" => public_path(),
 			"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
 		);
 
