@@ -29,7 +29,7 @@
         <div class="col-md-3">
           <a href="#" id="category" data-toggle="dropdown">
             <img src="{{ Theme::asset('img/add.png') }}" />
-            <span id="select_category_label">{{ Str::limit($default_question->question_categories, 20) }}</span>
+            <span id="select_category_label">{{ Str::limit($default_question->question_categories, 15) }}</span>
           </a>
           <div class="dropdown-path" id="div-filter-category">
             @include('home/filter_category')
@@ -59,7 +59,7 @@
           @foreach ($filters as $key_filters => $filter)
           <li>
             <select class="select-control">
-              <option>{{ Str::limit($key_filters, 4) }}</option>
+              <option>{{ $key_filters }}</option>
               @foreach ($filter as $filter_items)
               <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
               @endforeach
