@@ -53,7 +53,7 @@
 </div>
 <div class="modal-footer">
 	<button class="btn btn-defaultquestion" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">Manage default question</button>
-	<button class="btn btn-reupload" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;" onclick="window.location.href = '/admin/survey/'">Reupload survey</button>
+	<button class="btn btn-reupload" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;" onclick="window.location.href = '/survey/reupload/'">Reupload survey</button>
 </div>
 
 @stop

@@ -70,3 +70,7 @@
 </div>
 
 @stop
+@if(Session::has('survey_deleted'))
+<h1 class="alert">{{ Session::get('survey_deleted') }}</h1>
+@endif
+@stop

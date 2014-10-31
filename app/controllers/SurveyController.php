@@ -13,6 +13,27 @@ class SurveyController extends AvelcaController {
 		return View::make('admin.survey.index');
 	}
 
+	public function reupload()
+	{
+
+		DB::table('answers')->truncate();
+		DB::table('categories')->truncate();
+		DB::table('category_items')->truncate();
+		DB::table('codes')->truncate();
+		DB::table('cycles')->truncate();
+		DB::table('filter_participants')->truncate();
+		DB::table('master_codes')->truncate();
+		DB::table('participants')->truncate();
+		DB::table('question_categories')->truncate();
+		DB::table('question_participants')->truncate();
+		DB::table('questions')->truncate();
+		DB::table('regions')->truncate();
+		DB::table('surveys')->truncate();
+
+		Session::flash('survey_deleted', 'Survey Deleted');
+		return Redirect::to('/admin/survey');
+	}
+
 	public function postIndex()
 	{
 		$rule = array('survey_name' => 'Required');

@@ -117,6 +117,7 @@ class Question extends Eloquent {
 		if (!empty($request['region'])) {
 			$questions =  $questions->leftjoin('regions','regions.id','=','question_participants.region_id');
 		}
+		$questions =  $questions->where('question_participants.sample_type','=',0);
 
 		return $questions;
 	}
