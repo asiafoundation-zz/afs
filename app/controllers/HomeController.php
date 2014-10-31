@@ -27,7 +27,8 @@ class HomeController extends BaseController {
 		$data = array(
 			"survey" => $survey,
 			"filters" => Code::getFilter(),
-			"cycles" => Cycle::QuestionCycle($default_question),
+			// "cycles" => Cycle::QuestionCycle($default_question),
+			"cycles" => Cycle::get(),
 			"question_categories" => $split_data['question_categories'],
 			"question_lists" => $split_data['question_lists'],
 			"default_question" => $default_question,
