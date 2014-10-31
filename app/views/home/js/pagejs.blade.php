@@ -296,18 +296,20 @@
      function change_category()
      {
         // Get cycles functions
-        $.get( "filter-select", { SelectedFilter:"change_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cyclee} )
-          .done(function( data ) {
-            if (data != false) {
-              $("#div-filter-question").html(data);
-              DefaultSelectAssign(FilterSelect);
-            }else
-            {
-              alert("{{Lang::get('frontend.empty_data')}}");
-              // Re assingn Filter data
-              DefaultSelectAssign(DefaultSelect);
-            }
-          },"html");
+        // $.get( "filter-select", { SelectedFilter:"change_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cyclee} )
+        //   .done(function( data ) {
+        //     if (data != false) {
+        //       $("#div-filter-question").html('<div class="dropdown-path">'+data+'</div>');
+
+        //       DefaultSelectAssign(FilterSelect);
+        //     }else
+        //     {
+        //       alert("{{Lang::get('frontend.empty_data')}}");
+        //       // Re assingn Filter data
+        //       DefaultSelectAssign(DefaultSelect);
+        //     }
+        //   },"html");
+        return false;
      }
 
     function color_set(assign_color)
