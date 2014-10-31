@@ -382,10 +382,13 @@ public function postRegion(){
 
 							if(isset($code))
 							{
+								$region_name = explode('. ', $value);
+								$region_name = empty($region_name[1]) ? "": $region_name[1];
 								$s_region = DB::table('regions')
 											->select(DB::raw('regions.id as region_id'))
 											->join('codes', 'regions.code_id', '=', 'codes.id')
 											->where('codes.code', '=', strtoupper($key_piece[1]))
+											->where('regions.name', '=', $region_name)
 											->first();
 
 								if(isset($s_region))
@@ -445,12 +448,18 @@ public function postRegion(){
 					{
 						if($value != "")
 						{
-							$answer = Answer::where('answer', '=', $value)->where('cycle_id', '=', $cycle_id)->first();
+							$answer = Answer::join('questions','questions.id','=','answers.question_id')->where('questions.id', '=', $question->question_id)->where('answer', '=', $value)->where('cycle_id', '=', $cycle_id)->first();
+
 							if (!isset($answer)) {
+
 								$answer = Answer::create(array('answer' => $value, 'question_id' => $question->question_id, 'cycle_id' => $cycle_id, 'color_id' => 1));
 							}
 
-							$question_participant = QuestionParticipant::create(array('answer_id' => $answer->id, 'region_id' => $region_id, 'sample_type' => $sample_type, 'participant_id' => $participant_id));
+							$question_participant = QuestionParticipant::where('answer_id','=', $answer->id)->where('region_id','=', $region_id)->where('participant_id','=', $participant_id)->first();
+
+							if (!isset($question_participant)) {
+								$question_participant = QuestionParticipant::create(array('answer_id' => $answer->id, 'region_id' => $region_id, 'sample_type' => $sample_type, 'participant_id' => $participant_id));
+							}
 						}
 					}
 				}
