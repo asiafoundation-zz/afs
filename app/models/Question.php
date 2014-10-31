@@ -229,6 +229,7 @@ class Question extends Eloquent {
 				->groupBy('answer')
 				->get();
 
+
 		if (count($questions)) {
 			if (!empty($request['answers'])) {
 				if (count($questions) != count($request['answers'])) {

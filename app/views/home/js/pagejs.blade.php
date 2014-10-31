@@ -338,12 +338,18 @@
     {
       if (assign_answer != null) 
       {
-        var data_points = [];
+        var data_list = [];
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
-            data_points.push(
+            data_list.push(
               { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer'],indexLabel:assign_answer[key]['indexlabel']+"%"}
               );
+          }
+        }
+        var data_points = [];
+        for (i = 0; i < data_list.length; i++) {
+          if (data_list[i].y != 0) {
+            data_points.push(data_list[i]);    
           }
         }
       }
