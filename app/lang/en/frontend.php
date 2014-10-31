@@ -20,5 +20,6 @@ return array(
 	"compare_survey" => "COMPARE SURVEY",
 	"empty_data" => "There is no survey data",
 	"comparing_cycle" => "Comparing",
-	"cross_by_another_variable" => "Cross by another variable"
+	"cross_by_another_variable" => "Cross by another variable",
+	"filter_participant_by" => "Filter Participant By"
 );

@@ -441,7 +441,10 @@ public function postRegion(){
 					{
 						if($value != "")
 						{
-							$answer = Answer::create(array('answer' => $value, 'question_id' => $question->question_id, 'cycle_id' => $cycle_id, 'color_id' => 1));
+							$answer = Answer::where('answer', 'LIKE', '%'.$value.'%')->where('cycle_id', '=', $cycle_id)->first();
+							if (!isset($answer)) {
+								$answer = Answer::create(array('answer' => $value, 'question_id' => $question->question_id, 'cycle_id' => $cycle_id, 'color_id' => 1));
+							}
 
 							$question_participant = QuestionParticipant::create(array('answer_id' => $answer->id, 'region_id' => $region_id, 'sample_type' => $sample_type, 'participant_id' => $participant_id));
 						}

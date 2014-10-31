@@ -14,6 +14,10 @@ class HomeController extends BaseController {
 		}
 		// Get Default Question
 		$default_questions = Question::DefaultQuestion(Input::get());
+
+		if (empty($default_questions)) {
+			return View::make('error.404');
+		}
 		$default_question = reset($default_questions);
 
 		// Get catefory and question list
@@ -41,6 +45,11 @@ class HomeController extends BaseController {
 				case 'cycle':
 				
 					$default_questions = Question::DefaultQuestion(Input::get());
+
+					if (empty($default_questions)) {
+						return 0;
+					}
+
 					$default_question = reset($default_questions);
 
 					$load_filter = array(
@@ -69,6 +78,10 @@ class HomeController extends BaseController {
 
 				case 'survey':
 					$default_questions = Question::LoadQuestion(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
+
 					$default_question = reset($default_questions);
 
 					$load_filter = array();
@@ -95,6 +108,9 @@ class HomeController extends BaseController {
 
 				case 'compare_cycle':
 					$default_questions = Question::CompareCycle(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 					$default_question = reset($default_questions);
 
 					$load_filter = array();
@@ -111,6 +127,9 @@ class HomeController extends BaseController {
 
 				case 'next_question':
 					$default_questions = Question::NextQuestion(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 					$default_question = reset($default_questions);
 					$load_filter = array(
 						"survey" => Survey::first(),
@@ -126,6 +145,9 @@ class HomeController extends BaseController {
 
 				case 'survey_area_dynamic':
 					$default_questions = Question::LoadQuestion(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 					$default_question = reset($default_questions);
 
 					$load_filter = array(
@@ -140,6 +162,9 @@ class HomeController extends BaseController {
 
 				case 'detail_chart':
 					$default_questions = Category::DetailParticipant(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 					$default_question = reset($default_questions);
 
 					$load_filter = array(
