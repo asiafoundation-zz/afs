@@ -101,7 +101,7 @@
 			for (var i = 0; i < this.$collection.length; i++){
 				var $this = $(this.$collection[i]);
 
-				html += '<li class="'+ ($this.attr('disabled') === 'disabled' ? 'disabled' : '') +' id="filter_option_label_'+$this[0].value+'" onclick="filter_option()" data-value="'+$this[0].value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
+				html += '<li class="'+ ($this.attr('disabled') === 'disabled' ? 'disabled' : '') +'" id="filter_option_label_'+$this[0].value+'" onclick="filter_option()" data-value="'+$this[0].value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
 			 };
 			return html;
 		},
