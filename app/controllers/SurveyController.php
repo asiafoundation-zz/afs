@@ -128,17 +128,18 @@ class SurveyController extends AvelcaController {
 				if(!empty($question_content[0]))
 				{
 					$select_question_category = QuestionCategory::where('name', '=', $question_content[0])->first();
+
 					if(!isset($select_question_category))
 					{
-						$question_category = QuestionCategory::create(array('name' => $question_content[0], 'survey_id' => 1));
-						$id_question_category = $question_category->id;
+						$select_question_category = QuestionCategory::create(array('name' => $question_content[0], 'survey_id' => 1));
+
 					}
-					else{ $id_question_category = $select_question_category->id; }
+					$id_question_category = $select_question_category->id;
 				}
 
 				$arr_master_code = explode('_', $question_content[1]);
 				$s_master_code = MasterCode::where('master_code', '=', $arr_master_code[0])->first();
-				if(!isset($s_master_code))
+				if(!isset($s_master_code) && !empty($id_question_category))
 				{	
 					$master_code = MasterCode::create(array('master_code' => $arr_master_code[0]));
 
@@ -444,7 +445,7 @@ public function postRegion(){
 					{
 						if($value != "")
 						{
-							$answer = Answer::where('answer', 'LIKE', '%'.$value.'%')->where('cycle_id', '=', $cycle_id)->first();
+							$answer = Answer::where('answer', '=', $value)->where('cycle_id', '=', $cycle_id)->first();
 							if (!isset($answer)) {
 								$answer = Answer::create(array('answer' => $value, 'question_id' => $question->question_id, 'cycle_id' => $cycle_id, 'color_id' => 1));
 							}
