@@ -39,7 +39,7 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 	});
 	
 	Route::post('/admin/defaultquestion', 'SurveyController@postDefaultQuestion');
-	Route::get('/admin/filter', 'SurveyController@postDefaultQuestion');
+	Route::get('/admin/filter', 'CategoryController@getIndex');
 
 	Route::get('/admin/questioncategory', function(){
 		$question_category = QuestionCategory::all();
