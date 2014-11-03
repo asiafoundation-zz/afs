@@ -11,10 +11,10 @@
 		@if( ! empty($name) )
 		{{ $name }} {{ $title }} - 
 		@endif
-		{{ Setting::meta_data('general', 'name')->value }} - {{ Setting::meta_data('general', 'tag_line')->value }}
+		Asia Foundation Survey
 	</title>
 
-	<link rel="shortcut icon" type="image/x-icon" href="{{ Theme::asset('images/favicon.ico') }}">
+	<!-- <link rel="shortcut icon" type="image/x-icon" href="{{ Theme::asset('images/favicon.ico') }}"> -->
 
 	<!-- Core CSS - Include with every page -->
 	{{ HTML::style(Theme::asset('css/bootstrap.min.css')) }}

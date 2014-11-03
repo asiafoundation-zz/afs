@@ -4,13 +4,13 @@
     <!-- Map JS-->
     <script src="{{ Theme::asset('javascript/leaflet.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
-    <script type="text/javascript" src="{{ Theme::asset('geojson/geojson.geojson') }}"></script>
+    <script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
 
   <script type="text/javascript">
     window.onload = function () {
       // Load Filter plugin
       $('.select-control').selectik({
-        width: 150,
+        width: 200,
       });
 
       // Load Chart Plugin

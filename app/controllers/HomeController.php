@@ -14,6 +14,10 @@ class HomeController extends BaseController {
 		}
 		// Get Default Question
 		$default_questions = Question::DefaultQuestion(Input::get());
+
+		if (empty($default_questions)) {
+			return View::make('error.404');
+		}
 		$default_question = reset($default_questions);
 
 		// Get catefory and question list
@@ -24,10 +28,12 @@ class HomeController extends BaseController {
 			"survey" => $survey,
 			"filters" => Code::getFilter(),
 			"cycles" => Cycle::QuestionCycle($default_question),
+			// "cycles" => Cycle::get(),
 			"question_categories" => $split_data['question_categories'],
 			"question_lists" => $split_data['question_lists'],
 			"default_question" => $default_question,
 			"question" => $default_questions,
+			"public_path" => public_path(),
 			"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
 		);
 
@@ -41,6 +47,11 @@ class HomeController extends BaseController {
 				case 'cycle':
 				
 					$default_questions = Question::DefaultQuestion(Input::get());
+
+					if (empty($default_questions)) {
+						return 0;
+					}
+
 					$default_question = reset($default_questions);
 
 					$load_filter = array(
@@ -69,6 +80,10 @@ class HomeController extends BaseController {
 
 				case 'survey':
 					$default_questions = Question::LoadQuestion(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
+
 					$default_question = reset($default_questions);
 
 					$load_filter = array();
@@ -95,6 +110,9 @@ class HomeController extends BaseController {
 
 				case 'compare_cycle':
 					$default_questions = Question::CompareCycle(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 					$default_question = reset($default_questions);
 
 					$load_filter = array();
@@ -111,6 +129,9 @@ class HomeController extends BaseController {
 
 				case 'next_question':
 					$default_questions = Question::NextQuestion(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 					$default_question = reset($default_questions);
 					$load_filter = array(
 						"survey" => Survey::first(),
@@ -126,6 +147,9 @@ class HomeController extends BaseController {
 
 				case 'survey_area_dynamic':
 					$default_questions = Question::LoadQuestion(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 					$default_question = reset($default_questions);
 
 					$load_filter = array(
@@ -140,6 +164,9 @@ class HomeController extends BaseController {
 
 				case 'detail_chart':
 					$default_questions = Category::DetailParticipant(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 					$default_question = reset($default_questions);
 
 					$load_filter = array(
@@ -156,6 +183,19 @@ class HomeController extends BaseController {
 					$default_questions = Question::CompareCycle(Input::get());
 
 					$return = count($default_questions) > 0 ? $default_questions : 0;
+
+					return $return;
+					break;
+
+				case 'change_question':
+					$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
+					$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
+
+					$filter_question = (string)View::make('home.filter_question',$split_data)->render();
+
+					$split_data = $filter_question;
+
+					$return = count($question_categories_query) > 0 ? $split_data : 0;
 
 					return $return;
 					break;

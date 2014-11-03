@@ -3,11 +3,11 @@
 @section('content')
 
 <div>
-	<ol class="breadcrumb">
+<!-- 	<ol class="breadcrumb">
 	  <li class="active"><a href="/admin/survey/cycle">Add survey Name</a></li>
 	  <li class="active">Upload survey result</li>
 	  <!--li><a href="#">Create survey</a></li-->
-	</ol>
+	</ol> -->
 	<h3>Upload survey excel</h3>
 	<div class="modal-body">
 		{{ Form::open(array('url' => '/admin/survey/upload', 'class' => 'form-horizontal', 'files' => true)) }}

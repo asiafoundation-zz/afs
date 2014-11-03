@@ -52,7 +52,6 @@ class FilterParticipant extends Eloquent {
 		if (count($request['option_filters'])) {
 			$option_filters_trim = rtrim($request['option_filters'],",");
 			$option_filters_array = explode(",", $option_filters_trim);
-			$option_filters .= " and filter_participants.category_item_id IN (".(string)$option_filters_trim.") ";
 		}
 
 		$filter_queries =  DB::table('filter_participants')

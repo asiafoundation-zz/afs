@@ -29,7 +29,7 @@
         <div class="col-md-3">
           <a href="#" id="category" data-toggle="dropdown">
             <img src="{{ Theme::asset('img/add.png') }}" />
-            <span id="select_category_label">{{ Str::limit($default_question->question_categories, 20) }}</span>
+            <span id="select_category_label">{{ Str::limit($default_question->question_categories, 15) }}</span>
           </a>
           <div class="dropdown-path" id="div-filter-category">
             @include('home/filter_category')
@@ -59,7 +59,7 @@
           @foreach ($filters as $key_filters => $filter)
           <li>
             <select class="select-control">
-              <option>{{ Str::limit($key_filters, 4) }}</option>
+              <option>{{ $key_filters }}</option>
               @foreach ($filter as $filter_items)
               <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
               @endforeach
@@ -77,9 +77,9 @@
   <section class="survey-pemilu">
     <div class="container center">
       <div class="col-md-12">
-        <h1>{{ $survey->name }}</h1>
+        <h1>" {{ $survey->name }} "</h1>
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
-        <p id="question-name">{{ $default_question->question }}</p>
+        <p id="question-name">" {{ $default_question->question }} "</p>
         <div class="chart">
           <div id="chart_canvas">
             <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
@@ -87,7 +87,7 @@
           </div>
           <div class="col-md-12">
             <ul class="chart-pagination">
-            @if(count($cycles) > 2)
+            @if(count($cycles) > 1)
               <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
               <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
               <li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>

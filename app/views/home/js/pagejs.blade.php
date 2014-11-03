@@ -37,7 +37,7 @@
 
             $("#question-name").html(data.default_question.question);
             $("#select_cycle_label").html(cycle_text);
-            $("#select_category_label").html(data.default_question.question_categories.slice(0,20)+" ...");
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,15)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
             $(".chart-pagination").html('<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
 
@@ -129,7 +129,7 @@
 
               $("#chart_canvas").html('<div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div><div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>');
               chartjs(color_set_data,data_points_data,data_points_pie_data);
-
+              $(".chart-pagination").html('<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
             }else
@@ -158,6 +158,7 @@
             var endline_text = "";
             var question_text = "";
 
+            FilterSelect.answers = [];
             for (i = 0; i < data.question.length; i++) {
               if (data.question[i].cycle_type == 0) {
 
@@ -168,6 +169,7 @@
                 first_list.push({ y: parseInt(data.question[i].amount), label: data.question[i].answer});
 
                 colorSet.push(data.question[i].color);
+                FilterSelect.answers.push({ id: data.question[i].id_answer, answer: data.question[i].answer});
               }
               if (data.question[i].cycle_type == 1) {
                 endline_text = data.question[i].cycle;
@@ -177,7 +179,6 @@
 
             compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
 
-            FilterSelect.answers = [];
             if (move == 0) {
               $('.chart-pagination').html('<li><a class="orange-bg"><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" ><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li>');
             }else{
@@ -190,7 +191,6 @@
 
             // Re assingn Filter data
             DefaultSelectAssign(FilterSelect);
-
           }else
           {
             alert("{{Lang::get('frontend.empty_data')}}");
@@ -208,7 +208,7 @@
           if (data != false) {
 
             $("#question-name").html(data.default_question.question);
-            $("#select_category_label").html(data.default_question.question_categories.slice(0,20)+" ...");
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
 
             // Re assingn Filter data
@@ -219,12 +219,6 @@
               }
             }
 
-            FilterSelect.answers = [];
-            for (var key in data.question) {
-              if (data.question.hasOwnProperty(key)) {
-                FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
-              }
-            }
             DefaultSelectAssign(FilterSelect);
 
             var color_set_data = color_set(data.question);
@@ -299,50 +293,24 @@
           },"html");
      }
 
-    // function compare_question(move)
-    // {
-    //   // Get cycles functions
-    //   $.get( "filter-select", { SelectedFilter:"compare_all_cycle",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
-    //     .done(function( data ) {
-    //       if (data != false) {
+     function change_category()
+     {
+        // Get cycles functions
+        // $.get( "filter-select", { SelectedFilter:"change_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cyclee} )
+        //   .done(function( data ) {
+        //     if (data != false) {
+        //       $("#div-filter-question").html('<div class="dropdown-path">'+data+'</div>');
 
-    //         // Build chart
-    //         $("#chart_canvas").html('<div class="col-md-12"><div id="compareChart" style="height: 345px; width: 100%;"></div></div>');
-
-    //         var first_list = [];
-    //         var end_list = [];
-    //         var colorSet = [];
-    //         var baseline_text = "";
-    //         var endline_text = "";
-
-    //         for (i = 0; i < data.length; i++) {
-    //           if (data[i].cycle_type == 0) {
-    //             baseline_text = data[i].cycle;
-    //             first_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
-
-    //             colorSet.push(data[i].color);
-    //           }
-    //           if (data[i].cycle_type == 1) {
-    //             endline_text = data[i].cycle;
-    //             end_list.push({ y: parseInt(data[i].amount), label: data[i].answer});
-    //           }
-    //         }
-
-    //         compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
-
-    //         $('.chart-pagination').html('<li><a class="orange-bg" onclick="find_survey(1)><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" ><img src="{{ Theme::asset('img/footer-bg.png') }}" onclick="find_survey(2)></a></li>');
-
-    //         // Re assingn Filter data
-    //         DefaultSelectAssign(FilterSelect);
-
-    //       }else
-    //       {
-    //         alert("{{Lang::get('frontend.empty_data')}}");
-    //         // Re assingn Filter data
-    //         DefaultSelectAssign(DefaultSelect);
-    //       }
-    //     },"html");
-    // }
+        //       DefaultSelectAssign(FilterSelect);
+        //     }else
+        //     {
+        //       alert("{{Lang::get('frontend.empty_data')}}");
+        //       // Re assingn Filter data
+        //       DefaultSelectAssign(DefaultSelect);
+        //     }
+        //   },"html");
+        return false;
+     }
 
     function color_set(assign_color)
     {
@@ -370,12 +338,18 @@
     {
       if (assign_answer != null) 
       {
-        var data_points = [];
+        var data_list = [];
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
-            data_points.push(
+            data_list.push(
               { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer'],indexLabel:assign_answer[key]['indexlabel']+"%"}
               );
+          }
+        }
+        var data_points = [];
+        for (i = 0; i < data_list.length; i++) {
+          if (data_list[i].y != 0) {
+            data_points.push(data_list[i]);    
           }
         }
       }

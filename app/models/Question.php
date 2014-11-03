@@ -17,6 +17,7 @@ class Question extends Eloquent {
 	/* Mass Assignment */
 	protected $fillable = array(
 		'code',
+		'code_id',
 		'question',
 		'question_category_id',
 		'is_default'
@@ -26,6 +27,7 @@ class Question extends Eloquent {
 	/* Rules */
 	public static $rules = array(
 		'code' => 'required',
+		'code_id' => 'required',
 		'question' => 'required',
 		'question_category_id' => 'required',
 		'is_default' => 'required'
@@ -36,6 +38,10 @@ class Question extends Eloquent {
 	{
 		$fields = array(
 			'code' => array(
+				'type' => 'number',
+				'onIndex' => true
+			),
+			'code_id' => array(
 				'type' => 'number',
 				'onIndex' => true
 			),
@@ -111,6 +117,7 @@ class Question extends Eloquent {
 		if (!empty($request['region'])) {
 			$questions =  $questions->leftjoin('regions','regions.id','=','question_participants.region_id');
 		}
+		$questions =  $questions->where('question_participants.sample_type','=',0);
 
 		return $questions;
 	}
@@ -221,6 +228,7 @@ class Question extends Eloquent {
 			$questions =  $questions
 				->groupBy('answer')
 				->get();
+
 
 		if (count($questions)) {
 			if (!empty($request['answers'])) {
@@ -368,6 +376,9 @@ class Question extends Eloquent {
 			}
 			$request['question'] = $request['question']->id;
 		}
+
+		// Load answers
+		$request['answers'] =  DB::table('questions')->select('answers.id as id','answers.answer')->join('answers','answers.question_id','=','questions.id')->where('questions.id', '=', $request['question'])->get();
 
 		// Load Question
 		$questions =  self::DefaultLoad($request);

@@ -3,11 +3,11 @@
 @section('content')
 
 <div>
-	<ol class="breadcrumb">
+<!-- 	<ol class="breadcrumb">
 	  <li class="active">Create a survey</li>
 	  <li class="active">import baseline cycle</li>
 	  <li><a href="#"></a>Import endline cycle</li>
-	</ol>
+	</ol> -->
 	<h3>{{ $content[0] }}</h3>
 	{{ $content[1] }}
 	<div class="modal-body">
