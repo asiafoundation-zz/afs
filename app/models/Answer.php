@@ -58,4 +58,14 @@ class Answer extends Eloquent {
 		return compact('fields');
 	}
 
+	public static function checkData($data,$question_id, $cycle_id)
+	{
+		$answer = Answer::where('answer', '=', $data)->where('cycle_id', '=', $cycle_id)->first();
+		if(!isset($answer))
+		{
+			$answer = Answer::create(array('answer' => $data, 'question_id' => $question_id, 'color_id' => 1,'cycle_id' => $cycle_id));
+		}	
+		return $answer;
+	}
+
 }

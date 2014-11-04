@@ -1,6 +1,14 @@
 <?php
 class Code extends Eloquent {
 
+/* Code Types
+ * 0 = area/region/province
+ * 1 = wave
+ * 2 = oversample
+ * 3 = filter category
+ * 4 = question
+ */
+
 	/* Soft Delete */
 	protected $softDelete = true;
 
@@ -48,6 +56,11 @@ class Code extends Eloquent {
 		);
 
 		return compact('fields');
+	}
+
+	public function master_code()
+	{
+		return $this->belongsTo('MasterCode');
 	}
 
 	public static function getFilter()

@@ -45,6 +45,11 @@ class FilterParticipant extends Eloquent {
 		return compact('fields');
 	}
 
+	public function participant()
+	{
+		return $this->belongsTo('Participant');
+	}
+
 	public static function FilterOptions($answer_id,$request = array())
 	{
 		$option_filters = "";

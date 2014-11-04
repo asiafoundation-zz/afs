@@ -5,6 +5,7 @@ return array(
 	/* Basic Features */
 
 	"list" => "List",
+	"manage" => "Manage",
 	"create" => "Create",
 	"view" => "View",
 	"edit" => "Edit",
@@ -69,5 +70,10 @@ return array(
 	"good_afternoon" => "Good Afternoon",
 	"good_evening" => "Good Evening",
 
-	"minutes" => "minutes"
+	"minutes" => "minutes",
+
+	"next" => "Next",
+	"back" => "Back",
+	"save_changes" => "Save Changes",
+	"cancel" => "Cancel",
 );

@@ -39,5 +39,14 @@ class Participant extends Eloquent {
 		return compact('fields');
 	}
 
+	public function question_participants()
+	{
+		return $this->hasMany('QuestionPartipants');
+	}
+
+	public function filter_participants()
+	{
+		return $this->hasMany('FilterPartipants');
+	}
 
 }

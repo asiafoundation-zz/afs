@@ -109,4 +109,13 @@ class Category extends Eloquent {
 
 			return $filter_queries;
 	}
+	public static function checkData($data,$code_id,$survey_id)
+	{
+		$category = Category::where('name', '=', $data)->first();
+		if(!isset($category))
+		{
+			$category = Category::create(array('name' => $data, 'code_id' => $code_id, 'survey_id' => $survey_id));
+		}	
+		return $category;
+	}
 }
