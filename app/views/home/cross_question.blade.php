@@ -29,7 +29,5 @@
   <div class='cross-table'>
   </div>
 
-  <div class="col-md-12">
-    <a href="#" class="orange-bg"><img src="{{ Theme::asset('img/arrow-l.png') }}"> back</a>
-  </div>
+  
 </div>  

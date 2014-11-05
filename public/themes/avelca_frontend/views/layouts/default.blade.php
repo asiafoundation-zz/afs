@@ -28,14 +28,14 @@
   </footer>
 
   <script type="text/html" id="get-cross-table">
-  <div class="bordered">
+  <div class="chart bordered">
     <div class="col-md-12">
       <div class="table-wrapper">
         <table class="table matrix">
           <thead>
             <tr>
               <th rowspan="2"></th>
-              <th colspan="3" id='question_header'></th>
+              <th id='question_header'></th>
             </tr>
             <tr id="answer_header">
               
@@ -46,6 +46,9 @@
           </tbody>
         </table>
       </div>
+    </div>
+    <div class="col-md-12">
+      <a href="#" class="orange-bg"><img src="{{ Theme::asset('img/arrow-l.png') }}"> back</a>
     </div>
   </script>
 </body>
