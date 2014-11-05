@@ -75,28 +75,20 @@ Route::group(array('prefix' => LaravelLocalization::setLocale(), 'before' => 'fr
 
 Route::post('cross', function(){
 		
-		$question_headers = Answer::select(DB::raw('questions.question as question, questions.id as question_id, answers.id as id, answers.answer as answer'))
+		$question_headers = Answer::select(DB::raw('count(answers.answer) as count_header, questions.question as question, questions.id as question_id, answers.id as id, answers.answer as answer'))
 							->join('questions', 'questions.id', '=', 'answers.question_id')
-							->where('questions.id', '=', 1)
+							->where('questions.id', '=', Input::get('question_header'))
+							->groupBy('answers.answer')
 							->get();
-
+							
 		$query = "answers.answer as answer,";
 		$counter = 0;
-		$header_name = array();
 		foreach($question_headers as $header){
 			$query .= "(
-							count(answers.answer) +
-							(select count(answers.answer)
-								from answers
-								join questions
-									on questions.id = answers.question_id
-								where questions.id = ". $header->question_id ." 
-								and answers.id = ". $header->id .")
+							count(answers.answer) + ". $header->count_header ."
 						) as 'result$counter',";
-			$header_name[] = "result$counter";
 
 			$counter ++;
-
 		}
 
 		$query = rtrim($query, ',');
@@ -105,12 +97,9 @@ Route::post('cross', function(){
 							DB::raw($query)
 						)
 						->join('questions', 'questions.id', '=', 'answers.question_id')
-						->where('questions.id', '=', 4)
+						->where('questions.id', '=', Input::get('question_row'))
 						->groupBy('answer')
 						->get()->toArray();
-		// echo "<pre>";
-		// print_r($question_rows);		
-		// echo "</pre>";
-		// exit;
-		return array('question_rows' => $question_rows, 'question_headers' => $question_headers, 'header_name' => $header_name);
+		
+		return array('question_rows' => $question_rows, 'question_headers' => $question_headers);
 	});
