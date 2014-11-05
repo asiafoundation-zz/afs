@@ -7,4 +7,9 @@ class CategoryController extends AvelcaController {
 		parent::__construct($Model);
 	}
 	
+	public function getIndex(){
+		$category = Category::paginate(5);
+
+		return View::make('admin.filter.index')->with('categories', $category);
+	}
 }

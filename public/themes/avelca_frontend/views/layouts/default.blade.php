@@ -26,5 +26,30 @@
       </div>
     </div>
   </footer>
+
+  <script type="text/html" id="get-cross-table">
+  <div class="chart bordered">
+    <div class="col-md-12">
+      <div class="table-wrapper">
+        <table class="table matrix">
+          <thead>
+            <tr>
+              <th rowspan="2"></th>
+              <th id='question_header'></th>
+            </tr>
+            <tr id="answer_header">
+              
+            </tr>
+          </thead>
+          <tbody id="answer_row">
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <a href="#" class="orange-bg"><img src="{{ Theme::asset('img/arrow-l.png') }}"> back</a>
+    </div>
+  </script>
 </body>
 </html>
