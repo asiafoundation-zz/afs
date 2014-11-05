@@ -1,13 +1,40 @@
 $(document).ready(function(){
   $('.cross-question').hide();
+  $('.chart-flag').show();
   
+
+  $('.show-cross').click(function(e){
+    e.preventDefault();
+
+    $('.cross-question').show();
+    $('.chart-flag').hide();
+  })
+
   $('.select-category').change(function(){
       console.log($(this).val());
-    });
+  });
+
+  $('.select-question').change(function(){
+      console.log($(this).val());
+
+      $('.submit-cross').data('question_id', $(this).val());
+  });
+
+  function numAttrs(obj) {
+    var count = 0;
+    for(var key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        ++count;
+      }
+    }
+    return count;
+  }
 
   $('.submit-cross').click(function(){  
-    var question_row = $('.select-question').val();
+    var question_row = $(this).data('question_id');
     var $table = $($('#get-cross-table').html());
+
+    $('.cross-table').html("");
 
     $.ajax({
       type : 'post',
@@ -15,24 +42,32 @@ $(document).ready(function(){
       // dataType : 'array',
       data : {
         'question_header' : FilterSelect.question,
-        'question_row' : 4
+        'question_row' : question_row
       },
       success : function(data){
-        console.log(data['question_rows']);
-        $('#question_header', $table).append(data.question_headers[0].question);
-        $.each(data.question_headers, function(index, obj){
-          $('#answer_header', $table).append('<th width="33.3333%">'+ obj.answer +'</th>');
+        var count_value = 0;
+        
+
+        $('#question_header', $table).append(data.question_headers[0]['question']);
+        $.each(data.question_headers, function(index, value){
+          $('#answer_header', $table).append('<th>'+ value['answer'] +'</th>');
+          count_value++;
         });
 
-        
-        var counter = 0;
+        $('#question_header', $table).attr('colspan',count_value);
+
         $.each(data['question_rows'], function(index, value){
-          // console.log(data['question_rows']);
-          $('#answer_row', $table).append('<tr> <td>'+ value['answer'] +'</td>');
-          for(i=0;i<2;i++){
-            $('#answer_row tr', $table).append('<td>'+ value['result'+i] +'</td>')
+          
+          result = '<tr><td width="20%">'+ value['answer'] +'</td>';
+
+          for(i=0;i<count_value;i++){
+            result += '<td align="center">'+ value['result'+i] +'</td>';
           }
-          $('#answer_row', $table).append('<tr>')
+
+          result += '</tr>';
+
+          $('#answer_row', $table).append(result);
+
         });
         
         $('.cross-table').append($table);    
