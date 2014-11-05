@@ -58,12 +58,12 @@ class Cycle extends Eloquent {
 			return $question_cycle;
 	}
 
-	public static function checkData($data,$code_type)
+	public static function checkData($data,$cycle_type)
 	{
 		$cycle = Cycle::where('name', '=', $data)->first();
 		if(!isset($cycle))
 		{
-			$cycle = Cycle::create(array('name' => $data,'code_type' => $code_type));
+			$cycle = Cycle::create(array('name' => $data,'cycle_type' => $cycle_type));
 		}
 		$cycle_id = $cycle->id;
 		return $cycle_id;

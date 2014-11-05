@@ -63,9 +63,16 @@ class MasterCode extends Eloquent {
 	{
 		$status = false;
 		if (count($request['options_selected']) > 0) {
-			// try{
-			// 	DB::beginTransaction();
+			try{
+				DB::beginTransaction();
 				foreach ($request['options_selected'] as $key_options => $options_selected) {
+					$options_selected = array(
+						'category' => $options_selected['category'],
+						'category_question' => !empty($options_selected['category_question']) ? $options_selected['category_question'] : "",
+						'code' => !empty($options_selected['code']) ? $options_selected['code'] : "",
+						'label' => !empty($options_selected['label']) ? $options_selected['label'] : "",
+						);
+					
 					$code_labels = explode('_', $options_selected['code']);
 					$master_code_label = reset($code_labels);
 					$code_label = !empty($code_labels[1]) ? $code_labels[1] : "";
@@ -95,13 +102,13 @@ class MasterCode extends Eloquent {
 						$question = Question::checkData($options_selected['label'],$code->id,$question_category->id);
 					}
 				}
-				// DB::commit();
+				DB::commit();
 				$status = true;
-			// }
-			// catch(\PDOException $e){
-   //      DB::rollback();
-   //      $status = false;
-   //    }
+			}
+			catch(\PDOException $e){
+        DB::rollback();
+        $status = false;
+      }
 		}
 		return $status;
 	}
