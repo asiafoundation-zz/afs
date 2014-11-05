@@ -80,6 +80,7 @@
         <h1>" {{ $survey->name }} "</h1>
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
         <p id="question-name">" {{ $default_question->question }} "</p>
+        @include('home/cross_question')
         <div class="chart">
           <div id="chart_canvas">
             <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
@@ -119,7 +120,7 @@
           <div>
             <h4>{{Lang::get('frontend.cross_by_another_variable')}}</h4>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
-            <a href="#" class="orange-bg">{{Lang::get('frontend.cross_by_another_variable')}}</a>
+            <a onclick='crossData()' href="#" class="orange-bg">{{Lang::get('frontend.cross_by_another_variable')}}</a>
           </div>
         </div>
       </div>
