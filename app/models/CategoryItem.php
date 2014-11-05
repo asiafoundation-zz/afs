@@ -65,6 +65,13 @@ class CategoryItem extends Eloquent {
 
 		return compact('fields');
 	}
-
-
+	public static function checkData($data,$category_id)
+	{
+		$category_item = CategoryItem::where('name', '=', $data)->first();
+		if(!isset($category_item))
+		{
+			$category_item = CategoryItem::create(array('name' => $data, 'category_id' => $category_id));
+		}	
+		return $category_item;
+	}
 }

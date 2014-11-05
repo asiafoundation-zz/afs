@@ -45,4 +45,15 @@ class Region extends Eloquent {
 
 		return compact('fields');
 	}
+
+	public static function checkData($data,$code_id)
+	{
+		$region = Region::where('name', '=', $data)->first();
+		if(!isset($region))
+		{
+			$region = Region::create(array('name' => $data, 'code_id' => $code_id));
+		}
+		$region_id = $region->id;
+		return $region_id;
+	}
 }

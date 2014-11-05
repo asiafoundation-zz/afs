@@ -51,6 +51,11 @@ class QuestionParticipant extends Eloquent {
 		return compact('fields');
 	}
 
+	public function participant()
+	{
+		return $this->belongsTo('Participant');
+	}
+
 	public static function CompareQuestion($answer_id,$cycle_type)
 	{
 		$filter_queries =  DB::table('question_participants')

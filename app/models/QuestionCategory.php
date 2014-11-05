@@ -43,6 +43,16 @@ class QuestionCategory extends Eloquent {
 
 		return compact('fields');
 	}
+	
+	public static function checkData($data,$code_id,$survey_id)
+	{
+		$question_category = QuestionCategory::where('name', '=', $data)->first();
+		if(!isset($question_category))
+		{
+			$question_category = QuestionCategory::create(array('name' => $data, 'code_id' => $code_id, 'survey_id' => $survey_id));
+		}	
+		return $question_category;
+	}
 
 	public static function QuestionCategoryFilterRegion($request = array())
 	{

@@ -61,6 +61,17 @@ class Question extends Eloquent {
 
 		return compact('fields');
 	}
+	
+	public static function checkData($data,$code_id,$question_category_id)
+	{
+		$question = Question::where('code_id', '=', $code_id)->first();
+		
+		if(!isset($question))
+		{
+			$question = Question::create(array('question' => $data, 'code_id' => $code_id, 'question_category_id	' => $question_category_id));
+		}	
+		return $question;
+	}
 
 	public static function DefaultLoad($request)
 	{

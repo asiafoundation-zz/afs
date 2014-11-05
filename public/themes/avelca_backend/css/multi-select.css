@@ -1,3 +1,12 @@
+select[multiple], select[size] .header-select{
+  height: 400px;
+  width: auto;
+}
+select[multiple], select[size] .header-selected{
+  height: 400px;
+  width: 600px;
+}
+
 .ms-container{
   background: transparent url('../img/switch.png') no-repeat 50% 50%;
   width: 370px;

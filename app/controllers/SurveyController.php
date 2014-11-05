@@ -9,8 +9,11 @@ class SurveyController extends AvelcaController {
 	
 	public function getIndex()
 	{
+		$data['surveys'] = Survey::getSurveys();
+		// Paginations
+		$data['no'] = (Input::get('page') -1) * 10 +1;
 
-		return View::make('admin.survey.index');
+		return View::make('admin.survey.index',$data);
 	}
 
 	public function reupload()
@@ -42,8 +45,6 @@ class SurveyController extends AvelcaController {
 
 		if($validator->passes())
 		{
-			DB::table('surveys')->truncate();
-
 			$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'geojson_file' => Input::get('geojson'),'publish' => 1));
 
 			if($survey)
@@ -57,38 +58,6 @@ class SurveyController extends AvelcaController {
 		}
 	}
 
-	/*public function getCycle()
-	{
-
-		return view::make('admin.survey.cycle');
-	}
-
-	public function postCycle()
-	{
-		$rule = array(
-				'cycle_name' => 'Required',
-				'excel' => 'Required'
-			);
-
-		$validator = Validator::make(Input::all(), $rule);
-
-		if($validator->passes())
-		{
-			
-			$cycle = Cycle::create(array('name' => Input::get('cycle_name'), 'excel_file' => Input::get('uploaded_file')));
-
-			if($cycle)
-			{
-				return Redirect::to('/admin/survey/import/'. $cycle->id);
-			}
-
-		}
-		else
-		{
-			return Redirect::to('/admin/survey/cycle')->withErrors($validator)->withInput();
-		}
-	}
-*/
 	public function postUpload(){
 		ini_set("memory_limit","200M");
 		
@@ -106,99 +75,110 @@ class SurveyController extends AvelcaController {
 	{
 		$survey = Survey::where('id', '=', $id)->first();
 		
-		$header = $this->readHeader($survey->baseline_file, 'E', 0);
+		$header = Survey::readHeader($survey->baseline_file, 'E', 0);
 
-		$content = array("Select Category Filter","Please select select category with clicking a list on the left");
-
-		$form_action = "/admin/survey/category";
+		$content = array("Select 'Region' Filter","Please select select 'Region' with clicking a list on the left");
 
 		$button_value = "Next";
 
 		return View::make('admin.survey.import')
 				->with('header', $header)
 				->with('content', $content)
-				->with('action', $form_action)
+				->with('survey', $survey)
 				->with('button', $button_value)
 				->with('base_header', true);
 	}
 
 	public function postCategory(){
-		$headers = Input::get('header');
-		$questions = Input::get('unselected');
-
-		DB::table('questions')->truncate();
-		DB::table('question_categories')->truncate();
-		DB::table('master_codes')->truncate();
-		DB::table('codes')->truncate();
-
-		$header_code = array();
-		foreach($headers as $header)
-		{
-			$header_content = explode(';', $header);
-			$header_code[] = $header_content[0];
-		}
-
-		$id_question_category = 0;
-		foreach($questions as $question)
-		{
-			$question_content = explode(';', $question);
-			$question_exist = in_array($question_content[1], $header_code);
-			
-			if(empty($question_exist))
-			{
-				if(!empty($question_content[0]))
-				{
-					$select_question_category = QuestionCategory::where('name', '=', $question_content[0])->first();
-
-					if(!isset($select_question_category))
-					{
-						$select_question_category = QuestionCategory::create(array('name' => $question_content[0], 'survey_id' => 1));
-
-					}
-					$id_question_category = $select_question_category->id;
-				}
-
-				$arr_master_code = explode('_', $question_content[1]);
-				$s_master_code = MasterCode::where('master_code', '=', $arr_master_code[0])->first();
-				if(!isset($s_master_code) && !empty($id_question_category))
-				{	
-					$master_code = MasterCode::create(array('master_code' => $arr_master_code[0]));
-
-					if(isset($master_code))
-					{
-						if(empty($arr_master_code[1])){ 
-							$code_content = ""; 
-						}else{
-							$code_content = $arr_master_code[1];	
-						}
-						
-						$code = Code::create(array('code' => $code_content, 'master_code_id' => $master_code->id,'type' => 0));
-						
-						Question::create(array('code_id' => $code->id, 'question' => $question_content[2], 'question_category_id' => $id_question_category));	
-					}
-				}
-			}
-
-		}
-
-		$question = Question::find(1);
-		$question->is_default = 1;
-		$question->save();
-
-		$content = array("Select Region", "Please select region with clicking a list on the left");
-
-		$form_action = "/admin/survey/region";
-
-		$button_value = "Next";
-
-		return View::make('admin.survey.import')
-				->with('header', $headers)
-				->with('content', $content)
-				->with('action', $form_action)
-				->with('button', $button_value)
-				->with('survey_id', Input::get('survey_id'))
-				->with('base_header', false);
+		// Load survey
+		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
+		
+		// save code
+		$codes = MasterCode::savingProcess(Input::get());
+		// Load Master Code Data
+		$master_code = MasterCode::loadData(Input::get());
+		// Load Excel Data
+		$excel_data = Survey::readHeader($survey->baseline_file, 'E', 1);
+		// Import Data
+		$codes = Survey::importData($survey,$master_code,$excel_data);
 	}
+	// public function postCategory(){
+	// 	$headers = Input::get('header');
+	// 	$questions = Input::get('unselected');
+
+	// 	DB::table('questions')->truncate();
+	// 	DB::table('question_categories')->truncate();
+	// 	DB::table('master_codes')->truncate();
+	// 	DB::table('codes')->truncate();
+
+	// 	$header_code = array();
+	// 	foreach($headers as $header)
+	// 	{
+	// 		$header_content = explode(';', $header);
+	// 		$header_code[] = $header_content[0];
+	// 	}
+
+	// 	$id_question_category = 0;
+	// 	foreach($questions as $question)
+	// 	{
+	// 		$question_content = explode(';', $question);
+	// 		$question_exist = in_array($question_content[1], $header_code);
+			
+	// 		if(empty($question_exist))
+	// 		{
+	// 			if(!empty($question_content[0]))
+	// 			{
+	// 				$select_question_category = QuestionCategory::where('name', '=', $question_content[0])->first();
+
+	// 				if(!isset($select_question_category))
+	// 				{
+	// 					$select_question_category = QuestionCategory::create(array('name' => $question_content[0], 'survey_id' => 1));
+
+	// 				}
+	// 				$id_question_category = $select_question_category->id;
+	// 			}
+
+	// 			$arr_master_code = explode('_', $question_content[1]);
+	// 			$s_master_code = MasterCode::where('master_code', '=', $arr_master_code[0])->first();
+	// 			if(!isset($s_master_code) && !empty($id_question_category))
+	// 			{	
+	// 				$master_code = MasterCode::create(array('master_code' => $arr_master_code[0]));
+
+	// 				if(isset($master_code))
+	// 				{
+	// 					if(empty($arr_master_code[1])){ 
+	// 						$code_content = ""; 
+	// 					}else{
+	// 						$code_content = $arr_master_code[1];	
+	// 					}
+						
+	// 					$code = Code::create(array('code' => $code_content, 'master_code_id' => $master_code->id,'type' => 0));
+						
+	// 					Question::create(array('code_id' => $code->id, 'question' => $question_content[2], 'question_category_id' => $id_question_category));	
+	// 				}
+	// 			}
+	// 		}
+
+	// 	}
+
+	// 	$question = Question::find(1);
+	// 	$question->is_default = 1;
+	// 	$question->save();
+
+	// 	$content = array("Select Region", "Please select region with clicking a list on the left");
+
+	// 	$form_action = "/admin/survey/region";
+
+	// 	$button_value = "Next";
+
+	// 	return View::make('admin.survey.import')
+	// 			->with('header', $headers)
+	// 			->with('content', $content)
+	// 			->with('action', $form_action)
+	// 			->with('button', $button_value)
+	// 			->with('survey_id', Input::get('survey_id'))
+	// 			->with('base_header', false);
+	// }
 
 public function postRegion(){
 		set_time_limit(0) ;
@@ -504,43 +484,43 @@ public function postRegion(){
 		return Redirect::to('/admin/survey/managesurvey');
 	}
 
-	Public function readHeader($inputFileName, $highest_column, $sheet)
-	{		
-		$inputFileName = '../public/uploads/'.$inputFileName;
+	// Public function readHeader($inputFileName, $highest_column, $sheet)
+	// {
+	// 	$inputFileName = '../public/uploads/'.$inputFileName;
 
-		try
-	    {
-	      $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
-	      $objReader = PHPExcel_IOFactory::createReader($inputFileType);
-	      $objPHPExcel = $objReader->load($inputFileName);
-	    }
-	    catch(Exception $e)
-	    {
-	        die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
-	    }
+	// 	try
+	//     {
+	//       $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+	//       $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+	//       $objPHPExcel = $objReader->load($inputFileName);
+	//     }
+	//     catch(Exception $e)
+	//     {
+	//         die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+	//     }
 
-	    if($highest_column == strtoupper('highes column')){
-	    	$highest_column = $objWorksheet->getHighestColumn();
-	    }
+	//     if($highest_column == strtoupper('highes column')){
+	//     	$highest_column = $objWorksheet->getHighestColumn();
+	//     }
 
-	    $objWorksheet = $objPHPExcel->getSheet($sheet);
-	    $highestRow = $objWorksheet->getHighestRow();
-	    $highestColumn = $highest_column;
-	    $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+	//     $objWorksheet = $objPHPExcel->getSheet($sheet);
+	//     $highestRow = $objWorksheet->getHighestRow();
+	//     $highestColumn = $highest_column;
+	//     $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
 
-	    for($row = 5; $row <= $highestRow; ++$row){
-			for($col = 0; $col <= $highestColumnIndex; ++$col){
+	//     for($row = 5; $row <= $highestRow; ++$row){
+	// 		for($col = 0; $col <= $highestColumnIndex; ++$col){
 
-				$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-				$data[$row]['header'.$col] = $dataval;
-			}
+	// 			$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+	// 			$data[$row]['header'.$col] = $dataval;
+	// 		}
 
-			if (empty($data[$row]['header1'])) {
-				break;
-			}
-		}
-	  return $data;
-	}
+	// 		if (empty($data[$row]['header1'])) {
+	// 			break;
+	// 		}
+	// 	}
+	//   return $data;
+	// }
 
 	public function read_string($string, $key_start, $key_end, $str_start, $str_end){
 		$posfirst = strpos($string, $key_start);
