@@ -1,0 +1,25 @@
+.cross-button-group{
+	margin-top : 20px; 
+	margin-bottom : 20px;
+}
+
+.cross-table{
+	clear:both; 
+	margin-top:20px;
+}
+
+.cross-question .custom-text{
+	width : 70% !important;
+}
+
+.custom-text{
+	width : auto !important;
+}
+
+.select-list.custom-scroll ul{
+	width : 100% !important;
+}
+
+.chart-form .custom-select-control, .chart-form .custom-select-control ul{
+	width : 120%;
+}

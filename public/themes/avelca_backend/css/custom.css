@@ -9,3 +9,11 @@
 .ms-container .ms-list{
 	height: 500px !important;
 }
+
+.new-login .logo {
+	left: 47%;
+}
+
+.half-control .checkbox{
+	margin-top: 0 !important;
+}
