@@ -13,13 +13,13 @@ return array(
 	"filter_by_gender" => "Gender",
 	"clear_all" => "Clear All",
 	"cycle" => "Cycle",
-	"compare_this_survey" => "compare this survey",
+	"compare_this_survey" => "Compare with other survey",
 	"return" => "Back",
-	"compare_survey_results" => "Compare Survey Results",
+	"compare_survey_results" => "Compare results from different surveys",
 	"survey_question" => "Survey Question",
 	"compare_survey" => "COMPARE SURVEY",
 	"empty_data" => "There is no survey data",
 	"comparing_cycle" => "Comparing",
-	"cross_by_another_variable" => "Cross by another variable",
+	"cross_by_another_variable" => "Cross-tabulate data to compare answers from two questions from the same survey",
 	"filter_participant_by" => "Filter Participant By"
 );
