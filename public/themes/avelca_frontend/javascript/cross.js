@@ -1,20 +1,21 @@
 $(document).ready(function(){
+
   $('.cross-question').hide();
   $('.chart-flag').show();
   
 
   $('.show-cross').click(function(e){
     e.preventDefault();
-
+    $('.header-select li').removeAttr('onclick');
     $('.cross-question').show();
     $('.chart-flag').hide();
-  })
+  });
 
   /*$('.select-category').change(function(){
       
   });*/
 
-  $('.select-question').change(function(){
+  $('.cross-select-question').change(function(){
       console.log($(this).val());
 
       $('.submit-cross').data('question_id', $(this).val()); //send data-question_id to button
@@ -70,8 +71,23 @@ $(document).ready(function(){
         $('.cross-table').append($table); //append template to cross-table class
       }
 
-    })
-
+    });
   }); 
+
+  $('.cross-back').click(function(e){
+    e.preventDefault();
+
+    alert('I am here');
+  });
+
+  $('.select-question').change(function(e){
+    FilterSelect.question = parseInt($(this).val());
+    find_survey();
+  });
+
+  $('.select-cycle').change(function(){
+    var id_cycle = $(this).val();
+    cycle_select(id_cycle);
+  });
 
 })
