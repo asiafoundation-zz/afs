@@ -8,7 +8,12 @@
     <title>SURVEY Q Admin - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{ HTML::style(Theme::asset('css/login.css')) }}
-    {{ HTML::script(Theme::asset('js/jquery-1.10.2.js')) }}    
+    {{ HTML::style(Theme::asset('css/bootstrap.min.css')) }}
+    {{ HTML::style(Theme::asset('css/custom.css')) }}
+    {{ HTML::style(Theme::asset('font-awesome/css/font-awesome.css')) }}
+
+    {{ HTML::script(Theme::asset('js/jquery-1.10.2.js')) }}
+
     <!--script src="js/modernizr-2.7.1.min.js"></script--> 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -18,10 +23,8 @@
   </head>
 
   <body>
-  
-  <div class="header">
-    <h1>
-      Survey Q
+  <div class="header new-login">
+    <h1 style="margin : 0;">
       <span class="logo"></span>
     </h1>
   </div>
