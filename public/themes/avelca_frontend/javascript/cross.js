@@ -39,7 +39,6 @@ $(document).ready(function(){
     $.ajax({
       type : 'post',
       url : 'cross',
-      // dataType : 'array',
       data : {
         'question_header' : FilterSelect.question,
         'question_row' : question_row
@@ -57,13 +56,10 @@ $(document).ready(function(){
         $('#question_header', $table).attr('colspan',count_value);
 
         $.each(data['question_rows'], function(index, value){
-          
           result = '<tr><td width="20%">'+ value['answer'] +'</td>';
-
           for(i=0;i<count_value;i++){
             result += '<td align="center">'+ value['result'+i] +'</td>';
           }
-
           result += '</tr>';
 
           $('#answer_row', $table).append(result);
@@ -75,5 +71,6 @@ $(document).ready(function(){
 
     })
 
-  });  
+  }); 
+
 })
