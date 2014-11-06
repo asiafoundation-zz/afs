@@ -111,7 +111,7 @@
           <img src="{{ Theme::asset('img/compare.png') }}">
           <div>
             <h4>{{Lang::get('frontend.compare_survey_results')}}</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
+            <p>{{ Lang::get('frontend.compare_survey_results_content') }}</p>
             <a onclick='compare_cycle(2)' class="orange-bg">{{Lang::get('frontend.compare_survey')}}</a>
           </div>
         </div>
@@ -119,7 +119,7 @@
           <img src="{{ Theme::asset('img/variable.png') }}">
           <div>
             <h4>{{Lang::get('frontend.cross_by_another_variable')}}</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus</p>
+            <p>{{ Lang::get('frontend.cross_by_another_variable_p') }}</p>
             <a href="#" class="orange-bg show-cross">{{Lang::get('frontend.cross_by_another_variable')}}</a>
           </div>
         </div>
