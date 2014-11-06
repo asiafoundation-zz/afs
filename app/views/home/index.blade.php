@@ -49,7 +49,7 @@
         <div class="col-md-3"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
       </div>
     </div>
-    <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 570px"></div>
+    <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>
   </section>
 
   <section class="filter">
