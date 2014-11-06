@@ -13,3 +13,4 @@
 
 Artisan::add(new AvelcaCommand);
 Artisan::add(new AvelcaUpdateCommand);
+Artisan::add(new BackgroundCommand);

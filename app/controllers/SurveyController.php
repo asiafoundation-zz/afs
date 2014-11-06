@@ -91,19 +91,19 @@ class SurveyController extends AvelcaController {
 
 	public function postCategory()
 	{
-		$status = 0;	
+		$status = 1;
 		// Load survey
 		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
-		
-		// save code
-		$codes = MasterCode::savingProcess(Input::get());
-		// Load Master Code Data
-		$master_code = MasterCode::loadData(Input::get());
-		// Load Excel Data
-		$excel_data = Survey::readHeader($survey->baseline_file, 'BZ', 1);
-		// Import Data
-		$status = Survey::importData($survey,$master_code,$excel_data);
+		$survey->publish = 2;
+		$survey->save();
 
+		$request_parse = json_encode(Input::get());
+
+		$insert_queue = DelayedJob::create(array('type' => 'importfile','data' => $request_parse,'survey_id' => $survey->id));
+
+		Session::flash('alert-class', 'alert-success'); 
+		Session::flash('message', 'Importing File is in progress');
+		
 		return $status;
 	}
 }

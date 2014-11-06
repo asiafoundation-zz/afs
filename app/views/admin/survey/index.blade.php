@@ -1,9 +1,22 @@
 @extends('layouts/default')
 
 @section('content')
+<script type="text/javascript">
+setInterval(function() {
+  window.location.reload();
+}, 3000);
+</script>
+
 <div class="row">
 	<div class="col-md-12">
-
+	<div class="notification">
+		@if(Session::has('message'))
+		<div class="alert {{ Session::get('alert-class', 'alert-info') }}">
+			<button class="close" type="button" data-dismiss="alert">×</button>
+			{{ Session::get('message') }}
+		</div>
+		@endif
+	</div>
 	<div class="modal-header">
 		<h1>{{Lang::get('backend.manage_survey')}}</h1>
 		<hr>
