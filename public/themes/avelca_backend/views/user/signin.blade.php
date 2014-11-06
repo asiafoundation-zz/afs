@@ -23,11 +23,6 @@
   </head>
 
   <body>
-  <div class="header new-login">
-    <h1 style="margin : 0;">
-      <span class="logo"></span>
-    </h1>
-  </div>
   <div class="float-container">
   {{ Form::open(array('url' => 'signin', 'method' => 'post')) }}
     {{ Widget::get('form-validation') }}
