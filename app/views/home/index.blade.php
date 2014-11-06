@@ -3,58 +3,44 @@
 @section('content')
 
   @include('partial/homeasset')
+  <section class="header">
+    <div class="container">
+      <p>{{ $survey->name }}</p>
+    </div>
+  </section>
 
   <section class="map">
-    <a class="logo" href="#"><img src="{{ Theme::asset('img/logo.png') }}"></a>
-    <div class="border-top"></div>
     <div class="top-nav">
       <div class="left-side">
         <p id="select_region_label"></p>
       </div>
-      <div class="right-side">
-        <p id="select_cycle_label">{{ $default_question->cycle }}</p>
-        <div class="dropdown">
-          <a href="#" data-toggle="dropdown" class="hamburger"></a>
-          <ul class="dropdown-menu" id="cycle_list">
-            @foreach ($cycles as $cycle)
-            <li><a href="#" onclick='cycle_select({{ $cycle->id }})' id="cycle_select_{{ $cycle->id }}">{{ $cycle->name }}</a></li>
-            @endforeach
-        </ul>
-        </div>
-      </div>
     </div>
-    <div class="dropshadow">
-      <img src="{{ Theme::asset('img/dropshadow.png') }}">
-      <div class="search-wrp">
-        <div class="col-md-3">
-          <a href="#" id="category" data-toggle="dropdown">
-            <img src="{{ Theme::asset('img/add.png') }}" />
-            <span id="select_category_label">{{ Str::limit($default_question->question_categories, 15) }}</span>
-          </a>
-          <div class="dropdown-path" id="div-filter-category">
-            @include('home/filter_category')
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <a href="#" id="question">
-            <img src="{{ Theme::asset('img/add.png') }}" />
-            <span id="select_question_label">{{ Str::limit($default_question->question, 40) }}</span>
-          </a>
-          <div class="dropdown-path" id="div-filter-question">
-            @include('home/filter_question')
-          </div>
-        </div>
-
-        <div class="col-md-3"><a class="find-surveys" href="#" onclick='find_survey()'>{{Lang::get('frontend.find_surveys')}} <img src="{{ Theme::asset('img/arrow.png') }}"></a></div>
-      </div>
+    <div class="search-wrp header-select">
+      <select class="select-control select-cycle">
+        <option>Select Cycle</option>
+        @foreach ($cycles as $cycle)
+        <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
+        @endforeach
+      </select><!-- Custom Select -->
+      <select class="select-control select-category">
+        <option>Select Category</option>
+        @foreach ($question_categories as $question_category)
+        <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
+        @endforeach
+      </select><!-- Custom Select -->
+      <select class="select-control select-question">
+        <option>Select Question</option>
+        @foreach ($question_lists as $question_list)
+        <option value="{{ $question_list->id }}"> - {{ $question_list->question }}</option>
+        @endforeach
+      </select><!-- Custom Select -->
     </div>
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>
   </section>
 
   <section class="filter">
     <div class="container">
-      <div class="col-md-12">
+      <div class="col-md-12 dropdown-filter">
         <ul>
           @foreach ($filters as $key_filters => $filter)
           <li>
@@ -77,7 +63,6 @@
   <section class="survey-pemilu">
     <div class="container center">
       <div class="col-md-12">
-        <h1>" {{ $survey->name }} "</h1>
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
         <p id="question-name">" {{ $default_question->question }} "</p>
         @include('home/cross_question')

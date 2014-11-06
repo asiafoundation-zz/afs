@@ -70,6 +70,22 @@ a:hover {
 	text-decoration: none;
 }
 
+/*header*/
+.header {
+	background-color: #1fb7b8;
+	color: #ffffff;
+	font-size: 24px;
+	text-align: center;
+	line-height: 38px;
+	padding: 22px 0;
+}
+
+.header * {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+/*end header*/
+
 /*map*/
 
 .leaflet-top .leaflet-control {
@@ -552,4 +568,49 @@ footer p {
 	color: #ffffff;
     font-size: 12px;
     margin: 10px 0 0;
+}
+
+/* CSS CHANGES */
+.map .search-wrp {
+	position: absolute;
+	bottom: 60px;
+	width: 960px;
+	left: 50%;
+	margin-left: -480px;
+	z-index: 11;
+}
+.map .search-wrp .custom-select-control {
+	float: left;
+	width: 32.5%;
+}
+.map .search-wrp .custom-select-control + .custom-select-control {
+	margin-left: 1.25%;
+}
+.map .search-wrp .custom-select-control .custom-text, 
+.map .search-wrp .custom-select-control.disabled span.custom-text:hover {
+	background: url(../img/filter_transparent.png) no-repeat right center #ffffff;
+	color: #a5a5a5;
+	border-radius: 3px;
+	-webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+}
+
+.search-wrp > div:nth-child(1) .arrow-down {
+    left: 50%;	
+}
+.search-wrp > div:nth-child(2) .dropdown-path {
+	margin-left: -244px;
+}
+.search-wrp > div:nth-child(2) .arrow-down {
+    left: 50%;	
+}
+
+/*sponsorship*/
+.sponsorship {
+	text-align: center;
+}
+
+.sponsorship .container {
+	border-top: 1px solid #ededed;
+	padding: 60px 0;
 }

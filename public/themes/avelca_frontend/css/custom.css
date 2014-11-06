@@ -12,6 +12,10 @@
 	width : 70% !important;
 }
 
+.custom-text{
+	width : auto !important;
+}
+
 .select-list.custom-scroll ul{
 	width : 100% !important;
 }

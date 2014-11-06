@@ -1,7 +1,7 @@
 <div class="cross-question">  
   <form class="chart-form">
     <div class='col-xs-6'>
-    <div class="form-group">
+    <div class="form-group cross-category">
       <label>Select Category</label>
       <select class="select-control select-category">
       <option disabled>Category</option>
@@ -13,9 +13,9 @@
     </div>
 
     <div class='col-xs-6'>
-    <div class="form-group">
+    <div class="form-group cross-question">
       <label>Select Question</label>
-      <select class="select-control select-question">
+      <select class="select-control cross-select-question">
       <option>Question</option>
       @foreach ($question_lists as $question_list)
         <option value="{{ $question_list->id }}"> - {{ $question_list->question }}</option>
@@ -35,7 +35,9 @@
   <form class="chart-form">
 
   <div class='cross-table'>
+
   </div>
+
 
   
 </div>  
