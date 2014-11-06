@@ -110,7 +110,7 @@
      function filter_option(category_id)
      {
         var option_filters = [];
-        $(".selected_filter_option").each(function(){
+        $(".dropdown-filter .selected_filter_option").each(function(){
           var data_value = $(this).attr("data-value");
 
           if(data_value % 1 === 0){
