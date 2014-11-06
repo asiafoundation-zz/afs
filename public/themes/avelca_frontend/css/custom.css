@@ -1,0 +1,17 @@
+.cross-button-group{
+	margin-top : 20px; 
+	margin-bottom : 20px;
+}
+
+.cross-table{
+	clear:both; 
+	margin-top:20px;
+}
+
+.cross-question .custom-text{
+	width : 70% !important;
+}
+
+.select-list.custom-scroll ul{
+	width : 100% !important;
+}
