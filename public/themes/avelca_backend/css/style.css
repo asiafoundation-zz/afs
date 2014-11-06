@@ -364,3 +364,8 @@ table.dataTable thead .sorting:after {
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+
+#popup_modal{
+    overflow-x: auto;overflow-y: scroll;
+    width:auto;height:400px;
+}

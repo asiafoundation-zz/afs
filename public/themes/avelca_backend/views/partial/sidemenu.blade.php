@@ -12,7 +12,7 @@
 			if($survey->count() > 0){
 				?>
 				<li>
-					<a href="/admin/survey/managesurvey">Manage Survey<span class="fa"></span></a>
+					<a href="/admin/survey/index">Manage Survey<span class="fa"></span></a>
 				</li>
 				<li>
 					<a href="/admin/filter">Manage Filter<span class="fa"></span></a>

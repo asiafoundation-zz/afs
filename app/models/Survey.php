@@ -122,78 +122,101 @@ class Survey extends Eloquent {
 
 	public static function importData($survey,$master_code,$excel_data)
 	{
-		foreach ($excel_data as $lists_data) {
-			$questions_list = array();
-			$category_items = array();
-			$i=0;
-			foreach ($lists_data as $column => $data) {
+		$status = 0;
+		try{
+			DB::beginTransaction();
+			foreach ($excel_data as $lists_data) {
+				$questions_list = array();
+				$category_items = array();
+				$i=0;$j=0;
+				foreach ($lists_data as $column => $data) {
 
-				if (!empty($master_code[$column])) {
-					// remove special characters and number
-					$data_str = preg_replace('/[^A-Za-z]/', "", $data);
+					if (!empty($master_code[$column])) {
 
-					switch ($master_code[$column]['type']) {
-						case 0:
-							// Check region exist
-							$region_id = Region::checkData($data_str,$master_code[$column]['code_id']);
-							break;
-						case 1:
-							$wave_id = strtolower($data) == 'baseline' ? 0 : 1;
-							// Check wave exist
-							$cycle_id = Cycle::checkData($data_str,$wave_id);
-							$questions_list[$i]['cycle_id'] = $cycle_id;
-							break;
-						case 2:
-							// Check oversample
-							$oversample_id = preg_replace('/[^0-9]/', "", $data);
-							$oversample_id = $oversample_id == 1 ? 0 : 1;
-							break;
-						case 3:
-							// Check category exist
-							$category = Category::checkData($data,$master_code[$column]['code_id'],$survey->id);
-							$category_items[$i] = array(
-								'data' => $data,
-								'category_id' => $category->id
-								);
-							break;
-						case 4:
-							// Check answers exist
-							$question_category = QuestionCategory::checkData($data,$master_code[$column]['code_id'],$survey->id);
-							$questions_list[$i]['data'] = $data;
-							$questions_list[$i]['code_id'] = $master_code[$column]['code_id'];
-							$questions_list[$i]['question_category_id'] = $question_category->id;
-							break;
+						// remove special characters and number
+						$data_str = preg_replace('/[^A-Za-z]/', "", $data);
 
-						default:
-							continue;
-							break;
+						switch ($master_code[$column]['type']) {
+							case 0:
+								// Check region exist
+								$region_id = Region::checkData($data_str,$master_code[$column]['code_id']);
+								break;
+							case 1:
+								$cycle_type = strtolower($data) == 'baseline' ? 0 : 1;
+								// Check wave exist
+								$cycle_id = Cycle::checkData($data_str,$cycle_type);
+								break;
+							case 2:
+								// Check oversample
+								$oversample_id = preg_replace('/[^0-9]/', "", $data);
+								$oversample_id = $oversample_id == 1 ? 0 : 1;
+								break;
+							case 3:
+								$column_piece = explode("_", $column);
+								$code_label = !empty($column_piece[1]) ? $column_piece[1] : "";
+
+								// Check category exist
+								$category = Category::checkData($code_label,$master_code[$column]['code_id'],$survey->id);
+								$category_items[$i] = array(
+									'data' => $data,
+									'category_id' => $category->id
+									);
+								$i++;
+								break;
+							case 4:
+								// Check answers exist
+								$question_category = QuestionCategory::checkData($data,$master_code[$column]['code_id'],$survey->id);
+
+								$questions_list[$j]['cycle_id'] = $cycle_id;
+								$questions_list[$j]['data'] = $data;
+								$questions_list[$j]['code_id'] = $master_code[$column]['code_id'];
+								$questions_list[$j]['question_category_id'] = $question_category->id;
+								$j++;
+								break;
+
+							default:
+								continue;
+								break;
+						}
+					}
+				}
+
+				// Save participant
+				$participant = new Participant;
+				$participant->save();
+				foreach ($category_items as $category_item) {
+					if (!empty($category_item['data'])) {
+						$category_item_data = CategoryItem::checkData($category_item['data'],$category_item['category_id']);
+
+						$filter_participant = new FilterParticipant;
+						$filter_participant->category_item_id = $category_item_data->id;
+						$filter_participant->participant_id = $participant->id;
+						$filter_participant->save();
+					}
+				}
+
+				foreach ($questions_list as $key => $question_list) {
+					if (!empty($question_list['data'])) {
+						$question = Question::checkData('',$question_list['code_id'],$question_list['question_category_id']);
+						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'], $key);
+
+						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id);
 					}
 				}
 			}
-			$i++;
-			// Save participant
-			$participant = new Participant;
-			$participant->save();
-			foreach ($category_items as $category_item) {
-				$category_item_data = CategoryItem::checkData($category_item['data'],$category_item['category_id']);
+			// Set default question
+			$default_question = Question::join('question_categories', 'question_categories.id','=','questions.question_category_id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
+			$default_question->is_default = 1;
+			$default_question->save();
 
-				$filter_participant = new FilterParticipant;
-				$filter_participant->category_item_id = $category_item_data->id;
-				$filter_participant->participant_id = $participant->id;
-				$filter_participant->save();
-			}
-			foreach ($questions_list as $question_list) {
-				$question = Question::checkData('',$question_list['code_id'],$question_list['question_category_id']);
-				$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id']);
-
-				$question_participant = new QuestionParticipant;
-				$question_participant->answer_id = $answer->id;
-				$question_participant->participant_id = $participant->id;
-				$question_participant->region_id = $region_id;
-				$question_participant->save();
-			}
+			DB::commit();
+			$status = 1;
 		}
-		exit();
+		catch(\PDOException $e){
+      DB::rollback();
+      $status = 0;
+    }
+    return $status;
 	}
 
 	Public static function readHeader($inputFileName, $highest_column, $sheet)
@@ -211,15 +234,16 @@ class Survey extends Eloquent {
 	        die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
 	    }
 
-	    if($highest_column == strtoupper('highes column')){
-	    	$highest_column = $objWorksheet->getHighestColumn();
-	    }
+	    // if($highest_column == strtoupper('highes column')){
+	    // 	$highest_column = $objWorksheet->getHighestColumn();
+	    // }
 
 	    // Set variable data
 	    $data = array();
 	    $data_header = array();
 
 	    $objWorksheet = $objPHPExcel->getSheet($sheet);
+
 	    $highestRow = $objWorksheet->getHighestRow();
 	    $highestColumn = $highest_column;
 	    $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
@@ -228,6 +252,10 @@ class Survey extends Eloquent {
 				for($row = 5; $row <= $highestRow; ++$row){
 					for($col = 0; $col <= $highestColumnIndex; ++$col){
 						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+						if ($col != 1) {
+							$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]/', '', $dataval);
+						}
+
 						$data[$row]['header'.$col] = $dataval;
 					}
 
@@ -239,23 +267,22 @@ class Survey extends Eloquent {
 	    	for($row = 1; $row <= $highestRow; ++$row){
 					for($col = 0; $col <= $highestColumnIndex; ++$col){
 						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-
 						if ($row == 1) {
 							$first_column = strtolower($dataval);
 							$data_header[$col] = strtolower($dataval);
 						}
 						else
 						{
+							$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]/', '', $dataval);
 							$data[$row][$data_header[$col]] = $dataval;
 						}
 					}
 					// Break
-					if (empty($data[$row][$first_column]) && $row != 1) {
+					if (empty($data[$row]) && $row != 1) {
 						break;
 					}
 				}
 	    }
-
 	  return $data;
 	}
 }

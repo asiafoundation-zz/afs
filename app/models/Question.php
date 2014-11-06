@@ -28,7 +28,7 @@ class Question extends Eloquent {
 	public static $rules = array(
 		'code' => 'required',
 		'code_id' => 'required',
-		'question' => 'required',
+		// 'question' => 'required',
 		'question_category_id' => 'required',
 		'is_default' => 'required'
 		);
@@ -68,7 +68,7 @@ class Question extends Eloquent {
 		
 		if(!isset($question))
 		{
-			$question = Question::create(array('question' => $data, 'code_id' => $code_id, 'question_category_id	' => $question_category_id));
+			$question = Question::create(array('question' => $data, 'code_id' => $code_id, 'question_category_id' => $question_category_id));
 		}	
 		return $question;
 	}

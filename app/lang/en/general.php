@@ -76,4 +76,5 @@ return array(
 	"back" => "Back",
 	"save_changes" => "Save Changes",
 	"cancel" => "Cancel",
+	"select_all" => "Select All",
 );

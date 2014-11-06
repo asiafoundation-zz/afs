@@ -56,6 +56,16 @@ class QuestionParticipant extends Eloquent {
 		return $this->belongsTo('Participant');
 	}
 
+	public static function checkData($answer_id,$participant_id,$region_id)
+	{
+		$question_participant = QuestionParticipant::where('answer_id', '=', $answer_id)->where('participant_id', '=', $participant_id)->where('region_id', '=', $region_id)->first();
+		if(!isset($question_participant))
+		{
+			$question_participant = QuestionParticipant::create(array('answer_id' => $answer_id,'participant_id' => $participant_id,'region_id' => $region_id));
+		}
+		return $question_participant;
+	}
+
 	public static function CompareQuestion($answer_id,$cycle_type)
 	{
 		$filter_queries =  DB::table('question_participants')
