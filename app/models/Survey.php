@@ -76,6 +76,7 @@ class Survey extends Eloquent {
 	{
 		$surveys = array();
 		foreach ($survey_lists as $key_survey_lists => $survey_list) {
+			
 			$surveys[$key_survey_lists]['id'] = $survey_list->id;
 			$surveys[$key_survey_lists]['name'] = $survey_list->name;
 			$surveys[$key_survey_lists]['publish'] = $survey_list->publish;
@@ -90,7 +91,16 @@ class Survey extends Eloquent {
 					$surveys[$key_survey_lists]['publish_style'] = "published";
 					break;
 				case 2:
-					$surveys[$key_survey_lists]['publish_text'] = "Importing";
+					$percentage = "";
+					// Is queue exist
+					$queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
+					if ($queue->queue < $queue->information) {
+						$participant_count = Participant::where('survey_id','=',$survey_list->id)->count();
+						$percentage = ((int)$participant_count / (int)$queue->information) * 100;
+						$percentage = ": ". round($percentage)."% Completed";
+					}
+
+					$surveys[$key_survey_lists]['publish_text'] = "Importing ".$percentage;
 					$surveys[$key_survey_lists]['publish_style'] = "importing";
 					break;
 				case 3:
@@ -122,9 +132,10 @@ class Survey extends Eloquent {
 
 	public static function importData($survey,$master_code,$excel_data)
 	{
+		set_time_limit(0);
 		$status = 0;
-		try{
-			DB::beginTransaction();
+		// try{
+		// 	DB::beginTransaction();
 			foreach ($excel_data as $lists_data) {
 				$questions_list = array();
 				$category_items = array();
@@ -134,7 +145,7 @@ class Survey extends Eloquent {
 					if (!empty($master_code[$column])) {
 
 						// remove special characters and number
-						$data_str = preg_replace('/[^A-Za-z]/', "", $data);
+						$data_str = preg_replace('/[^A-Za-z\s]/', "", "2. Jawa Timur");
 
 						switch ($master_code[$column]['type']) {
 							case 0:
@@ -183,6 +194,7 @@ class Survey extends Eloquent {
 
 				// Save participant
 				$participant = new Participant;
+				$participant->survey_id = $survey->id;
 				$participant->save();
 				foreach ($category_items as $category_item) {
 					if (!empty($category_item['data'])) {
@@ -209,19 +221,19 @@ class Survey extends Eloquent {
 			$default_question->is_default = 1;
 			$default_question->save();
 
-			DB::commit();
-			$status = 1;
-		}
-		catch(\PDOException $e){
-      DB::rollback();
-      $status = 0;
-    }
+		// 	DB::commit();
+		// 	$status = 1;
+		// }
+		// catch(\PDOException $e){
+  //     DB::rollback();
+  //     $status = 0;
+  //   }
     return $status;
 	}
 
 	Public static function readHeader($inputFileName, $highest_column, $sheet)
 	{
-		$inputFileName = '../public/uploads/'.$inputFileName;
+		$inputFileName = public_path().'/uploads/'.$inputFileName;
 
 		try
 	    {
