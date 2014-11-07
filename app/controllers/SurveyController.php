@@ -40,9 +40,9 @@ class SurveyController extends AvelcaController {
 	public function postIndex()
 	{
 		$request = Input::get();
-		$survey = Survey::where('id', '=', $request['survey_id'])->first();
 		
-		if (isset($survey)) {
+		if (!empty($request['survey_id'])) {
+			$survey = Survey::where('id', '=', $request['survey_id'])->first();
 			if(!empty($request['geojson'])){
 				$survey->geojson_file = $request['geojson'];
 				$survey->save();

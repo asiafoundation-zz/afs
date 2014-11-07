@@ -38,7 +38,7 @@ setInterval(function() {
 				@foreach($surveys as $survey)
 					<tr>
 						<td>{{ $no }}</td>
-						<td><a href="/managesurvey/{{ $survey['id'] }}">{{ $survey['name'] }}</a></td>
+						<td><a href="{{ URL::to('admin/survey/managesurvey') }}/{{ $survey['id'] }}">{{ $survey['name'] }}</a></td>
 						<td>
 							@if($survey['publish_style'] == "importing")
 							<div class="progress">
