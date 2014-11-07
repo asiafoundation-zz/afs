@@ -310,7 +310,7 @@ function select_all(move){
  *
  */
  function cycle_select_option(survey_id){
-	$.get( "/survey/cycle", { survey_id: survey_id, options_selected: $("#cycle_select_modal").val() })
+	$.get( "survey/cycle", { survey_id: survey_id, options_selected: $("#cycle_select_modal").val() })
 	.done(function( data ) {
 		// redirect to index page
 alert('a');
