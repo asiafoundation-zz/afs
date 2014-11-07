@@ -6,7 +6,7 @@ $(document).ready(function(){
 
   $('.show-cross').click(function(e){
     e.preventDefault();
-    $('.header-select li').removeAttr('onclick');
+
     $('.cross-question').show();
     $('.chart-flag').hide();
   });
@@ -33,7 +33,7 @@ $(document).ready(function(){
 
   $('.submit-cross').click(function(){  
     var question_row = $(this).data('question_id');
-    var $table = $($('#get-cross-table').html()); //inisiate js template
+    var $table = $($('#get-cross-table').html().trim()); //inisiate js template
 
     $('.cross-table').html("");
 
@@ -76,8 +76,10 @@ $(document).ready(function(){
 
   $('.cross-back').click(function(e){
     e.preventDefault();
-
-    alert('I am here');
+    
+    $('.cross-question').hide().css('display', 'none').fadeOut('slow');
+    $('.chart-flag').show();
+    find_survey();
   });
 
   $('.select-question').change(function(e){
@@ -87,6 +89,8 @@ $(document).ready(function(){
 
   $('.select-cycle').change(function(){
     var id_cycle = $(this).val();
+    FilterSelect.cycle = parseInt(id_cycle);
+
     cycle_select(id_cycle);
   });
 
