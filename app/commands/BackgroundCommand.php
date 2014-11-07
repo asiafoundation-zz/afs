@@ -42,7 +42,9 @@ class BackgroundCommand extends Command {
   */
 	public function fire()
 	{
-		$sleep = 60;
+		set_time_limit(60);
+		
+		// $sleep = 60;
 		while (true) {
 			$delayed_jobs = DelayedJob::where('type','=','importfile')->orderBy('id', 'DESC')->first();
 			if (isset($delayed_jobs)) {
@@ -83,8 +85,8 @@ class BackgroundCommand extends Command {
 			    $survey->save();
 			  }
 			}
-		  echo "Sleep for ".$sleep." seconds...\n";
-		  sleep($sleep);
+		  // echo "Sleep for ".$sleep." seconds...\n";
+		  // sleep($sleep);
 		}
 	}
 
