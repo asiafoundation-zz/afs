@@ -75,12 +75,11 @@ class Question extends Eloquent {
 
 	public static function DefaultLoad($request)
 	{
-		$questions =  DB::table('questions');
+		// $questions =  DB::table('questions');
 
-		if (!empty($request['region'])) {
-			$questions =  $questions->select(
-				DB::raw(
-					'questions.id as id_question,
+		if (!empty($request['region']))
+		{
+			$query = 'questions.id as id_question,
 					questions.code_id as question_code,
 					questions.question as question,
 					question_categories.id as id_question_categories,
@@ -94,14 +93,10 @@ class Question extends Eloquent {
 					cycles.cycle_type  as cycle_type,
 					cycles.name as cycle,
 					(SELECT count(id) from question_participants where question_participants.region_id = id_region and question_participants.answer_id = id_answer) AS amount,
-					0 AS indexlabel'
-					)
-				);
+					0 AS indexlabel';
 		}else
 		{
-			$questions =  $questions->select(
-				DB::raw(
-					'questions.id as id_question,
+			$query = 'questions.id as id_question,
 					questions.code_id as question_code,
 					questions.question as question,
 					question_categories.id as id_question_categories,
@@ -113,17 +108,16 @@ class Question extends Eloquent {
 					cycles.cycle_type  as cycle_type,
 					cycles.name as cycle,
 					(SELECT count(id) from question_participants where question_participants.answer_id = id_answer) AS amount,
-					0 AS indexlabel'
-					)
-				);
+					0 AS indexlabel';
 		}
 
-		$questions =  $questions
-			->join('question_categories','questions.question_category_id','=','question_categories.id')
-			->join('answers','answers.question_id','=','questions.id')
-			->join('cycles','cycles.id','=','answers.cycle_id')
-			->join('colors','answers.color_id','=','colors.id')
-			->join('question_participants','question_participants.answer_id','=','answers.id');
+		$questions = DB::table('questions')
+					->select(DB::raw($query))
+					->join('question_categories','questions.question_category_id','=','question_categories.id')
+					->join('answers','answers.question_id','=','questions.id')
+					->join('cycles','cycles.id','=','answers.cycle_id')
+					->join('colors','answers.color_id','=','colors.id')
+					->join('question_participants','question_participants.answer_id','=','answers.id');
 
 		if (!empty($request['region'])) {
 			$questions =  $questions->leftjoin('regions','regions.id','=','question_participants.region_id');
@@ -136,27 +130,27 @@ class Question extends Eloquent {
 	public static function DifferentAnswer($questions, $request)
 	{
 		$answer_diff = array();
+		$data_row = count($questions);
 
 		foreach ($questions as $key_questions => $question) {
-			foreach ($request['answers'] as $key_answer => $answer) {
-				$answer_diff[$answer['id']] = new stdClass();
-				$answer_diff[$answer['id']]->id_answer = $answer['id'];
-				$answer_diff[$answer['id']]->answer = $answer['answer'];
-				$answer_diff[$answer['id']]->id_question = $question->id_question;
-				$answer_diff[$answer['id']]->question_code = $question->question_code;
-				$answer_diff[$answer['id']]->question = $question->question;
-				$answer_diff[$answer['id']]->id_question_categories = $question->id_question_categories;
-				$answer_diff[$answer['id']]->question_categories = $question->question_categories;
-				$answer_diff[$answer['id']]->name = $question->name;
-				$answer_diff[$answer['id']]->color = $question->color;
-				$answer_diff[$answer['id']]->question_code = $question->cycle_type;
-				$answer_diff[$answer['id']]->cycle = $question->cycle;
-				$answer_diff[$answer['id']]->question = $question->cycle;
-				$answer_diff[$answer['id']]->id_region = !empty($question->id_region) ? $question->id_region : "";
+			for($a=0;$a<count($data_row);$a++){
+				$answer_diff[$question->id_answer] = new stdClass();
+				$answer_diff[$question->id_answer]->id_answer = $question->id_answer;
+				$answer_diff[$question->id_answer]->answer = $question->answer;
+				$answer_diff[$question->id_answer]->id_question = $question->id_question;
+				$answer_diff[$question->id_answer]->question_code = $question->question_code;
+				$answer_diff[$question->id_answer]->question = $question->question;
+				$answer_diff[$question->id_answer]->id_question_categories = $question->id_question_categories;
+				$answer_diff[$question->id_answer]->question_categories = $question->question_categories;
+				$answer_diff[$question->id_answer]->color = $question->color;
+				$answer_diff[$question->id_answer]->question_code = $question->cycle_type;
+				$answer_diff[$question->id_answer]->cycle = $question->cycle;
+				$answer_diff[$question->id_answer]->id_cycle = $question->id_cycle;
+				$answer_diff[$question->id_answer]->id_region = !empty($question->id_region) ? $question->id_region : "";
 
-				$answer_diff[$answer['id']]->amount = 0;
+				$answer_diff[$question->id_answer]->amount = 0;
 			}
-			$answer_diff[$answer['id']]->amount = $question->amount;
+			$answer_diff[$question->id_answer]->amount = $question->amount;
 		}
 
 		return $answer_diff;
@@ -180,6 +174,7 @@ class Question extends Eloquent {
 	public static function DefaultQuestion($request = array())
 	{
 		// Load Question
+
 		$questions =  self::DefaultLoad($request);
 
 			if (!empty($request['cycle'])) {
@@ -206,6 +201,7 @@ class Question extends Eloquent {
 			if (count($questions)) {
 				if (!empty($request['answers'])) {
 					if (count($questions) != count($request['answers'])) {
+
 						$questions = self::DifferentAnswer($questions,$request);
 					}
 				}
@@ -219,6 +215,7 @@ class Question extends Eloquent {
 	public static function LoadQuestion($request = array())
 	{
 		// Load Question
+		
 		$questions =  self::DefaultLoad($request);
 
 			if (count($request)) {
@@ -239,7 +236,7 @@ class Question extends Eloquent {
 			$questions =  $questions
 				->groupBy('answer')
 				->get();
-
+		
 
 		if (count($questions)) {
 			if (!empty($request['answers'])) {
@@ -251,6 +248,7 @@ class Question extends Eloquent {
 			$questions = self::IndexLabel($questions);
 		}
 
+			// exit;
 		return $questions;
 	}
 

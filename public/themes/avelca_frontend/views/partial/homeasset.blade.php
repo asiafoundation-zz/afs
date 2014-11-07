@@ -1,4 +1,5 @@
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/selectik.css') }}">
+
     <script type="text/javascript" src="{{ Theme::asset('javascript/jquery.selectik.js') }}"></script>
 
     <!-- Map JS-->
@@ -19,5 +20,9 @@
       var data_points_pie_data = data_points_pie(null);
 
       chartjs(color_set_data,data_points_data,data_points_pie_data);
+
+      $('.header-select li').removeAttr('onclick');
+      $('.cross-category li').removeAttr('onclick');
+      $('.cross-question li').removeAttr('onclick');
     }
   </script>
