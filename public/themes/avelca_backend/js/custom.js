@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	// $('#header-select').multiSelect();
 	// $('.ms-visible').hide();
-	$('.progress').hide();
+	// $('.progress').hide();
 
 	$('.excel-upload').change(function(){
 		var file = this.files[0];
@@ -86,6 +86,10 @@ $(document).ready(function(){
 
 });
 
+/*
+ * Importing JS
+ *
+ */
 // Declared Category filter page flag
 /*
  * 0 = region
@@ -296,3 +300,24 @@ function select_all(move){
 	});
 	return false;
 }
+
+/*
+ * End Importing JS
+ *
+ */
+ /*
+ * Manage Survey JS
+ *
+ */
+ function cycle_select_option(survey_id){
+	$.get( "/survey/cycle", { survey_id: survey_id, options_selected: $("#cycle_select_modal").val() })
+	.done(function( data ) {
+		// redirect to index page
+alert('a');
+	});
+	return false;
+}
+ /*
+ * End Manage Survey JS
+ *
+ */

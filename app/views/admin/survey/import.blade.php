@@ -35,7 +35,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+
 	<div class="modal-footer">
 		<a class="btn"  style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;" onclick="change_page('back')">{{Lang::get('general.back')}}</a>
 		<a class="btn"  style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;" onclick="change_page('next')">{{Lang::get('general.next')}}</a>

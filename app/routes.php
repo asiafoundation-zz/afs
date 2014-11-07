@@ -27,20 +27,22 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 		{
 			AvelcaController::autoRoutes();
 			Route::get('survey', 'SurveyController@getIndex');
-			Route::get('survey/cycle', 'SurveyController@getCycle');
-			Route::post('survey/cycle', 'SurveyController@postCycle');
+			Route::get('survey/edit/{id}', 'SurveyController@getDefaultquestion');	
+			// Route::get('survey/cycle', 'SurveyController@getCycle');
+			// Route::post('survey/cycle', 'SurveyController@postCycle');
 			Route::get('survey/category/{id}', 'SurveyController@getCategory');
 			Route::post('survey/category', 'SurveyController@postCategory');
 			Route::post('survey/import', 'SurveyController@postImport');
 			Route::post('survey/upload', 'SurveyController@postEndline');
 			Route::post('survey/region', 'SurveyController@postRegion');
 			Route::post('survey/managesurvey', 'SurveyController@getManagesurvey');
-			Route::get('survey/reupload', 'SurveyController@reuploadSurvey');			
+			Route::get('survey/managesurvey/{id}', 'SurveyController@getManagesurvey');
+			Route::get('survey/defaultquestion/{id}', 'SurveyController@getDefaultquestion');	
 		});
 	});
-	
+	Route::get('survey/cycle', 'SurveyController@getCycle');
 	Route::get('/survey/reupload', 'SurveyController@reupload');
-	Route::post('/admin/defaultquestion', 'SurveyController@postDefaultQuestion');
+	// Route::post('/admin/defaultquestion', 'SurveyController@postDefaultQuestion');
 	Route::get('/admin/filter', 'CategoryController@getIndex');
 
 	Route::get('/admin/questioncategory', function(){

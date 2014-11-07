@@ -100,8 +100,9 @@ class Survey extends Eloquent {
 						$percentage = ": ". round($percentage)."% Completed";
 					}
 
-					$surveys[$key_survey_lists]['publish_text'] = "Importing ".$percentage;
+					$surveys[$key_survey_lists]['publish_text'] = "Importing ";
 					$surveys[$key_survey_lists]['publish_style'] = "importing";
+					$surveys[$key_survey_lists]['percentage'] = $percentage;;
 					break;
 				case 3:
 					$surveys[$key_survey_lists]['publish_text'] = "Completed";
@@ -145,7 +146,7 @@ class Survey extends Eloquent {
 					if (!empty($master_code[$column])) {
 
 						// remove special characters and number
-						$data_str = preg_replace('/[^A-Za-z\s]/', "", "2. Jawa Timur");
+						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
 
 						switch ($master_code[$column]['type']) {
 							case 0:

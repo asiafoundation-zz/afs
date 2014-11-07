@@ -23,7 +23,9 @@ class PermissionSeeder extends Seeder {
 			"survey.managesurvey",
 			"survey.question",
 			"survey.defaultquestion",
-			"survey.upload"
+			"survey.upload",
+
+			"survey.publish",
 			);
 
 Permission::whereIn("name", $permissions)->delete();

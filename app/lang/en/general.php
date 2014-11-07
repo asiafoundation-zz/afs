@@ -77,4 +77,13 @@ return array(
 	"save_changes" => "Save Changes",
 	"cancel" => "Cancel",
 	"select_all" => "Select All",
+	"action" => "Action",
+	"baseline" => "Baseline",
+	"endline" => "Endline",
+	"upload_file" => "Upload File",
+	"publish" => "Publish",
+	"manage_default_question" => "Manage Default Question",
+	"manage_file" => "Manage File",
+	"upload_file" => "Upload File",
+	"upload_map" => "Upload Map",
 );
