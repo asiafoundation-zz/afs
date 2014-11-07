@@ -16,9 +16,15 @@
     <script src="{{ Theme::asset('javascript/modernizr-2.6.2.min.js') }}"></script>
   </head>
 
-  <body onload="init()">
+  <body>
   @yield('content')
-
+  <section class="sponsorship">
+    <div class="container">
+      <div class="col-md-12">
+        <img src="{{ Theme::asset('img/sponsor.png') }}">
+      </div>
+    </div>
+  </section>
   <footer>
     <div class="container center">
       <div class="col-md-12">
@@ -48,8 +54,8 @@
         </table>
       </div>
     </div>
-    <div class="col-md-12">
-      <a href="#" class="orange-bg"><img src="{{ Theme::asset('img/arrow-l.png') }}"> back</a>
+    <div class="col-md-12 cross-back">
+      <a href="#" class="orange-bg cross-back"><img src="{{ Theme::asset('img/arrow-l.png') }}"> back</a>
     </div>
   </script>
 </body>
