@@ -235,6 +235,7 @@ Route::filter('csrf', function()
 Route::filter('frontend_theme', function()
 {
 	Theme::init('avelca_frontend');
+	App::setLocale('in');
 });
 
 Route::filter('backend_theme', function()
