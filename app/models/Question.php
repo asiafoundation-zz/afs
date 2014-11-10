@@ -470,10 +470,19 @@ class Question extends Eloquent {
 
 		return $questions;
 	}
+
 	public static function loadQuestionCycle($request=array())
 	{
 		$questions = DB::table('questions')
+			->select(
+				'questions.id as question_id',
+				'questions.question as question',
+				'codes.code',
+				'master_codes.master_code'
+				)
 			->join('answers','answers.question_id','=','questions.id')
+			->join('codes','codes.id','=','questions.code_id')
+			->join('master_codes','master_codes.id','=','questions.code_id')
 			->where('answers.cycle_id', '=', $request['cycle_id'])->get();
 
 		return $questions;

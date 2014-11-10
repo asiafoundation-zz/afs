@@ -20,4 +20,6 @@ return array(
 	"category_filter_name" => "Catehory Filter Name",
 	"question_code" => "Question Code",
 	"question_name" => "Question Name",
+	"default_survey" => "Default Survey",
+	"question" => "Question"
 );

@@ -86,4 +86,5 @@ return array(
 	"manage_file" => "Manage File",
 	"upload_file" => "Upload File",
 	"upload_map" => "Upload Map",
+	"is_default" => "Is Default"
 );

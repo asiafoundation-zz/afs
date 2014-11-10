@@ -38,12 +38,21 @@ setInterval(function() {
 				@foreach($surveys as $survey)
 					<tr>
 						<td>{{ $no }}</td>
-						<td><a href="{{ URL::to('admin/survey/managesurvey') }}/{{ $survey['id'] }}">{{ $survey['name'] }}</a></td>
+						<td>
+							@if($survey['publish'] == 1 || $survey['publish'] == 3)
+							<a href="{{ URL::to('admin/survey/managesurvey') }}/{{ $survey['id'] }}">
+								{{ $survey['name'] }}
+							</a>
+							@else
+							{{ $survey['name'] }}
+							@endif
+						</td>
 						<td>
 							@if($survey['publish_style'] == "importing")
+							{{ $survey['publish_text'] }}
 							<div class="progress">
 								<div class="progress-bar" style="width: {{ $survey['percentage'] }}%;">
-									{{ $survey['publish_text'] }} {{ $survey['percentage'] }}% Complete
+									{{ $survey['percentage'] }}%
 									<span class="sr-only"></span>
 								</div>
 							</div>
@@ -51,7 +60,7 @@ setInterval(function() {
 							{{ $survey['publish_text'] }}
 							@endif
 						</td>
-						<td></td>
+						<td>{{ Form::checkbox('name', 'value'); }}{{Lang::get('general.is_default')}}</td>
 					</tr>
 				<?php $no = $no+1; ?>
 				@endforeach

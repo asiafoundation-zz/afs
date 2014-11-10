@@ -20,8 +20,9 @@
 				</div>
 			@endif
 			<hr>
-			<a href="/admin/survey/create/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.baseline')}}</button></a>
-			<a href="/admin/survey/create/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.endline')}}</button></a>
+			@foreach($cycles as $cycle_id_loop =>$cycle)
+			<a href="/admin/survey/cycle?cycle_id={{$cycle_id_loop}}&survey_id={{ $survey->id }}"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{$cycle}}</button></a>
+			@endforeach
 			<a data-toggle="modal" href="#upload_map" style="float:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.upload_file')}}</button></a>
 		</div>
 
@@ -38,21 +39,21 @@
 	</div>
 </div>
 
-
 <div class="modal fade" id="manage_default_question" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
 			<div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">{{ Lang::get('general.manage_default_question') }}</h4>
       </div>
+      {{ Form::open(array('url' => '/admin/survey/defaultquestion', 'class' => 'form-horizontal')) }}
       <div class="modal-body" id="popup_modal">
 				<div class="row">
 					<div class="col-md-12">
 						<div class="form-group">
 							{{ Form::label("Cycle Name", "", array("class" => "control-label col-md-3")) }}
 							<div class="col-md-9">
-								{{ Form::select('cycle_select', array('L' => 'Large', 'S' => 'Small'),"", array("id" => "cycle_select_modal","class" => "control-label col-md-9","onclick"=>"cycle_select_option($survey->id)")) }}
+								{{ Form::select('cycle_select', $cycles,$default_question->id_cycle, array("id" => "cycle_select_modal","class" => "control-label col-md-9","onclick"=>"cycle_select_option($survey->id)")) }}
 							</div>
 						</div>
 					</div>
@@ -65,7 +66,7 @@
 						<div class="form-group">
 							{{ Form::label("Question Name", "", array("class" => "control-label col-md-3")) }}
 							<div class="col-md-9">
-								{{ Form::select('question_select', array(),"", array("id" => "question_select_modal","class" => "control-label col-md-9")) }}
+								{{ Form::select('question_select', $question_lists,$default_question->id_question, array("id" => "question_select_modal","class" => "control-label col-md-9")) }}
 							</div>
 						</div>
 					</div>
@@ -73,8 +74,9 @@
       </div>
       <div class="modal-footer">
         <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.cancel')}}</a>
-        <a type="button" class="btn btn-primary" onclick="post_category()">{{Lang::get('general.save')}}</a>
+        <button class="btn" type="submit" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.save')}}</button>
       </div>
+      {{ Form::close() }}
     </div>
   </div>
 </div>
