@@ -25,7 +25,7 @@
       </div>
     </div>
   </section>
-  <footer>
+  <!-- <footer>
     <div class="container center">
       <div class="col-md-12">
         <a href="#"><img src="{{ Theme::asset('img/logo-footer.png') }}"></a>
@@ -33,7 +33,7 @@
       </div>
     </div>
   </footer>
-
+ -->
   
 </body>
 </html>
