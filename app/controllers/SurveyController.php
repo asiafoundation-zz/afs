@@ -39,22 +39,43 @@ class SurveyController extends AvelcaController {
 
 	public function postIndex()
 	{
-		$rule = array('survey_name' => 'Required');
+		$request = Input::get();
+		
+		if (!empty($request['survey_id'])) {
+			$survey = Survey::where('id', '=', $request['survey_id'])->first();
+			if(!empty($request['geojson'])){
+				$survey->geojson_file = $request['geojson'];
+				$survey->save();
 
-		$validator = Validator::make(Input::all(), $rule);
+				Session::flash('alert-class', 'alert-success');
+				Session::flash('message', 'Save Succeed');
 
-		if($validator->passes())
-		{
-			$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'geojson_file' => Input::get('geojson'),'publish' => 1));
+				return Redirect::to('/admin/survey/managesurvey/'. $survey->id);
+			}
+			elseif (!empty($request['excel'])) {
+				$survey->baseline_file = $request['excel'];
+				$survey->save();
 
-			if($survey)
-			{
 				return Redirect::to('/admin/survey/category/'. $survey->id);
 			}
-		}
-		else
-		{
-			return Redirect::to('/admin/survey')->withErrors($validator)->withInput();
+		}else{
+			$rule = array('survey_name' => 'Required');
+
+			$validator = Validator::make(Input::all(), $rule);
+
+			if($validator->passes())
+			{
+				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'geojson_file' => Input::get('geojson'),'publish' => 1));
+
+				if($survey)
+				{
+					return Redirect::to('/admin/survey/category/'. $survey->id);
+				}
+			}
+			else
+			{
+				return Redirect::to('/admin/survey')->withErrors($validator)->withInput();
+			}
 		}
 	}
 
@@ -105,5 +126,61 @@ class SurveyController extends AvelcaController {
 		Session::flash('message', 'Importing File is in progress');
 		
 		return $status;
+	}
+
+	public function getManagesurvey($id)
+	{
+		// Load survey
+		$survey = Survey::where('id', '=', $id)->first();
+
+		// Get Default Question
+		$default_questions = Question::DefaultQuestion(Input::get());
+
+		$default_question = reset($default_questions);
+
+		// Get catefory and question list
+		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
+		$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
+
+		$cycles = array();
+		$loadcycles = Cycle::QuestionCycle($default_question);
+		foreach ($loadcycles as $key_loadcycles => $loadcycle) {
+			$cycles[$loadcycle->id] = $loadcycle->name;
+		}
+
+		$data = array(
+			"survey" => $survey,
+			"filters" => Code::getFilter(),
+			"cycles" => $cycles,
+			// "cycles" => Cycle::get(),
+			"question_categories" => $split_data['question_categories'],
+			"question_lists" => $split_data['question_lists'],
+			"default_question" => $default_question,
+			"question" => $default_questions,
+			"public_path" => public_path(),
+			"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
+		);
+		return View::make('admin.survey.managesurvey', $data);
+	}
+
+	public function getDefaultquestion($id)
+	{
+		// Load survey
+		$survey = Survey::where('id', '=', $id)->first();
+		$survey->publish = 1;
+		$survey->save();
+		
+		Session::flash('alert-class', 'alert-success'); 
+		Session::flash('message', 'Save Succeed');
+
+		return Redirect::to('/admin/survey');
+	}
+
+	public function getCycle()
+	{echo "a"; die();
+		// Load survey
+		$questions = Question::loadQuestionCycle(Input::get());
+
+		return Redirect::to('/admin/survey');
 	}
 }

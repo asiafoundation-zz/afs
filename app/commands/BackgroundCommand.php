@@ -45,7 +45,7 @@ class BackgroundCommand extends Command {
 		set_time_limit(60);
 		
 		// $sleep = 60;
-		while (true) {
+		// while (true) {
 			$delayed_jobs = DelayedJob::where('type','=','importfile')->orderBy('id', 'DESC')->first();
 			if (isset($delayed_jobs)) {
 				$data_parse = json_decode($delayed_jobs->data);
@@ -87,7 +87,7 @@ class BackgroundCommand extends Command {
 			}
 		  // echo "Sleep for ".$sleep." seconds...\n";
 		  // sleep($sleep);
-		}
+		// }
 	}
 
 	/**

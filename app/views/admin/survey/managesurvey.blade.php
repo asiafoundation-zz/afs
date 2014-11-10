@@ -1,59 +1,143 @@
 @extends('layouts/default')
 
 @section('content')
+
+<script src="{{ Theme::asset('js/leaflet.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
+<script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
+
+@include('admin/survey/js/mapjs')
+
 <div class="row">
 	<div class="col-md-12">
-
-		<div class="page-header">
-			<h1>Manage Question Survey</h1>
+		<div class="notification">
+		<div class="modal-header">
+			<h1>{{ $survey->name }}</h1>
+			@if(Session::has('message'))
+				<div class="alert {{ Session::get('alert-class', 'alert-info') }}">
+					<button class="close" type="button" data-dismiss="alert">×</button>
+				{{ Session::get('message') }}
+				</div>
+			@endif
+			<hr>
+			<a href="/admin/survey/create/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.baseline')}}</button></a>
+			<a href="/admin/survey/create/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.endline')}}</button></a>
+			<a data-toggle="modal" href="#upload_map" style="float:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.upload_file')}}</button></a>
 		</div>
 
-		<!--ol class="breadcrumb">
-			<li><a href="{{ URL::to('dashboard') }}"><i class="fa fa-dashboard"></i> {{ Lang::get('general.dashboard') }}</a></li>
-			<li><a href="{{ URL::to('admin/group') }}">Group</a></li>
-			<li class="active">{{ Lang::get('general.list') }}</li>
-		</ol-->
-
-		<div class="table-responsive">
-			<table class="datatable table table-striped table-bordered">
-				<thead>
-					<tr>
-						<th>No</th>
-						<th>Question Name</th>
-						<th>Updated At</th>
-						<th>Set Default</th>
-					</tr>
-					</thead>
-					<tbody>
-					@foreach($question as $value)
-						<?php
-							$default_question = $value->is_default == 1 ? "Default" : "-";
-						?>
-						<tr>
-							<td>{{ $value->id }}</td>
-							<td>{{ $value->question }}</td>
-							<td>{{ $value->updated_at }}</td>
-							<td>{{ $default_question }}</td>
-						</tr>
-					@endforeach
-					</tbody>
-					<!--tfoot>
-						<tr>
-							<th><input type="text" name="name" placeholder="Filter" class="search_init" /></th>
-							<th><input type="text" name="created_at" placeholder="Filter" class="search_init" /></th>
-							<th><input type="text" name="updated_at" placeholder="Filter" class="search_init" /></th>
-							<th>&nbsp;</th>
-						</tr>
-					</tfoot-->
-			</table>
-			{{ $question->links() }}
+		<div class="modal-body" style="position: relative; right: 0px; top: 0px; width: 100%; height: 690px">
+			<div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 680px"></div>
 		</div>
 
-	</div>			
-</div>
-<div class="modal-footer">
-	<button class="btn btn-defaultquestion" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">Manage default question</button>
-	<button class="btn btn-reupload" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;" onclick="window.location.href = '/survey/reupload/'">Reupload survey</button>
+		<div class="modal-footer">
+			<a style="align:right;" data-toggle="modal" href="#manage_default_question" ><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_default_question')}}</button></a>
+			<a data-toggle="modal" href="#upload_file" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_file')}}</button></a>
+			<a href="#" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.save')}}</button></a>
+			<a href="/admin/survey/defaultquestion/{{ $survey->id }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.publish')}}</button></a>
+		</div>
+	</div>
 </div>
 
+
+<div class="modal fade" id="manage_default_question" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+			<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ Lang::get('general.manage_default_question') }}</h4>
+      </div>
+      <div class="modal-body" id="popup_modal">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							{{ Form::label("Cycle Name", "", array("class" => "control-label col-md-3")) }}
+							<div class="col-md-9">
+								{{ Form::select('cycle_select', array('L' => 'Large', 'S' => 'Small'),"", array("id" => "cycle_select_modal","class" => "control-label col-md-9","onclick"=>"cycle_select_option($survey->id)")) }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					&nbsp;
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							{{ Form::label("Question Name", "", array("class" => "control-label col-md-3")) }}
+							<div class="col-md-9">
+								{{ Form::select('question_select', array(),"", array("id" => "question_select_modal","class" => "control-label col-md-9")) }}
+							</div>
+						</div>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.cancel')}}</a>
+        <a type="button" class="btn btn-primary" onclick="post_category()">{{Lang::get('general.save')}}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="upload_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+			<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ Lang::get('general.upload_file') }}</h4>
+      </div>
+      {{ Form::open(array('url' => '/admin/survey', 'class' => 'form-horizontal')) }}
+      <div class="modal-body">
+      	<div class="form-group upload-field">
+      	{{ Form::hidden('survey_id', $survey->id) }}
+				{{ Form::label("Add Excel file:", "", array("class" => "control-label col-md-3")) }}
+				<div class="col-md-3">
+					<input id="input-id" type="file" class="excel-upload" data-preview-file-type="text" name="excel">
+					<div class="progress" style="margin-top:10px;display: none;">
+					  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+					    <span class="sr-only">0% Complete</span>
+					  </div>
+					</div>
+				</div>
+			</div>
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.cancel')}}</a>
+        <button class="btn" type="submit" class="btn btn-primary">{{Lang::get('general.save')}}</button>
+      </div>
+      {{ Form::close() }}
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="upload_map" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+			<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ Lang::get('general.upload_map') }}</h4>
+      </div>
+      {{ Form::open(array('url' => '/admin/survey', 'class' => 'form-horizontal')) }}
+      <div class="modal-body">
+      	<div class="form-group upload-field">
+      		{{ Form::hidden('survey_id', $survey->id) }}
+					{{ Form::label("Add Geojson file:", "", array("class" => "control-label col-md-3")) }}
+					<div class="col-md-3">
+						<input id="input-id" type="file" class="excel-upload" data-preview-file-type="text" name="geojson">
+						<div class="progress" style="margin-top:10px;display: none;">
+						  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+						    <span class="sr-only">0% Complete</span>
+						  </div>
+						</div>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.cancel')}}</a>
+        <button class="btn" type="submit" class="btn btn-primary">{{Lang::get('general.save')}}</button>
+      </div>
+      {{ Form::close() }}
+    </div>
+  </div>
+</div>
 @stop

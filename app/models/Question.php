@@ -470,5 +470,12 @@ class Question extends Eloquent {
 
 		return $questions;
 	}
+	public static function loadQuestionCycle($request=array())
+	{
+		$questions = DB::table('questions')
+			->join('answers','answers.question_id','=','questions.id')
+			->where('answers.cycle_id', '=', $request['cycle_id'])->get();
 
+		return $questions;
+	}
 }
