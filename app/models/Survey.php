@@ -76,7 +76,6 @@ class Survey extends Eloquent {
 	{
 		$surveys = array();
 		foreach ($survey_lists as $key_survey_lists => $survey_list) {
-			
 			$surveys[$key_survey_lists]['id'] = $survey_list->id;
 			$surveys[$key_survey_lists]['name'] = $survey_list->name;
 			$surveys[$key_survey_lists]['publish'] = $survey_list->publish;
@@ -91,18 +90,18 @@ class Survey extends Eloquent {
 					$surveys[$key_survey_lists]['publish_style'] = "published";
 					break;
 				case 2:
-					$percentage = "";
+					$percentage = 0;
 					// Is queue exist
 					$queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
-					if ($queue->queue < $queue->information) {
+					if ((int)$queue->queue < (int)$queue->information) {
 						$participant_count = Participant::where('survey_id','=',$survey_list->id)->count();
 						$percentage = ((int)$participant_count / (int)$queue->information) * 100;
-						$percentage = ": ". round($percentage)."% Completed";
+						$percentage = round($percentage);
 					}
 
 					$surveys[$key_survey_lists]['publish_text'] = "Importing ";
 					$surveys[$key_survey_lists]['publish_style'] = "importing";
-					$surveys[$key_survey_lists]['percentage'] = $percentage;;
+					$surveys[$key_survey_lists]['percentage'] = $percentage;
 					break;
 				case 3:
 					$surveys[$key_survey_lists]['publish_text'] = "Completed";
@@ -261,6 +260,7 @@ class Survey extends Eloquent {
 	    $highestColumn = $highest_column;
 	    $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
 
+	    // Reformat Array
 	    if ($sheet == 0) {
 				for($row = 5; $row <= $highestRow; ++$row){
 					for($col = 0; $col <= $highestColumnIndex; ++$col){

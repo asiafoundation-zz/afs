@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	// $('#header-select').multiSelect();
 	// $('.ms-visible').hide();
-	// $('.progress').hide();
+	$('.progress').show();
 
 	$('.excel-upload').change(function(){
 		var file = this.files[0];
@@ -161,7 +161,7 @@ function view_table_category() {
 	var region_table = "";
 	var wave_table = "";
 	var oversample_table = "";
-	var category_filter_table = "";
+	var category_filter_table = "<tr>";
 	var question_table = "";
 
 	for (i = 0; i < options_selected.length; i++) {
@@ -175,11 +175,12 @@ function view_table_category() {
 			oversample_table = oversample_table+"<td>"+options_selected[i].code+"</td><td>"+options_selected[i].label+"</td>";
 		};
 		if (options_selected[i].category == 3) {
-			category_filter_table = category_filter_table+"<tr><td>"+options_selected[i].code+"</td><td>"+options_selected[i].label+"</td></tr>";
+			category_filter_table = category_filter_table+"<td>"+options_selected[i].code+"</td><td>"+options_selected[i].label+"</td>";
 		};
 		if (options_selected[i].category == 4) {
 			question_table = question_table+"<tr><td>"+options_selected[i].code+"</td><td>"+options_selected[i].label+"</td></tr>";
 		};
+		category_filter_table = category_filter_table+"</tr>";
 	};
 	// Create Region Table
 	$("#category_region").html(region_table);
@@ -310,10 +311,10 @@ function select_all(move){
  *
  */
  function cycle_select_option(survey_id){
-	$.get( "survey/cycle", { survey_id: survey_id, options_selected: $("#cycle_select_modal").val() })
+	$.get( "survey/cycles", { survey_id: survey_id, options_selected: $("#cycle_select_modal").val() })
 	.done(function( data ) {
 		// redirect to index page
-alert('a');
+alert('aa');
 	});
 	return false;
 }

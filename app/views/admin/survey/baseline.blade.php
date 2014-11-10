@@ -1,67 +1,61 @@
 @extends('layouts/default')
 
 @section('content')
+<script type="text/javascript">
+setInterval(function() {
+  window.location.reload();
+}, 20000);
+</script>
 
-<div>
-<!-- 	<ol class="breadcrumb">
-	  <li class="active">Create a survey</li>
-	  <li><a href="#"></a>import baseline cycle</li>
-	  <li class="active">Import endline cycle</li>
-	</ol> -->
-
-	{{ Session::get('message') ? Form::showMessage(Session::get('message'), 1) : ''}}
-
-	<h3>Create survey</h3>
-	<div class="modal-body">
-		{{ Form::open(array('url' => '/admin/survey/baseline', 'class' => 'form-horizontal', 'files' => true)) }}
-
-		<!--div class="form-group">
-			{{ Form::label("Survey Name", "", array("class" => "control-label col-md-3")) }}
-			<div class="col-md-4">
-				{{ Form::text("survey_name","", array("class" => "form-control")) }}
+<div class="row">
+	<div class="col-md-12">
+		<div class="notification">
+			@if(Session::has('message'))
+			<div class="alert {{ Session::get('alert-class', 'alert-info') }}">
+				<button class="close" type="button" data-dismiss="alert">×</button>
+				{{ Session::get('message') }}
 			</div>
-		</div-->
-		<div class='upload-form'>
-			<div class="form-group">
-				{{ Form::label("cycle Name", "", array("class" => "control-label col-md-3")) }}
-				<div class="col-md-3">
-					{{ Form::text("cycle_name","", array("class" => "form-control")) }}
-				</div>
-			</div>
-
-			<div class="form-group">
-				{{ Form::label("Add Excel file", "", array("class" => "control-label col-md-3")) }}
-				<div class="col-md-3">
-					<input id="input-id" type="file" class="excel-upload" data-preview-file-type="text" name="excel">
-					<div class="progress" style="margin-top:10px">
-					  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-					    <span class="sr-only">0% Complete</span>
-					  </div>
-					</div>
-				</div>
-			</div>
+			@endif
+		</div>
+		<div class="modal-header">
+			<h1>{{ $survey->name }} ({{$cycle->name}})</h1>
+			<hr>
 		</div>
 
-		<div class="form-group">
-			<!--{{ Form::label("", "", array("class" => "control-label col-md-3")) }}-->
-			<div class="ms-visible">
-				<div class="col-md-1">
-					<select multiple="multiple" id="header-select" name="my-select[]">
-						<!--option value='elem_1'>elem 1</option>
-						<option value='elem_2'>elem 2</option>
-						<option value='elem_3'>elem 3</option>
-						<option value='elem_4'>elem 4</option>
-						<option value='elem_100'>elem 100</option-->
-					</select>
-				</div>
-			</div>
+		<div class="table-responsive">
+			<table class="datatable table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>{{Lang::get('backend.survey_name')}}</th>
+						<th>{{Lang::get('backend.publish_status')}}</th>
+						<th width="100px">{{Lang::get('general.action')}}</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach($questions as $question)
+					<tr>
+						<td>{{$question->master_code}}@if(!empty($question->master_code)){{}} @endif</td>
+						<td>
+							@if($survey['publish_style'] == "importing")
+							{{ $survey['publish_text'] }}
+							<div class="progress">
+								<div class="progress-bar" style="width: {{ $survey['percentage'] }}%;">
+									{{ $survey['percentage'] }}%
+									<span class="sr-only"></span>
+								</div>
+							</div>
+							@else
+							{{ $survey['publish_text'] }}
+							@endif
+						</td>
+						<td>{{ Form::checkbox('name', 'value'); }}{{Lang::get('general.is_default')}}</td>
+					</tr>
+				@endforeach
+				</tbody>
+			</table>
 		</div>
 
-		<div class="modal-footer">
-			<button class="btn" type="submit" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">Next</button>
-		</div>
-		{{ Form::close() }}
-	</div>
+	</div>			
 </div>
 
 @stop

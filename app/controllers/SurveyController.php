@@ -148,13 +148,18 @@ class SurveyController extends AvelcaController {
 			$cycles[$loadcycle->id] = $loadcycle->name;
 		}
 
+		$questions_all = array();
+		foreach ($split_data['question_lists'] as $key_question_lists => $value_question_list) {
+			$questions_all[$value_question_list->id] = $value_question_list->question;
+		}
+
 		$data = array(
 			"survey" => $survey,
 			"filters" => Code::getFilter(),
 			"cycles" => $cycles,
 			// "cycles" => Cycle::get(),
 			"question_categories" => $split_data['question_categories'],
-			"question_lists" => $split_data['question_lists'],
+			"question_lists" => $questions_all,
 			"default_question" => $default_question,
 			"question" => $default_questions,
 			"public_path" => public_path(),
@@ -176,11 +181,47 @@ class SurveyController extends AvelcaController {
 		return Redirect::to('/admin/survey');
 	}
 
-	public function getCycle()
-	{echo "a"; die();
-		// Load survey
-		$questions = Question::loadQuestionCycle(Input::get());
+	public function postDefaultquestion()
+	{
+		// Save Default Question survey
+		$question = Question::where('question_id', '=', $id)->first();
+		$question->save();
+		
+		Session::flash('alert-class', 'alert-success'); 
+		Session::flash('message', 'Save Succeed');
 
 		return Redirect::to('/admin/survey');
+	}
+	
+	public function getCycles()
+	{
+		// Load Question
+		$request = Input::get();
+		$data = array(
+			'cycle' => Cycle::where('id','=',$request['cycle_id'])->first(),
+			'survey' => Survey::where('id', '=', $request['survey_id'])->first(),
+			'questions' => Question::loadQuestionCycle(Input::get()),
+		);
+
+		return View::make('admin.survey.cycle', $data);
+	}
+	public function getCycle()
+	{
+		// Load Question
+		$request = Input::get();
+		$data = array(
+			'cycle' => Cycle::where('id','=',$request['cycle_id'])->first(),
+			'survey' => Survey::where('id', '=', $request['survey_id'])->first(),
+			'questions' => Question::loadQuestionCycle(Input::get()),
+		);
+
+		return View::make('admin.survey.cycle', $data);
+	}
+
+	public function postCycle()
+	{
+		$post_cycle = Category::getDataList(Input::get());
+
+		return $post_cycle;
 	}
 }
