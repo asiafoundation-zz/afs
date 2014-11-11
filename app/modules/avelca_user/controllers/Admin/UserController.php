@@ -60,7 +60,9 @@ class UserController extends \BaseController {
 
 		if ($validator->fails())
 		{
-			return Redirect::to('admin/user/edit')->with('messages', $validator->messages());
+			setcookie("action", "#edit_modal-".Input::get('id'), time()+3600, "/admin/user");
+			return Redirect::to('admin/user')->with('data', array("edit-messages" => $validator->messages(), "id" => Input::get('id')));
+			// return Redirect::to('admin/user/edit')->with('messages', $validator->messages());
 		}
 		else
 		{
