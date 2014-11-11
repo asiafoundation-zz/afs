@@ -4,6 +4,7 @@ return array(
 
 	/* Basic Features */
 
+	"back" => "Kembali",
 	"select_category" => "Pilih Kategori",
 	"select_question" => "Pilih Pertanyaan",
 	"find_surveys" => "Temukan Survey",
