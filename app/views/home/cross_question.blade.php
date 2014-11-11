@@ -38,12 +38,11 @@
 
   </div>
   <div class="col-md-12">
-    <a href="#" class="orange-bg cross-back"><img src="{{ Theme::asset('img/arrow-l.png') }}"> back</a>
+    <a href="#" class="orange-bg cross-back"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get('frontend.back') }}</a>
   </div>
 </div>
 
 <script type="text/html" id="get-cross-table">
-  
 <div class="col-md-12">
   <div class="table-wrapper">
     <table class="table matrix">
@@ -60,5 +59,4 @@
     </table>
   </div>
 </div>
-  
 </script>  
