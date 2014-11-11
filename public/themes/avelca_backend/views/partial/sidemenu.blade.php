@@ -14,9 +14,11 @@
 				<li>
 					<a href="/admin/survey/index">Manage Survey<span class="fa"></span></a>
 				</li>
+				<!--
 				<li>
 					<a href="/admin/filter">Manage Filter<span class="fa"></span></a>
 				</li>
+			-->
 				<?php
 			}else{
 				?>

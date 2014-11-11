@@ -109,8 +109,7 @@ class QuestionParticipant extends Eloquent {
 				->GroupBy('id_answer')
 				->get();
 		}
-
-
+		
 		$regions_array = array();
 		$regions = array();
 		if (count($region_queries)) {
@@ -118,7 +117,7 @@ class QuestionParticipant extends Eloquent {
 			foreach ($region_queries as $key => $region_query_lists) {
 				foreach ($region_query_lists as $key_region_queries => $region_query) {
 					$regions_array[$region_query->id_region]["region_id"] = $region_query->id_region;
-					$regions_array[$region_query->id_region]["name"] = $region_query->name;
+					$regions_array[$region_query->id_region]["name"] = $region_query->name[0] == " " ? substr($region_query->name,1) : $region_query->name;
 
 					if (empty($regions_array[$region_query->id_region]["amount"])) {
 						$regions_array[$region_query->id_region]["answer_name"] = $region_query->answer_name;
@@ -142,7 +141,6 @@ class QuestionParticipant extends Eloquent {
 				$i++;
 			}
 		}
-
 		return $regions;
 	}
 }

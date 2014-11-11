@@ -60,7 +60,12 @@ setInterval(function() {
 							{{ $survey['publish_text'] }}
 							@endif
 						</td>
-						<td>{{ Form::checkbox('name', 'value'); }}{{Lang::get('general.is_default')}}</td>
+						<td>
+							<a href="/admin/filter/{{ $survey['id'] }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_filter')}}</button></a>
+							<!--
+							{{ Form::checkbox('name', 'value'); }}{{Lang::get('general.is_default')}}
+						-->
+						</td>
 					</tr>
 				<?php $no = $no+1; ?>
 				@endforeach

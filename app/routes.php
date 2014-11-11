@@ -27,7 +27,7 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 		{
 			AvelcaController::autoRoutes();
 			Route::get('survey', 'SurveyController@getIndex');
-			Route::get('survey/edit/{id}', 'SurveyController@getDefaultquestion');	
+			Route::get('survey/edit/{id}', 'SurveyController@getDefaultquestion');
 			Route::get('survey/cycle', 'SurveyController@getCycle');
 			Route::post('survey/cycle', 'SurveyController@postCycle');
 			Route::get('survey/category/{id}', 'SurveyController@getCategory');
@@ -41,8 +41,10 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 			Route::post('survey/defaultquestion', 'SurveyController@postDefaultquestion');
 		});
 	});
+	Route::get('survey/cyclelist', 'SurveyController@getCyclelist');	
 	Route::get('/survey/reupload', 'SurveyController@reupload');
-	Route::get('/admin/filter', 'CategoryController@getIndex');
+	Route::get('/admin/filter/{id}', 'CategoryController@getManagefilter');
+	Route::post('/admin/filter', 'CategoryController@postManagefilter');
 
 	Route::get('/admin/questioncategory', function(){
 		$question_category = QuestionCategory::all();

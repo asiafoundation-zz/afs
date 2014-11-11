@@ -369,6 +369,9 @@ table.dataTable thead .sorting:after {
     overflow-x: auto;overflow-y: scroll;
     width:auto;height:400px;
 }
+#popup_detail_question_body{
+    overflow-x: scroll;
+}
 /*map*/
 
 .leaflet-top .leaflet-control {

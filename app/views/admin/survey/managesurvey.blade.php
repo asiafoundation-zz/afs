@@ -53,7 +53,7 @@
 						<div class="form-group">
 							{{ Form::label("Cycle Name", "", array("class" => "control-label col-md-3")) }}
 							<div class="col-md-9">
-								{{ Form::select('cycle_select', $cycles,$default_question->id_cycle, array("id" => "cycle_select_modal","class" => "control-label col-md-9","onclick"=>"cycle_select_option($survey->id)")) }}
+								{{ Form::select('cycle_select', $cycles,$default_question->id_cycle, array("id" => "cycle_select_modal","class" => "control-label col-md-9","onchange"=>"cycle_select_option($survey->id)")) }}
 							</div>
 						</div>
 					</div>

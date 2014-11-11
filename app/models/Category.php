@@ -126,7 +126,7 @@ class Category extends Eloquent {
 		$category = Category::where('name', '=', $data)->first();
 		if(!isset($category))
 		{
-			$category = Category::create(array('name' => $data, 'code_id' => $code_id, 'survey_id' => $survey_id));
+			$category = Category::create(array('name' => $data, 'display_name' => $data,'code_id' => $code_id, 'survey_id' => $survey_id, 'is_active' => 1));
 		}	
 		return $category;
 	}
@@ -142,6 +142,7 @@ class Category extends Eloquent {
 			->join('answers','answers.question_id','=','questions.id')
 			->join('question_participants','question_participants.answer_id','=','answers.id')
 			->where('questions.id','=',$request['question_id'])
+			->where('answers.cycle_id','=',$request['cycle_id'])
 			->get();
 
 		$get_participants = DB::table('categories')
@@ -158,49 +159,100 @@ class Category extends Eloquent {
 			// ->groupBy('category_item')
 			->get();
 
-			// Combine data
-		$data=array();
-		$data_header=array();
+		$data_query_headers=DB::table('categories')
+			->select(
+					'categories.id as category_id',
+					'categories.name as category',
+					'category_items.id as category_item_id',
+					'category_items.name as category_item'
+					)
+			->join('category_items','category_items.category_id','=','categories.id')
+			->where('categories.survey_id','=',$request['survey_id'])
+			->get();
+
+		// Arrange Headers for table
+		$data_headers = array();
+		foreach ($data_query_headers as $key_data_headers => $data_query_header) {
+			$data_headers[$data_query_header->category_id]['category_id'] = $data_query_header->category_id;
+			$data_headers[$data_query_header->category_id]['category'] = $data_query_header->category;
+			$data_headers[$data_query_header->category_id]['colspan'] = empty($data_headers[$data_query_header->category_id]['colspan']) ? 1 : count($data_headers[$data_query_header->category_id]['category_items']) + 1 ;
+
+			$data_headers[$data_query_header->category_id]['category_items'][$data_query_header->category_item_id]['category_item_id'] = $data_query_header->category_item_id;
+			$data_headers[$data_query_header->category_id]['category_items'][$data_query_header->category_item_id]['category_item'] = $data_query_header->category_item;
+		}
+
+			// Arrange List data for table
+		$datas=array();
 		foreach ($get_answers as $key_get_answers => $get_answer) {
-			$data_header['answer_name'] = $get_answer->answer;
-			$data[$get_answer->answer_id]['answer_name'] = $get_answer->answer;
+			$datas[$get_answer->answer_id]['answer_id'] = $get_answer->answer_id;
+			$datas[$get_answer->answer_id]['answer'] = $get_answer->answer;
 
 			foreach ($get_participants as $key_get_participants => $get_participant) {
 				if ($get_answer->participant_id == $get_participant->participant_id) {
-					// Set Header
-					$data_header['answer_category'][$get_participant->category_id]['category_name'] = strtoupper($get_participant->category);
-					$data_header['answer_category'][$get_participant->category_id]['categories'][$get_participant->category_item_id] = $get_participant->category_item;
+					$datas[$get_answer->answer_id]['category_id'] = $get_participant->category_id;
 
-					// If empty
-					$count = empty($data[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]) ? 0 : $data[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id];
+					// To count participant choose certain answer with certain category
+					$count = isset($datas[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]['count']) ? $datas[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]['count'] : 0;
 
-					$data[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id] = $count + 1;
+					$datas[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]['count'] = $count + 1;
+					$datas[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]['category_item_id'] = $get_participant->category_item_id;
 				}
 			}
 		}
 
-		$table_data = '<thead><tr>';
-		$table_data = '<thead><tr><td rowspan="2"></td>';
+		/*
+		 * Built table header
+		 */
+		$table_data_category = '<tr><td rowspan="2">Answer</td>';
+		$table_data_category_item = '<tr>';
 
-		$table_data_category_item = '';
-		foreach ($data_header['answer_category'] as $key_data_header => $data_header_singles) {
-			// $table_data .= '<td>'.$data_header_singles['category_name'].'</td>';
-			foreach ($data_header_singles['categories'] as $key_data_header_single => $data_header_single) {
-				
-				$table_data_category_item .= '<td>'.$data_header_single.'</td>';
+		foreach ($data_headers as $key_data_headers => $data_header) {
+			$table_data_category .= '<td  align="center" colspan='.$data_header['colspan'].'>'.strtoupper($data_header['category']).'</td>';
+
+			foreach ($data_header['category_items'] as $key_category_items => $category_item) {
+				$table_data_category_item .= '<td>'.strtoupper($category_item['category_item']).'</td>';
 			}
 		}
-		$table_data .= '</tr></thead><tbody><tr>';
 
-		foreach ($data as $key_data => $single_data) {
-			$table_data .= '<td>'.$single_data['answer_name'].'</td>';
-			foreach ($single_data['answer_category'] as $key_answer_category => $answer_category) {
-				if ($key_answer_category == $data_header_singles['categories'][$key_answer_category]) {
-						$table_data .= '<td>'.$answer_category.'</td>';
+		$table_data_category .= '</tr>';
+		$table_data_category_item .= '</tr>';
+
+		$table_header = '<thead>'.$table_data_category.$table_data_category_item.'</thead>';
+		
+		/*
+		 *  End Built table header
+		 */
+
+		/*
+		 * Built table body
+		 */
+		$table_data_answer = '';
+		foreach ($datas as $key_datas => $single_data) {
+			$table_data_answer .= '<tr>';
+			$table_data_answer .= '<td>'.$single_data['answer'].'</td>';
+
+			foreach ($data_headers as $key_data_headers => $data_header) {
+
+				foreach ($data_header['category_items'] as $key_category_items => $category_item) {
+					if (!empty($single_data['answer_category'][$category_item['category_item_id']])) {
+						if ($category_item['category_item_id'] == $single_data['answer_category'][$category_item['category_item_id']]['category_item_id']) {
+							$table_data_answer .= '<td>'.$single_data['answer_category'][$category_item['category_item_id']]['count'].'</td>';
+						}
+					}else{
+						$table_data_answer .= '<td>0</td>';
 					}
+				}
+
 			}
+
+			$table_data_answer .= '</tr>';
 		}
-		$table_data .= '</tr><tbody>';
+		/*
+		 *  End Built table body
+		 */
+
+		$table_body = '<tbody>'.$table_data_answer.'</tbody>';
+		$table_data = $table_header.$table_body;
 
 		return $table_data;
 	}

@@ -77,6 +77,7 @@ return array(
 	"save_changes" => "Save Changes",
 	"cancel" => "Cancel",
 	"select_all" => "Select All",
+	"select_filter" => "Select Filter",
 	"action" => "Action",
 	"baseline" => "Baseline",
 	"endline" => "Endline",
@@ -86,5 +87,6 @@ return array(
 	"manage_file" => "Manage File",
 	"upload_file" => "Upload File",
 	"upload_map" => "Upload Map",
-	"is_default" => "Is Default"
+	"is_default" => "Is Default",
+	"manage_filter" => "Manage Filter"
 );

@@ -174,7 +174,6 @@ class Question extends Eloquent {
 	public static function DefaultQuestion($request = array())
 	{
 		// Load Question
-
 		$questions =  self::DefaultLoad($request);
 
 			if (!empty($request['cycle'])) {
@@ -191,7 +190,8 @@ class Question extends Eloquent {
 			}
 			else{
 				$questions = $questions->where('cycles.cycle_type', '=',0)
-					->where('questions.is_default', '=', 1);
+					->where('questions.is_default', '=', 1)
+					->where('answers.cycle_default', '=', 1);
 			}
 
 			$questions = $questions
@@ -475,14 +475,16 @@ class Question extends Eloquent {
 	{
 		$questions = DB::table('questions')
 			->select(
+				'question_categories.name as question_category',
 				'questions.id as question_id',
 				'questions.question as question',
 				'codes.code',
 				'master_codes.master_code'
 				)
+			->join('question_categories','questions.question_category_id','=','question_categories.id')
 			->join('answers','answers.question_id','=','questions.id')
 			->join('codes','codes.id','=','questions.code_id')
-			->join('master_codes','master_codes.id','=','questions.code_id')
+			->join('master_codes','master_codes.id','=','codes.master_code_id')
 			->where('answers.cycle_id', '=', $request['cycle_id'])->get();
 
 		return $questions;

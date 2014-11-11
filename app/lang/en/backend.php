@@ -21,5 +21,11 @@ return array(
 	"question_code" => "Question Code",
 	"question_name" => "Question Name",
 	"default_survey" => "Default Survey",
-	"question" => "Question"
+	"question" => "Question",
+	"category_question" => "Question Category",
+
+	"participant_filter" => "Participant Filter",
+	"display_name" => "Display Name",
+	"availability" => "Availability",
+	"manage_display_name" => "Manage Display Name"
 );

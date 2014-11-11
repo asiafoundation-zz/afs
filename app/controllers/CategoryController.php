@@ -7,9 +7,34 @@ class CategoryController extends AvelcaController {
 		parent::__construct($Model);
 	}
 	
-	public function getIndex(){
-		$category = Category::paginate(5);
+	public function getManagefilter($id){
+		$categories = Category::where('survey_id','=',$id)->get();
 
-		return View::make('admin.filter.index')->with('categories', $category);
+		return View::make('admin.filter.index')
+			->with('categories', $categories)
+			->with('survey_id', $id);
+	}
+
+	public function postManagefilter(){
+		$request = Input::get();
+
+		$categories = Category::where('id','=',Input::get('category_id'))->first();
+		if (isset($request['is_active'])) {
+			$categories->is_active = $request['is_active'];
+		}
+		if (!empty($request['display_name'])) {
+			$categories->display_name = $request['display_name'];
+		}
+
+		$categories->save();
+
+		Session::flash('alert-class', 'alert-success'); 
+		Session::flash('message', 'Save Succeed');
+		if (!empty($request['display_name'])) {
+			return Redirect::to('/admin/filter/'. $request['category_id']);
+		}
+		else{
+			return true;
+		}
 	}
 }

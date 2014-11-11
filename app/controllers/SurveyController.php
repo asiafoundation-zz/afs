@@ -184,27 +184,45 @@ class SurveyController extends AvelcaController {
 	public function postDefaultquestion()
 	{
 		// Save Default Question survey
-		$question = Question::where('question_id', '=', $id)->first();
+		$question_previous = Question::where('is_default', '=', 1)->first();
+		$question_previous->is_default = 0;
+		$question_previous->save();
+
+		$answer_default_previous = DB::table('answers')
+			->where('cycle_default', 1)
+			->where('question_id', $question_previous->id)
+			->update(array(
+         'cycle_default' => 0
+      ));
+
+		$question = Question::where('id', '=', Input::get('question_select'))->first();
+		$question->is_default = 1;
 		$question->save();
-		
+
+		$answers = DB::table('answers')
+				->where('question_id', $question->id)
+				->where('cycle_id', Input::get('cycle_select'))
+				->update(array(
+         'cycle_default' => 1
+         ));
+
 		Session::flash('alert-class', 'alert-success'); 
 		Session::flash('message', 'Save Succeed');
 
 		return Redirect::to('/admin/survey');
 	}
 	
-	public function getCycles()
+	public function getCyclelist()
 	{
 		// Load Question
-		$request = Input::get();
-		$data = array(
-			'cycle' => Cycle::where('id','=',$request['cycle_id'])->first(),
-			'survey' => Survey::where('id', '=', $request['survey_id'])->first(),
-			'questions' => Question::loadQuestionCycle(Input::get()),
-		);
-
-		return View::make('admin.survey.cycle', $data);
+		$responses = Question::loadQuestionCycle(Input::get());
+		$select = "";
+		foreach ($responses as $key_responses => $response) {
+			$select .= '<option value="'.$response->question_id.'">'.$response->question.'</option>';
+		}
+		return $select;
 	}
+
 	public function getCycle()
 	{
 		// Load Question

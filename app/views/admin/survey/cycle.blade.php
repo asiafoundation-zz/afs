@@ -3,10 +3,15 @@
 @section('content')
 <script type="text/javascript">
  function popup_question(question_id,survey_id,cycle_id){
+
+ 	var question_text = $("#question_test_"+question_id).text();
+
 	$.post( "{{ URL::to('admin') }}/survey/cycle", { question_id: question_id,survey_id: survey_id,cycle_id: cycle_id })
 	.done(function( data ) {
 		$("#question_popup_table").html(data);
 		$('#popup_detail_question').modal('show');
+
+		$("#question-label-popup").html(question_text);
 	});
 	return false;
 }
@@ -31,6 +36,7 @@
 				<thead>
 					<tr>
 						<th>{{Lang::get('backend.survey_name')}}</th>
+						<th>{{Lang::get('backend.category_question')}}</th>
 						<th>{{Lang::get('backend.question')}}</th>
 						<th>{{Lang::get('general.action')}}</th>
 					</tr>
@@ -39,11 +45,10 @@
 				@foreach($questions as $question)
 					<tr>
 						<td>{{$question->master_code}}@if(!empty($question->code))_{{ $question->code }} @endif </td>
-						<td>{{ $question->question }}</td>
+						<td><span id="category_question_test_{{ $question->question_id }}">{{ $question->question_category }}</span></td>
+						<td><span id="question_test_{{ $question->question_id }}">{{ $question->question }}</span></td>
 						<td>
-							<!--
 							<a href="#" onclick="popup_question({{ $question->question_id }},{{ $survey->id }},{{$cycle->id}})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.view')}}</button></a>
-						-->
 						</td>
 					</tr>
 				@endforeach
@@ -59,9 +64,9 @@
     <div class="modal-content">
 			<div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="question-label-popup">{{ Lang::get('general.upload_map') }}</h4>
+        <h4 class="modal-title" id="question-label-popup">{{ Lang::get('backend.question') }}</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="popup_detail_question_body">
       	<table class="datatable table table-striped table-bordered" id="question_popup_table"></table>
       </div>
       <div class="modal-footer">

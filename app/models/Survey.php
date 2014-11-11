@@ -150,6 +150,7 @@ class Survey extends Eloquent {
 						switch ($master_code[$column]['type']) {
 							case 0:
 								// Check region exist
+								$data_str = $data_str[0] == " " ? substr($data_str,1) : $data_str;
 								$region_id = Region::checkData($data_str,$master_code[$column]['code_id']);
 								break;
 							case 1:
@@ -220,6 +221,13 @@ class Survey extends Eloquent {
 			$default_question = Question::join('question_categories', 'question_categories.id','=','questions.question_category_id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
 			$default_question->is_default = 1;
 			$default_question->save();
+
+			$answer_default = DB::table('answers')
+				->where('question_id', $default_question->id)
+				->where('cycle_id', $question_list['cycle_id'])
+				->update(array(
+         'cycle_default' => 1
+         ));
 
 		// 	DB::commit();
 		// 	$status = 1;

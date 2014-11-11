@@ -306,19 +306,3 @@ function select_all(move){
  * End Importing JS
  *
  */
- /*
- * Manage Survey JS
- *
- */
- function cycle_select_option(survey_id){
-	$.get( "survey/cycles", { survey_id: survey_id, options_selected: $("#cycle_select_modal").val() })
-	.done(function( data ) {
-		// redirect to index page
-alert('aa');
-	});
-	return false;
-}
- /*
- * End Manage Survey JS
- *
- */

@@ -24,7 +24,7 @@ class PermissionSeeder extends Seeder {
 			"survey.question",
 			"survey.defaultquestion",
 			"survey.upload",
-			"survey.cycles",
+			"survey.cyclelist",
 			"survey.publish",
 			);
 

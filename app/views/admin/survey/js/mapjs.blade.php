@@ -65,18 +65,6 @@ $( document ).ready(function() {
       @endforeach
       return color;
     }
-    function getColorDynamic(d) {
-      var color = 'white';
-
-      for (i = 0; i < dynamicRegions.length; i++) {
-        if (dynamicRegions[i].name == d) 
-        {
-          color = dynamicRegions[i].color;
-        }
-      };
-
-      return color;
-    }
     function style(feature) {
       return {
         weight: 2,
@@ -115,4 +103,11 @@ $( document ).ready(function() {
     /*
      * -----------------------------------------End Map JS-----------------------------------------
      */
+    function cycle_select_option(survey_id){
+    $.get( "{{ URL::to('/survey/cyclelist') }}", { survey_id: survey_id,cycle_id : $("#cycle_select_modal").val()})
+      .done(function( data ) {
+        $("#question_select_modal").html(data);
+      });
+      return false;
+    }
   </script>
