@@ -89,8 +89,8 @@
   <section class="compare-survey">
     <div class="container">
       <div class="col-md-6">
-        <h4>Lorem ipsum dolor sit amet, consectet</h4>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus, dignissim vel arcu sit amet, sodales dignissim nibh. Suspendisse lobortis neque sed est sollicitudin ornare.<br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus, dignissim vel arcu sit amet, sodales dignissim nibh. Suspendisse lobortis neque sed est sollicitudin ornare.</p>
+        <h4>{{ Lang::get('frontend.description') }}</h4>
+        <p>{{ Lang::get('frontend.description_content') }}</p>
       </div>
       <div class="col-md-6">
         <div class="extras">
