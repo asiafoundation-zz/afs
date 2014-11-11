@@ -17,19 +17,19 @@
     </div>
     <div class="search-wrp header-select">
       <select class="select-control select-cycle">
-        <option>Select Cycle</option>
+        <option>{{ Lang::get('frontend.cycle') }}</option>
         @foreach ($cycles as $cycle)
         <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
       <select class="select-control select-category">
-        <option>Select Category</option>
+        <option>{{ Lang::get('frontend.select_category') }}</option>
         @foreach ($question_categories as $question_category)
         <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
       <select class="select-control select-question">
-        <option>Select Question</option>
+        <option>{{ Lang::get('frontend.select_question') }}</option>
         @foreach ($question_lists as $question_list)
         <option value="{{ $question_list->id }}"> - {{ $question_list->question }}</option>
         @endforeach
@@ -41,6 +41,7 @@
   <section class="filter">
     <div class="container">
       <div class="col-md-12 dropdown-filter">
+        <!-- <div class="col-xs-6 col-sm-3">Filter Participant by</div> -->
         <ul>
           @foreach ($filters as $key_filters => $filter)
           <li>
@@ -88,8 +89,8 @@
   <section class="compare-survey">
     <div class="container">
       <div class="col-md-6">
-        <h4>Lorem ipsum dolor sit amet, consectet</h4>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus, dignissim vel arcu sit amet, sodales dignissim nibh. Suspendisse lobortis neque sed est sollicitudin ornare.<br><br>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ipsum risus, dignissim vel arcu sit amet, sodales dignissim nibh. Suspendisse lobortis neque sed est sollicitudin ornare.</p>
+        <h4>{{ Lang::get('frontend.description') }}</h4>
+        <p>{{ Lang::get('frontend.description_content') }}</p>
       </div>
       <div class="col-md-6">
         <div class="extras">

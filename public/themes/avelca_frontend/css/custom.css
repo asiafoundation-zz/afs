@@ -23,3 +23,21 @@
 .chart-form .custom-select-control, .chart-form .custom-select-control ul{
 	width : 120%;
 }
+
+.survey-pemilu h3{
+	margin-top : 30px !important;
+}
+
+.compare-survey .col-md-6:nth-child(1) p {
+	text-align: justify;
+}
+
+/* Selectic scroll */
+.scroll-drag{
+	background-color: #A1A1A1 !important;
+}
+
+.select-scroll{
+	background-color: #D2D2D2 !important;
+}
+/* end */

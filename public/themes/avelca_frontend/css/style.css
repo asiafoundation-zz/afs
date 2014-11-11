@@ -386,21 +386,27 @@ a:focus {
 	position: relative;
 	margin: 0 auto;
 }
-.filter [class*="col-"] >  ul > li {
+
+.filter [class*="col-"] >  ul > li { /*Edited Nov/11/14*/
 	float: left;
     list-style: none outside none;
     margin: 0;
     text-align: left;
     vertical-align: middle;
+    margin-right: 10px;
 }
-.filter [class*="col-"] >  ul > li + li {
+.filter [class*="col-"] >  ul > li:last-child { /*Edited Nov/11/14*/
+	margin-right: 0;
+}
+
+/*.filter [class*="col-"] >  ul > li + li {
 	margin-left: 15px;
-}
+}*/
 .custom-select-control li + li {
 	margin-left: 0;
 }
 .clear-all,
-.clear-all:hover {
+/*.clear-all:hover {
 	background: none repeat scroll 0 0 #973a4f;
     border-radius: 5px;
     color: #ffffff;
@@ -411,6 +417,21 @@ a:focus {
     text-transform: uppercase;
     z-index: 10;
     line-height: 18px;
+}*/
+
+.clear-all:hover { /*Edited Nov/11/14*/
+	background: none repeat scroll 0 0 #973a4f;
+    border-radius: 5px;
+    color: #ffffff;
+    font-family: "DINNextLTPro-Bold";
+    font-size: 11px;
+    left: 0;
+    padding: 16px 15px 12px;
+    text-transform: uppercase;
+    z-index: 10;
+    line-height: 18px;
+    width: 130px;
+    text-align: center; 
 }
 
 /*survey-pemilu*/

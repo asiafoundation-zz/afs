@@ -1,12 +1,26 @@
 <div class="modal fade" id="edit_modal-{{ $user->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
+			{{ Form::open(array('url' => 'admin/user/edit', 'class' => 'form-horizontal', 'method' => 'post')) }}
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">Edit User</h4>
 			</div>
 			<div class="modal-body text-left">
-				{{ Form::open(array('url' => 'admin/user/edit', 'class' => 'form-horizontal', 'method' => 'post')) }}
+
+				<?php
+                    $data = Session::get('data');
+                    $messages = $data['edit-messages'];
+                    $id = $data['id'];
+                ?>
+                @if ( ! empty($messages) && $id == $user->id)
+                    @foreach ($messages->all() as $message)
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Error!</strong> {{ $message }}.
+                        </div>
+                    @endforeach
+                @endif
 
 				<input type="hidden" name="id" value="{{ $user->id }}">
 

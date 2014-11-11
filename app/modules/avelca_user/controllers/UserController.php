@@ -342,6 +342,7 @@ class UserController extends \BaseController {
 					{
 						$user = User::find($user_id);
 						$user->submit_reset_password_at = '';
+						$user->password = \Hash::make($new_password);
 						$user->save();
 
 						return Redirect::to('signin')->with('status', 'New Password : '.$new_password);

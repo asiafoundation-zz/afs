@@ -2,7 +2,7 @@
   <form class="chart-form">
     <div class='col-xs-6'>
     <div class="form-group cross-category">
-      <label>Select Category</label>
+      <label>{{ Lang::get('frontend.select_category') }}</label>
       <select class="select-control select-category">
       <option disabled>Category</option>
       @foreach ($question_categories as $question_category)
@@ -14,7 +14,7 @@
 
     <div class='col-xs-6'>
     <div class="form-group cross-question">
-      <label>Select Question</label>
+      <label>{{ Lang::get('frontend.select_question') }}</label>
       <select class="select-control cross-select-question">
       <option>Question</option>
       @foreach ($question_lists as $question_list)
@@ -34,31 +34,29 @@
     </div>
   <form class="chart-form">
 
-  <div class='cross-table'>
+  <div class='chart bordered cross-table'>
 
   </div>
   <div class="col-md-12">
-    <a href="#" class="orange-bg cross-back"><img src="{{ Theme::asset('img/arrow-l.png') }}"> back</a>
+    <a href="#" class="orange-bg cross-back"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get('frontend.back') }}</a>
   </div>
 </div>
 
 <script type="text/html" id="get-cross-table">
-  <div class="chart bordered">
-    <div class="col-md-12">
-      <div class="table-wrapper">
-        <table class="table matrix">
-          <thead>
-            <tr>
-              <th rowspan="2"></th>
-              <th id='question_header'></th>
-            </tr>
-            <tr id="answer_header">
-            </tr>
-          </thead>
-          <tbody id="answer_row">
-          </tbody>
-        </table>
-      </div>
-    </div>
+<div class="col-md-12">
+  <div class="table-wrapper">
+    <table class="table matrix">
+      <thead>
+        <tr>
+          <th rowspan="2"></th>
+          <th id='question_header'></th>
+        </tr>
+        <tr id="answer_header">
+        </tr>
+      </thead>
+      <tbody id="answer_row">
+      </tbody>
+    </table>
   </div>
+</div>
 </script>  

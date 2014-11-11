@@ -45,6 +45,14 @@ $().ready(function(){
 		}
 	});
 
+	/* Get cookie for user error messages */
+    if ($.cookie("action"))
+    {
+        var modalSelector = $.cookie("action");
+        $(modalSelector).modal('show');
+        $.cookie('action', '', { expires: -7, path: '/admin/user' });
+    }
+    /* END */
 
 	function initializeComponents()
 	{

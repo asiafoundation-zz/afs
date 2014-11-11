@@ -17,7 +17,7 @@
         this.config = $.extend(true, {
 			containerClass: 'custom-select-control',
             width: 0,
-            maxItems: 0,
+            maxItems: 20,
             customScroll: 1,
             speedAnimation:200,
 			smartPosition: true,
