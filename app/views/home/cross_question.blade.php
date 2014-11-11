@@ -2,7 +2,7 @@
   <form class="chart-form">
     <div class='col-xs-6'>
     <div class="form-group cross-category">
-      <label>Select Category</label>
+      <label>{{ Lang::get('frontend.select_category') }}</label>
       <select class="select-control select-category">
       <option disabled>Category</option>
       @foreach ($question_categories as $question_category)
@@ -14,7 +14,7 @@
 
     <div class='col-xs-6'>
     <div class="form-group cross-question">
-      <label>Select Question</label>
+      <label>{{ Lang::get('frontend.select_question') }}</label>
       <select class="select-control cross-select-question">
       <option>Question</option>
       @foreach ($question_lists as $question_list)
