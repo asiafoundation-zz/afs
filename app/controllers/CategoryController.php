@@ -30,8 +30,8 @@ class CategoryController extends AvelcaController {
 
 		Session::flash('alert-class', 'alert-success'); 
 		Session::flash('message', 'Save Succeed');
-		if (!empty($request['display_name'])) {
-			return Redirect::to('/admin/filter/'. $request['category_id']);
+		if (!empty($request['survey_id'])) {
+			return Redirect::to('/admin/filter/'. $request['survey_id']);
 		}
 		else{
 			return true;

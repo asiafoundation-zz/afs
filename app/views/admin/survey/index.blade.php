@@ -21,6 +21,7 @@ setInterval(function() {
 			<h1>{{Lang::get('backend.manage_survey')}}</h1>
 			<hr>
 			<a href="/admin/survey/create/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('backend.create_survey')}}</button></a>
+			<a href="/survey/reupload/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.remove_all_surveys')}}</button></a>
 		</div>
 
 		<div class="table-responsive">

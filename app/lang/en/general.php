@@ -88,5 +88,6 @@ return array(
 	"upload_file" => "Upload File",
 	"upload_map" => "Upload Map",
 	"is_default" => "Is Default",
-	"manage_filter" => "Manage Filter"
+	"manage_filter" => "Manage Filter",
+	"remove_all_surveys" => "Remove All Survey"
 );

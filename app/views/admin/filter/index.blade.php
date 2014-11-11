@@ -14,10 +14,10 @@
  	$('#edit_filter_option').modal('show');
 	return false;
 }
-function is_active_filter(category_id){
-	$.post( "{{ URL::to('/admin/filter') }}", { survey_id: {{ $survey_id }},category_id:category_id,is_active: $("#question_select_modal").val() })
+function is_active_filter(survey_id,category_id){
+	$.post( "{{ URL::to('/admin/filter') }}", { survey_id: survey_id,category_id:category_id,is_active: $("#question_select_modal").val() })
 	.done(function( data ) {
-		window.location.href = "/admin/filter/"+{{ $survey_id }};
+		window.location.href = "/admin/filter/"+survey_id;
 	});
 	return false;
 }
@@ -54,7 +54,7 @@ function is_active_filter(category_id){
 						<td><span id="filter_category_name_{{ $category->id }}">{{ strtoupper($category->name) }}</span></td>
 						<td><span id="filter_category_display_name_{{ $category->id }}">{{ $category->display_name }}</span></td>
 						<td>
-							{{ Form::select('is_active', array(0 => 'Disable',1 => 'Enable'),$category->is_active, array("id" => "question_select_modal","class" => "control-label","onchange" => "is_active_filter( $category->id )")) }}
+							{{ Form::select('is_active', array(0 => 'Disable',1 => 'Enable'),$category->is_active, array("id" => "question_select_modal","class" => "control-label","onchange" => "is_active_filter( $survey_id,$category->id )")) }}
 						</td>
 						<td>
 							<a href="#" onclick="popup_filter({{ $category->id }})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.view')}}</button></a>
@@ -92,6 +92,7 @@ function is_active_filter(category_id){
 							<div class="col-md-9">
 								{{ Form::text("display_name","", array("class" => "form-control","id" => "form_filter_display_name")) }}
 								{{ Form::hidden("category_id","", array("class" => "form-control","id" => "form_filter_category_id")) }}
+								{{ Form::hidden("survey_id",$survey_id, array("class" => "form-control","id" => "form_filter_survey_id")) }}
 							</div>
 						</div>
 					</div>

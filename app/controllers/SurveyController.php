@@ -88,8 +88,7 @@ class SurveyController extends AvelcaController {
 		{
 			$uploaded = Input::file('file')->move('uploads/', $filename);	
 		}
-
-	    return Response::json($filename);
+		return Response::json($filename);
 	}
 
 	public function getCategory($id)
