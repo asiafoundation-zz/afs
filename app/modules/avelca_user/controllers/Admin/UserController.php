@@ -106,7 +106,8 @@ class UserController extends \BaseController {
 
 		if ($validator->fails())
 		{
-			return Redirect::to('admin/user/create')->with('messages', $validator->messages());
+			setcookie("action", "#create_modal", time()+3600, "/admin/user");
+			return Redirect::to('admin/user')->with('create-messages', $validator->messages())->withInput();
 		}
 		else
 		{

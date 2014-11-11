@@ -214,6 +214,9 @@
 	{{ HTML::script(Theme::asset('js/moment.min.js')) }}
 	{{ HTML::script(Theme::asset('js/bootstrap-datetimepicker.min.js')) }}
 
+	<!-- Jquery Cookie -->
+	{{ HTML::script(Theme::asset('js/jquery.cookie.js')) }}
+
 	<!-- SB Admin Scripts - Include with every page -->
 	{{ HTML::script(Theme::asset('js/script.js')) }}
 

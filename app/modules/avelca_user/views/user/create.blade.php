@@ -1,12 +1,22 @@
 <div class="modal fade" id="create_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
+			{{ Form::open(array('url' => 'admin/user/create', 'class' => 'form-horizontal', "id" => 'create-account')) }}
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				<h4 class="modal-title">Create User</h4>
 			</div>
 			<div class="modal-body">
-				{{ Form::open(array('url' => 'admin/user/create', 'class' => 'form-horizontal')) }}
+				
+				<?php $messages = Session::get('create-messages'); ?>
+                @if ( ! empty($messages))
+                    @foreach ($messages->all() as $message)
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Error!</strong> {{ $message }}.
+                        </div>
+                    @endforeach
+                @endif
 
 				<div class="form-group">
 					{{ Form::label("First Name", "", array("class" => "col-md-4 control-label")) }}
