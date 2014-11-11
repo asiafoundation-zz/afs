@@ -31,3 +31,13 @@
 .compare-survey .col-md-6:nth-child(1) p {
 	text-align: justify;
 }
+
+/* Selectic scroll */
+.scroll-drag{
+	background-color: #A1A1A1 !important;
+}
+
+.select-scroll{
+	background-color: #D2D2D2 !important;
+}
+/* end */
