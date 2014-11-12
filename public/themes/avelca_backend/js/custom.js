@@ -215,6 +215,12 @@ function change_page(move) {
 			title = title.replace(/Wave/g, "Region");
 			text = text.replace(/Wave/g, "Region");
 
+			// dblclick Trigger the last options
+			$(".header-options-clicked").each(function(){
+				var elem = document.getElementById(this.id);
+				elem.ondblclick.apply(elem);
+			});
+
 			page_flag(move);
 			category_back();
 		};
@@ -230,6 +236,12 @@ function change_page(move) {
 		if (move == 'back') {
 			title = title.replace(/Oversample/g, "Wave");
 			text = text.replace(/Oversample/g, "Wave");
+
+			// dblclick Trigger the last options
+			$(".header-options-clicked").each(function(){
+				var elem = document.getElementById(this.id);
+				elem.ondblclick.apply(elem);
+			});
 
 			page_flag(move);
 			category_back();
@@ -247,6 +259,12 @@ function change_page(move) {
 		if (move == 'back') {
 			title = title.replace(/Category/g, "Oversample");
 			text = text.replace(/Category/g, "Oversample");
+
+			// dblclick Trigger the last options
+			$(".header-options-clicked").each(function(){
+				var elem = document.getElementById(this.id);
+				elem.ondblclick.apply(elem);
+			});
 
 			page_flag(move);
 			category_back();
@@ -301,8 +319,14 @@ function select_all(move){
 	});
 	return false;
 }
-
 /*
  * End Importing JS
  *
  */
+$('.survey_is_default').click(function(){
+	$.post( "/admin/survey", { survey_id: $(this).val(), is_default:1 })
+	.done(function( data ) {
+		window.location.href = "/admin/survey/index";
+	});
+
+});

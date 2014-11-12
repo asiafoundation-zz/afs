@@ -33,7 +33,7 @@ setInterval(function() {
 						<th width="50px">{{Lang::get('backend.no')}}</th>
 						<th>{{Lang::get('backend.survey_name')}}</th>
 						<th>{{Lang::get('backend.publish_status')}}</th>
-<!-- 						<th width="50px">{{Lang::get('backend.is_default')}}</th> -->
+						<th width="100px">{{Lang::get('general.is_default')}}</th>
 						<th width="300px">{{Lang::get('general.action')}}</th>
 					</tr>
 				</thead>
@@ -64,9 +64,9 @@ setInterval(function() {
 							{{ $survey['publish_text'] }}
 							@endif
 						</td>
-<!-- 						<td align="center">
-							{{ Form::checkbox('name', 'value'); }}
-						</td> -->
+						<td align="center">
+							{{ Form::checkbox('is_default', $survey['id'],$survey['is_default'],array('class' => 'survey_is_default')) }}
+						</td>
 						<td>
 							<a href="/admin/filter/{{ $survey['id'] }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_filter')}}</button></a>
 						</td>

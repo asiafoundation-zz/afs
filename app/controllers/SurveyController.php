@@ -56,6 +56,19 @@ class SurveyController extends AvelcaController {
 				$survey->save();
 
 				return Redirect::to('/admin/survey/category/'. $survey->id);
+			}elseif (isset($request['is_default'])) {
+				// Delete previous default
+				$previous_default = Survey::where('is_default','=',1)->first();
+				if (isset($previous_default)) {
+					$previous_default->is_default = 0;
+					$previous_default->save();
+				}
+				
+				$survey->is_default = $request['is_default'];
+				$survey->save();
+
+				Session::flash('alert-class', 'alert-success');
+				Session::flash('message', 'Save Succeed');
 			}
 		}else{
 			$rule = array('survey_name' => 'Required');

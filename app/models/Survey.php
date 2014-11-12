@@ -30,7 +30,8 @@ class Survey extends Eloquent {
 		'geojson_file',
 		'baseline_file',
 		'endline_file',
-		'publish'
+		'publish',
+		'is_default'
 		);
 	protected $guarded = array('id');
 
@@ -40,7 +41,8 @@ class Survey extends Eloquent {
 		'geojson_file' => 'required',
 		'baseline_file' => 'required',
 		'endline_file' => 'required',
-		'publish' => 'required'
+		'publish' => 'required',
+		'is_default' => 'required'
 		);
 
 	/* Database Structure */
@@ -66,6 +68,10 @@ class Survey extends Eloquent {
 			'publish' => array(
 						'type' => 'number',
 						'onIndex' => true
+					),
+			'is_default' => array(
+						'type' => 'number',
+						'onIndex' => true
 					)
 		);
 
@@ -80,6 +86,7 @@ class Survey extends Eloquent {
 			$surveys[$key_survey_lists]['id'] = $survey_list->id;
 			$surveys[$key_survey_lists]['name'] = $survey_list->name;
 			$surveys[$key_survey_lists]['publish'] = $survey_list->publish;
+			$surveys[$key_survey_lists]['is_default'] = $survey_list->is_default;
 
 			switch ($survey_list->publish) {
 				case 0:
