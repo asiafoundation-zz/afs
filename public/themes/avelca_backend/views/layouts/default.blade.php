@@ -157,7 +157,7 @@
 			<hr>
 
 			<footer>
-				<p class="text-center">{{ date('Y') }} &copy; {{ Setting::meta_data('general', 'organization')->value }} - Powered by {{ HTML::link('http://www.avelca.com', 'Avelca', array('target', '_blank')) }}</p>
+				<p class="text-center">{{ date('Y') }} &copy; Asia Foundation Survey</p>
 			</footer>
 
 		</div>
