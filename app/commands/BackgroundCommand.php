@@ -80,18 +80,21 @@ class BackgroundCommand extends Command {
 			  if ($next_queue >= $count_excel_data) {
 			    $delayed_jobs->delete();
 
-			    $default_question_query = Question::select('questions.id','answers.cycle_id')->join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
+			    $question_default = Question::where('is_default','=',1)->count();
+			    if ($question_default == 0) {
+			    	$default_question_query = Question::select('questions.id','answers.cycle_id')->join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
 
-			    $default_question = Question::where('id','=',$default_question_query->id)->first();
-			    $default_question->is_default = 1;
-			    $default_question->save();
+			    	$default_question = Question::where('id','=',$default_question_query->id)->first();
+			    	$default_question->is_default = 1;
+			    	$default_question->save();
 
-			    $answer_default = DB::table('answers')
-			    	->where('question_id', $default_question_query->id)
-			    	->where('cycle_id', $default_question_query->cycle_id)
-			    	->update(array(
-			    		'cycle_default' => 1
+			    	$answer_default = DB::table('answers')
+			    		->where('question_id', $default_question_query->id)
+			    		->where('cycle_id', $default_question_query->cycle_id)
+			    		->update(array(
+			    			'cycle_default' => 1
 			    		));
+			    }
 
 			    // Update publish status
 			    $survey->publish = 3;
