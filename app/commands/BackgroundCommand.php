@@ -46,7 +46,7 @@ class BackgroundCommand extends Command {
 		
 		// $sleep = 60;
 		// while (true) {
-			$delayed_jobs = DelayedJob::where('type','=','importfile')->orderBy('id', 'DESC')->first();
+			$delayed_jobs = DelayedJob::where('type','=','importfile')->where('queue','=',1)->orderBy('id', 'DESC')->first();
 			if (isset($delayed_jobs)) {
 				$data_parse = json_decode($delayed_jobs->data);
 
@@ -66,40 +66,37 @@ class BackgroundCommand extends Command {
 			  $excel_data = Survey::readHeader($survey->baseline_file, 'BZ', 1);
 
 			  $count_excel_data = count($excel_data);
-			  $next_queue = $delayed_jobs->queue + 30;
-
-			  $excel_data_chop = array_slice($excel_data, $delayed_jobs->queue, 30);
 			  // Saving queue data
 			  $delayed_jobs->information = $count_excel_data;
-			  $delayed_jobs->queue = $next_queue;
+			  $delayed_jobs->queue = 0;
 			  $delayed_jobs->save();
 
+			  $active_delayed_job_id = $delayed_jobs->id;
+
 			  // Import Data
-			  $status = Survey::importData($survey,$master_code,$excel_data_chop);
-			  // delete jobs
-			  if ($next_queue >= $count_excel_data) {
-			    $delayed_jobs->delete();
+			  $status = Survey::importData($survey,$master_code,$excel_data);
 
-			    $question_default = Question::where('is_default','=',1)->count();
-			    if ($question_default == 0) {
-			    	$default_question_query = Question::select('questions.id','answers.cycle_id')->join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
+			  DB::table('delayed_jobs')->where('id','=',$active_delayed_job_id)->delete();
 
-			    	$default_question = Question::where('id','=',$default_question_query->id)->first();
-			    	$default_question->is_default = 1;
-			    	$default_question->save();
+		    $question_default = Question::where('is_default','=',1)->count();
+		    if ($question_default == 0) {
+		    	$default_question_query = Question::select('questions.id','answers.cycle_id')->join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
 
-			    	$answer_default = DB::table('answers')
-			    		->where('question_id', $default_question_query->id)
-			    		->where('cycle_id', $default_question_query->cycle_id)
-			    		->update(array(
-			    			'cycle_default' => 1
-			    		));
-			    }
+		    	$default_question = Question::where('id','=',$default_question_query->id)->first();
+		    	$default_question->is_default = 1;
+		    	$default_question->save();
 
-			    // Update publish status
-			    $survey->publish = 3;
-			    $survey->save();
-			  }
+		    	$answer_default = DB::table('answers')
+		    		->where('question_id', $default_question_query->id)
+		    		->where('cycle_id', $default_question_query->cycle_id)
+		    		->update(array(
+		    			'cycle_default' => 1
+		    		));
+		    }
+
+		    // Update publish status
+		    $survey->publish = 3;
+		    $survey->save();
 			}
 		  // echo "Sleep for ".$sleep." seconds...\n";
 		  // sleep($sleep);
