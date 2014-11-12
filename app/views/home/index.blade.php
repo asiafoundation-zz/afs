@@ -16,19 +16,20 @@
       </div>
     </div>
     <div class="search-wrp header-select">
-      <select class="select-control select-cycle">
+      <!-- <select class="select-control select-cycle"> -->
+      <select class="select2-custom select-cycle">
         <option>{{ Lang::get('frontend.cycle') }}</option>
         @foreach ($cycles as $cycle)
         <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
-      <select class="select-control select-category">
+      <select class="select2-custom select-category">
         <option>{{ Lang::get('frontend.select_category') }}</option>
         @foreach ($question_categories as $question_category)
         <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
-      <select class="select-control select-question">
+      <select class="select2-custom select-question">
         <option>{{ Lang::get('frontend.select_question') }}</option>
         @foreach ($question_lists as $question_list)
         <option value="{{ $question_list->id }}"> - {{ $question_list->question }}</option>

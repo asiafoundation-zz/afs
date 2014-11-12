@@ -1,21 +1,21 @@
 <div class="cross-question">  
   <form class="chart-form">
     <div class='col-xs-6'>
-    <div class="form-group cross-category">
-      <label>{{ Lang::get('frontend.select_category') }}</label>
-      <select class="select-control select-category">
-      <option disabled>Category</option>
-      @foreach ($question_categories as $question_category)
-        <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
-      @endforeach
-      </select><!-- Custom Select -->
-    </div>
+      <div class="form-group cross-category">
+        <label>{{ Lang::get('frontend.select_category') }}</label>
+        <select class="cross-select-category">
+        <option disabled>Category</option>
+        @foreach ($question_categories as $question_category)
+          <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
+        @endforeach
+        </select><!-- Custom Select -->
+      </div>
     </div>
 
     <div class='col-xs-6'>
     <div class="form-group cross-question">
       <label>{{ Lang::get('frontend.select_question') }}</label>
-      <select class="select-control cross-select-question">
+      <select class="cross-select-question">
       <option>Question</option>
       @foreach ($question_lists as $question_list)
         <option value="{{ $question_list->id }}"> - {{ $question_list->question }}</option>
