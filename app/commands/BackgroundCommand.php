@@ -74,7 +74,7 @@ class BackgroundCommand extends Command {
 			  $active_delayed_job_id = $delayed_jobs->id;
 
 			  // Import Data
-			  // $status = Survey::importData($survey,$master_code,$excel_data);
+			  $status = Survey::importData($survey,$master_code,$excel_data);
 
 			  $active_delayed_job = DelayedJob::find($active_delayed_job_id);
 			  $active_delayed_job->delete();
