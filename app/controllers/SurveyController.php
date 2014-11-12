@@ -31,6 +31,7 @@ class SurveyController extends AvelcaController {
 		DB::table('questions')->truncate();
 		DB::table('regions')->truncate();
 		DB::table('surveys')->truncate();
+		DB::table('delayed_jobs')->truncate();
 
 		Session::flash('survey_deleted', 'Survey Deleted');
 		return Redirect::to('/admin/survey');
