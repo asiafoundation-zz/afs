@@ -9,7 +9,7 @@ class SurveyController extends AvelcaController {
 	
 	public function getIndex()
 	{
-		$data['surveys'] = Survey::getSurveys();
+		list($data['surveys'],$data['is_refresh']) = Survey::getSurveys();
 		// Paginations
 		$data['no'] = (Input::get('page') -1) * 10 +1;
 
@@ -18,7 +18,6 @@ class SurveyController extends AvelcaController {
 
 	public function reupload()
 	{
-
 		DB::table('answers')->truncate();
 		DB::table('categories')->truncate();
 		DB::table('category_items')->truncate();
@@ -65,7 +64,7 @@ class SurveyController extends AvelcaController {
 
 			if($validator->passes())
 			{
-				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'geojson_file' => Input::get('geojson'),'publish' => 1));
+				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'geojson_file' => Input::get('geojson'),'publish' => 0));
 
 				if($survey)
 				{

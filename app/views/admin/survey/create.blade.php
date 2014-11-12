@@ -40,7 +40,7 @@
 		<div class="form-group upload-field">
 			{{ Form::label("Add GeoJson file", "", array("class" => "control-label col-md-3")) }}
 			<div class="col-md-3">
-				<input id="input-id" type="file" class="geojson-upload" data-preview-file-type="text" name="geojson">
+				<input id="input-id" type="file" class="excel-upload" data-preview-file-type="text" name="geojson">
 <!-- 				<div class="progress" style="margin-top:10px">
 				  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
 				    <span class="sr-only">0% Complete</span>

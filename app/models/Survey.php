@@ -75,6 +75,7 @@ class Survey extends Eloquent {
 	public static function surveyDetails($survey_lists)
 	{
 		$surveys = array();
+		$is_refresh = false;
 		foreach ($survey_lists as $key_survey_lists => $survey_list) {
 			$surveys[$key_survey_lists]['id'] = $survey_list->id;
 			$surveys[$key_survey_lists]['name'] = $survey_list->name;
@@ -98,10 +99,14 @@ class Survey extends Eloquent {
 						$percentage = ((int)$participant_count / (int)$queue->information) * 100;
 						$percentage = round($percentage);
 					}
+					elseif ((int)$queue->queue >= (int)$queue->information){
+						$percentage = 99;
+					}
 
 					$surveys[$key_survey_lists]['publish_text'] = "Importing ";
 					$surveys[$key_survey_lists]['publish_style'] = "importing";
 					$surveys[$key_survey_lists]['percentage'] = $percentage;
+					$is_refresh = true;
 					break;
 				case 3:
 					$surveys[$key_survey_lists]['publish_text'] = "Completed";
@@ -118,7 +123,7 @@ class Survey extends Eloquent {
 					break;
 			}
 		}
-		return $surveys;
+		return array($surveys,$is_refresh);
 	}
 
 	public static function getSurveys()
