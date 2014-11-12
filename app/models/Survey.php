@@ -106,8 +106,10 @@ class Survey extends Eloquent {
 						$percentage = ((int)$participant_count / (int)$queue->information) * 100;
 						$percentage = round($percentage);
 					}
-					elseif ((int)$queue->queue >= (int)$queue->information){
-						$percentage = 99;
+					elseif(isset($queue)){
+						if ((int)$queue->queue >= (int)$queue->information){
+							$percentage = 99;
+						}
 					}
 
 					$surveys[$key_survey_lists]['publish_text'] = "Importing ";
@@ -230,16 +232,20 @@ class Survey extends Eloquent {
 				}
 			}
 			// Set default question
-			$default_question = Question::join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
-			$default_question->is_default = 1;
-			$default_question->save();
+			$is_default_exist = Question::where('questions.is_default','=',1)->get();
+			
+			if (!isset($is_default_exist)) {
+				$default_question = Question::join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
+				$default_question->is_default = 1;
+				$default_question->save();
 
-			$answer_default = DB::table('answers')
-				->where('question_id', $default_question->id)
-				->where('cycle_id', $question_list['cycle_id'])
-				->update(array(
-         'cycle_default' => 1
+				$answer_default = DB::table('answers')
+					->where('question_id', $default_question->id)
+					->where('cycle_id', $question_list['cycle_id'])
+					->update(array(
+						'cycle_default' => 1
          ));
+			}
 
 		// 	DB::commit();
 		// 	$status = 1;
