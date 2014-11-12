@@ -74,9 +74,10 @@ class BackgroundCommand extends Command {
 			  $active_delayed_job_id = $delayed_jobs->id;
 
 			  // Import Data
-			  $status = Survey::importData($survey,$master_code,$excel_data);
+			  // $status = Survey::importData($survey,$master_code,$excel_data);
 
-			  DB::table('delayed_jobs')->where('id','=',$active_delayed_job_id)->delete();
+			  $active_delayed_job = DelayedJob::find($active_delayed_job_id);
+			  $active_delayed_job->delete();
 
 		    $question_default = Question::where('is_default','=',1)->count();
 		    if ($question_default == 0) {
