@@ -66,9 +66,9 @@ class BackgroundCommand extends Command {
 			  $excel_data = Survey::readHeader($survey->baseline_file, 'BZ', 1);
 
 			  $count_excel_data = count($excel_data);
-			  $next_queue = $delayed_jobs->queue + 100;
+			  $next_queue = $delayed_jobs->queue + 30;
 
-			  $excel_data_chop = array_slice($excel_data, $delayed_jobs->queue, 100);
+			  $excel_data_chop = array_slice($excel_data, $delayed_jobs->queue, 30);
 			  // Saving queue data
 			  $delayed_jobs->information = $count_excel_data;
 			  $delayed_jobs->queue = $next_queue;
@@ -79,6 +79,19 @@ class BackgroundCommand extends Command {
 			  // delete jobs
 			  if ($next_queue >= $count_excel_data) {
 			    $delayed_jobs->delete();
+
+			    $default_question_query = Question::select('questions.id','answers.cycle_id')->join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
+
+			    $default_question = Question::where('id','=',$default_question_query->id)->first();
+			    $default_question->is_default = 1;
+			    $default_question->save();
+
+			    $answer_default = DB::table('answers')
+			    	->where('question_id', $default_question_query->id)
+			    	->where('cycle_id', $default_question_query->cycle_id)
+			    	->update(array(
+			    		'cycle_default' => 1
+			    		));
 
 			    // Update publish status
 			    $survey->publish = 3;
