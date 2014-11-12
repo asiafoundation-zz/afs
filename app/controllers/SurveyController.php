@@ -132,7 +132,7 @@ class SurveyController extends AvelcaController {
 
 		$request_parse = json_encode(Input::get());
 
-		$insert_queue = DelayedJob::create(array('type' => 'importfile','data' => $request_parse,'survey_id' => $survey->id));
+		$insert_queue = DelayedJob::create(array('type' => 'importfile','data' => $request_parse,'survey_id' => $survey->id,'queue' => 1));
 
 		Session::flash('alert-class', 'alert-success'); 
 		Session::flash('message', 'Importing File is in progress');

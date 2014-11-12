@@ -33,7 +33,7 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 			Route::get('survey/category/{id}', 'SurveyController@getCategory');
 			Route::post('survey/category', 'SurveyController@postCategory');
 			Route::post('survey/import', 'SurveyController@postImport');
-			Route::post('survey/upload', 'SurveyController@postEndline');
+			// Route::post('survey/upload', 'SurveyController@postEndline');
 			Route::post('survey/region', 'SurveyController@postRegion');
 			Route::get('/survey/reupload', 'SurveyController@reupload');
 			Route::get('survey/managesurvey/{id}', 'SurveyController@getManagesurvey');

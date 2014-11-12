@@ -16,7 +16,9 @@ class DelayedJob extends Eloquent {
 	protected $fillable = array(
 		'type',
 		'data',
-		'survey_id'
+		'survey_id',
+		'queue',
+		'information'
 		);
 	protected $guarded = array('id');
 
@@ -24,7 +26,9 @@ class DelayedJob extends Eloquent {
 	public static $rules = array(
 		'data' => 'required',
 		'type' => 'required',
-		'survey_id' => 'required'
+		'survey_id' => 'required',
+		'queue' => 'required',
+		'information' => 'required'
 		);
 
 	/* Database Structure */
@@ -41,6 +45,14 @@ class DelayedJob extends Eloquent {
 			),
 			'survey_id' => array(
 			'type' => 'number',
+			'onIndex' => true
+			),
+			'queue' => array(
+			'type' => 'number',
+			'onIndex' => true
+			),
+			'information' => array(
+			'type' => 'text',
 			'onIndex' => true
 			)
 		);
