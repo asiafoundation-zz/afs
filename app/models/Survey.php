@@ -106,7 +106,7 @@ class Survey extends Eloquent {
 						$percentage = ((int)$participant_count / (int)$queue->information) * 100;
 						$percentage = round($percentage);
 					}
-					elseif(isset($queue)){
+					elseif(!isset($queue)){
 						if ((int)$queue->queue >= (int)$queue->information){
 							$percentage = 99;
 						}
@@ -234,7 +234,7 @@ class Survey extends Eloquent {
 			// Set default question
 			$is_default_exist = Question::where('questions.is_default','=',1)->get();
 			
-			if (!isset($is_default_exist)) {
+			if (!empty($is_default_exist)) {
 				$default_question = Question::join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
 				$default_question->is_default = 1;
 				$default_question->save();
