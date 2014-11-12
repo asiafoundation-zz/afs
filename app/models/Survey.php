@@ -223,7 +223,7 @@ class Survey extends Eloquent {
 				}
 			}
 			// Set default question
-			$default_question = Question::join('question_categories', 'question_categories.id','=','questions.question_category_id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
+			$default_question = Question::join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
 			$default_question->is_default = 1;
 			$default_question->save();
 
