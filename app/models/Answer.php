@@ -72,6 +72,22 @@ class Answer extends Eloquent {
 			$answer = Answer::create(array('answer' => $data, 'question_id' => $question_id, 'color_id' => rand(1,4),'cycle_id' => $cycle_id));
 		}
 
+		$update_answer_color = self::update_color($question_id, $cycle_id);
 		return $answer;
+	}
+
+	public static function update_color($question_id, $cycle_id)
+	{
+		$answers = DB::table('answers')->where('question_id', '=', $question_id)->where('cycle_id', '=', $cycle_id)->get();
+
+		foreach ($answers as $key_answers => $answer) {
+			$answer_default = DB::table('answers')
+		    		->where('id', $answer->id)
+		    		->update(array(
+		    			'color_id' => (int)$key_answers +1
+		    		));
+		}
+
+		return $answers;
 	}
 }

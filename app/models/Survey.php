@@ -148,8 +148,8 @@ class Survey extends Eloquent {
 	{
 		set_time_limit(0);
 		$status = 0;
-		// try{
-		// 	DB::beginTransaction();
+		try{
+			DB::beginTransaction();
 			foreach ($excel_data as $lists_data) {
 				$questions_list = array();
 				$category_items = array();
@@ -233,13 +233,13 @@ class Survey extends Eloquent {
 				}
 			}
 
-		// 	DB::commit();
-		// 	$status = 1;
-		// }
-		// catch(\PDOException $e){
-  //     DB::rollback();
-  //     $status = 0;
-  //   }
+			DB::commit();
+			$status = 1;
+		}
+		catch(\PDOException $e){
+      DB::rollback();
+      $status = 0;
+    }
     return $status;
 	}
 

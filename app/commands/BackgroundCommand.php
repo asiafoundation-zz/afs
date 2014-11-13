@@ -46,8 +46,11 @@ class BackgroundCommand extends Command {
 		
 		// $sleep = 60;
 		// while (true) {
-			$delayed_jobs = DelayedJob::where('type','=','importfile')->where('queue','=',1)->orderBy('id', 'DESC')->first();
-			if (isset($delayed_jobs)) {
+		$delayed_jobs = DelayedJob::where('type','=','importfile')->where('queue','=',1)->orderBy('id', 'DESC')->first();
+		if (isset($delayed_jobs)) {
+			try{
+				DB::beginTransaction();
+				
 				$data_parse = json_decode($delayed_jobs->data);
 
 			  $data = array();
@@ -98,7 +101,13 @@ class BackgroundCommand extends Command {
 		    // Update publish status
 		    $survey->publish = 3;
 		    $survey->save();
+
+		    DB::commit();
 			}
+			catch(\PDOException $e){
+	      DB::rollback();
+	    }
+		}
 		  // echo "Sleep for ".$sleep." seconds...\n";
 		  // sleep($sleep);
 		// }
