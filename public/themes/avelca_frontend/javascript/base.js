@@ -21,12 +21,14 @@ function chartjs(color_set,data_points,data_points_pie)
       indexLabelFontFamily: "DINNextLTPro-Regular",       
       indexLabelFontSize: 0,
       startAngle:0,
-      indexLabel: "{label} #percent%",
+      indexLabel: "{label} #percent",
+      // indexLabel: "{label} #percent%"
       indexLabelFontColor: "#ffffff",       
       indexLabelPlacement: "inside", 
       toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
       showInLegend: false,
-      indexLabel: "#percent%", 
+      indexLabel: "#percent", 
+      // indexLabel: "#percent%",
       dataPoints: data_points_pie
     }
     ]
