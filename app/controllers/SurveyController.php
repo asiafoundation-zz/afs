@@ -40,12 +40,15 @@ class SurveyController extends AvelcaController {
 	public function postIndex()
 	{
 		$request = Input::get();
+		$files = Input::file();
 		
 		if (!empty($request['survey_id'])) {
 			$survey = Survey::where('id', '=', $request['survey_id'])->first();
 			if(!empty($request['geojson'])){
 				$survey->geojson_file = $request['geojson'];
 				$survey->save();
+
+				self::postUpload($files);
 
 				Session::flash('alert-class', 'alert-success');
 				Session::flash('message', 'Save Succeed');
@@ -55,6 +58,8 @@ class SurveyController extends AvelcaController {
 			elseif (!empty($request['excel'])) {
 				$survey->baseline_file = $request['excel'];
 				$survey->save();
+
+				self::postUpload($files);
 
 				return Redirect::to('/admin/survey/category/'. $survey->id);
 			}elseif (isset($request['is_default'])) {
@@ -78,10 +83,11 @@ class SurveyController extends AvelcaController {
 
 			if($validator->passes())
 			{
-				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::get('excel'), 'geojson_file' => Input::get('geojson'),'publish' => 0));
+				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::file('excel')->getClientOriginalName(), 'geojson_file' => Input::file('geojson')->getClientOriginalName(),'publish' => 0));
 
 				if($survey)
 				{
+					self::postUpload($files);
 					return Redirect::to('/admin/survey/category/'. $survey->id);
 				}
 			}
@@ -92,15 +98,18 @@ class SurveyController extends AvelcaController {
 		}
 	}
 
-	public function postUpload(){
+	public function postUpload($files){
 		ini_set("memory_limit","200M");
 		
-		$filename = Input::file('file')->getClientOriginalName();
+		foreach ($files as $key_files => $file) {
+			$filename = $file->getClientOriginalName();
 
-		if(!file_exists($filename))
-		{
-			$uploaded = Input::file('file')->move('uploads/', $filename);	
+			if(!file_exists($filename))
+			{
+				$uploaded = $file->move('uploads/', $filename);	
+			}
 		}
+		
 		return Response::json($filename);
 	}
 

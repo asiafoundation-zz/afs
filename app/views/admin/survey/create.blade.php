@@ -17,7 +17,7 @@
 
 	<h3>Create survey</h3>
 	<div class="modal-body">
-		{{ Form::open(array('url' => '/admin/survey', 'class' => 'form-horizontal')) }}
+		{{ Form::open(array('url' => '/admin/survey', 'class' => 'form-horizontal', 'files'=>true)) }}
 
 		<div class="form-group">
 			{{ Form::label("Survey Name", "", array("class" => "control-label col-md-3")) }}

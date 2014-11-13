@@ -44,6 +44,15 @@
       <div class="col-md-12 dropdown-filter">
         <!-- <div class="col-xs-6 col-sm-3">Filter Participant by</div> -->
         <ul>
+          <!--
+          <li>
+            <select class="select-control" id="selectik-filter-region">
+              <option value="0">{{ Lang::get('frontend.all_region') }}</option>
+              @foreach ($regions as $region)
+              <option value="{{ $region['region_id'] }}">{{ $region['name'] }}</option>
+              @endforeach
+            </select>
+          </li>-->
           @foreach ($filters as $key_filters => $filter)
           <li>
             <select class="select-control">
