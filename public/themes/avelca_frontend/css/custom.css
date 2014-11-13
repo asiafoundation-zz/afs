@@ -41,3 +41,30 @@
 	background-color: #D2D2D2 !important;
 }
 /* end */
+
+.header-select .select2-container{
+	width : 31% !important;
+	margin : 10px !important;
+	-webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .3) !important;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .3) !important;
+}
+
+/*.header-select .select2-container .select2-choice{
+	height : 40px !important;
+}*/
+
+.select2-container .select2-choice > .select2-chosen{
+	margin-top: 8px;
+}
+
+.cross-question .select2-container{
+	width: 100%;
+}
+
+.cross-question .select2-container .select2-choice{
+	background-color: #f1f1f1 !important;
+}
+
+.cross-question .select2-drop{
+	background-color: #f1f1f1 !important;	
+}

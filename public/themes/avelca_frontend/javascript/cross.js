@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+  /*Define select2*/
+  $(function(){
+      $('.select-cycle, .select-category, .select-question, .cross-select-category, .cross-select-question').select2({});
+  });
+  
   $('.cross-question').hide();
   $('.chart-flag').show();
   
@@ -99,5 +104,4 @@ $(document).ready(function(){
 
     cycle_select(id_cycle);
   });
-
 })
