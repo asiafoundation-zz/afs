@@ -46,8 +46,8 @@
           @foreach ($filters as $key_filters => $filter)
           <li>
             <select class="select-control">
-              <option>{{ $key_filters }}</option>
-              @foreach ($filter as $filter_items)
+              <option>{{ $filter['category_name'] }}</option>
+              @foreach ($filter['category_items'] as $filter_items)
               <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
               @endforeach
             </select><!-- Custom Select -->

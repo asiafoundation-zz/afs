@@ -117,6 +117,7 @@
     var popupRegion;
 
     function resetHighlight(e) {
+      console.log(e.target);
       FilterSelect.region = "";
       geojson.resetStyle(e.target);
       $("#select_region_label").html("");
