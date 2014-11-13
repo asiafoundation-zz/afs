@@ -48,8 +48,8 @@ class BackgroundCommand extends Command {
 		// while (true) {
 		$delayed_jobs = DelayedJob::where('type','=','importfile')->where('queue','=',1)->orderBy('id', 'DESC')->first();
 		if (isset($delayed_jobs)) {
-			try{
-				DB::beginTransaction();
+			// try{
+			// 	DB::beginTransaction();
 				
 				$data_parse = json_decode($delayed_jobs->data);
 
@@ -58,7 +58,7 @@ class BackgroundCommand extends Command {
 			  foreach ($data_parse->options_selected as $key => $value) {
 			    $data['options_selected'][$key] = (array)$value;
 			  }
-
+			  
 			  $status = 0;
 			  $survey = Survey::where('id', '=', $data['survey_id'])->first();
 			  // save code
@@ -102,11 +102,11 @@ class BackgroundCommand extends Command {
 		    $survey->publish = 3;
 		    $survey->save();
 
-		    DB::commit();
-			}
-			catch(\PDOException $e){
-	      DB::rollback();
-	    }
+		 //    DB::commit();
+			// }
+			// catch(\PDOException $e){
+	  //     DB::rollback();
+	  //   }
 		}
 		  // echo "Sleep for ".$sleep." seconds...\n";
 		  // sleep($sleep);

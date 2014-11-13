@@ -70,9 +70,10 @@ class Answer extends Eloquent {
 		if(!isset($answer))
 		{
 			$answer = Answer::create(array('answer' => $data, 'question_id' => $question_id, 'color_id' => rand(1,4),'cycle_id' => $cycle_id));
+
+			$update_answer_color = self::update_color($question_id, $cycle_id);
 		}
 
-		$update_answer_color = self::update_color($question_id, $cycle_id);
 		return $answer;
 	}
 
@@ -87,7 +88,5 @@ class Answer extends Eloquent {
 		    			'color_id' => (int)$key_answers +1
 		    		));
 		}
-
-		return $answers;
 	}
 }
