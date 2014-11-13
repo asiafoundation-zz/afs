@@ -117,7 +117,6 @@
     var popupRegion;
 
     function resetHighlight(e) {
-      console.log(e.target);
       FilterSelect.region = "";
       geojson.resetStyle(e.target);
       $("#select_region_label").html("");
@@ -144,6 +143,8 @@
       LoadDataHighligtArea(layer);
       $("#select_region_label").html(layer.feature.properties.nm_provinsi);
 
+      // Remove tooltip
+      map.removeLayer(popupRegion);
       // Load new data 
       find_survey_dynamic();
     }
