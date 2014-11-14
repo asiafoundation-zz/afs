@@ -230,7 +230,6 @@ class Survey extends Eloquent {
 
 						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
 					}
-					$global_cycle_id = $question_list['cycle_id'];
 				}
 			}
 
