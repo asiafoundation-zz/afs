@@ -4,7 +4,7 @@
       <div class="form-group cross-category">
         <label>{{ Lang::get('frontend.select_category') }}</label>
         <select class="cross-select-category">
-        <option disabled>Category</option>
+        <option disabled>{{ Lang::get('frontend.select_category') }}</option>
         @foreach ($question_categories as $question_category)
           <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
         @endforeach
@@ -16,7 +16,7 @@
     <div class="form-group cross-question">
       <label>{{ Lang::get('frontend.select_question') }}</label>
       <select class="cross-select-question">
-      <option>Question</option>
+      <option>{{ Lang::get('frontend.select_question') }}</option>
       @foreach ($question_lists as $question_list)
         <option value="{{ $question_list->id }}"> - {{ $question_list->question }}</option>
       @endforeach

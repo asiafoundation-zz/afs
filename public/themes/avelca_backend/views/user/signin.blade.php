@@ -5,7 +5,7 @@
   <head>
 
     <meta charset="utf-8">
-    <title>SURVEY Q Admin - Login</title>
+    <title>Asia Foundation Survey - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {{ HTML::style(Theme::asset('css/login.css')) }}
     {{ HTML::style(Theme::asset('css/bootstrap.min.css')) }}

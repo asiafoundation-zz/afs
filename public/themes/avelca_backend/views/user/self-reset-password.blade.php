@@ -20,9 +20,9 @@
 	<hr>
 	{{ HTML::link('signin', 'Sign In') }} 
 
-	@if(Setting::meta_data('user_management', 'allow_sign_up')->selected == 1)
-	<span class="pull-right">{{ HTML::link('signup', 'Sign Up') }}</span>
-	@endif
+	<?php //@if(Setting::meta_data('user_management', 'allow_sign_up')->selected == 1)?>
+	<!-- <span class="pull-right"><?php //{{ HTML::link('signup', 'Sign Up') }} ?></span> -->
+	<?php //@endif ?>
 
 </div>
 

@@ -29,12 +29,12 @@
 
 	<div class="container">
 
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col-md-4 col-md-offset-4 text-center">
 				<br>
-				<a href="{{ URL::to('/') }}">{{ HTML::image(Theme::asset('images/logo.png')) }}</a>
+				<a href="{{ URL::to('/') }}"><?php //{{ HTML::image(Theme::asset('images/logo.png')) }} ?></a>
 			</div>
-		</div>
+		</div> -->
 
 		<div class="row">
 			<div class="col-md-4 col-md-offset-4">

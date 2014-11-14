@@ -2,7 +2,7 @@
 <html id="newhome" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SURVEY Q - Oops!</title>
+    <title>Asia Foundation Survey - Oops!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Loading Bootstrap -->
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/bootstrap.min.css') }}">
@@ -21,13 +21,13 @@
   <body>
   
   <section class="maintenance">
-    <a class="logo" href="#"><img src="img/logo.png"></a>
+    <!-- <a class="logo" href="#"><img src="{{ Theme::asset('img/logo.png') }}"></a> -->
     <div class="container">
       <div class="col-md-6">
         <i class="detective"></i>
       </div>
       <div class="col-md-6">
-        <h1>SurveyQ Will Be Back Soon</h1>
+        <h1>Asia Foundation Survey Will Be Back Soon</h1>
         <p>
           We apologize for the inconvenience, but we are unable to process your request at this time. Our detective have been notified of this problem and will work to resolve it.
         </p>
