@@ -4,7 +4,7 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
-		$survey = DB::table('surveys')->first();
+		$survey = DB::table('surveys')->where('is_default','=',1)->first();
 
 		if (!count($survey)) {
 			return View::make('error.404');
