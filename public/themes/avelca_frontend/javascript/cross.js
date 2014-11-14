@@ -90,7 +90,6 @@ $(document).ready(function(){
   });
 
   $('.select-category').change(function(){
-    console.log($(this).val());
     FilterSelect.category = parseInt($(this).val());
 
     $.ajax({
@@ -100,6 +99,7 @@ $(document).ready(function(){
         'id_cat' : $(this).val(),
       },
       success : function(data){
+        $('.header-select #select-question option').remove()
         $.each(data, function(index, obj){
           $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
         });
