@@ -16,10 +16,6 @@ $(document).ready(function(){
     $('.chart-flag').hide();
   });
 
-  /*$('.select-category').change(function(){
-      
-  });*/
-
   $('.cross-select-question').change(function(){
       console.log($(this).val());
 
@@ -91,6 +87,10 @@ $(document).ready(function(){
     $('.cross-question').hide().css('display', 'none').fadeOut('slow');
     $('.chart-flag').show();
     find_survey();
+  });
+
+  $('.select-category').change(function(){
+    FilterSelect.category = parseInt($(this).val());  
   });
 
   $('.select-question').change(function(e){
