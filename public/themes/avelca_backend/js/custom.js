@@ -118,9 +118,7 @@ function category_clicked(category,category_question,code,number,label,base) {
 		category:page,
 		category_question:category_question,
 		code:code,
-		number:number,
-		label:label,
-		base:base
+		label:label
 	});
 
 	// Remove option selected from header select

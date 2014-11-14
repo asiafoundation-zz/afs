@@ -137,26 +137,23 @@ class Category extends Eloquent {
 				'questions.id as question_id',
 				'answers.id as answer_id',
 				'answers.answer as answer',
-				'question_participants.participant_id as participant_id'
-				)
-			->join('answers','answers.question_id','=','questions.id')
-			->join('question_participants','question_participants.answer_id','=','answers.id')
-			->where('questions.id','=',$request['question_id'])
-			->where('answers.cycle_id','=',$request['cycle_id'])
-			->get();
-
-		$get_participants = DB::table('categories')
-			->select(
+				'question_participants.participant_id as participant_id',
 				'categories.id as category_id',
 				'categories.name as category',
 				'category_items.id as category_item_id',
 				'category_items.name as category_item',
 				'filter_participants.participant_id'
 				)
-			->join('category_items','category_items.category_id','=','categories.id')
-			->join('filter_participants','filter_participants.category_item_id','=','category_items.id')
+			->join('answers','answers.question_id','=','questions.id')
+			->join('question_participants','question_participants.answer_id','=','answers.id')
+			->join('participants','participants.id','=','question_participants.participant_id')
+			->join('filter_participants','filter_participants.participant_id','=','participants.id')
+			->join('category_items','category_items.id','=','filter_participants.category_item_id')
+			->join('categories','categories.id','=','category_items.category_id')
+			->where('questions.id','=',$request['question_id'])
+			->where('question_participants.sample_type','=',0)
+			->where('answers.cycle_id','=',$request['cycle_id'])
 			->where('categories.survey_id','=',$request['survey_id'])
-			// ->groupBy('category_item')
 			->get();
 
 		$data_query_headers=DB::table('categories')
@@ -187,17 +184,13 @@ class Category extends Eloquent {
 			$datas[$get_answer->answer_id]['answer_id'] = $get_answer->answer_id;
 			$datas[$get_answer->answer_id]['answer'] = $get_answer->answer;
 
-			foreach ($get_participants as $key_get_participants => $get_participant) {
-				if ($get_answer->participant_id == $get_participant->participant_id) {
-					$datas[$get_answer->answer_id]['category_id'] = $get_participant->category_id;
+			$datas[$get_answer->answer_id]['category_id'] = $get_answer->category_id;
 
-					// To count participant choose certain answer with certain category
-					$count = isset($datas[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]['count']) ? $datas[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]['count'] : 0;
+			// To count participant choose certain answer with certain category
+			$count = isset($datas[$get_answer->answer_id]['answer_category'][$get_answer->category_item_id]['count']) ? $datas[$get_answer->answer_id]['answer_category'][$get_answer->category_item_id]['count'] : 0;
 
-					$datas[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]['count'] = $count + 1;
-					$datas[$get_answer->answer_id]['answer_category'][$get_participant->category_item_id]['category_item_id'] = $get_participant->category_item_id;
-				}
-			}
+			$datas[$get_answer->answer_id]['answer_category'][$get_answer->category_item_id]['count'] = $count + 1;
+			$datas[$get_answer->answer_id]['answer_category'][$get_answer->category_item_id]['category_item_id'] = $get_answer->category_item_id;
 		}
 
 		/*

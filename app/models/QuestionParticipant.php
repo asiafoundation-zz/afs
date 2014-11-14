@@ -56,12 +56,12 @@ class QuestionParticipant extends Eloquent {
 		return $this->belongsTo('Participant');
 	}
 
-	public static function checkData($answer_id,$participant_id,$region_id)
+	public static function checkData($answer_id,$participant_id,$region_id,$sample_type)
 	{
-		$question_participant = QuestionParticipant::where('answer_id', '=', $answer_id)->where('participant_id', '=', $participant_id)->where('region_id', '=', $region_id)->first();
+		$question_participant = QuestionParticipant::where('answer_id', '=', $answer_id)->where('participant_id', '=', $participant_id)->where('region_id', '=', $region_id)->where('sample_type', '=', $sample_type)->first();
 		if(!isset($question_participant))
 		{
-			$question_participant = QuestionParticipant::create(array('answer_id' => $answer_id,'participant_id' => $participant_id,'region_id' => $region_id));
+			$question_participant = QuestionParticipant::create(array('answer_id' => $answer_id,'participant_id' => $participant_id,'region_id' => $region_id,'sample_type' => $sample_type));
 		}
 		return $question_participant;
 	}

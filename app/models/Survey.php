@@ -194,6 +194,7 @@ class Survey extends Eloquent {
 								$question_category = QuestionCategory::checkData($data,$master_code[$column]['code_id'],$survey->id);
 
 								$questions_list[$j]['cycle_id'] = $cycle_id;
+								$questions_list[$j]['sample_type'] = $oversample_id;
 								$questions_list[$j]['data'] = $data;
 								$questions_list[$j]['code_id'] = $master_code[$column]['code_id'];
 								$questions_list[$j]['question_category_id'] = $question_category->id;
@@ -227,7 +228,7 @@ class Survey extends Eloquent {
 						$question = Question::checkData('',$question_list['code_id'],$question_list['question_category_id']);
 						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'], $key);
 
-						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id);
+						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
 					}
 					$global_cycle_id = $question_list['cycle_id'];
 				}
