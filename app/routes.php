@@ -74,3 +74,7 @@ Route::group(array('prefix' => LaravelLocalization::setLocale(), 'before' => 'fr
 });
 
 Route::post('cross', 'AnswerController@postCross');
+Route::post('loadcategory', function(){
+	$question = Question::where('question_category_id', '=', Input::get('id_cat'))->get();
+	return Response::json($question);
+});

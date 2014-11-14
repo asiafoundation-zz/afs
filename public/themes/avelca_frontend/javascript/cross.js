@@ -91,7 +91,21 @@ $(document).ready(function(){
 
   $('.select-category').change(function(){
     console.log($(this).val());
-    FilterSelect.category = parseInt($(this).val());    
+    FilterSelect.category = parseInt($(this).val());
+
+    $.ajax({
+      type : 'post',
+      url : 'loadcategory',
+      data : {
+        'id_cat' : $(this).val(),
+      },
+      success : function(data){
+        $.each(data, function(index, obj){
+          $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
+        });
+      }
+
+    });    
   });
 
   $('.select-question').change(function(e){
