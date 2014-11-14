@@ -90,7 +90,8 @@ $(document).ready(function(){
   });
 
   $('.select-category').change(function(){
-    FilterSelect.category = parseInt($(this).val());  
+    console.log($(this).val());
+    FilterSelect.category = parseInt($(this).val());    
   });
 
   $('.select-question').change(function(e){
