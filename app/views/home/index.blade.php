@@ -29,11 +29,9 @@
         <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
-      <select class="select2-custom select-question">
+      <select class="select2-custom select-question" id="select-question">
         <option>{{ Lang::get('frontend.select_question') }}</option>
-        @foreach ($question_lists as $question_list)
-        <option value="{{ $question_list->id }}"> - {{ $question_list->question }}</option>
-        @endforeach
+        
       </select><!-- Custom Select -->
     </div>
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>
