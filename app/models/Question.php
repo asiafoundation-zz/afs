@@ -92,7 +92,9 @@ class Question extends Eloquent {
 					cycles.id  as id_cycle,
 					cycles.cycle_type  as cycle_type,
 					cycles.name as cycle,
-					(SELECT count(id) from question_participants where question_participants.region_id = id_region and question_participants.answer_id = id_answer) AS amount,
+					(SELECT sum(amounts.amount) 
+						from amounts 
+						where amounts.answer_id = id_answer) AS amount,
 					0 AS indexlabel';
 		}else
 		{
@@ -107,7 +109,9 @@ class Question extends Eloquent {
 					cycles.id  as id_cycle,
 					cycles.cycle_type  as cycle_type,
 					cycles.name as cycle,
-					(SELECT count(id) from question_participants where question_participants.answer_id = id_answer) AS amount,
+					(SELECT sum(amounts.amount) 
+						from amounts 
+						where amounts.answer_id = id_answer) AS amount,
 					0 AS indexlabel';
 		}
 
