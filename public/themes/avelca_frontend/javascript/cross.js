@@ -92,23 +92,18 @@ $(document).ready(function(){
   $('.select-category').change(function(){
     FilterSelect.category = parseInt($(this).val());
 
-    $.ajax({
-      type : 'post',
-      url : 'loadcategory',
-      data : {
-        'id_cat' : $(this).val(),
-      },
-      success : function(data){
-        $('.header-select #select-question option').remove()
+    $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val()} )
+    .done(function(data){
+      $('.header-select #select-question option').remove()
         $.each(data, function(index, obj){
           $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
         });
-      }
+      })
 
-    });    
   });
 
   $('.select-question').change(function(e){
+    console.log($(this).val());
     FilterSelect.question = parseInt($(this).val());
     find_survey();
   });
