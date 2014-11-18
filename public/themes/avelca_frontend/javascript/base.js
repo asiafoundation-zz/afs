@@ -27,7 +27,7 @@ function chartjs(color_set,data_points,data_points_pie)
       indexLabelPlacement: "inside", 
       toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
       showInLegend: false,
-      indexLabel: "#percent", 
+      indexLabel: " ", 
       // indexLabel: "#percent%",
       dataPoints: data_points_pie
     }

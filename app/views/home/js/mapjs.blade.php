@@ -97,6 +97,15 @@
         fillColor: getColorDynamic(feature.properties.nm_provinsi)
       };
     }
+    function highlightDynamic(feature) {
+      return {
+        weight: 3,
+        opacity: 1,
+        fillColor: '#B2B0B8',
+        dashArray: '1',
+        fillOpacity: 0.7
+      };
+    }
     function highlightFeature(e) {
       var layer = e.target;
 

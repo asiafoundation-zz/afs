@@ -110,11 +110,15 @@
      function filter_option(category_id)
      {
         var option_filters = [];
+        var is_region = false;
         $(".dropdown-filter .selected_filter_option").each(function(){
-          var data_value = $(this).attr("data-value");
-
-          if(data_value % 1 === 0){
-            option_filters += $(this).attr("data-value")+",";
+          if ($(this).attr("data-type") === 'region') {
+            FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
+          }else{
+            var data_value = $(this).attr("data-value");
+            if(data_value % 1 === 0){
+              option_filters += $(this).attr("data-value")+",";
+            }
           }
         });
 
@@ -291,26 +295,22 @@
               DefaultSelectAssign(DefaultSelect);
             }
           },"html");
-     }
+    }
 
-     function change_category()
-     {
-        // Get cycles functions
-        // $.get( "filter-select", { SelectedFilter:"change_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cyclee} )
-        //   .done(function( data ) {
-        //     if (data != false) {
-        //       $("#div-filter-question").html('<div class="dropdown-path">'+data+'</div>');
+    function filter_option_regions(region_id,region_text)
+    {
+      $(".title-filters").each(function(){
+          if ($(this).attr("data-type") === 'region') {
+            FilterSelect.region = region_id;
+          }else{
+            var title = $(this).attr("data-title");
+            console.log(title);
+            $('#custom-text-title-'+title).text(title);
+          }
+        });
 
-        //       DefaultSelectAssign(FilterSelect);
-        //     }else
-        //     {
-        //       alert("{{Lang::get('frontend.empty_data')}}");
-        //       // Re assingn Filter data
-        //       DefaultSelectAssign(DefaultSelect);
-        //     }
-        //   },"html");
-        return false;
-     }
+      // find_survey();
+    }
 
     function color_set(assign_color)
     {
