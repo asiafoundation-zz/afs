@@ -14,13 +14,16 @@
                 FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
               }
             }
-
             // cycle list
+            var data_cycles_length = 0;
             var cycle_list = "";
             var data_cycles = data.cycles;
             for (var key in data_cycles) {
               if (data_cycles.hasOwnProperty(key)) {
-                cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'</a></li>'; 
+                cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'</a></li>';
+
+                // Count Data
+                data_cycles_length=key;
               }
             }
 
@@ -39,7 +42,12 @@
             $("#select_cycle_label").html(cycle_text);
             $("#select_category_label").html(data.default_question.question_categories.slice(0,15)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
-            $(".chart-pagination").html('<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+
+            // Is Has Compare Cycle
+            var is_has_compare = data_cycles_length > 0 ? 'onclick="compare_cycle(0)"' : '';
+            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" '+is_has_compare+'>{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+
+            $(".chart-pagination").html(chart_pagination);
 
             // Re assign map
             dynamicRegions = data.regions;
@@ -133,7 +141,19 @@
 
               $("#chart_canvas").html('<div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div><div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>');
               chartjs(color_set_data,data_points_data,data_points_pie_data);
-              $(".chart-pagination").html('<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+
+              // Is Has Compare Cycle
+              var data_cycles_length = 0;
+              var data_cycles = data.cycles;
+              for (var key in data_cycles) {
+                if (data_cycles.hasOwnProperty(key)) {
+                data_cycles_length=key;
+                }
+              }
+              var is_has_compare = data_cycles_length > 0 ? 'onclick="compare_cycle(0)"' : '';
+              var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" '+is_has_compare+'>{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+              $(".chart-pagination").html(chart_pagination);
+
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
             }else
@@ -340,8 +360,15 @@
         var data_list = [];
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
+            var label = assign_answer[key]['answer'];
+
+            if (label.match(/./g).length > 20){
+              label = label.substr(0, 20);
+              label = label+" ...";
+            }
+
             data_list.push(
-              { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer'],indexLabel:assign_answer[key]['indexlabel']+"%"}
+              { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer'],indexLabel:assign_answer[key]['indexlabel']+"%"}
               );
           }
         }

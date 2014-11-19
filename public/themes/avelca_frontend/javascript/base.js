@@ -3,6 +3,7 @@
 */
 function chartjs(color_set,data_points,data_points_pie)
 {
+  console.log(data_points);
   // PIE CHART
   CanvasJS.addColorSet("greenShades",color_set);
 
@@ -47,21 +48,22 @@ function chartjs(color_set,data_points,data_points_pie)
           gridThickness: 0                   
       },
       axisX: {
-          tickThickness: 0,
-          lineThickness: 0,
-          labelFontSize: 18,
-          labelFontColor: "gray"
+          tickThickness: 1,
+          lineThickness: 1,
+          labelFontSize: 12,
+          labelFontColor: "gray",
+          labelAutoFit: true,
 
       },
       data: [
       {
-          indexLabelFontSize: 24,
+          indexLabelFontSize: 16,
           labelFontFamily: "DINNextLTPro-Regular",
           labelFontColor: "gray",
-          labelFontSize: 18,
+          labelFontSize: 14,
           indexLabelFontColor: "gray",
           indexLabelFontFamily: "DINNextLTPro-Regular",
-          indexLabelPlacement:"inside",
+          indexLabelPlacement:"outside",
           type: "bar",
           click: function(e){
             detail_chart(e.dataPoint.answer_id,0,0)
@@ -124,7 +126,7 @@ function detail_chart_js(data)
       label = label.substr(0, 12);
       label = label+" ...";
     }
-    
+
     total_participant += parseInt(data[i].amount); 
     data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: label});
   };
