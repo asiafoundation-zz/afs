@@ -16,7 +16,9 @@
 		"barryvdh/laravel-dompdf": "0.4.*",
 		"maatwebsite/excel": "dev-master",
 		"lucadegasperi/oauth2-server-laravel": "1.0.x",
-		"marcelgwerder/laravel-api-handler": "0.3.*"
+		"marcelgwerder/laravel-api-handler": "0.3.*",
+		"zizaco/mongolid": "dev-master",
+    "zizaco/mongolid-laravel": "dev-master"
 		},
 		"autoload": {
 			"classmap": [

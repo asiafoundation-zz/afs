@@ -50,21 +50,22 @@ class BackgroundCommand extends Command {
 		if (isset($delayed_jobs)) {
 			// try{
 			// 	DB::beginTransaction();
-				
-				$data_parse = json_decode($delayed_jobs->data);
-
-			  $data = array();
-			  $data['survey_id'] = $data_parse->survey_id;
-			  foreach ($data_parse->options_selected as $key => $value) {
-			    $data['options_selected'][$key] = (array)$value;
-			  }
 			  
 			  $status = 0;
-			  $survey = Survey::where('id', '=', $data['survey_id'])->first();
-			  // save code
-			  $codes = MasterCode::savingProcess($data);
+			  $survey = Survey::where('id', '=', $delayed_jobs->survey_id)->first();
+
+			  // Load data from collections MonggoDB and saving master code and codes
+			  $cursors = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id]);
+			  foreach ($cursors as $key => $cursor) {
+			  	$codes = MasterCode::savingProcess($cursor);
+
+			  	// Delete document in collections monggodb
+			  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id,'queueline'=>(string)$cursor->queueline]);
+			  	$assign_delete->delete();
+			  }
+
 			  // Load Master Code Data
-			  $master_code = MasterCode::loadData($data);
+			  $master_code = MasterCode::loadData($delayed_jobs->survey_id);
 			  // Load Excel Data
 			  $excel_data = Survey::readHeader($survey->baseline_file, 'BZ', 1);
 
