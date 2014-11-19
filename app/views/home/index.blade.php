@@ -106,8 +106,8 @@
   <section class="compare-survey">
     <div class="container">
       <div class="col-md-6">
-        <h4>{{ Lang::get('frontend.description') }}</h4>
-        <p>{{ Lang::get('frontend.description_content') }}</p>
+        <h4><b>{{ Lang::get('frontend.description') }}</b></h4>
+        {{ Lang::get('frontend.description_content') }}
       </div>
       <div class="col-md-6">
         <div class="extras">
