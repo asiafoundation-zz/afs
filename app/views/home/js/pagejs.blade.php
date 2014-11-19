@@ -282,7 +282,7 @@
         $.get( "filter-select", { SelectedFilter:"detail_chart",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answer_id:answer_id, category_filter: category_id, FilterMove:move} )
           .done(function( data ) {
             if (data != false) {
-              $("#chart_canvas").html('<div class="col-md-12"><div id="detailChart" style="height: 345px; width: 100%;"></div></div>');
+              $("#chart_canvas").html('<div class="col-md-12"><div id="detailChart" style="margin-top: 5px; height: 345px; width: 100%;"></div></div>');
               detail_chart_js(data.question);
 
               // Re assingn Filter data

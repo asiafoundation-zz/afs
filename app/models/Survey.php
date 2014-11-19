@@ -157,7 +157,6 @@ class Survey extends Eloquent {
 				foreach ($lists_data as $column => $data) {
 
 					if (!empty($master_code[$column])) {
-
 						// remove special characters and number
 						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
 
@@ -191,13 +190,20 @@ class Survey extends Eloquent {
 								break;
 							case 4:
 								// Check answers exist
-								$question_category = QuestionCategory::checkData($data,$master_code[$column]['code_id'],$survey->id);
+								$question_category = Question::select(
+													DB::raw(
+																'question_categories.id as question_category_id'
+															)
+														)
+													->join('question_categories', 'question_categories.id', '=', 'questions.question_category_id')
+													->where('questions.code_id', '=', $master_code[$column]['code_id'])
+													->first();
 
 								$questions_list[$j]['cycle_id'] = $cycle_id;
 								$questions_list[$j]['sample_type'] = $oversample_id;
 								$questions_list[$j]['data'] = $data;
 								$questions_list[$j]['code_id'] = $master_code[$column]['code_id'];
-								$questions_list[$j]['question_category_id'] = $question_category->id;
+								$questions_list[$j]['question_category_id'] = $question_category->question_category_id;
 								$j++;
 								break;
 
@@ -212,23 +218,22 @@ class Survey extends Eloquent {
 				$participant = new Participant;
 				$participant->survey_id = $survey->id;
 				$participant->save();
+				foreach ($questions_list as $key => $question_list) {
+					if (!empty($question_list['data'])) {
+						$question = Question::checkData('',$question_list['code_id'],$question_list['question_category_id']);
+						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'], $key, $question->id);
+						
+						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
+					}
+				}
+
 				foreach ($category_items as $category_item) {
 					if (!empty($category_item['data'])) {
 						$category_item_data = CategoryItem::checkData($category_item['data'],$category_item['category_id']);
-
 						$filter_participant = new FilterParticipant;
 						$filter_participant->category_item_id = $category_item_data->id;
 						$filter_participant->participant_id = $participant->id;
 						$filter_participant->save();
-					}
-				}
-
-				foreach ($questions_list as $key => $question_list) {
-					if (!empty($question_list['data'])) {
-						$question = Question::checkData('',$question_list['code_id'],$question_list['question_category_id']);
-						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'], $key);
-
-						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
 					}
 				}
 			}

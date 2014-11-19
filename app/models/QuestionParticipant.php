@@ -58,10 +58,17 @@ class QuestionParticipant extends Eloquent {
 
 	public static function checkData($answer_id,$participant_id,$region_id,$sample_type)
 	{
-		$question_participant = QuestionParticipant::where('answer_id', '=', $answer_id)->where('participant_id', '=', $participant_id)->where('region_id', '=', $region_id)->where('sample_type', '=', $sample_type)->first();
+		$question_participant = QuestionParticipant::where('answer_id', '=', $answer_id)
+			->where('participant_id', '=', $participant_id)
+			->where('region_id', '=', $region_id)
+			->where('sample_type', '=', $sample_type)
+			->first();
+
 		if(!isset($question_participant))
 		{
 			$question_participant = QuestionParticipant::create(array('answer_id' => $answer_id,'participant_id' => $participant_id,'region_id' => $region_id,'sample_type' => $sample_type));
+
+			$amount = Amount::checkData($answer_id, $region_id, $sample_type, $participant_id);
 		}
 		return $question_participant;
 	}

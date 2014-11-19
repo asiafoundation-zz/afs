@@ -200,6 +200,11 @@ class HomeController extends BaseController {
 					return $return;
 					break;
 
+				case 'loadcategory':
+					$question = Question::where('question_category_id', '=', Input::get('category'))->get();
+					return Response::json($question);
+					break;
+
 				default:
 					return 0;
 					break;
