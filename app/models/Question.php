@@ -120,13 +120,13 @@ class Question extends Eloquent {
 					->join('question_categories','questions.question_category_id','=','question_categories.id')
 					->join('answers','answers.question_id','=','questions.id')
 					->join('cycles','cycles.id','=','answers.cycle_id')
-					->join('colors','answers.color_id','=','colors.id')
-					->join('question_participants','question_participants.answer_id','=','answers.id');
+					->join('amounts','amounts.answer_id','=','answers.id')
+					->join('colors','answers.color_id','=','colors.id');
 
 		if (!empty($request['region'])) {
-			$questions =  $questions->leftjoin('regions','regions.id','=','question_participants.region_id');
+			$questions =  $questions->leftjoin('regions','regions.id','=','answers.region_id');
 		}
-		$questions =  $questions->where('question_participants.sample_type','=',0);
+		$questions = $questions->where('amounts.sample_type', '=', 0);
 
 		return $questions;
 	}

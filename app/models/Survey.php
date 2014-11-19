@@ -236,6 +236,9 @@ class Survey extends Eloquent {
 						$filter_participant->save();
 					}
 				}
+
+				AmountFilter::checkData($participant->id);
+
 			}
 
 		// 	DB::commit();
