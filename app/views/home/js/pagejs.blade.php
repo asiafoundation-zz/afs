@@ -304,7 +304,6 @@
             FilterSelect.region = region_id;
           }else{
             var title = $(this).attr("data-title");
-            console.log(title);
             $('#custom-text-title-'+title).text(title);
           }
         });

@@ -3,7 +3,6 @@
 */
 function chartjs(color_set,data_points,data_points_pie)
 {
-  console.log(data_points);
   // PIE CHART
   CanvasJS.addColorSet("greenShades",color_set);
 
@@ -117,9 +116,17 @@ function detail_chart_js(data)
   var total_participant = 0;
 
   for (i = 0; i < data.length; i++) {
+    // Cut String
     var data_text = data[i].category_name;
+    var label = data[i].category_item_name;
+    
+    if (label.match(/./g).length > 12){
+      label = label.substr(0, 12);
+      label = label+" ...";
+    }
+    
     total_participant += parseInt(data[i].amount); 
-    data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: data[i].category_item_name});
+    data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: label});
   };
 
   CanvasJS.addColorSet("hellowYellow",
@@ -144,8 +151,7 @@ function detail_chart_js(data)
       gridThickness: 1
     },
     axisX: {
-      labelFontSize: 18,
-      tickLength: 10
+      labelFontSize: 12
     },
     colorSet: "hellowYellow",
     data: [
