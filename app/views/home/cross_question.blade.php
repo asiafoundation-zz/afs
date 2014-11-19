@@ -4,9 +4,10 @@
       <div class="form-group cross-category">
         <label>{{ Lang::get('frontend.select_category') }}</label>
         <select class="cross-select-category">
-        <option disabled>{{ Lang::get('frontend.select_category') }}</option>
+        <option>{{ Lang::get('frontend.select_category') }}</option>
         @foreach ($question_categories as $question_category)
-          <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
+          <?php $question_category_name = $question_category->name != "" ? $question_category->name : "OTHER CATEGORY" ?>
+          <option value="{{ $question_category->id }}">{{ $question_category_name }}</option>
         @endforeach
         </select><!-- Custom Select -->
       </div>
@@ -15,12 +16,8 @@
     <div class='col-xs-6'>
     <div class="form-group cross-question">
       <label>{{ Lang::get('frontend.select_question') }}</label>
-      <select class="cross-select-question">
+      <select class="cross-select-question" id="cross-select-question">
       <option>{{ Lang::get('frontend.select_question') }}</option>
-      @foreach ($question_lists as $question_list)
-        <option value="{{ $question_list->id }}"> - {{ $question_list->question }}</option>
-      @endforeach
-      <option>Option Name 2</option>
       </select><!-- Custom Select -->
     </div>
     </div>

@@ -91,15 +91,25 @@ $(document).ready(function(){
 
   $('.select-category').change(function(){
     FilterSelect.category = parseInt($(this).val());
-
+    var value = $(this).val();
     $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val()} )
     .done(function(data){
       $('.header-select #select-question option').remove()
-        $.each(data, function(index, obj){
-          $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
-        });
-      })
+      $.each(data, function(index, obj){
+        $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
+      });
+    });
+  });
 
+  $('.cross-select-category').change(function(){
+    var value = $(this).val();
+    $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val()} )
+    .done(function(data){
+      $('#cross-select-question option').remove()
+      $.each(data, function(index, obj){
+        $('#cross-select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
+      });
+    });
   });
 
   $('.select-question').change(function(e){
