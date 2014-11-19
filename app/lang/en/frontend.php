@@ -7,6 +7,7 @@ return array(
 	"select_category" => "Select Category",
 	"select_question" => "Select Question",
 	"find_surveys" => "Find Surveys",
+	"filter_by" => "Filter By",
 	"filter_by_age" => "Age",
 	"filter_by_income" => "Income",
 	"filter_by_education" => "Education",

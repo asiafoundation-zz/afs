@@ -3,6 +3,7 @@
 */
 function chartjs(color_set,data_points,data_points_pie)
 {
+  console.log(data_points);
   // PIE CHART
   CanvasJS.addColorSet("greenShades",color_set);
 
@@ -21,14 +22,13 @@ function chartjs(color_set,data_points,data_points_pie)
       indexLabelFontFamily: "DINNextLTPro-Regular",       
       indexLabelFontSize: 0,
       startAngle:0,
-      indexLabel: "{label} #percent",
+      // indexLabel: "{label} #percent",
       // indexLabel: "{label} #percent%"
       indexLabelFontColor: "#ffffff",       
       indexLabelPlacement: "inside", 
       toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
       showInLegend: false,
       indexLabel: " ", 
-      // indexLabel: "#percent%",
       dataPoints: data_points_pie
     }
     ]

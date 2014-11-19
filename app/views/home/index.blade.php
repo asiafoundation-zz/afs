@@ -31,7 +31,6 @@
       </select><!-- Custom Select -->
       <select class="select2-custom select-question" id="select-question">
         <option>{{ Lang::get('frontend.select_question') }}</option>
-        
       </select><!-- Custom Select -->
     </div>
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>
@@ -39,31 +38,42 @@
 
   <section class="filter">
     <div class="container">
-      <div class="col-md-12 dropdown-filter">
-        <!-- <div class="col-xs-6 col-sm-3">Filter Participant by</div> -->
-        <ul>
-<!--           <li>
-            <select class="select-control">
-              <option class="selectik-filter-region">{{ Lang::get('frontend.all_region') }}</option>
-              @foreach ($regions as $region)
-              <option value="{{ $region['region_id'] }}" class="selectik-filter-region">{{ $region['name'] }}</option>
-              @endforeach
-            </select>
-          </li> -->
-          @foreach ($filters as $key_filters => $filter)
-          <li>
-            <select class="select-control">
-              <option>{{ $filter['category_name'] }}</option>
-              @foreach ($filter['category_items'] as $filter_items)
-              <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
-              @endforeach
-            </select><!-- Custom Select -->
-          </li>
-          @endforeach
-          <li>
-						<a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
-          </li>
-        </ul>
+      <div class="row">
+        <div class="col-md-1">
+          &nbsp;
+        </div>
+        <div class="col-md-11">
+          <h4 class="custom-select-control-custom-text" style="color:white;">{{ Lang::get('frontend.filter_by') }}:</h4>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-12 dropdown-filter">
+          <!-- <div class="col-xs-6 col-sm-3">Filter Participant by</div> -->
+          <ul>
+  <!--           <li>
+              <select class="select-control">
+                <option class="selectik-filter-region">{{ Lang::get('frontend.all_region') }}</option>
+                @foreach ($regions as $region)
+                <option value="{{ $region['region_id'] }}" class="selectik-filter-region">{{ $region['name'] }}</option>
+                @endforeach
+              </select>
+            </li> -->
+            @foreach ($filters as $key_filters => $filter)
+            <li>
+              <select class="select-control">
+                <option>{{ $filter['category_name'] }}</option>
+                @foreach ($filter['category_items'] as $filter_items)
+                <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
+                @endforeach
+              </select><!-- Custom Select -->
+            </li>
+            @endforeach
+            <li>
+  						<a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -81,11 +91,9 @@
           </div>
           <div class="col-md-12">
             <ul class="chart-pagination">
-            @if(count($cycles) > 1)
               <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
               <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
               <li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
-            @endif
             </ul>
           </div>
         </div>

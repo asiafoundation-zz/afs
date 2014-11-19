@@ -8,6 +8,7 @@ return array(
 	"select_category" => "Pilih Kategori",
 	"select_question" => "Pilih Pertanyaan",
 	"find_surveys" => "Temukan Survey",
+	"filter_by" => "Pencarian Berdasarkan",
 	"filter_by_age" => "Umur",
 	"filter_by_income" => "Pendapatan",
 	"filter_by_education" => "Pendidikan",
