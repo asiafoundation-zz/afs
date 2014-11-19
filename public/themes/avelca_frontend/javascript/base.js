@@ -3,7 +3,6 @@
 */
 function chartjs(color_set,data_points,data_points_pie)
 {
-  console.log(data_points);
   // PIE CHART
   CanvasJS.addColorSet("greenShades",color_set);
 
@@ -22,8 +21,6 @@ function chartjs(color_set,data_points,data_points_pie)
       indexLabelFontFamily: "DINNextLTPro-Regular",       
       indexLabelFontSize: 0,
       startAngle:0,
-      // indexLabel: "{label} #percent",
-      // indexLabel: "{label} #percent%"
       indexLabelFontColor: "#ffffff",       
       indexLabelPlacement: "inside", 
       toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
@@ -36,17 +33,21 @@ function chartjs(color_set,data_points,data_points_pie)
   chart.render();
 
   // BAR CHART
+  var total_participant = 0;
+  for (i = 0; i < data_points.length; i++) {
+    total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant; 
+  };
+
   CanvasJS.addColorSet("greenShades",color_set);
 
   var chartbar = new CanvasJS.Chart("chartContainer", {
 
       colorSet: "greenShades",
       axisY: {
-          tickThickness: 0,
-          lineThickness: 0,
-          valueFormatString: " ",
-          gridThickness: 0                   
-      },
+          maximum: total_participant,
+          tickLength: 0,
+          gridThickness: 1
+        },
       axisX: {
           tickThickness: 1,
           lineThickness: 1,
@@ -57,7 +58,6 @@ function chartjs(color_set,data_points,data_points_pie)
       },
       data: [
       {
-          indexLabelFontSize: 16,
           labelFontFamily: "DINNextLTPro-Regular",
           labelFontColor: "gray",
           labelFontSize: 14,

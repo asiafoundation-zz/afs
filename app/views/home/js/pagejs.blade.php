@@ -44,8 +44,8 @@
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
 
             // Is Has Compare Cycle
-            var is_has_compare = data_cycles_length > 0 ? 'onclick="compare_cycle(0)"' : '';
-            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" '+is_has_compare+'>{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+            var is_has_compare = data_cycles_length > 0 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
+            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
 
             $(".chart-pagination").html(chart_pagination);
 
@@ -150,8 +150,8 @@
                 data_cycles_length=key;
                 }
               }
-              var is_has_compare = data_cycles_length > 0 ? 'onclick="compare_cycle(0)"' : '';
-              var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" '+is_has_compare+'>{{Lang::get('frontend.compare_this_survey')}}</a></li><li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+              var is_has_compare = data_cycles_length > 0 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
+              var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
               $(".chart-pagination").html(chart_pagination);
 
               // Re assingn Filter data
@@ -368,7 +368,7 @@
             }
 
             data_list.push(
-              { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer'],indexLabel:assign_answer[key]['indexlabel']+"%"}
+              { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer']}
               );
           }
         }
@@ -383,10 +383,13 @@
       {
         var data_points = [//colorSet Array
           @foreach ($question as $answer)
-            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",indexLabel: "{{ $answer->indexlabel}}%"},
+            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
           @endforeach                  
           ];
       }
+
+      // Sort Data based on highest amount
+      // data_points = data_points.sort(function(a,b) { return parseFloat(a.y) - parseFloat(b.y) } );
 
       return data_points;
     }
@@ -419,7 +422,6 @@
           @endforeach                  
           ];
       }
-
       return data_points;
     }
 </script>
