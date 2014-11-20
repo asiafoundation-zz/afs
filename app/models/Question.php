@@ -180,13 +180,9 @@ class Question extends Eloquent {
 		usort($questions, function($a, $b) {
 			return $a->amount - $b->amount;
 		});
-
+		
 		return $questions;
 	}
-
-	public function sortByOrder($a, $b) {
-		return $a['amount'] - $b['amount'];
-  }
 
 	public static function DefaultQuestion($request = array())
 	{

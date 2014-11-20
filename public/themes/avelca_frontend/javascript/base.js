@@ -33,30 +33,31 @@ function chartjs(color_set,data_points,data_points_pie)
   chart.render();
 
   // BAR CHART
+  var total_participant = 0;
+  for (i = 0; i < data_points.length; i++) {
+    total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant;
+  };
+
   CanvasJS.addColorSet("greenShades",color_set);
-
   var chartbar = new CanvasJS.Chart("chartContainer", {
-
       colorSet: "greenShades",
       axisY: {
-          tickThickness: 0,
-          lineThickness: 0,
-          valueFormatString: " ",
-          gridThickness: 0                   
+        maximum: total_participant,
+        minimum:0,
+        tickLength: 0,
+        gridThickness: 1
       },
       axisX: {
-          tickThickness: 0,
-          lineThickness: 0,
-          labelFontSize: 18,
-          labelFontColor: "gray"
-
+          tickThickness: 1,
+          lineThickness: 1,
+          labelFontSize: 10,
       },
       data: [
       {
-          indexLabelFontSize: 24,
+          indexLabelFontSize: 12,
           labelFontFamily: "DINNextLTPro-Regular",
+          indexLabelOrientation: "horizontal",
           labelFontColor: "gray",
-          labelFontSize: 18,
           indexLabelFontColor: "gray",
           indexLabelFontFamily: "DINNextLTPro-Regular",
           indexLabelPlacement:"inside",

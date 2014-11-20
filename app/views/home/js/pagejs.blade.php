@@ -359,8 +359,15 @@
           @endforeach                 
           ];
       }
-
-      return color_set;
+      var data_points = [];
+      var start = color_set.length > 10 ? color_set.length - 10 : 0;
+      for (i = start; i < color_set.length; i++) {
+      // for (i = 0; i < data_list.length; i++) {
+        if (color_set[i].y != 0) {
+          data_points.push(color_set[i]);    
+        }
+      }
+      return data_points;
     }
     function data_points(assign_answer)
     {
@@ -381,25 +388,24 @@
               );
           }
         }
-        var data_points = [];
-        for (i = 0; i < data_list.length; i++) {
-          if (data_list[i].y != 0) {
-            data_points.push(data_list[i]);    
-          }
-        }
       }
       else
       {
-        var data_points = [//colorSet Array
-          @foreach ($question as $answer)
-            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
+        var data_list = [//colorSet Array
+          @foreach ($question as $key => $answer)
+            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",},
           @endforeach                  
           ];
       }
 
-      // Sort Data based on highest amount
-      // data_points = data_points.sort(function(a,b) { return parseFloat(a.y) - parseFloat(b.y) } );
-
+        var data_points = [];
+        var start = data_list.length > 10 ? data_list.length - 10 : 0;
+        for (i = start; i < data_list.length; i++) {
+        // for (i = 0; i < data_list.length; i++) {
+          if (data_list[i].y != 0) {
+            data_points.push(data_list[i]);    
+          }
+        }
       return data_points;
     }
     function data_points_pie(assign_answer)
@@ -414,23 +420,23 @@
               );
           }
         }
-        var data_points = [];
-        for (i = 0; i < data_list.length; i++) {
+      }
+      else
+      {
+        var data_list = [//colorSet Array
+          @foreach ($question as $answer)
+              { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
+          @endforeach                  
+          ];
+      }
+      var data_points = [];
+      var start = data_list.length > 10 ? data_list.length - 10 : 0;
+        for (i = start; i < data_list.length; i++) {
+        // for (i = 0; i < data_list.length; i++) {
           if (data_list[i].y != 0) {
             data_points.push(data_list[i]);    
           }
         }
-      }
-      else
-      {
-        var data_points = [//colorSet Array
-          @foreach ($question as $answer)
-            @if($answer->amount != 0)
-              { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
-            @endif
-          @endforeach                  
-          ];
-      }
       return data_points;
     }
 </script>
