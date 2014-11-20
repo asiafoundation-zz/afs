@@ -38,13 +38,6 @@
 			</div>
 		</div>
 		
-		<div class="form-group upload-field">
-			{{ Form::label("Add GeoJson file", "", array("class" => "control-label col-md-3")) }}
-			<div class="col-md-3">
-				<input id="input-id" type="file" class="excel-upload" data-preview-file-type="text" name="geojson">
-			</div>
-		</div>
-
 		<div class="modal-footer">
 			<button class="btn" type="submit" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">Next</button>
 		</div>

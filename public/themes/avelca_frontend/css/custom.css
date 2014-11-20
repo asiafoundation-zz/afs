@@ -72,3 +72,15 @@
 .loading-flag {
 	margin: 5% auto 5% auto;
 }
+
+.custom-select-control-custom-text{
+  overflow:     hidden;
+  height:       46px;
+  line-height:    52px;
+  padding:      0 42px 0 15px;
+  color:        #ffffff;
+  text-align: left;
+  font-family: "DINNextLTPro-Bold";
+  font-size: 16px;
+  text-transform: uppercase;
+  }

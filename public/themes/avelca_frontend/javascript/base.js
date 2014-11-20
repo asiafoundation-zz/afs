@@ -21,14 +21,11 @@ function chartjs(color_set,data_points,data_points_pie)
       indexLabelFontFamily: "DINNextLTPro-Regular",       
       indexLabelFontSize: 0,
       startAngle:0,
-      indexLabel: "{label} #percent",
-      // indexLabel: "{label} #percent%"
       indexLabelFontColor: "#ffffff",       
       indexLabelPlacement: "inside", 
       toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
       showInLegend: false,
-      indexLabel: "#percent", 
-      // indexLabel: "#percent%",
+      indexLabel: " ", 
       dataPoints: data_points_pie
     }
     ]
@@ -36,33 +33,37 @@ function chartjs(color_set,data_points,data_points_pie)
   chart.render();
 
   // BAR CHART
+  var total_participant = 0;
+  for (i = 0; i < data_points.length; i++) {
+    total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant; 
+  };
+
   CanvasJS.addColorSet("greenShades",color_set);
 
   var chartbar = new CanvasJS.Chart("chartContainer", {
 
       colorSet: "greenShades",
       axisY: {
-          tickThickness: 0,
-          lineThickness: 0,
-          valueFormatString: " ",
-          gridThickness: 0                   
-      },
+          maximum: total_participant,
+          tickLength: 0,
+          gridThickness: 1
+        },
       axisX: {
-          tickThickness: 0,
-          lineThickness: 0,
-          labelFontSize: 18,
-          labelFontColor: "gray"
+          tickThickness: 1,
+          lineThickness: 1,
+          labelFontSize: 12,
+          labelFontColor: "gray",
+          labelAutoFit: true,
 
       },
       data: [
       {
-          indexLabelFontSize: 24,
           labelFontFamily: "DINNextLTPro-Regular",
           labelFontColor: "gray",
-          labelFontSize: 18,
+          labelFontSize: 14,
           indexLabelFontColor: "gray",
           indexLabelFontFamily: "DINNextLTPro-Regular",
-          indexLabelPlacement:"inside",
+          indexLabelPlacement:"outside",
           type: "bar",
           click: function(e){
             detail_chart(e.dataPoint.answer_id,0,0)
@@ -117,9 +118,17 @@ function detail_chart_js(data)
   var total_participant = 0;
 
   for (i = 0; i < data.length; i++) {
+    // Cut String
     var data_text = data[i].category_name;
+    var label = data[i].category_item_name;
+    
+    if (label.match(/./g).length > 12){
+      label = label.substr(0, 12);
+      label = label+" ...";
+    }
+
     total_participant += parseInt(data[i].amount); 
-    data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: data[i].category_item_name});
+    data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: label});
   };
 
   CanvasJS.addColorSet("hellowYellow",
@@ -144,8 +153,7 @@ function detail_chart_js(data)
       gridThickness: 1
     },
     axisX: {
-      labelFontSize: 18,
-      tickLength: 10
+      labelFontSize: 12
     },
     colorSet: "hellowYellow",
     data: [

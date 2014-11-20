@@ -123,6 +123,9 @@ class Category extends Eloquent {
 	}
 	public static function checkData($data,$code_id,$survey_id)
 	{
+		// If Category Empty
+		$data = !empty($data) ? $data : 'Other';
+
 		$category = Category::where('name', '=', $data)->first();
 		if(!isset($category))
 		{

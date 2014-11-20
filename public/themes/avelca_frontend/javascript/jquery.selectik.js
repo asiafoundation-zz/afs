@@ -72,7 +72,7 @@
 				html = '<div class="select-list '+scrollClass+'">'+scrollHtml+'<ul>'+html+'</ul></div>';
 				$(html).prependTo(this.$container);
 			}else{
-				html = '<span class="custom-text">'+this.$selected[0].text+'</span><div class="select-list '+scrollClass+'">'+scrollHtml+'<ul>'+html+'</ul></div>';
+				html = '<span class="custom-text" id="custom-text-title-'+this.$selected[0].text+'">'+this.$selected[0].text+'</span><div class="select-list '+scrollClass+'">'+scrollHtml+'<ul>'+html+'</ul></div>';
 				$(html).prependTo(this.$container);
 			}
 			
@@ -100,8 +100,13 @@
 			var html = '';
 			for (var i = 0; i < this.$collection.length; i++){
 				var $this = $(this.$collection[i]);
-
-				html += '<li class="'+ ($this.attr('disabled') === 'disabled' ? 'disabled' : '') +'" id="filter_option_label_'+$this[0].value+'" onclick="filter_option()" data-value="'+$this[0].value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
+				if ($.isNumeric( $this[0].value )) 
+				{
+					html += '<li class="'+ ($this.attr('disabled') === 'disabled' ? 'disabled' : '') +'" id="filter_option_label_'+$this[0].value+'" '+($this[0].className == 'selectik-filter-region' ? 'onclick="filter_option_regions('+$this[0].value+',"'+$this[0].text+'")" data-type="region"' : 'onclick="filter_option()" data-type="filter"')+' data-value="'+$this[0].value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
+				}
+				else{
+					html += '<li class="title-filters" id="filter_option_label_'+$this[0].value+'" data-title="'+$this[0].text.toUpperCase()+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text.toUpperCase())+'</li>';
+				}
 			 };
 			return html;
 		},

@@ -27,7 +27,7 @@
         <i class="detective"></i>
       </div>
       <div class="col-md-6">
-        <h1>Asia Foundation Survey Will Be Back Soon</h1>
+        <h1>We Will Be Back Soon</h1>
         <p>
           We apologize for the inconvenience, but we are unable to process your request at this time. Our detective have been notified of this problem and will work to resolve it.
         </p>
