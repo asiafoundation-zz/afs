@@ -1,9 +1,14 @@
   <script type="text/javascript">
+      $('.loading-flag').hide();
      function find_survey()
      {
       // Get cycles functions
+      $('#chart_canvas').hide();
+      $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answers: FilterSelect.answers} )
         .done(function( data ) {
+          $('#chart_canvas').show();
+          $('.loading-flag').hide();
           if (data != false) {
             // Re declare object filter data 
             cycle_id = FilterSelect.cycle;
@@ -119,8 +124,12 @@
         });
 
         // Get cycles functions
+        $('#chart_canvas').hide();
+        $('.loading-flag').show();
         $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
           .done(function( data ) {
+            $('.loading-flag').hide();
+            $('#chart_canvas').show();
             if (data != false) {
               // Build chart
               var color_set_data = color_set(data.question);

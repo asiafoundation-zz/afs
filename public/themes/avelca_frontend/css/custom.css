@@ -68,3 +68,7 @@
 .cross-question .select2-drop{
 	background-color: #f1f1f1 !important;	
 }
+
+.loading-flag {
+	margin: 5% auto 5% auto;
+}
