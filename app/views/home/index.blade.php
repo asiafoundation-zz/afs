@@ -85,7 +85,6 @@
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
         <p id="question-name">" {{ $default_question->question }} "</p>
         @include('home/cross_question')
-    </div>
         <div class="chart chart-flag">
           <div id="chart_canvas">
             <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>

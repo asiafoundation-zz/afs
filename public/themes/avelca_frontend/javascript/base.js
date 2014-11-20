@@ -3,7 +3,6 @@
 */
 function chartjs(color_set,data_points,data_points_pie)
 {
-  console.log(data_points);
   // PIE CHART
   CanvasJS.addColorSet("greenShades",color_set);
 
@@ -22,8 +21,6 @@ function chartjs(color_set,data_points,data_points_pie)
       indexLabelFontFamily: "DINNextLTPro-Regular",       
       indexLabelFontSize: 0,
       startAngle:0,
-      // indexLabel: "{label} #percent",
-      // indexLabel: "{label} #percent%"
       indexLabelFontColor: "#ffffff",       
       indexLabelPlacement: "inside", 
       toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
@@ -188,18 +185,17 @@ function select_category(category_id)
 function clear_all_filter()
 {
   var option_filters = [];
-  filter_text = $('.title-filters',$(this).parent('ul')).text();
   $(".dropdown-filter .selected_filter_option").each(function(){
     if ($(this).attr("data-type") === 'region') {
       FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
     }else{
       var data_value = $(this).attr("data-value");
       if(data_value % 1 === 0){
+        filter_text = $('.title-filters',$(this).parent('ul')).html();
 
-        // Filter Text
-        filter_text = $('.title-filters',$(this).parent('ul')).text();
-        filter_text = filter_text+" "+$(this).text()+",";
-        option_filters += $(this).attr("data-value")+",";
+        $('#custom-text-title-'+filter_text.toLowerCase()).html("");
+        $('#custom-text-title-'+filter_text.toLowerCase()).html(filter_text);
+        find_survey();
       }
     }
   });
