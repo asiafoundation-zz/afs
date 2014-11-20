@@ -62,7 +62,7 @@ class FilterParticipant extends Eloquent {
 		$filter_queries =  DB::table('filter_participants')
 			->select(
 				DB::raw(
-					'participants.id as id_participant,
+					'count(participants.id) as count_participant,
 					filter_participants.category_item_id as id_category_item'
 					)
 				)
@@ -77,22 +77,16 @@ class FilterParticipant extends Eloquent {
 			}
 
 			$filter_queries = $filter_queries
+				// ->whereIn('filter_participants.category_item_id',$option_filters_array)
 				->whereIn('filter_participants.category_item_id',$option_filters_array)
+				->groupBy('participants.id')
 				->get();
-
+				
 			$data_merge = array();
 			$data_result = 0;
 			if (count($filter_queries)) {
 				foreach ($filter_queries as $key_filter_queries => $filter_query) {
-
-					// Grouping query result according it's id participant
-					if(empty($data_merge[$filter_query->id_participant])){
-						$data_merge[$filter_query->id_participant] = 0;
-					}
-					$data_merge[$filter_query->id_participant]++;
-
-					// Compare valid filter category item choosen and total category item data merge 
-					if(count($option_filters_array) == $data_merge[$filter_query->id_participant]){
+					if(count($option_filters_array) == $filter_query->count_participant){
 						$data_result++;
 					}
 				}
@@ -101,7 +95,6 @@ class FilterParticipant extends Eloquent {
 			{
 				$data_result = 0;
 			}
-
 			return $data_result;
 	}
 
