@@ -81,11 +81,14 @@
 
   <section class="survey-pemilu">
     <div class="container center">
-      <div class="col-md-12">
+      <div class="col-md-12 chart-div">
         <h3>{{Lang::get('frontend.survey_question')}}</h3>
         <p id="question-name">" {{ $default_question->question }} "</p>
         @include('home/cross_question')
         <div class="chart chart-flag">
+          <div class="loading-flag">
+            <img src="{{ Theme::asset('img/ajax-loader.gif') }}">
+          </div>
           <div id="chart_canvas">
             <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
             <div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>

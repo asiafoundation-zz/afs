@@ -69,6 +69,10 @@
 	background-color: #f1f1f1 !important;	
 }
 
+.loading-flag {
+	margin: 5% auto 5% auto;
+}
+
 .custom-select-control-custom-text{
   overflow:     hidden;
   height:       46px;
