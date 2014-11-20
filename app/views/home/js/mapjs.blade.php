@@ -41,6 +41,11 @@
         cycle: data.cycle,
         answers:data.answers
       };
+
+      // Remove Filter Text
+      $("#filter-by-label").text("");
+      // Remove Notification
+      $(".notification").html();
     }
 
     // Removed last clicked area

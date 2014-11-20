@@ -176,8 +176,17 @@ class Question extends Eloquent {
 				$question->answer = $question->answer." ...";
 			}
 		}
+		// sort array based on amounts
+		usort($questions, function($a, $b) {
+			return $a->amount - $b->amount;
+		});
+
 		return $questions;
 	}
+
+	public function sortByOrder($a, $b) {
+		return $a['amount'] - $b['amount'];
+  }
 
 	public static function DefaultQuestion($request = array())
 	{

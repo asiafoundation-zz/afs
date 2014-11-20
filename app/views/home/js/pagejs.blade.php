@@ -60,7 +60,7 @@
             DefaultSelectAssign(FilterSelect);
           }else
           {
-            alert("{{Lang::get('frontend.empty_data')}}");
+            $(".notification").text('<div class="notification"><div class="alert-info"><button class="close" type="button" data-dismiss="alert">×</button>{{Lang::get('frontend.empty_data')}}</div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -119,16 +119,23 @@
      {
         var option_filters = [];
         var is_region = false;
+
+        var filter_text = "";
         $(".dropdown-filter .selected_filter_option").each(function(){
           if ($(this).attr("data-type") === 'region') {
             FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
           }else{
             var data_value = $(this).attr("data-value");
             if(data_value % 1 === 0){
+              // Filter Text
+              filter_text = $('.title-filters',$(this).parent('ul')).text();
+              filter_text = filter_text+" "+$(this).text()+",";
               option_filters += $(this).attr("data-value")+",";
             }
           }
         });
+        filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text;
+        filter_text = filter_text.substring(0, filter_text.length - 1);
 
         // Get cycles functions
         $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
@@ -156,6 +163,9 @@
 
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
+
+              // Show label
+              $("#filter-by-label").text();
             }else
             {
               alert("{{Lang::get('frontend.empty_data')}}");
@@ -204,7 +214,7 @@
             compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
 
             if (move == 0) {
-              $('.chart-pagination').html('<li><a class="orange-bg"><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" ><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li>');
+              $('.chart-pagination').html('<li>&nbsp;</li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li>&nbsp;</li>');
             }else{
               $("#question-name").html(question_text);
 
