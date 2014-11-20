@@ -65,7 +65,7 @@
             DefaultSelectAssign(FilterSelect);
           }else
           {
-            $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
+            $("#chart_canvas").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -113,7 +113,7 @@
               DefaultSelectAssign(FilterSelect);
             }else
             {
-              $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
+              $("#chart_canvas").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }
@@ -176,7 +176,7 @@
               $("#filter-by-label").text(filter_text);
             }else
             {
-              $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
+              $("#chart_canvas").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }
@@ -235,7 +235,7 @@
             DefaultSelectAssign(FilterSelect);
           }else
           {
-            $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
+            $("#chart_canvas").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -277,7 +277,7 @@
             }).addTo(map);
           }else
           {
-            $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
+            $("#chart_canvas").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -307,7 +307,7 @@
             chartjs(color_set_data,data_points_data,data_points_pie_data);
           }else
           {
-            $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
+            $("#chart_canvas").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -328,7 +328,7 @@
               $('.chart-pagination').html('<li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',2)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
             }else
             {
-              $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
+              $("#chart_canvas").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }
