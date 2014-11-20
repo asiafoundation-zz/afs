@@ -65,7 +65,7 @@
             DefaultSelectAssign(FilterSelect);
           }else
           {
-            alert("{{Lang::get('frontend.empty_data')}}");
+            $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -113,7 +113,7 @@
               DefaultSelectAssign(FilterSelect);
             }else
             {
-              alert("{{Lang::get('frontend.empty_data')}}");
+              $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }
@@ -124,16 +124,22 @@
      {
         var option_filters = [];
         var is_region = false;
+
+        var filter_text = "";
         $(".dropdown-filter .selected_filter_option").each(function(){
           if ($(this).attr("data-type") === 'region') {
             FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
           }else{
             var data_value = $(this).attr("data-value");
             if(data_value % 1 === 0){
+              // Filter Text
+              filter_text = filter_text+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
               option_filters += $(this).attr("data-value")+",";
             }
           }
         });
+        filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text;
+        filter_text = filter_text.substring(0, filter_text.length - 1);
 
         // Get cycles functions
         $('#chart_canvas').hide();
@@ -165,9 +171,12 @@
 
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
+
+              // Show label
+              $("#filter-by-label").text(filter_text);
             }else
             {
-              alert("{{Lang::get('frontend.empty_data')}}");
+              $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }
@@ -213,7 +222,7 @@
             compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
 
             if (move == 0) {
-              $('.chart-pagination').html('<li><a class="orange-bg"><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" ><img src="{{ Theme::asset('img/footer-bg.png') }}"></a></li>');
+              $('.chart-pagination').html('<li>&nbsp;</li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li>&nbsp;</li>');
             }else{
               $("#question-name").html(question_text);
 
@@ -226,7 +235,7 @@
             DefaultSelectAssign(FilterSelect);
           }else
           {
-            alert("{{Lang::get('frontend.empty_data')}}");
+            $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -268,7 +277,7 @@
             }).addTo(map);
           }else
           {
-            alert("{{Lang::get('frontend.empty_data')}}");
+            $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -298,7 +307,7 @@
             chartjs(color_set_data,data_points_data,data_points_pie_data);
           }else
           {
-            alert("{{Lang::get('frontend.empty_data')}}");
+            $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -319,7 +328,7 @@
               $('.chart-pagination').html('<li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',2)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
             }else
             {
-              alert("{{Lang::get('frontend.empty_data')}}");
+              $(".chart-flag").html('<div class="notification"><div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }
@@ -359,8 +368,15 @@
           @endforeach                 
           ];
       }
-
-      return color_set;
+      var data_points = [];
+      var start = color_set.length > 10 ? color_set.length - 10 : 0;
+      for (i = start; i < color_set.length; i++) {
+      // for (i = 0; i < data_list.length; i++) {
+        if (color_set[i].y != 0) {
+          data_points.push(color_set[i]);    
+        }
+      }
+      return data_points;
     }
     function data_points(assign_answer)
     {
@@ -381,25 +397,24 @@
               );
           }
         }
-        var data_points = [];
-        for (i = 0; i < data_list.length; i++) {
-          if (data_list[i].y != 0) {
-            data_points.push(data_list[i]);    
-          }
-        }
       }
       else
       {
-        var data_points = [//colorSet Array
-          @foreach ($question as $answer)
-            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
+        var data_list = [//colorSet Array
+          @foreach ($question as $key => $answer)
+            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",},
           @endforeach                  
           ];
       }
 
-      // Sort Data based on highest amount
-      // data_points = data_points.sort(function(a,b) { return parseFloat(a.y) - parseFloat(b.y) } );
-
+        var data_points = [];
+        var start = data_list.length > 10 ? data_list.length - 10 : 0;
+        for (i = start; i < data_list.length; i++) {
+        // for (i = 0; i < data_list.length; i++) {
+          if (data_list[i].y != 0) {
+            data_points.push(data_list[i]);    
+          }
+        }
       return data_points;
     }
     function data_points_pie(assign_answer)
@@ -410,27 +425,27 @@
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
             data_list.push(
-              { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer'],indexLabel:assign_answer[key]['indexlabel']+"%"}
+              { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer']}
               );
-          }
-        }
-        var data_points = [];
-        for (i = 0; i < data_list.length; i++) {
-          if (data_list[i].y != 0) {
-            data_points.push(data_list[i]);    
           }
         }
       }
       else
       {
-        var data_points = [//colorSet Array
+        var data_list = [//colorSet Array
           @foreach ($question as $answer)
-            @if($answer->amount != 0)
-              { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}", indexlabel: "{{ $answer->indexlabel}}%"},
-            @endif
+              { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
           @endforeach                  
           ];
       }
+      var data_points = [];
+      var start = data_list.length > 10 ? data_list.length - 10 : 0;
+        for (i = start; i < data_list.length; i++) {
+        // for (i = 0; i < data_list.length; i++) {
+          if (data_list[i].y != 0) {
+            data_points.push(data_list[i]);    
+          }
+        }
       return data_points;
     }
 </script>

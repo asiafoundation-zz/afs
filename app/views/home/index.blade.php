@@ -101,6 +101,7 @@
               @endif
               <li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
             </ul>
+            <span id="filter-by-label"></span>
           </div>
         </div>
       </div>

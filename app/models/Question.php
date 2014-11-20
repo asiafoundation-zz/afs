@@ -176,6 +176,11 @@ class Question extends Eloquent {
 				$question->answer = $question->answer." ...";
 			}
 		}
+		// sort array based on amounts
+		usort($questions, function($a, $b) {
+			return $a->amount - $b->amount;
+		});
+		
 		return $questions;
 	}
 
@@ -313,6 +318,11 @@ class Question extends Eloquent {
 			foreach ($questions as $key_questions => $question) {
 				$question->indexlabel = round(!$total_amount ? 0 : ($question->amount / $total_amount) * 100,2);
 			}
+
+			// sort array based on amounts
+			usort($questions, function($a, $b) {
+				return $a->amount - $b->amount;
+			});
 
 		// Is questions not exist
 		$questions = $total_amount > 0 ? $questions : array();

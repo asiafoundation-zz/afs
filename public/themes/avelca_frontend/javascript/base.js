@@ -35,35 +35,32 @@ function chartjs(color_set,data_points,data_points_pie)
   // BAR CHART
   var total_participant = 0;
   for (i = 0; i < data_points.length; i++) {
-    total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant; 
+    total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant;
   };
 
   CanvasJS.addColorSet("greenShades",color_set);
-
   var chartbar = new CanvasJS.Chart("chartContainer", {
-
       colorSet: "greenShades",
       axisY: {
-          maximum: total_participant,
-          tickLength: 0,
-          gridThickness: 1
-        },
+        maximum: total_participant,
+        minimum:0,
+        tickLength: 0,
+        gridThickness: 1
+      },
       axisX: {
           tickThickness: 1,
           lineThickness: 1,
-          labelFontSize: 12,
-          labelFontColor: "gray",
-          labelAutoFit: true,
-
+          labelFontSize: 10,
       },
       data: [
       {
+          indexLabelFontSize: 12,
           labelFontFamily: "DINNextLTPro-Regular",
+          indexLabelOrientation: "horizontal",
           labelFontColor: "gray",
-          labelFontSize: 14,
           indexLabelFontColor: "gray",
           indexLabelFontFamily: "DINNextLTPro-Regular",
-          indexLabelPlacement:"outside",
+          indexLabelPlacement:"inside",
           type: "bar",
           click: function(e){
             detail_chart(e.dataPoint.answer_id,0,0)
@@ -118,17 +115,9 @@ function detail_chart_js(data)
   var total_participant = 0;
 
   for (i = 0; i < data.length; i++) {
-    // Cut String
     var data_text = data[i].category_name;
-    var label = data[i].category_item_name;
-    
-    if (label.match(/./g).length > 12){
-      label = label.substr(0, 12);
-      label = label+" ...";
-    }
-
     total_participant += parseInt(data[i].amount); 
-    data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: label});
+    data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: data[i].category_item_name});
   };
 
   CanvasJS.addColorSet("hellowYellow",
@@ -153,7 +142,8 @@ function detail_chart_js(data)
       gridThickness: 1
     },
     axisX: {
-      labelFontSize: 12
+      labelFontSize: 18,
+      tickLength: 10
     },
     colorSet: "hellowYellow",
     data: [
@@ -195,7 +185,21 @@ function select_category(category_id)
 
 function clear_all_filter()
 {
-  window.location.reload();
+  var option_filters = [];
+  $(".dropdown-filter .selected_filter_option").each(function(){
+    if ($(this).attr("data-type") === 'region') {
+      FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
+    }else{
+      var data_value = $(this).attr("data-value");
+      if(data_value % 1 === 0){
+        filter_text = $('.title-filters',$(this).parent('ul')).html();
+
+        $('#custom-text-title-'+filter_text.toLowerCase()).html("");
+        $('#custom-text-title-'+filter_text.toLowerCase()).html(filter_text);
+        find_survey();
+      }
+    }
+  });
 }
 /*
 * -----------------------------------------END Filter Category  JS--------------------------
