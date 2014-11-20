@@ -410,7 +410,7 @@
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
             data_list.push(
-              { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer'],indexLabel:assign_answer[key]['indexlabel']+"%"}
+              { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer']}
               );
           }
         }
@@ -426,7 +426,7 @@
         var data_points = [//colorSet Array
           @foreach ($question as $answer)
             @if($answer->amount != 0)
-              { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}", indexlabel: "{{ $answer->indexlabel}}%"},
+              { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
             @endif
           @endforeach                  
           ];
