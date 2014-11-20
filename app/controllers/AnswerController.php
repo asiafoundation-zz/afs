@@ -22,8 +22,9 @@ class AnswerController extends AvelcaController {
 		for($a=0;$a<$question_header_count;$a=$a+3){
 
 			//Create query for question header
-			$question_headers = Answer::select(DB::raw('count(answers.answer) as count_header, questions.question as question, questions.id as question_id, answers.id as id, answers.answer as answer'))
+			$question_headers = Answer::select(DB::raw('amounts.amount as count_header, questions.question as question, questions.id as question_id, answers.id as id, answers.answer as answer'))
 							->join('questions', 'questions.id', '=', 'answers.question_id')
+							->join('amounts', 'amounts.answer_id', '=', 'answers.id')
 							->where('questions.id', '=', $heder)
 							->groupBy('answers.answer')
 							->skip($a)
@@ -45,6 +46,7 @@ class AnswerController extends AvelcaController {
 								DB::raw($query)
 							)
 							->join('questions', 'questions.id', '=', 'answers.question_id')
+							->join('amounts', 'amounts.answer_id', '=', 'answers.id')
 							->where('questions.id', '=', $row)
 							->groupBy('answer')
 							->get()->toArray();	
