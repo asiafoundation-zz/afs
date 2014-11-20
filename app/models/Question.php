@@ -323,6 +323,11 @@ class Question extends Eloquent {
 				$question->indexlabel = round(!$total_amount ? 0 : ($question->amount / $total_amount) * 100,2);
 			}
 
+			// sort array based on amounts
+			usort($questions, function($a, $b) {
+				return $a->amount - $b->amount;
+			});
+
 		// Is questions not exist
 		$questions = $total_amount > 0 ? $questions : array();
 		
