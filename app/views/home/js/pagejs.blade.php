@@ -5,7 +5,7 @@
       // Get cycles functions
       $('#chart_canvas').hide();
       $('.loading-flag').show();
-      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answers: FilterSelect.answers} )
+      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
           $('#chart_canvas').show();
           $('.loading-flag').hide();
@@ -79,7 +79,7 @@
         FilterSelect.cycle = cycle_id;
 
         // Get cycles functions
-        $.get( "filter-select", {SelectedFilter:"cycle",category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answers: FilterSelect.answers} )
+        $.get( "filter-select", {SelectedFilter:"cycle", cycle: cycle_id} )
           .done(function( data ) {
             if (data != false) {
 

@@ -124,7 +124,7 @@ class Question extends Eloquent {
 					->join('colors','answers.color_id','=','colors.id');
 
 		if (!empty($request['region'])) {
-			$questions =  $questions->leftjoin('regions','regions.id','=','answers.region_id');
+			$questions =  $questions->leftjoin('regions','regions.id','=','amounts.region_id');
 		}
 		$questions = $questions->where('amounts.sample_type', '=', 0);
 
@@ -202,21 +202,26 @@ class Question extends Eloquent {
 				}
 			}
 			else{
-				$questions = $questions->where('questions.is_default', '=', 1)
-					->where('answers.cycle_default', '=', 1);
+				$questions = $questions->where('questions.is_default', '=', 1);
 			}
 
-			$questions = $questions
-			->groupBy('answer')
-			->get();
+			if(!empty($request['cycle'])){
+				$questions = $questions
+				->havingRaw('min(id_answer)')
+				->get();	
+			}else{
+				$questions = $questions
+				->groupBy('answer')
+				->get();
+			}
 
 			if (count($questions)) {
-				if (!empty($request['answers'])) {
-					if (count($questions) != count($request['answers'])) {
+				// if (!empty($request['answers'])) {
+				// 	if (count($questions) != count($request['answers'])) {
 
-						$questions = self::DifferentAnswer($questions,$request);
-					}
-				}
+				$questions = self::DifferentAnswer($questions,$request);
+				// 	}
+				// }
 
 				$questions = self::IndexLabel($questions);
 			}
@@ -251,11 +256,11 @@ class Question extends Eloquent {
 		
 
 		if (count($questions)) {
-			if (!empty($request['answers'])) {
-				if (count($questions) != count($request['answers'])) {
-					$questions = self::DifferentAnswer($questions,$request);
-				}
-			}
+			// if (!empty($request['answers'])) {
+			// 	if (count($questions) != count($request['answers'])) {
+			$questions = self::DifferentAnswer($questions,$request);
+			// 	}
+			// }
 
 			$questions = self::IndexLabel($questions);
 		}
