@@ -76,6 +76,7 @@ class Code extends Eloquent {
 			->join('category_items','categories.id','=','category_items.category_id')
 			->where('codes.code', '!=', 'REGION')
 			->where('master_codes.attribute_code', '=', 0)
+			->where('categories.is_active', '=', 1)
 			->get();
 
 		$filters = array();
