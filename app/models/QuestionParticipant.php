@@ -96,22 +96,21 @@ class QuestionParticipant extends Eloquent {
 	public static function RegionColor($cycle_id,$default_questions)
 	{
 		foreach ($default_questions as $key_default_question => $default_question) {
-			$region_queries[$key_default_question] =  DB::table('question_participants')
+			$region_queries[$key_default_question] =  DB::table('amounts')
 				->select(
 					DB::raw(
 						'regions.id as id_region,
 						answers.id as id_answer,
 						answers.answer as answer_name,
-						question_participants.id as question_participant_id,
 						regions.name,
 						colors.color as color,
-						(SELECT count(id) from question_participants where question_participants.region_id = id_region and question_participants.answer_id = id_answer) AS amount'
+						(SELECT sum(amounts.amount) from amounts where amounts.region_id = id_region and amounts.answer_id = id_answer) AS amount'
 						)
 				)
-				->join('regions','regions.id','=','question_participants.region_id')
-				->join('answers','answers.id','=','question_participants.answer_id')
+				->join('regions','regions.id','=','amounts.region_id')
+				->join('answers','answers.id','=','amounts.answer_id')
 				->join('colors','colors.id','=','answers.color_id')
-				->where('question_participants.answer_id','=',$default_question->id_answer)
+				->where('amounts.answer_id','=',$default_question->id_answer)
 				->GroupBy('id_region')
 				->GroupBy('id_answer')
 				->get();
