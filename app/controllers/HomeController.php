@@ -28,7 +28,6 @@ class HomeController extends BaseController {
 			"survey" => $survey,
 			"filters" => Code::getFilter(),
 			"cycles" => Cycle::QuestionCycle($default_question),
-			// "cycles" => Cycle::get(),
 			"question_categories" => $split_data['question_categories'],
 			"question_lists" => $split_data['question_lists'],
 			"default_question" => $default_question,
@@ -36,6 +35,7 @@ class HomeController extends BaseController {
 			"public_path" => public_path(),
 			"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
 		);
+		$data["cycles_count"] = count($data['cycles']);
 		
 		return View::make('home.index', $data);
 	}
