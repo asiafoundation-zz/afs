@@ -92,7 +92,7 @@ $(document).ready(function(){
   $('.select-category').change(function(){
     FilterSelect.category = parseInt($(this).val());
     var value = $(this).val();
-    $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val()} )
+    $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
       $('.header-select #select-question option').remove()
       $.each(data, function(index, obj){
