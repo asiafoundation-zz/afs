@@ -103,7 +103,7 @@ $(document).ready(function(){
 
   $('.cross-select-category').change(function(){
     var value = $(this).val();
-    $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val()} )
+    $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
       $('#cross-select-question option').remove()
       $.each(data, function(index, obj){
