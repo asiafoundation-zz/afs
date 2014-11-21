@@ -33,12 +33,12 @@ function chartjs(color_set,data_points,data_points_pie)
   chart.render();
 
   // BAR CHART
-  var total_participant = 0;
-  for (i = 0; i < data_points.length; i++) {
-    total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant;
-  };
-  // Set Interval
-  var interval = total_participant > 10 ? Math.floor(total_participant / 10) : 1;
+  // var total_participant = 0;
+  // for (i = 0; i < data_points.length; i++) {
+  //   total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant;
+  // };
+  // // Set Interval
+  // var interval = total_participant > 10 ? Math.floor(total_participant / 10) : 1;
 
   // Set width
   var width = 0;
@@ -60,9 +60,9 @@ function chartjs(color_set,data_points,data_points_pie)
   var chartbar = new CanvasJS.Chart("chartContainer", {
       colorSet: "greenShades",
       axisY: {
-        maximum: total_participant,
+        maximum: 100,
         minimum:0,
-        interval: interval,
+        interval: 10,
         tickLength: 0,
         gridThickness: 1,
         labelFontSize: 10,
@@ -81,6 +81,7 @@ function chartjs(color_set,data_points,data_points_pie)
           indexLabelFontColor: "gray",
           indexLabelFontFamily: "DINNextLTPro-Regular",
           indexLabelPlacement:"inside",
+          toolTipContent: "{label}: <strong>{y}%</strong>",
           type: "bar",
           click: function(e){
             detail_chart(e.dataPoint.answer_id,0,0)

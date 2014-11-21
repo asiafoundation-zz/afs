@@ -434,8 +434,10 @@
             }
 
             data_list.push(
-              { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer']}
+              { label: label, answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
               );
+            // { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer'], percentage: assign_answer[key]['indexlabel'] }
+            //   );
           }
         }
       }
@@ -443,7 +445,8 @@
       {
         var data_list = [//colorSet Array
           @foreach ($question as $key => $answer)
-            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",},
+            { label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
+            // { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",percentage: {{ $answer->indexlabel }} },
           @endforeach
           ];
       }
