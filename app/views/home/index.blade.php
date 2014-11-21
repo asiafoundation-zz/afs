@@ -86,8 +86,7 @@
         <p id="question-name">" {{ $default_question->question }} "</p>
         @include('home/cross_question')
         <div class="chart chart-flag">
-          <div class="notification">
-          </div>
+          <div class="notification">&nbsp;</div>
           <div class="loading-flag">
             <img src="{{ Theme::asset('img/ajax-loader.gif') }}">
           </div>
