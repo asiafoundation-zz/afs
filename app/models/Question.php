@@ -391,7 +391,31 @@ class Question extends Eloquent {
 	{
 		// If Backward
 		if (($request['FilterMove'] == 0)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select max(id) from questions where questions.id < ".$request['question'].")")->first();
+			$query_raw = "questions.id = 
+							(select max(questions.id) 
+								from questions 
+									inner join question_categories on question_categories.id=questions.question_category_id
+									inner join answers on answers.question_id = questions.id
+									where questions.id < ".$request['question'];
+								
+			if (count($request)) {
+				if (!empty($request['category'])) {
+					$query_raw .= " and question_categories.id = ". $request['category'];
+				}
+				if (!empty($request['cycle'])) {
+					$query_raw .= " and answers.cycle_id = ". $request['cycle'];
+				}
+				if (!empty($request['region'])) {
+					$query_raw .= " and answers.cycle_id = ". (string)$request['region'];
+				}
+			}
+
+			$query_raw .= ")";
+
+			$request['question'] =  DB::table('questions')
+									->select('id')
+									->whereRaw($query_raw)
+									->first();
 			// If no backward
 			if (!count($request['question'])) {
 				$request['question'] =  DB::table('questions')->select('id')->orderBy('id', 'desc')->first();
@@ -400,7 +424,32 @@ class Question extends Eloquent {
 		}
 		// If Forward
 		if (($request['FilterMove'] == 1)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(id) from questions where questions.id > ".$request['question'].")")->first();
+			$query_raw = "questions.id = 
+							(select min(questions.id) 
+								from questions 
+									inner join question_categories on question_categories.id=questions.question_category_id
+									inner join answers on answers.question_id = questions.id
+									where questions.id > ".$request['question'];
+								
+			if (count($request)) {
+				if (!empty($request['category'])) {
+					$query_raw .= " and question_categories.id = ". $request['category'];
+				}
+				if (!empty($request['cycle'])) {
+					$query_raw .= " and answers.cycle_id = ". $request['cycle'];
+				}
+				if (!empty($request['region'])) {
+					$query_raw .= " and answers.cycle_id = ". (string)$request['region'];
+				}
+			}
+			
+			$query_raw .= ")";
+			
+			$request['question'] =  DB::table('questions')
+									->select('id')
+									->whereRaw($query_raw)
+									->first();
+			// $request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(id) from questions where questions.id > ".$request['question'].")")->first();
 			// If no forard
 			if (!count($request['question'])) {
 				$request['question'] =  DB::table('questions')->select('id')->first();
