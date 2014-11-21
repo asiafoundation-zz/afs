@@ -143,7 +143,7 @@
       }
 
       var layer = e.target;
-
+      
       FilterSelect.region = "";
       FilterSelect.region = layer.feature.properties.nm_provinsi;
       lastClickedLayer = layer;
