@@ -201,8 +201,8 @@ function clear_all_filter()
       if(data_value % 1 === 0){
         filter_text = $('.title-filters',$(this).parent('ul')).html();
 
-        $('#custom-text-title-'+filter_text).html("");
-        $('#custom-text-title-'+filter_text).html(filter_text);
+        $('#custom-text-title-'+filter_text.toUpperCase()).html("");
+        $('#custom-text-title-'+filter_text.toUpperCase()).html(filter_text);
         find_survey();
       }
     }

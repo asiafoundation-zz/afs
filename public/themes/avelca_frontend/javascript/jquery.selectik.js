@@ -72,7 +72,7 @@
 				html = '<div class="select-list '+scrollClass+'">'+scrollHtml+'<ul>'+html+'</ul></div>';
 				$(html).prependTo(this.$container);
 			}else{
-				html = '<span class="custom-text" id="custom-text-title-'+this.$selected[0].text+'">'+this.$selected[0].text+'</span><div class="select-list '+scrollClass+'">'+scrollHtml+'<ul>'+html+'</ul></div>';
+				html = '<span class="custom-text" id="custom-text-title-'+this.$selected[0].text.toUpperCase()+'">'+this.$selected[0].text.toUpperCase()+'</span><div class="select-list '+scrollClass+'">'+scrollHtml+'<ul>'+html+'</ul></div>';
 				$(html).prependTo(this.$container);
 			}
 			
