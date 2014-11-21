@@ -16,6 +16,7 @@ class CategoryController extends AvelcaController {
 	}
 
 	public function postManagefilter(){
+		$status = 1;
 		$request = Input::get();
 
 		$categories = Category::where('id','=',Input::get('category_id'))->first();
@@ -30,11 +31,6 @@ class CategoryController extends AvelcaController {
 
 		Session::flash('alert-class', 'alert-success'); 
 		Session::flash('message', 'Save Succeed');
-		if (!empty($request['survey_id'])) {
-			return Redirect::to('/admin/filter/'. $request['survey_id']);
-		}
-		else{
-			return true;
-		}
+		return $status;
 	}
 }

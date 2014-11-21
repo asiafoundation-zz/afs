@@ -4,6 +4,7 @@
      function find_survey()
      {
       // Get cycles functions
+      clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
@@ -78,6 +79,7 @@
 
      function cycle_select(cycle_id)
      {
+        clear_text_notification();
         // Re declare object filter data 
         FilterSelect.cycle = cycle_id;
 
@@ -130,6 +132,7 @@
 
      function filter_option(category_id)
      {
+        clear_text_notification();
         var option_filters = [];
         var is_region = false;
 
@@ -198,6 +201,7 @@
 
     function compare_cycle(move)
     {
+      clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
@@ -261,6 +265,7 @@
 
     function next_question(move)
     {
+      clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
 
@@ -309,6 +314,7 @@
 
     function find_survey_dynamic()
     {
+      clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
 
@@ -346,6 +352,7 @@
 
      function detail_chart(answer_id,category_id,move)
      {
+      clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
         // Get cycles functions
@@ -483,5 +490,11 @@
           }
         }
       return data_points;
+    }
+    function clear_text_notification(){
+      // Remove Filter Text
+      $("#filter-by-label").text("");
+      // Remove Notification
+      $(".notification").html("&nbsp;");
     }
 </script>

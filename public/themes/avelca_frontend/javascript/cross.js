@@ -17,8 +17,6 @@ $(document).ready(function(){
   });
 
   $('.cross-select-question').change(function(){
-      console.log($(this).val());
-
       $('.submit-cross').data('question_id', $(this).val()); //send data-question_id to button
   });
 
@@ -113,15 +111,13 @@ $(document).ready(function(){
   });
 
   $('.select-question').change(function(e){
-    console.log($(this).val());
     FilterSelect.question = parseInt($(this).val());
     find_survey();
   });
 
   $('.select-cycle').change(function(){
-    var id_cycle = $(this).val();
-    FilterSelect.cycle = parseInt(id_cycle);
+    FilterSelect.cycle = parseInt($(this).val());
 
-    cycle_select(id_cycle);
+    cycle_select(parseInt($(this).val()));
   });
 })
