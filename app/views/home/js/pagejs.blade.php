@@ -270,7 +270,7 @@
       $('.loading-flag').show();
 
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move, answers: FilterSelect.answers} )
+      $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move} )
         .done(function( data ) {
           if (data != false) {
             $('#chart_canvas').show();
