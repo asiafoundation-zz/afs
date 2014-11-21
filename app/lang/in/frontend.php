@@ -22,6 +22,7 @@ return array(
 	"survey_question" => "Pertanyaan Survey",
 	"compare_survey" => "BANDINGKAN SURVEY",
 	"empty_data" => "Tidak ada data survey untuk pertanyaan: ",
+	"empty_filter_data" => "Tidak ada data survey untuk filter ",
 	"comparing_cycle" => "Membandingkan",
 	"comparing_cycle_failed" => "Membandingkan Gagal",
 	"cross_by_another_variable" => "Data tabulasi silang",

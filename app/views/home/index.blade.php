@@ -71,7 +71,7 @@
             </li>
             @endforeach
             <li>
-  						<a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
+  						<a class="clear-all" onclick='clear_all_filter()'>{{Lang::get('frontend.clear_all')}}</a>
             </li>
           </ul>
         </div>
@@ -86,8 +86,7 @@
         <p id="question-name">" {{ $default_question->question }} "</p>
         @include('home/cross_question')
         <div class="chart chart-flag">
-          <div class="notification">
-          </div>
+          <div class="notification">&nbsp;</div>
           <div class="loading-flag">
             <img src="{{ Theme::asset('img/ajax-loader.gif') }}">
           </div>

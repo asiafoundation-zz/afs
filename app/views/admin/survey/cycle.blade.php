@@ -5,11 +5,15 @@
  function popup_question(question_id,survey_id,cycle_id){
 
  	var question_text = $("#question_test_"+question_id).text();
-
+ 	$('#question_popup_table').hide();
+ 	$('.loading-flag').show();
+ 	$('#popup_detail_question').modal('show');
+ 	
 	$.post( "{{ URL::to('admin') }}/survey/cycle", { question_id: question_id,survey_id: survey_id,cycle_id: cycle_id })
 	.done(function( data ) {
+		$('#question_popup_table').show();
+		$('.loading-flag').hide();
 		$("#question_popup_table").html(data);
-		$('#popup_detail_question').modal('show');
 
 		$("#question-label-popup").html(question_text);
 	});
@@ -30,7 +34,6 @@
 			<h1>{{ $survey->name }} ( {{$cycle->name}} )</h1>
 			<hr>
 		</div>
-
 		<div class="table-responsive">
 			<table class="datatable table table-striped table-bordered">
 				<thead>
@@ -67,6 +70,9 @@
         <h4 class="modal-title" id="question-label-popup">{{ Lang::get('backend.question') }}</h4>
       </div>
       <div class="modal-body" id="popup_detail_question_body">
+      	<div class="loading-flag">
+      		<img src="{{ Theme::asset('img/ajax-loader.gif') }}">
+      	</div>
       	<table class="datatable table table-striped table-bordered" id="question_popup_table"></table>
       </div>
       <div class="modal-footer">
