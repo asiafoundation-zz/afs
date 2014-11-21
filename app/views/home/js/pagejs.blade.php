@@ -412,9 +412,7 @@
           ];
       }
       var data_points = [];
-      var start = color_set.length > 10 ? color_set.length - 10 : 0;
-      for (i = start; i < color_set.length; i++) {
-      // for (i = 0; i < data_list.length; i++) {
+      for (i = 0; i < color_set.length; i++) {
         if (color_set[i].y != 0) {
           data_points.push(color_set[i]);    
         }
@@ -436,8 +434,10 @@
             }
 
             data_list.push(
-              { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer']}
+              { label: label, answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
               );
+            // { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer'], percentage: assign_answer[key]['indexlabel'] }
+            //   );
           }
         }
       }
@@ -445,15 +445,14 @@
       {
         var data_list = [//colorSet Array
           @foreach ($question as $key => $answer)
-            { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",},
-          @endforeach                  
+            { label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
+            // { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",percentage: {{ $answer->indexlabel }} },
+          @endforeach
           ];
       }
 
         var data_points = [];
-        var start = data_list.length > 10 ? data_list.length - 10 : 0;
-        for (i = start; i < data_list.length; i++) {
-        // for (i = 0; i < data_list.length; i++) {
+        for (i = 0; i < data_list.length; i++) {
           if (data_list[i].y != 0) {
             data_points.push(data_list[i]);    
           }
@@ -482,9 +481,7 @@
           ];
       }
       var data_points = [];
-      var start = data_list.length > 10 ? data_list.length - 10 : 0;
-        for (i = start; i < data_list.length; i++) {
-        // for (i = 0; i < data_list.length; i++) {
+        for (i = 0; i < data_list.length; i++) {
           if (data_list[i].y != 0) {
             data_points.push(data_list[i]);    
           }

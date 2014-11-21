@@ -18,15 +18,13 @@
     <div class="search-wrp header-select">
       <!-- <select class="select-control select-cycle"> -->
       <select class="select2-custom select-cycle">
-        <option value="{{ $default_question->id_cycle }}">{{ $default_question->cycle }}</option>
         @foreach ($cycles as $cycle)
-        <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
+        <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
       <select class="select2-custom select-category">
-        <option value="{{ $default_question->id_question_categories }}">{{ $default_question->question_categories }}</option>
         @foreach ($question_categories as $question_category)
-        <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
+        <option value="{{ $question_category->id }}" @if( $default_question->id_question_categories == $question_category->id) selected @endif >{{ $question_category->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
       <select class="select2-custom select-question" id="select-question">

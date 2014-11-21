@@ -33,24 +33,44 @@ function chartjs(color_set,data_points,data_points_pie)
   chart.render();
 
   // BAR CHART
-  var total_participant = 0;
-  for (i = 0; i < data_points.length; i++) {
-    total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant;
-  };
+  // var total_participant = 0;
+  // for (i = 0; i < data_points.length; i++) {
+  //   total_participant = data_points[i].y >= total_participant ? data_points[i].y : total_participant;
+  // };
+  // // Set Interval
+  // var interval = total_participant > 10 ? Math.floor(total_participant / 10) : 1;
 
+  // Set width
+  var width = 0;
+  var label_font_size = 10;
+  if (data_points.length <= 10) {
+    width = 300;
+  }else if(data_points.length > 10 && data_points.length <= 20){
+    width = 1000;
+    label_font_size = 14;
+  }else{
+    width = Math.floor(data_points.length / 10);
+    width = width * 1100;
+    label_font_size = 18;
+  }
+
+  // Apply width to chart
+  $("#chartContainer").css({'height': width+'px', 'width':'100%'});
   CanvasJS.addColorSet("greenShades",color_set);
   var chartbar = new CanvasJS.Chart("chartContainer", {
       colorSet: "greenShades",
       axisY: {
-        maximum: total_participant,
+        maximum: 100,
         minimum:0,
+        interval: 10,
         tickLength: 0,
-        gridThickness: 1
+        gridThickness: 1,
+        labelFontSize: 10,
       },
       axisX: {
           tickThickness: 1,
           lineThickness: 1,
-          labelFontSize: 10,
+          labelFontSize: label_font_size,
       },
       data: [
       {
@@ -61,6 +81,7 @@ function chartjs(color_set,data_points,data_points_pie)
           indexLabelFontColor: "gray",
           indexLabelFontFamily: "DINNextLTPro-Regular",
           indexLabelPlacement:"inside",
+          toolTipContent: "{label}: <strong>{y}%</strong>",
           type: "bar",
           click: function(e){
             detail_chart(e.dataPoint.answer_id,0,0)

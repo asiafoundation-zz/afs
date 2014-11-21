@@ -391,6 +391,7 @@ class Question extends Eloquent {
 	{
 		// If Backward
 		if (($request['FilterMove'] == 0)) {
+
 			$query_raw = "questions.id = 
 							(select max(questions.id) 
 								from questions 
@@ -418,12 +419,13 @@ class Question extends Eloquent {
 									->first();
 			// If no backward
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select('id')->orderBy('id', 'desc')->first();
+				$request['question'] =  DB::table('questions')->select('id')->where("questions.question_category_id","=",$request['category'])->orderBy('id', 'desc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
 		// If Forward
 		if (($request['FilterMove'] == 1)) {
+
 			$query_raw = "questions.id = 
 							(select min(questions.id) 
 								from questions 
@@ -450,9 +452,10 @@ class Question extends Eloquent {
 									->whereRaw($query_raw)
 									->first();
 			// $request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(id) from questions where questions.id > ".$request['question'].")")->first();
+									
 			// If no forard
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select('id')->first();
+				$request['question'] =  DB::table('questions')->select('id')->where("questions.question_category_id","=",$request['category'])->orderBy('id', 'desc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
