@@ -18,20 +18,20 @@
     <div class="search-wrp header-select">
       <!-- <select class="select-control select-cycle"> -->
       <select class="select2-custom select-cycle">
-        <option>{{ Lang::get('frontend.cycle') }}</option>
+        <option value="{{ $default_question->id_cycle }}">{{ $default_question->cycle }}</option>
         @foreach ($cycles as $cycle)
         <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
       <select class="select2-custom select-category">
-        <option>{{ Lang::get('frontend.select_category') }}</option>
+        <option value="{{ $default_question->id_question_categories }}">{{ $default_question->question_categories }}</option>
         @foreach ($question_categories as $question_category)
         <?php $question_category_name = $question_category->name != "" ? $question_category->name : "OTHER CATEGORY" ?>
         <option value="{{ $question_category->id }}">{{ $question_category_name }}</option>
         @endforeach
       </select><!-- Custom Select -->
       <select class="select2-custom select-question" id="select-question">
-        <option>{{ Lang::get('frontend.select_question') }}</option>
+        <option value="{{ $default_question->id_question }}">{{ $default_question->question }}</option>
       </select><!-- Custom Select -->
     </div>
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>

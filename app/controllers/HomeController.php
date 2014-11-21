@@ -36,7 +36,7 @@ class HomeController extends BaseController {
 			"public_path" => public_path(),
 			"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
 		);
-
+		
 		return View::make('home.index', $data);
 	}
 
