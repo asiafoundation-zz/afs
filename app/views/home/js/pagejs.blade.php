@@ -30,7 +30,7 @@
                 cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'</a></li>';
 
                 // Count Data
-                data_cycles_length=key;
+                data_cycles_length=data_cycles_length+1;
               }
             }
 
@@ -174,7 +174,7 @@
               var data_cycles = data.cycles;
               for (var key in data_cycles) {
                 if (data_cycles.hasOwnProperty(key)) {
-                data_cycles_length=key;
+                data_cycles_length=data_cycles_length+1;
                 }
               }
               var is_has_compare = data_cycles_length > 0 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
