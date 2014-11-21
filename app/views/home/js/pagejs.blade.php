@@ -149,10 +149,11 @@
         filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text;
         filter_text = filter_text.substring(0, filter_text.length - 1);
 
+        if(option_filters.length != 0){
         // Get cycles functions
-        $('#chart_canvas').hide();
-        $('.loading-flag').show();
-        $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
+          $('#chart_canvas').hide();
+          $('.loading-flag').show();
+          $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
           .done(function( data ) {
             $('.loading-flag').hide();
             $('#chart_canvas').show();
@@ -190,6 +191,9 @@
               DefaultSelectAssign(DefaultSelect);
             }
           },"html");
+        }else{
+          find_survey();
+        }
      }
 
     function compare_cycle(move)
