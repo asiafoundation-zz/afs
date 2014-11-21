@@ -14,7 +14,7 @@
  	$('#edit_filter_option').modal('show');
 	return false;
 }
-function is_active_filter(survey_id,category_id){
+function is_active_filter(survey_id,category_id){console.log(survey_id);
 	$.post( "{{ URL::to('/admin/filter') }}", { survey_id: survey_id,category_id:category_id,is_active: $("#question_select_modal").val() })
 	.done(function( data ) {
 		window.location.href = "/admin/filter/"+survey_id;
