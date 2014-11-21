@@ -71,7 +71,7 @@
 			if (e.refreshSelect){
 				html = '<div class="select-list '+scrollClass+'">'+scrollHtml+'<ul>'+html+'</ul></div>';
 				$(html).prependTo(this.$container);
-			}else{
+			}else{console.log(this.$selected); 
 				html = '<span class="custom-text" id="custom-text-title-'+this.$selected[0].text.toUpperCase()+'">'+this.$selected[0].text.toUpperCase()+'</span><div class="select-list '+scrollClass+'">'+scrollHtml+'<ul>'+html+'</ul></div>';
 				$(html).prependTo(this.$container);
 			}

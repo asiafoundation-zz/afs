@@ -198,13 +198,11 @@ function clear_all_filter()
       FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
     }else{
       var data_value = $(this).attr("data-value");
-      if(data_value % 1 === 0){
         filter_text = $('.title-filters',$(this).parent('ul')).html();
 
         $('#custom-text-title-'+filter_text.toUpperCase()).html("");
         $('#custom-text-title-'+filter_text.toUpperCase()).html(filter_text);
         find_survey();
-      }
     }
   });
   return false;
