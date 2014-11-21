@@ -26,8 +26,7 @@
       <select class="select2-custom select-category">
         <option>{{ Lang::get('frontend.select_category') }}</option>
         @foreach ($question_categories as $question_category)
-        <?php $question_category_name = $question_category->name != "" ? $question_category->name : "OTHER CATEGORY" ?>
-        <option value="{{ $question_category->id }}">{{ $question_category_name }}</option>
+        <option value="{{ $question_category->id }}">{{ $question_category->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
       <select class="select2-custom select-question" id="select-question">
