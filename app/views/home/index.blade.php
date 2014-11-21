@@ -94,7 +94,7 @@
           <div class="col-md-12">
             <ul class="chart-pagination">
               <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
-              @if(count($cycles) > 1)
+              @if($cycles_count > 1)
               <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
               @endif
               <li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
