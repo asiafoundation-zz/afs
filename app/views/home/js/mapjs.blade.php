@@ -55,10 +55,10 @@
     }).addTo(map);
 
     // get color depending on highest maximum vote
-    function getColor(d) {
+    function getColor(provinsi,dapil) {
       var color = 'white';
       @foreach ($regions as $key_region => $region)
-        if (d === '{{ $region["name"] }}')
+        if (provinsi === '{{ $region["name"] }}' || dapil === '{{ $region["name"] }}')
         {
           color = '{{ $region["color"] }}';
         }
@@ -84,7 +84,7 @@
         color: '#8E73F1',
         dashArray: '3',
         fillOpacity: 0.7,
-        fillColor: getColor(feature.properties.nm_provinsi)
+        fillColor: getColor(feature.properties.nm_provinsi, feature.properties.nm_dapil)
       };
     }
     function styleDynamic(feature) {
