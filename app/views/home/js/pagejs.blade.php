@@ -133,7 +133,7 @@
         var option_filters = [];
         var is_region = false;
 
-        var filter_text = "";
+        var filter_text_type = "";
         $(".dropdown-filter .selected_filter_option").each(function(){
           if ($(this).attr("data-type") === 'region') {
             FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
@@ -141,12 +141,12 @@
             var data_value = $(this).attr("data-value");
             if(data_value % 1 === 0){
               // Filter Text
-              filter_text = filter_text+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
+              filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
               option_filters += $(this).attr("data-value")+",";
             }
           }
         });
-        filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text;
+        filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text_type;
         filter_text = filter_text.substring(0, filter_text.length - 1);
 
         // Get cycles functions
@@ -185,7 +185,7 @@
             }else
             {
               var last_question = $('#s2id_select-question').children().children().html();
-              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_filter_data')}}'+filter_text_type+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }

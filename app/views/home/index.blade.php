@@ -71,7 +71,7 @@
             </li>
             @endforeach
             <li>
-  						<a class="clear-all" onclick='clear_all_filter()' href="#">{{Lang::get('frontend.clear_all')}}</a>
+  						<a class="clear-all" onclick='clear_all_filter()'>{{Lang::get('frontend.clear_all')}}</a>
             </li>
           </ul>
         </div>
