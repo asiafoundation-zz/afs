@@ -202,7 +202,7 @@ class HomeController extends BaseController {
 
 				case 'loadcategory':
 					$question = Question::select(DB::raw('distinct questions.id, questions.question'))
-								->join('answers','answers.question_id', '=', 'questions.id')
+								->leftJoin('answers','answers.question_id', '=', 'questions.id')
 								->where('question_category_id', '=', Input::get('category'))
 								->where('answers.cycle_id', '=', Input::get('cycle'))
 								->get();

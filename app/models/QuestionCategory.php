@@ -65,8 +65,7 @@ class QuestionCategory extends Eloquent {
 					questions.question as question'
 					)
 				)
-			->join('questions','questions.question_category_id','=','question_categories.id')
-			->join('answers','answers.question_id','=','questions.id');
+			->join('questions','questions.question_category_id','=','question_categories.id');
 			if (!empty($request['region'])) {
 				$question_categories = $question_categories->where('question_categories','=',$request['region']);
 			}
