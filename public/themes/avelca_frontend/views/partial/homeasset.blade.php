@@ -21,8 +21,11 @@
 
       chartjs(color_set_data,data_points_data,data_points_pie_data);
 
-      $('.header-select li').removeAttr('onclick');
-      $('.cross-category li').removeAttr('onclick');
-      $('.cross-question li').removeAttr('onclick');
+      // $('.header-select li').removeAttr('onclick');
+      // $('.cross-category li').removeAttr('onclick');
+      // $('.cross-question li').removeAttr('onclick');
+      $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
+      $('#select-category').prepend("<option value='0'>Pilih category</option>");
+      $('#select-cycle').prepend("<option value='0'>Pilih cycle</option>");
     }
   </script>
