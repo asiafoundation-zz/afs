@@ -415,7 +415,12 @@ class Question extends Eloquent {
 									->first();
 			// If no backward
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select('id')->where("questions.question_category_id","=",$request['category'])->orderBy('id', 'desc')->first();
+				$request['question'] =  DB::table('questions')
+										->select(DB::raw('max(questions.id) as id'))
+										->join('answers', 'answers.question_id', '=', 'questions.id')
+										->where("questions.question_category_id","=",$request['category'])
+										->where('answers.cycle_id', '=', $request['cycle'])
+										->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
@@ -451,7 +456,12 @@ class Question extends Eloquent {
 									
 			// If no forard
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select('id')->where("questions.question_category_id","=",$request['category'])->orderBy('id', 'desc')->first();
+				$request['question'] =  DB::table('questions')
+										->select(DB::raw('min(questions.id) as id'))
+										->join('answers', 'answers.question_id', '=', 'questions.id')
+										->where("questions.question_category_id","=",$request['category'])
+										->where('answers.cycle_id', '=', $request['cycle'])
+										->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
