@@ -42,8 +42,8 @@ class Amount extends Eloquent {
 				$amount->amount = $amount->amount+1;
 				$amount->save();	
 			}
+			
+			return $amount;
 		}
-
-		return $amount;
 	}
 }
