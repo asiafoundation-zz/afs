@@ -33,6 +33,14 @@ class SurveyController extends AvelcaController {
 		DB::table('surveys')->truncate();
 		DB::table('delayed_jobs')->truncate();
 
+		// Remove All File
+		$path = public_path()."/uploads/";
+		$files = glob($path.'*');
+		foreach($files as $file){
+			if(is_file($file))
+			unlink($file);
+		}
+
 		Session::flash('survey_deleted', 'Survey Deleted');
 		return Redirect::to('/admin/survey');
 	}
