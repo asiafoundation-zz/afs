@@ -17,12 +17,12 @@
     </div>
     <div class="search-wrp header-select">
       <!-- <select class="select-control select-cycle"> -->
-      <select class="select2-custom select-cycle">
+      <select class="select2-custom select-cycle" id="select-cycle">
         @foreach ($cycles as $cycle)
         <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
         @endforeach
       </select><!-- Custom Select -->
-      <select class="select2-custom select-category">
+      <select class="select2-custom select-category" id="select-category">
         @foreach ($question_categories as $question_category)
         <option value="{{ $question_category->id }}" @if( $default_question->id_question_categories == $question_category->id) selected @endif >{{ $question_category->name }}</option>
         @endforeach

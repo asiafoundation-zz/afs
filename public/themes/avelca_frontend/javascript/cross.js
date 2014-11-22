@@ -1,5 +1,7 @@
 $(document).ready(function(){
-
+  var default_q = parseInt(FilterSelect.default_question);
+  var default_cat = parseInt(FilterSelect.default_category);
+  var default_cy = parseInt(FilterSelect.default_cycle);
   /*Define select2*/
   $(function(){
       $('.select-cycle, .select-category, .select-question, .cross-select-category, .cross-select-question').select2({});
@@ -88,11 +90,18 @@ $(document).ready(function(){
   });
 
   $('.select-category').change(function(){
-    FilterSelect.category = parseInt($(this).val());
+    if($(this).val() == 0){
+      FilterSelect.question = default_q;
+      FilterSelect.category = default_cat;
+      FilterSelect.category = default_cy;
+      find_survey();
+    }else{FilterSelect.category = parseInt($(this).val());}
+    
     var value = $(this).val();
     $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
-      $('.header-select #select-question option').remove()
+      $('.header-select #select-question option').remove();
+      $('.header-select #select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
       $.each(data, function(index, obj){
         $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
       });
@@ -111,13 +120,31 @@ $(document).ready(function(){
   });
 
   $('.select-question').change(function(e){
-    FilterSelect.question = parseInt($(this).val());
-    find_survey();
+    if($(this).val() == 0){
+      FilterSelect.question = default_q;
+      FilterSelect.category = default_cat;
+      FilterSelect.category = default_cy;
+      console.log(default_q);
+      find_survey();
+    }else{
+      FilterSelect.question = parseInt($(this).val());
+      find_survey();  
+    }
+    
   });
 
   $('.select-cycle').change(function(){
-    FilterSelect.cycle = parseInt($(this).val());
+    if($(this).val() == 0){
+      FilterSelect.question = default_q;
+      FilterSelect.category = default_cat;
+      FilterSelect.cycle = default_cy;
+      // console.log(default_q);
+      find_survey();
+    }else{
+      FilterSelect.cycle = parseInt($(this).val());
 
-    cycle_select(parseInt($(this).val()));
+      cycle_select(parseInt($(this).val()));  
+    }
+    
   });
 })
