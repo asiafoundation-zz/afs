@@ -93,7 +93,7 @@ $(document).ready(function(){
     if($(this).val() == 0){
       FilterSelect.question = default_q;
       FilterSelect.category = default_cat;
-      FilterSelect.category = default_cy;
+      FilterSelect.cycle = default_cy;
       find_survey();
     }else{FilterSelect.category = parseInt($(this).val());}
     
@@ -123,7 +123,7 @@ $(document).ready(function(){
     if($(this).val() == 0){
       FilterSelect.question = default_q;
       FilterSelect.category = default_cat;
-      FilterSelect.category = default_cy;
+      FilterSelect.cycle = default_cy;
       console.log(default_q);
       find_survey();
     }else{
