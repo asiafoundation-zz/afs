@@ -33,4 +33,36 @@ class CategoryController extends AvelcaController {
 		Session::flash('message', 'Save Succeed');
 		return $status;
 	}
+
+	public function getFilterorder(){
+		$status = 1;
+
+		// Is categories ordered
+		$is_categories_ordered = CategoryItem::where('category_id','=',Input::get('category_id'))->first();
+
+		$category = CategoryItem::where('category_id','=',Input::get('category_id'));
+		if ($is_categories_ordered->order != 0) {
+			$categories = $category->orderBy('order', 'ASC')->get();
+		}else{
+			$categories = $category->get();
+		}
+
+		$view = View::make('admin.filter.order')->with('categories', $categories);
+		$view =(string) $view;
+
+		return $view;
+	}
+
+	public function postFilterorder(){
+		$status = 1;
+		$requests = Input::get();
+
+		foreach ($requests['order'] as $key_requests => $request) {
+			DB::table('category_items')->where('id', $key_requests)->update(array('order' => $request));
+		}
+
+		Session::flash('alert-class', 'alert-success'); 
+		Session::flash('message', 'Save Succeed');
+		return Redirect::to('/admin/filter/'.$requests['survey_id']);
+	}
 }

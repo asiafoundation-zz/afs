@@ -70,7 +70,8 @@ class Code extends Eloquent {
 				'categories.name as category_name',
 				'categories.display_name as name',
 				'category_items.id as category_item_id',
-				'category_items.name as category_item_name')
+				'category_items.name as category_item_name',
+				'category_items.order as order')
 			->join('master_codes','master_codes.id','=','codes.master_code_id')
 			->join('categories','codes.id','=','categories.code_id')
 			->join('category_items','categories.id','=','category_items.category_id')
@@ -82,9 +83,14 @@ class Code extends Eloquent {
 		$filters = array();
 		if (!$filter_queries->isEmpty()) {
 			foreach ($filter_queries as $key_filter_queries => $filter_query) {
+				$filters[$filter_query['category_id']]['category_items'][$filter_query['category_item_id']]['order'] = $filter_query['order'];
 				$filters[$filter_query['category_id']]['category_items'][$filter_query['category_item_id']]['category_item_id'] = $filter_query['category_item_id'];
 				$filters[$filter_query['category_id']]['category_items'][$filter_query['category_item_id']]['category_item_name'] = $filter_query['category_item_name'];
 				$filters[$filter_query['category_id']]['category_name'] = !empty($filter_query['name']) ? $filter_query['name'] : $filter_query['category_name'];
+
+				usort($filters[$filter_query['category_id']]['category_items'], function($a, $b) {
+					return $a['order'] - $b['order'];
+				});
 			}
 		}
 		return $filters;
