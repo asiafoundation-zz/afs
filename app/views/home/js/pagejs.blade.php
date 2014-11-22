@@ -30,7 +30,7 @@
                 cycle_list =cycle_list+'<li><a href="#" onclick="cycle_select('+data_cycles[key].id+')" id="'+data_cycles[key].id+'">'+data_cycles[key].name+'</a></li>';
 
                 // Count Data
-                data_cycles_length=key;
+                data_cycles_length=data_cycles_length+1;
               }
             }
 
@@ -51,7 +51,7 @@
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
 
             // Is Has Compare Cycle
-            var is_has_compare = data_cycles_length > 0 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
+            var is_has_compare = data_cycles_length > 1 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
             var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
 
             $(".chart-pagination").html(chart_pagination);
@@ -174,10 +174,10 @@
               var data_cycles = data.cycles;
               for (var key in data_cycles) {
                 if (data_cycles.hasOwnProperty(key)) {
-                data_cycles_length=key;
+                data_cycles_length=data_cycles_length+1;
                 }
               }
-              var is_has_compare = data_cycles_length > 0 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
+              var is_has_compare = data_cycles_length > 1 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
               var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
               $(".chart-pagination").html(chart_pagination);
 
@@ -426,18 +426,9 @@
         var data_list = [];
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
-            var label = assign_answer[key]['answer'];
-
-            if (label.match(/./g).length > 20){
-              label = label.substr(0, 20);
-              label = label+" ...";
-            }
-
             data_list.push(
-              { label: label, answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
+              { label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
               );
-            // { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer'], percentage: assign_answer[key]['indexlabel'] }
-            //   );
           }
         }
       }
@@ -446,7 +437,6 @@
         var data_list = [//colorSet Array
           @foreach ($question as $key => $answer)
             { label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
-            // { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",percentage: {{ $answer->indexlabel }} },
           @endforeach
           ];
       }

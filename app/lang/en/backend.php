@@ -17,15 +17,16 @@ return array(
 	"oversample_code" => "Oversample Code",
 	"oversample_name" => "Oversample Name",
 	"category_filter_code" => "Category Filter Code",
-	"category_filter_name" => "Catehory Filter Name",
+	"category_filter_name" => "Category Filter Name",
 	"question_code" => "Question Code",
 	"question_name" => "Question Name",
 	"default_survey" => "Default Survey",
 	"question" => "Question",
 	"category_question" => "Question Category",
-
+	"manage_filter_order" => "Manage Filter Order",
 	"participant_filter" => "Participant Filter",
 	"display_name" => "Display Name",
 	"availability" => "Availability",
-	"manage_display_name" => "Manage Display Name"
+	"manage_display_name" => "Manage Display Name",
+	"order_no" => "Order Number",
 );

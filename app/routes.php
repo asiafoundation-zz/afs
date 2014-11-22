@@ -46,6 +46,8 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 	Route::get('/survey/reupload', 'SurveyController@reupload');
 	Route::get('/admin/filter/{id}', 'CategoryController@getManagefilter');
 	Route::post('/admin/filter', 'CategoryController@postManagefilter');
+	Route::post('/admin/filterorder', 'CategoryController@postFilterorder');
+	Route::get('/admin/filterorder', 'CategoryController@getFilterorder');
 
 	Route::get('/admin/questioncategory', function(){
 		$question_category = QuestionCategory::all();

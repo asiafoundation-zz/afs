@@ -3,39 +3,39 @@ $(document).ready(function(){
 	// $('.ms-visible').hide();
 	$('.progress').show();
 
-	$('.excel-upload').change(function(){
-		var file = this.files[0];
-	    var name = file.name;
-	    var size = file.size;
-	    var type = file.type;
-	    var formData = new FormData();
-	    formData.append('file', this.files[0]);
+	// $('.excel-upload').change(function(){
+	// 	var file = this.files[0];
+	//     var name = file.name;
+	//     var size = file.size;
+	//     var type = file.type;
+	//     var formData = new FormData();
+	//     formData.append('file', this.files[0]);
 
-   		$.ajax({
-	        url: '/admin/survey/upload',
-	        type: 'POST',
-	        xhr: function(){
+ //   		$.ajax({
+	//         url: '/admin/survey/upload',
+	//         type: 'POST',
+	//         xhr: function(){
 
-	            var xhr = $.ajaxSettings.xhr() ;
-	            $('.progress').show();
+	//             var xhr = $.ajaxSettings.xhr() ;
+	//             $('.progress').show();
 
-                xhr.upload.onprogress = function(evt){
-                    var progress = evt.loaded/evt.total*100;
-                    $('.progress-bar').css('width', progress+'%' ).html(progress+'%').attr('aria-valuenow',progress);
-                } ;
+ //                xhr.upload.onprogress = function(evt){
+ //                    var progress = evt.loaded/evt.total*100;
+ //                    $('.progress-bar').css('width', progress+'%' ).html(progress+'%').attr('aria-valuenow',progress);
+ //                } ;
 
-                xhr.upload.onload = function(){/*console.log('DONE!');*/$('.progress-bar').parent().fadeOut("slow");} ;
-                return xhr;
-	        },
-	        data: formData,
-	        success: function(data){
-	        	$('.excel-upload').after('<input type="hidden" name="uploaded_file" value="'+ data +'">');	        	
-	        },
-	        cache: false,
-	        contentType: false,
-	        processData: false
-		})
-	});
+ //                xhr.upload.onload = function(){/*console.log('DONE!');*/$('.progress-bar').parent().fadeOut("slow");} ;
+ //                return xhr;
+	//         },
+	//         data: formData,
+	//         success: function(data){
+	//         	$('.excel-upload').after('<input type="hidden" name="uploaded_file" value="'+ data +'">');	        	
+	//         },
+	//         cache: false,
+	//         contentType: false,
+	//         processData: false
+	// 	})
+	// });
 	
 	$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 

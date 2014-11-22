@@ -34,7 +34,8 @@ class CategoryItem extends Eloquent {
 	protected $fillable = array(
 		'name',
 		'category_id',
-		'type'
+		'type',
+		'order'
 		);
 	protected $guarded = array('id');
 
@@ -58,6 +59,10 @@ class CategoryItem extends Eloquent {
 			'onIndex' => true
 		),
 		'type' => array(
+			'type' => 'number',
+			'onIndex' => true
+		),
+		'order' => array(
 			'type' => 'number',
 			'onIndex' => true
 		)
