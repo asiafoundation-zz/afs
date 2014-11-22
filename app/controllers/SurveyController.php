@@ -32,6 +32,8 @@ class SurveyController extends AvelcaController {
 		DB::table('regions')->truncate();
 		DB::table('surveys')->truncate();
 		DB::table('delayed_jobs')->truncate();
+		DB::table('amounts')->truncate();
+		DB::table('amount_filters')->truncate();
 
 		// Remove All File
 		$path = public_path()."/uploads/";
