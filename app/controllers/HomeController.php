@@ -204,7 +204,7 @@ class HomeController extends BaseController {
 					$question = Question::select(DB::raw('distinct questions.id, questions.question'))
 								->leftJoin('answers','answers.question_id', '=', 'questions.id')
 								->where('question_category_id', '=', Input::get('category'))
-								->where('answers.cycle_id', '=', Input::get('cycle'))
+								// ->where('answers.cycle_id', '=', Input::get('cycle'))
 								->get();
 					return Response::json($question);
 					break;
