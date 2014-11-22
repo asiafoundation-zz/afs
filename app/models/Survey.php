@@ -237,7 +237,7 @@ class Survey extends Eloquent {
 					}
 				}
 
-				AmountFilter::checkData($participant->id);
+				// AmountFilter::checkData($participant->id);
 
 			}
 
