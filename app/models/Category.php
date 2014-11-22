@@ -99,7 +99,7 @@ class Category extends Eloquent {
 					categories.name as category_name,
 					category_items.id as id_category_item,
 					category_items.name as category_item_name,
-					(select amount_filters.amount from amount_filters where answer_id = '. $request['answer_id'] .' and category_item_id = id_category_item) as amount,
+					(select sum(amount_filters.amount) from amount_filters where answer_id = '. $request['answer_id'] .' and category_item_id = id_category_item) as amount,
 					0 AS indexlabel'
 					)
 				)
