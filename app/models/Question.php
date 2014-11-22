@@ -171,10 +171,6 @@ class Question extends Eloquent {
 		// Count index label percentage
 		foreach ($questions as $key_questions => $question) {
 			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,1);
-			if (strlen($question->answer) > 20) {
-				$question->answer = substr($question->answer, 0,20);
-				$question->answer = $question->answer." ...";
-			}
 		}
 		// sort array based on amounts
 		usort($questions, function($a, $b) {

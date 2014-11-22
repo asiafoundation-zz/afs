@@ -426,18 +426,9 @@
         var data_list = [];
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
-            var label = assign_answer[key]['answer'];
-
-            if (label.match(/./g).length > 20){
-              label = label.substr(0, 20);
-              label = label+" ...";
-            }
-
             data_list.push(
-              { label: label, answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
+              { label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
               );
-            // { y: parseInt(assign_answer[key]['amount']), label: label, answer_id: assign_answer[key]['id_answer'], percentage: assign_answer[key]['indexlabel'] }
-            //   );
           }
         }
       }
@@ -446,7 +437,6 @@
         var data_list = [//colorSet Array
           @foreach ($question as $key => $answer)
             { label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
-            // { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",percentage: {{ $answer->indexlabel }} },
           @endforeach
           ];
       }

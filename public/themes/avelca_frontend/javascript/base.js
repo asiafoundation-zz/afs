@@ -71,6 +71,9 @@ function chartjs(color_set,data_points,data_points_pie)
           tickThickness: 1,
           lineThickness: 1,
           labelFontSize: label_font_size,
+          labelMaxWidth: 200,
+          labelWrap: false,
+          sufix: "... "
       },
       data: [
       {
