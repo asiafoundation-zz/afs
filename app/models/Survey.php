@@ -266,15 +266,15 @@ class Survey extends Eloquent {
 	        die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
 	    }
 
-	    // if($highest_column == strtoupper('highes column')){
-	    // 	$highest_column = $objWorksheet->getHighestColumn();
-	    // }
-
 	    // Set variable data
 	    $data = array();
 	    $data_header = array();
 
 	    $objWorksheet = $objPHPExcel->getSheet($sheet);
+
+	    if(empty($highest_column)){
+	    	$highest_column = $objWorksheet->getHighestColumn();
+	    }
 
 	    $highestRow = $objWorksheet->getHighestRow();
 	    $highestColumn = $highest_column;
@@ -300,6 +300,14 @@ class Survey extends Eloquent {
 	    	for($row = 1; $row <= $highestRow; ++$row){
 					for($col = 0; $col <= $highestColumnIndex; ++$col){
 						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+
+						$dataval_header = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+						$dataval_header = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]/', '', $dataval_header);
+
+						if (empty($dataval_header)) {
+								continue;
+							}
+
 						if ($row == 1) {
 							$first_column = strtolower($dataval);
 							$data_header[$col] = strtolower($dataval);

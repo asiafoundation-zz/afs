@@ -66,7 +66,7 @@ class BackgroundCommand extends Command {
 			  // Load Master Code Data
 			  $master_code = MasterCode::loadData($data);
 			  // Load Excel Data
-			  $excel_data = Survey::readHeader($survey->baseline_file, 'BZ', 1);
+			  $excel_data = Survey::readHeader($survey->baseline_file, '', 1);
 
 			  $count_excel_data = count($excel_data);
 			  // Saving queue data
