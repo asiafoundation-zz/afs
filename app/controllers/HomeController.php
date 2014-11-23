@@ -131,16 +131,37 @@ class HomeController extends BaseController {
 					break;
 
 				case 'next_question':
+					$empty_question = Question::select(DB::raw('distinct questions.id'))
+									->join('answers', 'answers.question_id', '=', 'questions.id')
+									->where('questions.id','=', Input::get('question'))
+									->where('questions.question_category_id', '=', Input::get('category'))
+									->first();
+
+					if(isset($empty_question)){
+						Input::merge(array('empty' => 0));
+					}else{
+						Input::merge(array('empty' => 1));
+					}
+
 					$default_questions = Question::NextQuestion(Input::get());
 					if (empty($default_questions)) {
 						return 0;
 					}
 					$default_question = reset($default_questions);
+
+					if(empty(Input::get('empty'))){
+						$region_color = QuestionParticipant::RegionColor(0,$default_questions);
+					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 0){
+						$region_color = QuestionParticipant::RegionColor(0,$default_questions);
+					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 1){
+						$region_color = 0;
+					}
+
 					$load_filter = array(
 						"survey" => Survey::first(),
 						"default_question" => $default_question,
 						"question" => $default_questions,
-						"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
+						"regions" => $region_color,
 					);
 
 					$return = count($default_questions) > 0 ? $load_filter : 0;
@@ -209,7 +230,16 @@ class HomeController extends BaseController {
 								->where('question_category_id', '=', Input::get('category'))
 								// ->where('answers.cycle_id', '=', Input::get('cycle'))
 								->get();
-					return Response::json($question);
+
+					$empty_question = Question::select(DB::raw('distinct min(questions.id) as id, questions.question'))
+								->leftJoin('answers','answers.question_id', '=', 'questions.id')
+								->where('question_category_id', '=', Input::get('category'))
+								->where('answers.cycle_id', '=', Input::get('cycle'))
+								->first();
+
+					$question_exist = isset($empty_question) ? $empty_question->id : 0;
+
+					return Response::json(array($question, $question_exist));
 					break;
 
 				default:

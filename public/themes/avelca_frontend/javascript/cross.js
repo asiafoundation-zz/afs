@@ -100,9 +100,20 @@ $(document).ready(function(){
     var value = $(this).val();
     $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
+      FilterSelect.empty_question = 0;
+      var data_exist = parseInt(data[1]);
+
+      if(data[1] == null){
+        data_exist = 0;
+        FilterSelect.question = parseInt(data[0][0].id);
+        FilterSelect.empty_question = 1;
+      }else{
+        FilterSelect.question = data_exist;  
+      }
+
       $('.header-select #select-question option').remove();
       $('.header-select #select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
-      $.each(data, function(index, obj){
+      $.each(data[0], function(index, obj){
         $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
       });
     });
@@ -113,21 +124,24 @@ $(document).ready(function(){
     $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
       $('#cross-select-question option').remove()
-      $.each(data, function(index, obj){
+      $.each(data[0], function(index, obj){
         $('#cross-select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
       });
     });
   });
 
   $('.select-question').change(function(e){
+    if(FilterSelect.empty_question == 0){
+      FilterSelect.empty_question = 0;
+    }
     if($(this).val() == 0){
       FilterSelect.question = default_q;
       FilterSelect.category = default_cat;
       FilterSelect.cycle = default_cy;
-      console.log(default_q);
       find_survey();
     }else{
       FilterSelect.question = parseInt($(this).val());
+
       find_survey();  
     }
     
