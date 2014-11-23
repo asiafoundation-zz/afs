@@ -93,11 +93,11 @@
           </div>
           <div class="col-md-12">
             <ul class="chart-pagination">
-              <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>
+              <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get('frontend.preveous_question') }}</a></li>
               @if($cycles_count > 1)
               <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
               @endif
-              <li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
+              <li><a class="orange-bg" onclick="next_question(1)">{{ Lang::get('frontend.next_question') }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
             </ul>
             <span id="filter-by-label"></span>
           </div>

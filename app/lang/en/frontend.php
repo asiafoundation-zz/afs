@@ -25,5 +25,7 @@ return array(
 	"cross_by_another_variable" => "Cross-tabulate data",
 	"cross_by_another_variable_p" => "Cross-tabulate data to compare answers from two question from the same survey",
 	"filter_participant_by" => "Filter Participant By",
-	"all_region" => "All Region"
+	"all_region" => "All Region",
+	"next_question" => "Next question",
+	"prevous_question" => "Preveous question"
 );
