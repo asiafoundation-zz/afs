@@ -220,7 +220,9 @@ class Survey extends Eloquent {
 				$participant->save();
 				foreach ($questions_list as $key => $question_list) {
 					if (!empty($question_list['data'])) {
-						$question = Question::checkData('',$question_list['code_id'],$question_list['question_category_id']);
+						$question = Question::where('code_id','=',$question_list['code_id'])->where('question_category_id','=',$question_list['question_category_id'])->first();
+
+						Log::info('question_id:'.$question->id);
 						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'], $key, $question->id);
 						
 						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
@@ -303,11 +305,7 @@ class Survey extends Eloquent {
 
 						$dataval_header = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
 						$dataval_header = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]/', '', $dataval_header);
-
-						if (empty($dataval_header)) {
-								continue;
-							}
-
+						
 						if ($row == 1) {
 							$first_column = strtolower($dataval);
 							$data_header[$col] = strtolower($dataval);
