@@ -348,7 +348,7 @@ class Question extends Eloquent {
 		}
 		// If Forward
 		if (($request['FilterMove'] == 2)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type and questions.id > ".$request['question'].")")->first();
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id > ".$request['question'].")")->first();
 
 			// If no forard
 			if (!count($request['question'])) {
@@ -380,7 +380,7 @@ class Question extends Eloquent {
 		->groupBy('id_answer')
 		->get();
 
-		return $questions;
+		return array($questions,$request);
 	}
 
 	public static function NextQuestion($request = array())

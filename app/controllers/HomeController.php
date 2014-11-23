@@ -111,6 +111,10 @@ class HomeController extends BaseController {
 				case 'compare_cycle':
 					$request = Input::get();
 					list($default_questions,$request) = Question::CompareCycle($request);
+					if (count($default_questions) ) {
+						return 0;			
+						// return Redirect::to('filter-select?SelectedFilter=compare_cycle&region='.$request['region'].'&category='.$request['category'].'&question='.$request['question'].'&cycle='.$request['cycle'].'&FilterMove='.$request['FilterMove']);
+					}
 
 					$default_question = reset($default_questions);
 

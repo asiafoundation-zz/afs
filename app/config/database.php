@@ -86,7 +86,15 @@ return array(
 			'password' => '',
 			'prefix'   => '',
 		),
-
+		
+		'mongodb' => array(
+			'driver'   => 'mongodb',
+			'host'     => 'localhost',
+			'port'     => 27017,
+			'username' => '',
+			'password' => '',
+			'database' => 'asia_foundation_survey'
+		),
 	),
 
 	/*

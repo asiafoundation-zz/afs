@@ -112,61 +112,7 @@ class MasterCode extends Eloquent {
     }
 		return $status;
 	}
-
-	// public static function savingProcess($request=array())
-	// {
-	// 	$status = false;
-	// 	if (count($request['options_selected']) > 0) {
-	// 		try{
-	// 			DB::beginTransaction();
-	// 			foreach ($request['options_selected'] as $key_options => $options_selected) {
-	// 				$options_selected = array(
-	// 					'category' => $options_selected['category'],
-	// 					'category_question' => !empty($options_selected['category_question']) ? $options_selected['category_question'] : "",
-	// 					'code' => !empty($options_selected['code']) ? $options_selected['code'] : "",
-	// 					'label' => !empty($options_selected['label']) ? $options_selected['label'] : "",
-	// 					);
-					
-	// 				$code_labels = explode('_', $options_selected['code']);
-	// 				$master_code_label = reset($code_labels);
-	// 				$code_label = !empty($code_labels[1]) ? $code_labels[1] : "";
-
-	// 				// Saving
-	// 				$master_codes_data = DB::table('master_codes')->where('master_code','=',$master_code_label)->first();
-	// 				if (!isset($master_codes_data)) {
-	// 					$master_code = new MasterCode;
-	// 					$master_code->master_code = $master_code_label;
-	// 					$master_code->survey_id = $request['survey_id'];
-	// 					$master_code->save();
-
-	// 					$master_codes_data = $master_code;
-	// 				}
-					
-	// 				$code = new Code;
-	// 				$code->code = $code_label;
-	// 				$code->type = $options_selected['category'];
-	// 				$code->master_code_id = $master_codes_data->id;
-	// 				$code->save();
-
-	// 				// Save question and question category
-	// 				if ($options_selected['category'] == 4) {
-	// 					// Save category question 
-	// 					$question_category = QuestionCategory::checkData($options_selected['category_question'],$code->id,$request['survey_id']);
-	// 					// Save question
-	// 					$question = Question::checkData($options_selected['label'],$code->id,$question_category->id);
-	// 				}
-	// 			}
-	// 			DB::commit();
-	// 			$status = true;
-	// 		}
-	// 		catch(\PDOException $e){
- //        DB::rollback();
- //        $status = false;
- //      }
-	// 	}
-	// 	return $status;
-	// }
-
+	
 	public static function loadData($survey_id)
 	{
 		$list_data = DB::table('master_codes')
