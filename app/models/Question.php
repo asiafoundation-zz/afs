@@ -379,7 +379,7 @@ class Question extends Eloquent {
 		}
 		// If Forward
 		if (($request['FilterMove'] == 2)) {
-			$request['question'] =  DB::table('questions')->select('*')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id > ".$request['question'].")")->first();
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id > ".$request['question'].")")->first();
 
 			// If no forard
 			if (!count($request['question'])) {
@@ -396,9 +396,9 @@ class Question extends Eloquent {
 	$questions =  self::DefaultLoad($request);
 
 		if (count($request)) {
-			// if (!empty($request['category'])) {
-			// 	$questions =  $questions->where('question_categories.id', '=', $request['category']);
-			// }
+			if (!empty($request['category'])) {
+				$questions =  $questions->where('question_categories.id', '=', $request['category']);
+			}
 			if (!empty($request['question'])) {
 				$questions =  $questions->where('questions.id', '=', $request['question']);
 			}
@@ -410,7 +410,7 @@ class Question extends Eloquent {
 		$questions =  $questions
 		->groupBy('id_answer')
 		->get();
-		
+
 		return array($questions,$request);
 	}
 
