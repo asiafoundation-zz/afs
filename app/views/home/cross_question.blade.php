@@ -6,7 +6,7 @@
         <select class="cross-select-category">
         <option>{{ Lang::get('frontend.select_category') }}</option>
         @foreach ($question_categories as $question_category)
-          <?php $question_category_name = $question_category->name != "" ? $question_category->name : "OTHER CATEGORY" ?>
+          <?php $question_category_name = $question_category->name != "" ? $question_category->name : "OTHER" ?>
           <option value="{{ $question_category->id }}">{{ $question_category_name }}</option>
         @endforeach
         </select><!-- Custom Select -->
