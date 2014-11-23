@@ -57,7 +57,7 @@ return array(
 			'host'      => 'localhost',
 			'database'  => 'agusam_asia_foundation_survey',
 			'username'  => 'agusam',
-			'password'  => 'agusam1010',
+			'password'  => 'agusam1003',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
