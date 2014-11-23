@@ -69,6 +69,7 @@
           {
 
             var last_question = $('#s2id_select-question').children().children().html();
+            $('.loading-flag').hide();
             $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
@@ -123,6 +124,7 @@
             }else
             {
               var last_question = $('#s2id_select-question').children().children().html();
+              $('.loading-flag').hide();
               $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
@@ -189,6 +191,7 @@
             }else
             {
               var last_question = $('#s2id_select-question').children().children().html();
+              $('.loading-flag').hide();
               $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_filter_data')}}'+filter_text_type+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
@@ -256,6 +259,7 @@
           }else
           {
             var last_question = $('#s2id_select-question').children().children().html();
+            $('.loading-flag').hide();
             $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.comparing_cycle_failed')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
@@ -305,6 +309,7 @@
           }else
           {
             var last_question = $('#s2id_select-question').children().children().html();
+            $('.loading-flag').hide();
             $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
@@ -343,6 +348,7 @@
           }else
           {
             var last_question = $('#s2id_select-question').children().children().html();
+              $('.loading-flag').hide();
               $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
@@ -371,6 +377,7 @@
             }else
             {
               var last_question = $('#s2id_select-question').children().children().html();
+              $('.loading-flag').hide();
               $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.detail_chart_failed')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
