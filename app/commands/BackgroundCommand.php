@@ -61,6 +61,7 @@ class BackgroundCommand extends Command {
 
 			  	// Delete document in collections monggodb
 			  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id,'queueline'=>(string)$cursor->queueline])->first();
+			  	// Delete actions
 			  	$assign_delete->delete();
 			  }
 
