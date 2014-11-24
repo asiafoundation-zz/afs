@@ -143,12 +143,19 @@ function detail_chart_js(data)
     var data_text = data[i].category_name;
     var label = data[i].category_item_name;
 
+    var amount = 0;
+    if (data[i].amount === null){
+      amount = 0;
+    }else{
+      amount = data[i].amount;
+    }
+
     if (label.length > 12){
       label = label.substr(0, 12);
       label = label+" ...";
     }
     total_participant += parseInt(data[i].amount); 
-    data_list.push({ y: parseInt(data[i].amount), indexLabel: data[i].indexlabel+"%", label: label});
+    data_list.push({ y: parseInt(amount), indexLabel: data[i].indexlabel+"%", label: label});
   }
 
   CanvasJS.addColorSet("hellowYellow",
@@ -168,7 +175,6 @@ function detail_chart_js(data)
     },
     axisY: {
       maximum: total_participant,
-      interval: 100,
       tickLength: 0,
       gridThickness: 1
     },
