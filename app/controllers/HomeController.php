@@ -170,7 +170,15 @@ class HomeController extends BaseController {
 					break;
 
 				case 'survey_area_dynamic':
-					$default_questions = Question::LoadQuestion(Input::get());
+					// print_r(Input::get());
+					$region_name = Region::where('name', '=', Input::get('region'))
+								->orWhere('name', '=', Input::get('region_dapil'))
+								->first();
+					// echo $region_name->name;		
+					Input::merge(array('region' => $region_name->id));
+
+					$default_questions = Question::loadRegion(Input::get());
+
 					if (empty($default_questions)) {
 						return 0;
 					}

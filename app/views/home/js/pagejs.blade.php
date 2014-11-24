@@ -334,13 +334,17 @@
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
-
+      // console.log("I am here");
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,answers: FilterSelect.answers} )
+      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
           if (data != false) {
+            console.log(data);
             $('#chart_canvas').show();
             $('.loading-flag').hide();
+
+            // $("#question-name").html(data.default_question.question);
+            $("#question-name").html(data.default_question.question);
 
             // Re assingn Filter data
             FilterSelect.question = data.default_question.id_question;

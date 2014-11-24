@@ -168,13 +168,11 @@
     }
 
     // Load Queston and Categories based on Area
-    function LoadDataHighligtArea(e) {
-      $.get( "filter-select", { SelectedFilter:"area", region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
-          .done(function( response ) {
+    function LoadDataHighligtArea() {
 
-            var data = response.split(";");
-            $("#div-filter-category").html(data[0]);
-            $("#div-filter-question").html(data[1]);
+      $.get( "filter-select", { SelectedFilter:"area", region: FilterSelect.region, region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+          .done(function(data) {
+             $('html, body').animate({scrollTop: $(".filter").offset().top + 100}, 1000);
           });
     }
 

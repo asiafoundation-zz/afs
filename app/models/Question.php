@@ -256,6 +256,45 @@ class Question extends Eloquent {
 		return $questions;
 	}
 
+	public static function loadRegion($request = array()){
+
+		$questions =  self::DefaultLoad($request);
+
+			if (count($request)) {
+				if (!empty($request['cycle'])) {
+					$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
+				}
+				if (!empty($request['region'])) {
+
+					$questions =  $questions
+									->where('regions.id', '=', $request['region'])
+									->whereRaw('questions.id = (select min(questions.id) from questions
+												inner join answers on answers.question_id = questions.id
+												inner join amounts on amounts.answer_id = answers.id
+												inner join regions on regions.id = amounts.region_id
+												where regions.name = name)');
+				}
+			}
+
+			$questions =  $questions
+				->groupBy('answer')
+				->get();
+		
+
+		if (count($questions)) {
+			// if (!empty($request['answers'])) {
+			// 	if (count($questions) != count($request['answers'])) {
+			$questions = self::DifferentAnswer($questions,$request);
+			// 	}
+			// }
+
+			$questions = self::IndexLabel($questions);
+		}
+
+			// exit;
+		return $questions;
+	}
+
 	public static function LoadQuestion($request = array())
 	{
 		// Load Question
