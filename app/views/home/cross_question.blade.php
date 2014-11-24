@@ -32,8 +32,12 @@
   <form class="chart-form">
 
   <div class='chart bordered cross-table'>
-
   </div>
+
+  <div class="alert alert-info" id="cross-alert">
+    <h4>{{Lang::get('frontend.no_data')}}</h4>
+  </div>
+
   <div class="col-md-12">
     <a href="#" class="orange-bg cross-back"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get('frontend.back') }}</a>
   </div>

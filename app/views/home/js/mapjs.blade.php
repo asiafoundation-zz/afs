@@ -10,6 +10,7 @@
       question: {{ $default_question->id_question }},
       default_question: {{ $default_question->id_question }},
       question_code: {{ $default_question->question_code }},
+      empty_question: 0,
       cycle:{{ $default_question->id_cycle }},
       default_cycle:{{ $default_question->id_cycle }},
       answers:[
