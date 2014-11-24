@@ -72,9 +72,15 @@ class FilterParticipant extends Eloquent {
 			->where('question_participants.answer_id', '=',$answer_id)
 			;
 
-			if ($request['region']) {
-				$filter_queries = $filter_queries->where('regions.name', '=',$request['region']);
-			}
+			if (!empty($request['region'])) {
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions =  $questions->where(
+						function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
+				}
 
 			$filter_queries = $filter_queries
 				// ->whereIn('filter_participants.category_item_id',$option_filters_array)

@@ -5,6 +5,7 @@
     // Containing province id from click event
     var FilterSelect = {
       region:"",
+      region_dapil:"",
       category:{{ $default_question->id_question_categories }},
       default_category:{{ $default_question->id_question_categories }},
       question: {{ $default_question->id_question }},
@@ -21,6 +22,7 @@
 
     var DefaultSelect = {
       region:"",
+      region_dapil:"",
       category:{{ $default_question->id_question_categories }},
       question: {{ $default_question->id_question }},
       question_code: {{ $default_question->question_code }},
@@ -38,6 +40,7 @@
     function DefaultSelectAssign(data) {
       DefaultSelect = {
         region: data.region,
+        region_dapil: data.region_dapil,
         category: data.category,
         question: data.question,
         question_code: data.question_code,
@@ -58,10 +61,10 @@
     }).addTo(map);
 
     // get color depending on highest maximum vote
-    function getColor(provinsi,dapil) {
+    function getColor(provinsi,region_dapil) {
       var color = 'white';
       @foreach ($regions as $key_region => $region)
-        if (provinsi === '{{ $region["name"] }}' || dapil === '{{ $region["name"] }}')
+        if (provinsi === '{{ $region["name"] }}' || region_dapil === '{{ $region["name"] }}')
         {
           color = '{{ $region["color"] }}';
         }
@@ -148,7 +151,9 @@
       var layer = e.target;
       
       FilterSelect.region = "";
+      FilterSelect.region_dapil = "";
       FilterSelect.region = layer.feature.properties.nm_provinsi;
+      FilterSelect.region_dapil = layer.feature.properties.nm_dapil;
       lastClickedLayer = layer;
 
       highlightFeature(e);
@@ -163,7 +168,7 @@
 
     // Load Queston and Categories based on Area
     function LoadDataHighligtArea(e) {
-      $.get( "filter-select", { SelectedFilter:"area", region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"area", region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
           .done(function( response ) {
 
             var data = response.split(";");
