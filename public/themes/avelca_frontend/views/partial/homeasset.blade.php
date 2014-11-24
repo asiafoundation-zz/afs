@@ -24,5 +24,6 @@
       $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
       $('#select-category').prepend("<option value='0'>Pilih category</option>");
       $('#select-cycle').prepend("<option value='0'>Pilih jenis survey</option>");
+      $('html, body').animate({scrollTop: $(".filter").offset().top + 100}, 1000);
     }
   </script>
