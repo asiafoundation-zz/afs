@@ -79,7 +79,7 @@
   <section class="survey-pemilu">
     <div class="container center">
       <div class="col-md-12 chart-div">
-        <h3>{{Lang::get('frontend.survey_question')}}</h3>
+        <h3 id="survey-question">{{Lang::get('frontend.survey_question')}}</h3>
         <p id="question-name">" {{ $default_question->question }} "</p>
         @include('home/cross_question')
         <div class="chart chart-flag">

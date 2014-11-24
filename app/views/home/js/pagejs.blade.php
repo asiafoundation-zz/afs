@@ -345,6 +345,10 @@
 
             // $("#question-name").html(data.default_question.question);
             $("#question-name").html(data.default_question.question);
+            if(FilterSelect.region != ""){
+              $("#survey-question .region-name").remove();
+              $("#survey-question").append('<span class="region-name"> di '+FilterSelect.region+'</span>');
+            }
 
             // Re assingn Filter data
             FilterSelect.question = data.default_question.id_question;
