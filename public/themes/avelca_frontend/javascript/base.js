@@ -124,7 +124,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
       {
         type: "bar",
         showInLegend: true,
-        legendText: endline_text+" (Hasil survey 2013)",
+        legendText: endline_text+" (Hasil survey 2014)",
         dataPoints: end_list
       }
       ]
