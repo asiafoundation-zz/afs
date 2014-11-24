@@ -60,7 +60,7 @@ class BackgroundCommand extends Command {
 			  	$codes = MasterCode::savingProcess($cursor);
 
 			  	// Delete document in collections monggodb
-			  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id,'queueline'=>(string)$cursor->queueline]);
+			  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id,'queueline'=>(string)$cursor->queueline])->first();
 			  	$assign_delete->delete();
 			  }
 

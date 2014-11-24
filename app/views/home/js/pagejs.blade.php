@@ -1,6 +1,5 @@
   <script type="text/javascript">
       $('.loading-flag').hide();
-
      function find_survey()
      {
       // Get cycles functions
@@ -52,7 +51,7 @@
 
             // Is Has Compare Cycle
             var is_has_compare = data_cycles_length > 1 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
-            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
 
             $(".chart-pagination").html(chart_pagination);
 
@@ -70,6 +69,7 @@
 
             var last_question = $('#s2id_select-question').children().children().html();
             $('.loading-flag').hide();
+            // $('#chart_canvas .col-md-7, #chart_canvas .col-md-5').hide();
             $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
@@ -180,7 +180,7 @@
                 }
               }
               var is_has_compare = data_cycles_length > 1 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
-              var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+              var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
               $(".chart-pagination").html(chart_pagination);
 
               // Re assingn Filter data
@@ -250,7 +250,7 @@
               $("#question-name").html(question_text);
 
               if (Object.keys(data.cycles).length > 1) {
-                $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+                $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
               }
             }
 
@@ -269,22 +269,21 @@
 
     function next_question(move)
     {
+      clear_all_filter();
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
 
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move} )
+      $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move, empty: FilterSelect.empty_question} )
         .done(function( data ) {
           if (data != false) {
-            $('#chart_canvas').show();
             $('.loading-flag').hide();
 
             $("#question-name").html(data.default_question.question);
             $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
 
-            // Re assingn Filter data
             FilterSelect.question = data.default_question.id_question;
             for (var key in data.question) {
               if (data.question.hasOwnProperty(key)) {
@@ -292,20 +291,33 @@
               }
             }
 
-            DefaultSelectAssign(FilterSelect);
+            if(data.regions != 0){
+              $('#chart_canvas').show();
+              // Re assingn Filter data
+              
 
-            var color_set_data = color_set(data.question);
-            var data_points_data = data_points(data.question);
-            var data_points_pie_data = data_points_pie(data.question);
-            chartjs(color_set_data,data_points_data,data_points_pie_data);
+              DefaultSelectAssign(FilterSelect);
 
-            // Re assign map
-            dynamicRegions = data.regions;
-            // Load New map
-            geojson = L.geoJson(statesData, {
-              style: styleDynamic,
-              onEachFeature: onEachFeature,
-            }).addTo(map);
+              var color_set_data = color_set(data.question);
+              var data_points_data = data_points(data.question);
+              var data_points_pie_data = data_points_pie(data.question);
+              chartjs(color_set_data,data_points_data,data_points_pie_data);
+
+              // Re assign map
+              dynamicRegions = data.regions;
+              // Load New map
+              geojson = L.geoJson(statesData, {
+                style: styleDynamic,
+                onEachFeature: onEachFeature,
+              }).addTo(map);
+            }
+            else{
+              var last_question = $('#s2id_select-question').children().children().html();
+              $('.loading-flag').hide();
+              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              // Re assingn Filter data
+              // DefaultSelectAssign(DefaultSelect);   
+            }
           }else
           {
             var last_question = $('#s2id_select-question').children().children().html();
@@ -373,7 +385,7 @@
 
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
-              $('.chart-pagination').html('<li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"></a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',2)"><img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+              $('.chart-pagination').html('<li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
             }else
             {
               var last_question = $('#s2id_select-question').children().children().html();

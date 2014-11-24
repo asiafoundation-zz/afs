@@ -2,6 +2,7 @@ $(document).ready(function(){
   var default_q = parseInt(FilterSelect.default_question);
   var default_cat = parseInt(FilterSelect.default_category);
   var default_cy = parseInt(FilterSelect.default_cycle);
+  $('.cross-question #cross-alert').hide();
   /*Define select2*/
   $(function(){
       $('.select-cycle, .select-category, .select-question, .cross-select-category, .cross-select-question').select2({});
@@ -47,35 +48,39 @@ $(document).ready(function(){
       success : function(data){
         var count_array = Object.keys(data.question_headers).length;
         
-        
-        for(var a=0;a<count_array;a++){
-          var count_value = 0; //inisiate variable for question header count
+        if(Object.keys(data.question_rows[1]).length != 0){
+          $('.cross-question #cross-alert').hide();
           
-          //show question header  
-          var $table = $($('#get-cross-table').html().trim()); //inisiate js template
-          $('#question_header', $table).append(data.question_headers[a][0]['question']);
-          $.each(data.question_headers[a], function(index, value){
-            $('#answer_header', $table).append('<th>'+ value['answer'] +'</th>');
-            count_value++;
-          });
+          for(var a=0;a<count_array;a++){
+            var count_value = 0; //inisiate variable for question header count
+            
+            //show question header  
+            var $table = $($('#get-cross-table').html().trim()); //inisiate js template
+            $('#question_header', $table).append(data.question_headers[a][0]['question']);
+            $.each(data.question_headers[a], function(index, value){
+              $('#answer_header', $table).append('<th>'+ value['answer'] +'</th>');
+              count_value++;
+            });
 
-          $('#question_header', $table).attr('colspan',count_value);
+            $('#question_header', $table).attr('colspan',count_value);
 
-          //show question row
-          $.each(data.question_rows[a], function(index, value){
-            result = '<tr><td width="20%">'+ value['answer'] +'</td>'; //create html for showing question row data
-            for(i=0;i<count_value;i++){
-              result += '<td align="center">'+ value['result'+i] +'</td>';
-            }
-            result += '</tr>';
+            //show question row
+            $.each(data.question_rows[a], function(index, value){
+              result = '<tr><td width="20%">'+ value['answer'] +'</td>'; //create html for showing question row data
+              for(i=0;i<count_value;i++){
+                result += '<td align="center">'+ value['result'+i] +'</td>';
+              }
+              result += '</tr>';
 
-            $('#answer_row', $table).append(result); //append html to tempate
+              $('#answer_row', $table).append(result); //append html to tempate
 
-          });
-          
-          $('.cross-table').append($table); //append template to cross-table class
+            });
+            
+            $('.cross-table').append($table); //append template to cross-table class
+          }  
+        }else{
+          $('.cross-question #cross-alert').show();
         }
-
       }
 
     });
