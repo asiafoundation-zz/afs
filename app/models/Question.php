@@ -79,19 +79,7 @@ class Question extends Eloquent {
 
 		if (!empty($request['region']))
 		{
-			if(!empty($request['empty']) && $request['empty'] == 1){
-
-				$query = 'questions.id as id_question,
-					questions.code_id as question_code,
-					questions.question as question,
-					question_categories.id as id_question_categories,
-					question_categories.name as question_categories,
-					regions.id as id_region,
-					regions.name,
-					0 AS indexlabel';	
-			}else{
-
-				$query = 'questions.id as id_question,
+			$query = 'questions.id as id_question,
 					questions.code_id as question_code,
 					questions.question as question,
 					question_categories.id as id_question_categories,
@@ -107,38 +95,26 @@ class Question extends Eloquent {
 					(SELECT sum(amounts.amount) 
 						from amounts 
 						where amounts.answer_id = id_answer) AS amount,
-					0 AS indexlabel';	
-			}
-			
+					0 AS indexlabel';
 		}else
 		{
-			if(!empty($request['empty']) && $request['empty'] == 1){
-				
-				$query = 'questions.id as id_question,
+			$query = 'questions.id as id_question,
 					questions.code_id as question_code,
 					questions.question as question,
 					question_categories.id as id_question_categories,
 					question_categories.name as question_categories,
-					0 AS indexlabel';	
-			}else{
-
-				$query = 'questions.id as id_question,
-						questions.code_id as question_code,
-						questions.question as question,
-						question_categories.id as id_question_categories,
-						question_categories.name as question_categories,
-						answers.id  as id_answer,
-						answers.answer as answer,
-						colors.color,
-						cycles.id  as id_cycle,
-						cycles.cycle_type  as cycle_type,
-						cycles.name as cycle,
-						(SELECT sum(amounts.amount) 
-							from amounts 
-							where amounts.answer_id = id_answer) AS amount,
-						0 AS indexlabel';
-			}
+					answers.id  as id_answer,
+					answers.answer as answer,
+					colors.color,
+					cycles.id  as id_cycle,
+					cycles.cycle_type  as cycle_type,
+					cycles.name as cycle,
+					(SELECT sum(amounts.amount) 
+						from amounts 
+						where amounts.answer_id = id_answer) AS amount,
+					0 AS indexlabel';
 		}
+
 		$questions = DB::table('questions')
 					->select(DB::raw($query))
 					->join('question_categories','questions.question_category_id','=','question_categories.id')
@@ -365,36 +341,27 @@ class Question extends Eloquent {
 
 	public static function CompareCycle($request = array())
 	{
+		$questions = array();
 		// If Backward
 		if (($request['FilterMove'] == 1)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id < ".$request['question']." and questions.question_category_id = ". $request['category'] .")")->first();
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions where questions.id < ".$request['question'].")")->first();
 			// If no backward
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select(DB::raw('max(questions.id) as id'))
-					->join('answers','answers.question_id','=','questions.id')
-					->join('cycles','cycles.id','=','answers.cycle_id')
-					->where("cycles.cycle_type","=",1)
-					->where('questions.question_category_id', '=', $request['category'])
-					->orderBy('questions.id', 'desc')->first();
+				$request['question'] =  DB::table('questions')->select('questions.id')->orderBy('questions.id', 'desc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
 		// If Forward
 		if (($request['FilterMove'] == 2)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id > ".$request['question']." and questions.question_category_id = ". $request['category'] .")")->first();
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions where  questions.id > ".$request['question'].")")->first();
 
 			// If no forard
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select(DB::raw('min(questions.id) as id'))
-					->join('answers','answers.question_id','=','questions.id')
-					->join('cycles','cycles.id','=','answers.cycle_id')
-					->where("cycles.cycle_type","=",1)
-					->where('questions.question_category_id', '=', $request['category'])
-					->first();
+				$request['question'] =  DB::table('questions')->select('questions.id')->orderBy('questions.id', 'asc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
-
+		
 	// Load Question
 	$questions =  self::DefaultLoad($request);
 
@@ -416,12 +383,19 @@ class Question extends Eloquent {
 				}
 		}
 
-		$questions =  $questions
+		$is_cycles = $questions
+		->groupBy('cycle_type')
+		->get();
+		
+		if (count($is_cycles) < 2) {
+			list($questions,$request) = Question::CompareCycle($request);self::CompareCycle($request);
+		}else{
+			$questions =  $questions
 		->groupBy('id_answer')
 		->get();
+		}
 
-		// print_r($questions);
-		return $questions;
+		return array($questions,$request);
 	}
 
 	public static function NextQuestion($request = array())
@@ -433,17 +407,15 @@ class Question extends Eloquent {
 							(select max(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.id
+									inner join answers on answers.question_id = questions.id
 									where questions.id < ".$request['question'];
 								
 			if (count($request)) {
 				if (!empty($request['category'])) {
 					$query_raw .= " and question_categories.id = ". $request['category'];
 				}
-				if($request['empty'] == 0){
-					if (!empty($request['cycle'])) {
-						$query_raw .= " and answers.cycle_id = ". $request['cycle'];
-					}
+				if (!empty($request['cycle'])) {
+					$query_raw .= " and answers.cycle_id = ". $request['cycle'];
 				}
 				if (!empty($request['region'])) {
 					$region = $request['region'];
@@ -480,17 +452,15 @@ class Question extends Eloquent {
 							(select min(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.id
+									inner join answers on answers.question_id = questions.id
 									where questions.id > ".$request['question'];
 								
 			if (count($request)) {
 				if (!empty($request['category'])) {
 					$query_raw .= " and question_categories.id = ". $request['category'];
 				}
-				if($request['empty'] == 0){
-					if (!empty($request['cycle'])) {
-						$query_raw .= " and answers.cycle_id = ". $request['cycle'];
-					}
+				if (!empty($request['cycle'])) {
+					$query_raw .= " and answers.cycle_id = ". $request['cycle'];
 				}
 				if (!empty($request['region'])) {
 					$region = $request['region'];
@@ -536,10 +506,8 @@ class Question extends Eloquent {
 				if (!empty($request['question'])) {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
-				if($request['empty'] == 0){
-					if (!empty($request['cycle'])) {
-						$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
-					}
+				if (!empty($request['cycle'])) {
+					$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
 				}
 				if (!empty($request['region'])) {
 					$region = $request['region'];
@@ -552,20 +520,19 @@ class Question extends Eloquent {
 				}
 			}
 
-			if($request['empty'] == 0){
-				$questions = $questions->groupBy('answer')
-							->get();
-							
-				if (count($questions)) {
-					$questions = self::IndexLabel($questions);
-				}
-			}else{
-				$questions =  $questions->get();
-			}
+			$questions =  $questions
+				->groupBy('answer')
+				->get();
 
-			
+		if (count($questions)) {
+			// if (!empty($request['answers'])) {
+			// 	if (count($questions) != count($request['answers'])) {
+			// 		$questions = self::DifferentAnswer($questions,$request);
+			// 	}
+			// }
 
-		
+			$questions = self::IndexLabel($questions);
+		}
 
 		return $questions;
 	}
