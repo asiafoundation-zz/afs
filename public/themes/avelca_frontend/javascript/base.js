@@ -136,7 +136,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
 function detail_chart_js(data)
 {
   var data_list = [];
-  var total_participant = 0;
+  var total_participant = 10;
 
   for (i = 0; i < data.length; i++) {
     // Cut String
@@ -154,10 +154,10 @@ function detail_chart_js(data)
       label = label.substr(0, 12);
       label = label+" ...";
     }
-    total_participant += parseInt(data[i].amount); 
+    total_participant += parseInt(amount); 
     data_list.push({ y: parseInt(amount), indexLabel: data[i].indexlabel+"%", label: label});
   }
-
+  
   CanvasJS.addColorSet("hellowYellow",
   [//colorSet Array
     "#ffe87a"              
