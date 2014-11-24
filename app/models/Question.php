@@ -139,25 +139,16 @@ class Question extends Eloquent {
 						0 AS indexlabel';
 			}
 		}
+		$questions = DB::table('questions')
+					->select(DB::raw($query))
+					->join('question_categories','questions.question_category_id','=','question_categories.id')
+					->join('answers','answers.question_id','=','questions.id')
+					->join('cycles','cycles.id','=','answers.cycle_id')
+					->join('amounts','amounts.answer_id','=','answers.id')
+					->join('regions','regions.id','=','amounts.region_id')
+					->join('colors','answers.color_id','=','colors.id');
 
-		$questions = DB::table('questions')->select(DB::raw($query));
-
-		if(!empty($request['empty']) && $request['empty'] == 1){
-			$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id');
-
-		}else{
-			$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id')
-							->join('answers','answers.question_id','=','questions.id')
-							->join('cycles','cycles.id','=','answers.cycle_id')
-							->join('amounts','amounts.answer_id','=','answers.id')
-							->join('colors','answers.color_id','=','colors.id');
-
-			if (!empty($request['region'])) {
-				$questions =  $questions->leftjoin('regions','regions.id','=','amounts.region_id');
-			}
-
-			$questions = $questions->where('amounts.sample_type', '=', 0);
-		}
+		$questions = $questions->where('amounts.sample_type', '=', 0);
 
 		return $questions;
 	}
@@ -225,7 +216,13 @@ class Question extends Eloquent {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
 				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions =  $questions->where(
+						function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
 				}
 			}
 			else{
@@ -270,7 +267,13 @@ class Question extends Eloquent {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
 				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions =  $questions->where(
+						function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
 				}
 				if (!empty($request['cycle'])) {
 					$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
@@ -280,8 +283,6 @@ class Question extends Eloquent {
 			$questions =  $questions
 				->groupBy('answer')
 				->get();
-		
-
 		if (count($questions)) {
 			// if (!empty($request['answers'])) {
 			// 	if (count($questions) != count($request['answers'])) {
@@ -405,8 +406,14 @@ class Question extends Eloquent {
 				$questions =  $questions->where('questions.id', '=', $request['question']);
 			}
 			if (!empty($request['region'])) {
-				$questions =  $questions->where('regions.name', '=', (string)$request['region']);
-			}
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions =  $questions->where(
+						function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
+				}
 		}
 
 		$questions =  $questions
@@ -439,7 +446,13 @@ class Question extends Eloquent {
 					}
 				}
 				if (!empty($request['region'])) {
-					$query_raw .= " and answers.cycle_id = ". (string)$request['region'];
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions =  $questions->where(
+						function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
 				}
 			}
 
@@ -480,7 +493,13 @@ class Question extends Eloquent {
 					}
 				}
 				if (!empty($request['region'])) {
-					$query_raw .= " and answers.cycle_id = ". (string)$request['region'];
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions =  $questions->where(
+						function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
 				}
 			}
 			
@@ -523,7 +542,13 @@ class Question extends Eloquent {
 					}
 				}
 				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions =  $questions->where(
+						function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
 				}
 			}
 
@@ -578,8 +603,14 @@ class Question extends Eloquent {
 				$questions =  $questions->whereRaw("(questions.id = ".$request['question']." or questions.id = ".$request['question_move'].")");
 			}
 			if (!empty($request['region'])) {
-				$questions =  $questions->where('regions.name', '=', (string)$request['region']);
-			}
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions =  $questions->where(
+						function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
+				}
 			if (!empty($request['cycle'])) {
 				$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
 			}

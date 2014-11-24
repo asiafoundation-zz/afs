@@ -6,7 +6,7 @@
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
-      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
           $('#chart_canvas').show();
           $('.loading-flag').hide();
@@ -158,7 +158,7 @@
         // Get cycles functions
           $('#chart_canvas').hide();
           $('.loading-flag').show();
-          $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
+          $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
           .done(function( data ) {
             $('.loading-flag').hide();
             $('#chart_canvas').show();
@@ -208,7 +208,7 @@
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
+      $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
             $('#chart_canvas').show();
@@ -275,7 +275,7 @@
       $('.loading-flag').show();
 
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move, empty: FilterSelect.empty_question} )
+      $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move, empty: FilterSelect.empty_question})
         .done(function( data ) {
           if (data != false) {
             $('.loading-flag').hide();
@@ -336,7 +336,7 @@
       $('.loading-flag').show();
 
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,answers: FilterSelect.answers} )
+      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,answers: FilterSelect.answers} )
         .done(function( data ) {
           if (data != false) {
             $('#chart_canvas').show();
@@ -374,7 +374,7 @@
       $('#chart_canvas').hide();
       $('.loading-flag').show();
         // Get cycles functions
-        $.get( "filter-select", { SelectedFilter:"detail_chart",region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answer_id:answer_id, category_filter: category_id, FilterMove:move} )
+        $.get( "filter-select", { SelectedFilter:"detail_chart",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answer_id:answer_id, category_filter: category_id, FilterMove:move} )
           .done(function( data ) {
             if (data != false) {
               $('#chart_canvas').show();
