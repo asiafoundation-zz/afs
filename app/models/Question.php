@@ -366,27 +366,29 @@ class Question extends Eloquent {
 	{
 		// If Backward
 		if (($request['FilterMove'] == 1)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id < ".$request['question'].")")->first();
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id < ".$request['question']." and questions.question_category_id = ". $request['category'] .")")->first();
 			// If no backward
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select('questions.id')
+				$request['question'] =  DB::table('questions')->select(DB::raw('max(questions.id) as id'))
 					->join('answers','answers.question_id','=','questions.id')
 					->join('cycles','cycles.id','=','answers.cycle_id')
 					->where("cycles.cycle_type","=",1)
+					->where('questions.question_category_id', '=', $request['category'])
 					->orderBy('questions.id', 'desc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
 		// If Forward
 		if (($request['FilterMove'] == 2)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id > ".$request['question'].")")->first();
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id > ".$request['question']." and questions.question_category_id = ". $request['category'] .")")->first();
 
 			// If no forard
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select('questions.id')
+				$request['question'] =  DB::table('questions')->select(DB::raw('min(questions.id) as id'))
 					->join('answers','answers.question_id','=','questions.id')
 					->join('cycles','cycles.id','=','answers.cycle_id')
 					->where("cycles.cycle_type","=",1)
+					->where('questions.question_category_id', '=', $request['category'])
 					->first();
 			}
 			$request['question'] = $request['question']->id;
@@ -411,7 +413,8 @@ class Question extends Eloquent {
 		->groupBy('id_answer')
 		->get();
 
-		return array($questions,$request);
+		// print_r($questions);
+		return $questions;
 	}
 
 	public static function NextQuestion($request = array())
