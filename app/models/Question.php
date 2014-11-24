@@ -478,7 +478,7 @@ class Question extends Eloquent {
 					}
 				}
 				if (!empty($request['region'])) {
-					$query_raw .= " and answers.cycle_id = ". (string)$request['region'];
+					$query_raw .= " and regions.name = ". (string)$request['region'];
 				}
 			}
 
@@ -519,7 +519,7 @@ class Question extends Eloquent {
 					}
 				}
 				if (!empty($request['region'])) {
-					$query_raw .= " and answers.cycle_id = ". (string)$request['region'];
+					$query_raw .= " and regions.name = ". (string)$request['region'];
 				}
 			}
 			
