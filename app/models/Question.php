@@ -341,34 +341,27 @@ class Question extends Eloquent {
 
 	public static function CompareCycle($request = array())
 	{
+		$questions = array();
 		// If Backward
 		if (($request['FilterMove'] == 1)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id < ".$request['question'].")")->first();
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions where questions.id < ".$request['question'].")")->first();
 			// If no backward
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select('questions.id')
-					->join('answers','answers.question_id','=','questions.id')
-					->join('cycles','cycles.id','=','answers.cycle_id')
-					->where("cycles.cycle_type","=",1)
-					->orderBy('questions.id', 'desc')->first();
+				$request['question'] =  DB::table('questions')->select('questions.id')->orderBy('questions.id', 'desc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
 		// If Forward
 		if (($request['FilterMove'] == 2)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id > ".$request['question'].")")->first();
+			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions where  questions.id > ".$request['question'].")")->first();
 
 			// If no forard
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select('questions.id')
-					->join('answers','answers.question_id','=','questions.id')
-					->join('cycles','cycles.id','=','answers.cycle_id')
-					->where("cycles.cycle_type","=",1)
-					->first();
+				$request['question'] =  DB::table('questions')->select('questions.id')->orderBy('questions.id', 'asc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
-
+		
 	// Load Question
 	$questions =  self::DefaultLoad($request);
 
@@ -390,9 +383,17 @@ class Question extends Eloquent {
 				}
 		}
 
-		$questions =  $questions
+		$is_cycles = $questions
+		->groupBy('cycle_type')
+		->get();
+		
+		if (count($is_cycles) < 2) {
+			list($questions,$request) = Question::CompareCycle($request);self::CompareCycle($request);
+		}else{
+			$questions =  $questions
 		->groupBy('id_answer')
 		->get();
+		}
 
 		return array($questions,$request);
 	}
