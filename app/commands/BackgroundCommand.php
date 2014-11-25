@@ -52,12 +52,12 @@ class BackgroundCommand extends Command {
 			// 	DB::beginTransaction();
 				$delayed_jobs->queue = 0;
 				$delayed_jobs->save();
-				// Update publish status
-		    $survey->publish = 3;
-		    $survey->save();
-		    
+
 			  $status = 0;
 			  $survey = Survey::where('id', '=', $delayed_jobs->survey_id)->first();
+			  // Update publish status
+		    $survey->publish = 3;
+		    $survey->save();
 
 			  // Load data from collections MonggoDB and saving master code and codes
 			  $cursors = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id]);
