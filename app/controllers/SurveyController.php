@@ -42,6 +42,14 @@ class SurveyController extends AvelcaController {
 			if(is_file($file))
 			unlink($file);
 		}
+		// Emptying mongo data
+		$cursors = Assign::all();
+		foreach ($cursors as $key => $cursor) {
+			// Delete document in collections monggodb
+			$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id,'queueline'=>(string)$cursor->queueline])->first();
+			// Delete actions
+			$assign_delete->delete();
+		}
 
 		Session::flash('survey_deleted', 'Survey Deleted');
 		return Redirect::to('/admin/survey');
