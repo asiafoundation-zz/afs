@@ -340,6 +340,11 @@
         .done(function( data ) {
           if (data != false) {
             console.log(data);
+            
+            FilterSelect.question = parseInt(data.default_question.id_question);
+            FilterSelect.category = parseInt(data.default_question.id_question_categories);
+            FilterSelect.cycle = parseInt(data.default_question.id_cycle);
+
             $('#chart_canvas').show();
             $('.loading-flag').hide();
 
