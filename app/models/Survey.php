@@ -255,6 +255,7 @@ class Survey extends Eloquent {
 
 	Public static function readHeader($inputFileName, $highest_column, $sheet)
 	{
+		set_time_limit(0);
 		$inputFileName = public_path().'/uploads/'.$inputFileName;
 
 		try
@@ -288,7 +289,8 @@ class Survey extends Eloquent {
 					for($col = 0; $col <= $highestColumnIndex; ++$col){
 						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
 						if ($col != 1) {
-							$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]/', '', $dataval);
+							$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|\n\r]/', '', $dataval);
+							$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
 						}
 
 						$data[$row]['header'.$col] = $dataval;
@@ -304,7 +306,7 @@ class Survey extends Eloquent {
 						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
 
 						$dataval_header = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-						$dataval_header = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]/', '', $dataval_header);
+						$dataval_header = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval_header);
 						
 						if ($row == 1) {
 							$first_column = strtolower($dataval);
@@ -312,7 +314,7 @@ class Survey extends Eloquent {
 						}
 						else
 						{
-							$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]/', '', $dataval);
+							$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval);
 							$data[$row][$data_header[$col]] = $dataval;
 						}
 					}
