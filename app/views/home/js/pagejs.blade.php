@@ -211,6 +211,7 @@
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
+            $('html, body').animate({scrollTop: $("#filter").offset().top}, 1000);
             $('#chart_canvas').show();
             $('.loading-flag').hide();
             // Build chart
