@@ -110,14 +110,13 @@ class HomeController extends BaseController {
 
 				case 'compare_cycle':
 					$request = Input::get();
-					$default_questions = Question::CompareCycle($request);
-					// if (count($default_questions) ) {
-					// 	return 0;			
-					// 	// return Redirect::to('filter-select?SelectedFilter=compare_cycle&region='.$request['region'].'&category='.$request['category'].'&question='.$request['question'].'&cycle='.$request['cycle'].'&FilterMove='.$request['FilterMove']);
-					// }
-					// print_r($default_questions);
-					// exit;
+					list($default_questions,$request) = Question::CompareCycle($request);
+					if (!count($default_questions) ) {
+						return 0;
+					}
+
 					$default_question = reset($default_questions);
+
 					$load_filter = array();
 					$load_filter = array(
 						"default_question" => $default_question,
@@ -132,31 +131,32 @@ class HomeController extends BaseController {
 
 				case 'next_question':
 					$empty_question = Question::select(DB::raw('distinct questions.id'))
-									->join('answers', 'answers.question_id', '=', 'questions.id')
-									->where('questions.id','=', Input::get('question'))
-									->where('questions.question_category_id', '=', Input::get('category'))
-									->first();
+									->join('answers', 'answers.question_id', '=', 'questions.id')	 
+									->where('questions.id','=', Input::get('question'))	 
+									->where('questions.question_category_id', '=', Input::get('category'))	 
+									->first();	 
 
 					if(isset($empty_question)){
-						Input::merge(array('empty' => 0));
+						Input::merge(array('empty' => 0));	 
 					}else{
-						Input::merge(array('empty' => 1));
+	 					Input::merge(array('empty' => 1));
 					}
+	 
 
 					$default_questions = Question::NextQuestion(Input::get());
 					if (empty($default_questions)) {
 						return 0;
 					}
-					$default_question = reset($default_questions);
 
-					if(empty(Input::get('empty'))){
-						$region_color = QuestionParticipant::RegionColor(0,$default_questions);
-					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 0){
-						$region_color = QuestionParticipant::RegionColor(0,$default_questions);
-					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 1){
-						$region_color = 0;
+					if(empty(Input::get('empty'))){	 
+						$region_color = QuestionParticipant::RegionColor(0,$default_questions);	 
+					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 0){	 
+						$region_color = QuestionParticipant::RegionColor(0,$default_questions);	 
+					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 1){	 
+						$region_color = 0;	 
 					}
 
+					$default_question = reset($default_questions);
 					$load_filter = array(
 						"survey" => Survey::first(),
 						"default_question" => $default_question,
@@ -170,15 +170,14 @@ class HomeController extends BaseController {
 					break;
 
 				case 'survey_area_dynamic':
-					// print_r(Input::get());
-					$region_name = Region::where('name', '=', Input::get('region'))
+	 
+					$region_name = Region::where('name', '=', Input::get('region')) 
 								->orWhere('name', '=', Input::get('region_dapil'))
-								->first();
-					// echo $region_name->name;		
+								->first();	
+	 
 					Input::merge(array('region' => $region_name->id));
 
 					$default_questions = Question::loadRegion(Input::get());
-
 					if (empty($default_questions)) {
 						return 0;
 					}
@@ -241,7 +240,7 @@ class HomeController extends BaseController {
 
 					$empty_question = Question::select(DB::raw('distinct min(questions.id) as id, questions.question'))
 								->leftJoin('answers','answers.question_id', '=', 'questions.id')
-								->where('question_category_id', '=', Input::get('category'))
+								->where('question_category_id', '=', Input::get('category'))	 
 								->where('answers.cycle_id', '=', Input::get('cycle'))
 								->first();
 

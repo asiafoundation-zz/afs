@@ -135,7 +135,7 @@ class SurveyController extends AvelcaController {
 	{
 		$survey = Survey::where('id', '=', $id)->first();
 		
-		$header = Survey::readHeader($survey->baseline_file, 'E', 0);
+		$header = Survey::readHeader($survey->baseline_file, 'E', 0,$survey);
 
 		$content = array("Select 'Region' Filter","Please select select 'Region' with clicking a list on the left");
 

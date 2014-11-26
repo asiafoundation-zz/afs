@@ -43,7 +43,7 @@ setInterval(function() {
 					<tr>
 						<td>{{ $no }}</td>
 						<td>
-							@if($survey['publish'] == 1 || $survey['publish'] == 3)
+							@if($survey['publish'] == 1 || $survey['publish'] == 3 || $survey['publish'] == 4)
 							<a href="{{ URL::to('admin/survey/managesurvey') }}/{{ $survey['id'] }}">
 								{{ $survey['name'] }}
 							</a>

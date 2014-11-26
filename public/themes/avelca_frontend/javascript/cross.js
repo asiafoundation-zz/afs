@@ -136,6 +136,7 @@ $(document).ready(function(){
   });
 
   $('.select-question').change(function(e){
+    $('html, body').animate({scrollTop: $("#filter").offset().top}, 1000);
     if(FilterSelect.empty_question == 0){
       FilterSelect.empty_question = 0;
     }

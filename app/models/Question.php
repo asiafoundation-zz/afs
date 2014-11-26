@@ -233,7 +233,13 @@ class Question extends Eloquent {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
 				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions = $questions->where(
+						function ($query) use ($region,$region_dapil) {
+							$query->where('regions.name', '=', (string)$region)
+							->orWhere('regions.name', '=', (string)$region_dapil);
+					});
 				}
 			}
 			else{
@@ -317,7 +323,13 @@ class Question extends Eloquent {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
 				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions = $questions->where(
+						function ($query) use ($region,$region_dapil) {
+							$query->where('regions.name', '=', (string)$region)
+							->orWhere('regions.name', '=', (string)$region_dapil);
+					});
 				}
 				if (!empty($request['cycle'])) {
 					$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
@@ -408,60 +420,60 @@ class Question extends Eloquent {
 		
 		return $questions;
 	}
-
 	public static function CompareCycle($request = array())
 	{
+		$questions = array();
 		// If Backward
 		if (($request['FilterMove'] == 1)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id < ".$request['question']." and questions.question_category_id = ". $request['category'] .")")->first();
+			$request['question'] = DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions where questions.id < ".$request['question'].")")->first();
 			// If no backward
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select(DB::raw('max(questions.id) as id'))
-					->join('answers','answers.question_id','=','questions.id')
-					->join('cycles','cycles.id','=','answers.cycle_id')
-					->where("cycles.cycle_type","=",1)
-					->where('questions.question_category_id', '=', $request['category'])
-					->orderBy('questions.id', 'desc')->first();
+				$request['question'] = DB::table('questions')->select('questions.id')->orderBy('questions.id', 'desc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
 		// If Forward
 		if (($request['FilterMove'] == 2)) {
-			$request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions JOIN answers ON answers.question_id = questions.id JOIN cycles ON cycles.id = answers.cycle_id where cycles.cycle_type = 1 and questions.id > ".$request['question']." and questions.question_category_id = ". $request['category'] .")")->first();
-
+			$request['question'] = DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions where questions.id > ".$request['question'].")")->first();
 			// If no forard
 			if (!count($request['question'])) {
-				$request['question'] =  DB::table('questions')->select(DB::raw('min(questions.id) as id'))
-					->join('answers','answers.question_id','=','questions.id')
-					->join('cycles','cycles.id','=','answers.cycle_id')
-					->where("cycles.cycle_type","=",1)
-					->where('questions.question_category_id', '=', $request['category'])
-					->first();
+				$request['question'] = DB::table('questions')->select('questions.id')->orderBy('questions.id', 'asc')->first();
 			}
 			$request['question'] = $request['question']->id;
 		}
 
-	// Load Question
-	$questions =  self::DefaultLoad($request);
+		// Load Question
+		$questions = self::DefaultLoad($request);
 
 		if (count($request)) {
 			if (!empty($request['category'])) {
-				$questions =  $questions->where('question_categories.id', '=', $request['category']);
+				$questions = $questions->where('question_categories.id', '=', $request['category']);
 			}
 			if (!empty($request['question'])) {
-				$questions =  $questions->where('questions.id', '=', $request['question']);
+				$questions = $questions->where('questions.id', '=', $request['question']);
 			}
 			if (!empty($request['region'])) {
-				$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+				$region = $request['region'];
+				$region_dapil = $request['region_dapil'];
+				$questions = $questions->where(
+					function ($query) use ($region,$region_dapil) {
+						$query->where('regions.name', '=', (string)$region)
+						->orWhere('regions.name', '=', (string)$region_dapil);
+					});
 			}
 		}
 
-		$questions =  $questions
-		->groupBy('id_answer')
+		$is_cycles = $questions
+		->groupBy('cycle_type')
 		->get();
-
-		// print_r($questions);
-		return $questions;
+		if (count($is_cycles) < 2) {
+			list($questions,$request) = Question::CompareCycle($request);self::CompareCycle($request);
+		}else{
+			$questions = $questions
+			->groupBy('id_answer')
+			->get();
+		}
+		return array($questions,$request);
 	}
 
 	public static function NextQuestion($request = array())
@@ -473,7 +485,7 @@ class Question extends Eloquent {
 							(select max(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.idleft join answers on answers.question_id = questions.id";
+									left join answers on answers.question_id = questions.idleft join answers on answers.question_id = questions.id ";
 			
 			if (!empty($request['region'])) {
 				$query_raw .= " left join amounts on amounts.answer_id = answers.id
@@ -520,7 +532,7 @@ class Question extends Eloquent {
 							(select min(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.id";
+									left join answers on answers.question_id = questions.id ";
 			
 			if (!empty($request['region'])) {
 				$query_raw .= " left join amounts on amounts.answer_id = answers.id
@@ -637,8 +649,14 @@ class Question extends Eloquent {
 				$questions =  $questions->whereRaw("(questions.id = ".$request['question']." or questions.id = ".$request['question_move'].")");
 			}
 			if (!empty($request['region'])) {
-				$questions =  $questions->where('regions.name', '=', (string)$request['region']);
-			}
+					$region = $request['region'];
+					$region_dapil = $request['region_dapil'];
+					$questions = $questions->where(
+						function ($query) use ($region,$region_dapil) {
+							$query->where('regions.name', '=', (string)$region)
+							->orWhere('regions.name', '=', (string)$region_dapil);
+					});
+				}
 			if (!empty($request['cycle'])) {
 				$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
 			}
