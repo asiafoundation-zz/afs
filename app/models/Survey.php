@@ -121,6 +121,7 @@ class Survey extends Eloquent {
 				case 3:
 					$surveys[$key_survey_lists]['publish_text'] = "Initializing";
 					$surveys[$key_survey_lists]['publish_style'] = "initializing";
+					$is_refresh = true;
 					break;
 				case 4:
 					$surveys[$key_survey_lists]['publish_text'] = "Completed";
@@ -258,7 +259,7 @@ class Survey extends Eloquent {
     return $status;
 	}
 
-	Public static function readHeader($inputFileName, $highest_column, $sheet, $survey,$master_code = array())
+	Public static function readHeader($inputFileName, $highest_column, $sheet, $survey,$master_code = array(),$delayed_jobs = array())
 	{
 		set_time_limit(0);
 		$inputFileName = public_path().'/uploads/'.$inputFileName;
@@ -306,6 +307,14 @@ class Survey extends Eloquent {
 					}
 				}
 	    }else{
+	    	// Change Status
+	    	$survey->publish = 2;
+		    $survey->save();
+
+		    // Saving queue data
+			  $delayed_jobs->information = $highestRow - 1;
+			  $delayed_jobs->save();
+
 	    	for($row = 1; $row <= $highestRow; ++$row){
 					for($col = 0; $col <= $highestColumnIndex; ++$col){
 						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();

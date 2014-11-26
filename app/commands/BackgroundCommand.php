@@ -73,7 +73,7 @@ class BackgroundCommand extends Command {
 			  // Load Master Code Data
 			  $master_code = MasterCode::loadData($delayed_jobs->survey_id);
 			  // Load Excel Data
-			  $excel_data = Survey::readHeader($survey->baseline_file, '', 1,$survey,$master_code);
+			  $excel_data = Survey::readHeader($survey->baseline_file, '', 1,$survey,$master_code,$delayed_jobs);
 
 			  $count_excel_data = count($excel_data);
 			  // Saving queue data
@@ -101,7 +101,7 @@ class BackgroundCommand extends Command {
 		    }
 
 		    // Update publish status
-		    $survey->publish = 3;
+		    $survey->publish = 4;
 		    $survey->save();
 
 		 //    DB::commit();
