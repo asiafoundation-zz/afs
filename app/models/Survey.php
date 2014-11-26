@@ -6,8 +6,9 @@ class Survey extends Eloquent {
  * 0 = not active
  * 1 = publish
  * 2 = uploading/importing
- * 3 = Complete
- * 4 = Unpublish
+ * 3 = initializing
+ * 4 = Complete
+ * 5 = Unpublish
  */
 
 	/* Soft Delete */
@@ -118,10 +119,15 @@ class Survey extends Eloquent {
 					$is_refresh = true;
 					break;
 				case 3:
+					$surveys[$key_survey_lists]['publish_text'] = "Initializing";
+					$surveys[$key_survey_lists]['publish_style'] = "initializing";
+					$is_refresh = true;
+					break;
+				case 4:
 					$surveys[$key_survey_lists]['publish_text'] = "Completed";
 					$surveys[$key_survey_lists]['publish_style'] = "completed";
 					break;
-				case 3:
+				case 5:
 					$surveys[$key_survey_lists]['publish_text'] = "Unpublish";
 					$surveys[$key_survey_lists]['publish_style'] = "unpublish";
 					break;
@@ -155,7 +161,6 @@ class Survey extends Eloquent {
 				$category_items = array();
 				$i=0;$j=0;
 				foreach ($lists_data as $column => $data) {
-
 					if (!empty($master_code[$column])) {
 						// remove special characters and number
 						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
@@ -232,6 +237,7 @@ class Survey extends Eloquent {
 				foreach ($category_items as $category_item) {
 					if (!empty($category_item['data'])) {
 						$category_item_data = CategoryItem::checkData($category_item['data'],$category_item['category_id']);
+
 						$filter_participant = new FilterParticipant;
 						$filter_participant->category_item_id = $category_item_data->id;
 						$filter_participant->participant_id = $participant->id;
@@ -253,7 +259,7 @@ class Survey extends Eloquent {
     return $status;
 	}
 
-	Public static function readHeader($inputFileName, $highest_column, $sheet)
+	Public static function readHeader($inputFileName, $highest_column, $sheet, $survey,$master_code = array(),$delayed_jobs = array())
 	{
 		set_time_limit(0);
 		$inputFileName = public_path().'/uploads/'.$inputFileName;
@@ -301,6 +307,14 @@ class Survey extends Eloquent {
 					}
 				}
 	    }else{
+	    	// Change Status
+	    	$survey->publish = 2;
+		    $survey->save();
+
+		    // Saving queue data
+			  $delayed_jobs->information = $highestRow - 1;
+			  $delayed_jobs->save();
+
 	    	for($row = 1; $row <= $highestRow; ++$row){
 					for($col = 0; $col <= $highestColumnIndex; ++$col){
 						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
@@ -318,10 +332,14 @@ class Survey extends Eloquent {
 							$data[$row][$data_header[$col]] = $dataval;
 						}
 					}
+					if (!empty($data)) {
+						$data = self::importData($survey,$master_code,$data);
+					}
 					// Break
 					if (empty($data[$row]) && $row != 1) {
 						break;
 					}
+					$data = array();
 				}
 	    }
 	  return $data;

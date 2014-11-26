@@ -50,9 +50,14 @@ class BackgroundCommand extends Command {
 		if (isset($delayed_jobs)) {
 			// try{
 			// 	DB::beginTransaction();
-			  
+				$delayed_jobs->queue = 0;
+				$delayed_jobs->save();
+
 			  $status = 0;
 			  $survey = Survey::where('id', '=', $delayed_jobs->survey_id)->first();
+			  // Update publish status
+		    $survey->publish = 3;
+		    $survey->save();
 
 			  // Load data from collections MonggoDB and saving master code and codes
 			  $cursors = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id]);
@@ -68,19 +73,14 @@ class BackgroundCommand extends Command {
 			  // Load Master Code Data
 			  $master_code = MasterCode::loadData($delayed_jobs->survey_id);
 			  // Load Excel Data
-			  $excel_data = Survey::readHeader($survey->baseline_file, '', 1);
+			  $excel_data = Survey::readHeader($survey->baseline_file, '', 1,$survey,$master_code,$delayed_jobs);
 
 			  $count_excel_data = count($excel_data);
 			  // Saving queue data
 			  $delayed_jobs->information = $count_excel_data;
-			  $delayed_jobs->queue = 0;
 			  $delayed_jobs->save();
 
 			  $active_delayed_job_id = $delayed_jobs->id;
-
-			  // Import Data
-			  $status = Survey::importData($survey,$master_code,$excel_data);
-
 			  $active_delayed_job = DelayedJob::find($active_delayed_job_id);
 			  $active_delayed_job->delete();
 
@@ -101,7 +101,7 @@ class BackgroundCommand extends Command {
 		    }
 
 		    // Update publish status
-		    $survey->publish = 3;
+		    $survey->publish = 4;
 		    $survey->save();
 
 		 //    DB::commit();
