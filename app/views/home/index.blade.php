@@ -34,14 +34,14 @@
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>
   </section>
 
-  <section class="filter">
+  <section class="filter" id="filter">
     <div class="container">
       <div class="row">
         <div class="col-md-1">
           &nbsp;
         </div>
         <div class="col-md-11">
-          <h4 class="custom-select-control-custom-text" style="color:white;">{{ Lang::get('frontend.filter_by') }}:</h4>
+          <span class="custom-select-control-custom-text" style="color:white;">{{ Lang::get('frontend.filter_by') }}:</span>
         </div>
       </div>
       

@@ -28,6 +28,11 @@
 
 .survey-pemilu h3{
 	margin-top : 30px !important;
+	margin-bottom : 10px !important;
+}
+
+.survey-pemilu p{
+	font-size : 150% !important;
 }
 
 .compare-survey .col-md-6:nth-child(1) p {
@@ -78,7 +83,7 @@
 .custom-select-control-custom-text{
   overflow:     hidden;
   height:       46px;
-  line-height:    52px;
+  line-height:    10px;
   padding:      0 42px 0 15px;
   color:        #ffffff;
   text-align: left;
@@ -89,5 +94,13 @@
 
 .chart-pagination li:first-child .orange-bg, .chart-pagination li:last-child .orange-bg{
 	width: 200px !important;
+}
+
+.chart, .compare-survey{
+	margin: auto !important;
+}
+
+.filter{
+	padding: 10px 0 !important;
 }
 
