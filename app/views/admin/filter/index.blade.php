@@ -3,7 +3,7 @@
 @section('content')
 
 <script type="text/javascript">
- function popup_filter(category_id){
+ function popup_filter(survey_id,category_id){
 
  	var category_text = $("#filter_category_name_"+category_id).text();
  	var category_display_text = $("#filter_category_display_name_"+category_id).text();
@@ -13,7 +13,7 @@
  	$('#edit_filter_option').modal('show');
 	return false;
 }
-function is_active_filter(survey_id,category_id){console.log(survey_id);
+function is_active_filter(survey_id,category_id){
 	$.post( "{{ URL::to('/admin/filter') }}", { survey_id: survey_id,category_id:category_id,is_active: $("#question_select_modal").val() })
 	.done(function( data ) {
 		window.location.href = "/admin/filter/"+survey_id;
@@ -21,7 +21,7 @@ function is_active_filter(survey_id,category_id){console.log(survey_id);
 	return false;
 }
 
-function manage_filter_order(category_id){
+function manage_filter_order(survey_id,category_id){
 
  	var category_text = $("#filter_category_name_"+category_id).text();
  	console.log(category_text);
@@ -72,8 +72,8 @@ function manage_filter_order(category_id){
 							{{ Form::select('is_active', array(0 => 'Disable',1 => 'Enable'),$category->is_active, array("id" => "question_select_modal","class" => "control-label","onchange" => "is_active_filter( $survey_id,$category->id )")) }}
 						</td>
 						<td>
-							<a href="#" onclick="popup_filter({{ $category->id }})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.view')}}</button></a>
-							<a href="#" onclick="manage_filter_order({{ $category->id }})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('backend.manage_filter_order')}}</button></a>
+							<a href="#" onclick="popup_filter({{ $survey_id }},{{ $category->id }})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.view')}}</button></a>
+							<a href="#" onclick="manage_filter_order({{ $survey_id }},{{ $category->id }})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('backend.manage_filter_order')}}</button></a>
 						</td>
 					</tr>
 				@endforeach
@@ -130,7 +130,7 @@ function manage_filter_order(category_id){
         <h4 class="modal-title" id="question-label-popup">{{ Lang::get('backend.manage_filter_order') }} <span id="popup_order_filter_participant_name"></span></h4>
       </div>
       {{ Form::open(array('url' => '/admin/filterorder', 'class' => 'form-horizontal')) }}
-      <div class="modal-body" id="popup_order_detail_question_body">&nbsp;</div>
+      <div id="popup_order_detail_question_body"></div>
       <div class="modal-footer">
         <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.back')}}</a>
         <button class="btn" type="submit" class="btn btn-primary">{{Lang::get('general.save')}}</button>
