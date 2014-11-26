@@ -31,7 +31,7 @@ class CategoryController extends AvelcaController {
 
 		Session::flash('alert-class', 'alert-success'); 
 		Session::flash('message', 'Save Succeed');
-		return $status;
+		return Redirect::to('/admin/filter/'.$request['survey_id']);
 	}
 
 	public function getFilterorder(){
