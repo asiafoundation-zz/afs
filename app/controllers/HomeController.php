@@ -4,6 +4,71 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
+		$delayed_jobs = DelayedJob::where('type','=','importfile')->where('queue','=',1)->orderBy('id', 'DESC')->first();
+		if (isset($delayed_jobs)) {
+			// try{
+			// 	DB::beginTransaction();
+				$delayed_jobs->queue = 0;
+				$delayed_jobs->save();
+
+			  $status = 0;
+			  $survey = Survey::where('id', '=', $delayed_jobs->survey_id)->first();
+			  // Update publish status
+		    $survey->publish = 3;
+		    $survey->save();
+
+			  // Load data from collections MonggoDB and saving master code and codes
+			  $cursors = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id]);
+			  foreach ($cursors as $key => $cursor) {
+			  	$codes = MasterCode::savingProcess($cursor);
+
+			  	// Delete document in collections monggodb
+			  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id,'queueline'=>(string)$cursor->queueline])->first();
+			  	// Delete actions
+			  	$assign_delete->delete();
+			  }
+
+			  // Load Master Code Data
+			  $master_code = MasterCode::loadData($delayed_jobs->survey_id);
+			  // Load Excel Data
+			  $excel_data = Survey::readHeader($survey->baseline_file, '', 1,$survey,$master_code,$delayed_jobs);
+
+			  $count_excel_data = count($excel_data);
+			  // Saving queue data
+			  $delayed_jobs->information = $count_excel_data;
+			  $delayed_jobs->save();
+
+			  $active_delayed_job_id = $delayed_jobs->id;
+			  $active_delayed_job = DelayedJob::find($active_delayed_job_id);
+			  $active_delayed_job->delete();
+
+		    $question_default = Question::where('is_default','=',1)->count();
+		    if ($question_default == 0) {
+		    	$default_question_query = Question::select('questions.id','answers.cycle_id')->join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
+
+		    	$default_question = Question::where('id','=',$default_question_query->id)->first();
+		    	$default_question->is_default = 1;
+		    	$default_question->save();
+
+		    	$answer_default = DB::table('answers')
+		    		->where('question_id', $default_question_query->id)
+		    		->where('cycle_id', $default_question_query->cycle_id)
+		    		->update(array(
+		    			'cycle_default' => 1
+		    		));
+		    }
+
+		    // Update publish status
+		    $survey->publish = 4;
+		    $survey->save();
+
+		 //    DB::commit();
+			// }
+			// catch(\PDOException $e){
+	  //     DB::rollback();
+	  //   }
+		}
+		exit();
 		$survey = DB::table('surveys')->where('is_default','=',1)->first();
 
 		if (!count($survey)) {

@@ -6,9 +6,10 @@ class Survey extends Eloquent {
  * 0 = not active
  * 1 = publish
  * 2 = uploading/importing
- * 3 = initializing
+ * 3 = parsing
  * 4 = Complete
  * 5 = Unpublish
+ * 6 = Category
  */
 
 	/* Soft Delete */
@@ -83,6 +84,7 @@ class Survey extends Eloquent {
 	{
 		$surveys = array();
 		$is_refresh = false;
+		$category_show = false;
 		foreach ($survey_lists as $key_survey_lists => $survey_list) {
 			$surveys[$key_survey_lists]['id'] = $survey_list->id;
 			$surveys[$key_survey_lists]['name'] = $survey_list->name;
@@ -119,8 +121,8 @@ class Survey extends Eloquent {
 					$is_refresh = true;
 					break;
 				case 3:
-					$surveys[$key_survey_lists]['publish_text'] = "Initializing";
-					$surveys[$key_survey_lists]['publish_style'] = "initializing";
+					$surveys[$key_survey_lists]['publish_text'] = "Parsing File";
+					$surveys[$key_survey_lists]['publish_style'] = "parsing";
 					$is_refresh = true;
 					break;
 				case 4:
@@ -131,6 +133,11 @@ class Survey extends Eloquent {
 					$surveys[$key_survey_lists]['publish_text'] = "Unpublish";
 					$surveys[$key_survey_lists]['publish_style'] = "unpublish";
 					break;
+				case 6:
+					$surveys[$key_survey_lists]['publish_text'] = "Select Category";
+					$surveys[$key_survey_lists]['publish_style'] = "category";
+					$category_show = true;
+					break;
 
 				default:
 					$surveys[$key_survey_lists]['publish_text'] = "Not Active";
@@ -138,7 +145,7 @@ class Survey extends Eloquent {
 					break;
 			}
 		}
-		return array($surveys,$is_refresh);
+		return array($surveys,$is_refresh,$category_show);
 	}
 
 	public static function getSurveys()
@@ -153,6 +160,11 @@ class Survey extends Eloquent {
 	public static function importData($survey,$master_code,$excel_data)
 	{
 		set_time_limit(0);
+		// parse data
+		$excel_data = json_decode($excel_data['data']);
+		print '<pre>';
+print_r($excel_data);
+print '<pre>';
 		$status = 0;
 		// try{
 		// 	DB::beginTransaction();
@@ -165,6 +177,8 @@ class Survey extends Eloquent {
 						// remove special characters and number
 						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
 
+						$cycle_id = 1;
+						$oversample_id = 0;;
 						switch ($master_code[$column]['type']) {
 							case 0:
 								// Check region exist
@@ -258,10 +272,10 @@ class Survey extends Eloquent {
     return $status;
 	}
 
-	Public static function readHeader($inputFileName, $highest_column, $sheet, $survey,$master_code = array(),$delayed_jobs = array())
+	Public static function readHeader($survey,$delayed_jobs = array())
 	{
 		set_time_limit(0);
-		$inputFileName = public_path().'/uploads/'.$inputFileName;
+		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
 
 		try
 	    {
@@ -274,73 +288,85 @@ class Survey extends Eloquent {
 	        die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
 	    }
 
+	    // Change Status
+    	$survey->publish = 2;
+	    $survey->save();
+
 	    // Set variable data
+	    $data_label = array();
 	    $data = array();
 	    $data_header = array();
 
-	    $objWorksheet = $objPHPExcel->getSheet($sheet);
+	    $objWorksheet_1 = $objPHPExcel->getSheet(0);
+	    $objWorksheet_2 = $objPHPExcel->getSheet(1);
 
-	    if(empty($highest_column)){
-	    	$highest_column = $objWorksheet->getHighestColumn();
-	    }
+	    $highest_column_1 = $objWorksheet_1->getHighestColumn();
+	    $highest_column_2 = $objWorksheet_2->getHighestColumn();
 
-	    $highestRow = $objWorksheet->getHighestRow();
-	    $highestColumn = $highest_column;
-	    $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+	    $highestRow_1 = $objWorksheet_1->getHighestRow();
+	    $highestRow_2 = $objWorksheet_2->getHighestRow();
+
+	    $highestColumnIndex_1 = PHPExcel_Cell::columnIndexFromString($highest_column_1);
+	    $highestColumnIndex_2 = PHPExcel_Cell::columnIndexFromString($highest_column_2);
 
 	    // Reformat Array
-	    if ($sheet == 0) {
-				for($row = 5; $row <= $highestRow; ++$row){
-					for($col = 0; $col <= $highestColumnIndex; ++$col){
-						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-						if ($col != 1) {
-							$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|\n\r]/', '', $dataval);
-							$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
-						}
-
-						$data[$row]['header'.$col] = $dataval;
+			for($row = 5; $row <= $highestRow_1; ++$row){
+				for($col = 0; $col <= $highestColumnIndex_1; ++$col){
+					$dataval = $objWorksheet_1->getCellByColumnAndRow($col, $row)->getValue();
+					if ($col != 1) {
+						$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|\n\r]/', '', $dataval);
+						$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
 					}
+					$data_label[$row]['header'.$col] = $dataval;
+				}
 
-					if (empty($data[$row]['header1'])) {
-						break;
+				if (empty($data_label[$row]['header1'])) {
+					break;
+				}
+			}
+			// Save header to MongoDB
+			if (!empty($data_label)) {
+				$header = new Header;
+				$header->survey_id = $survey->id;
+				$header->delayed_job_id = $delayed_jobs->id;
+				$header->data = json_encode($data_label);
+				$header->save();
+			}
+
+    	for($row = 1; $row <= $highestRow_2; ++$row){
+				for($col = 0; $col <= $highestColumnIndex_2; ++$col){
+					$dataval = $objWorksheet_2->getCellByColumnAndRow($col, $row)->getValue();
+
+					$dataval_header = $objWorksheet_2->getCellByColumnAndRow($col, $row)->getValue();
+					$dataval_header = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval_header);
+					
+					if ($row == 1) {
+						$first_column = strtolower($dataval);
+						$data_header[$col] = strtolower($dataval);
+					}
+					else
+					{
+						$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval);
+						$data[$row][$data_header[$col]] = $dataval;
 					}
 				}
-	    }else{
-	    	// Change Status
-	    	$survey->publish = 2;
-		    $survey->save();
-
-		    // Saving queue data
-			  $delayed_jobs->information = $highestRow - 1;
-			  $delayed_jobs->save();
-
-	    	for($row = 1; $row <= $highestRow; ++$row){
-					for($col = 0; $col <= $highestColumnIndex; ++$col){
-						$dataval = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-
-						$dataval_header = $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
-						$dataval_header = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval_header);
-						
-						if ($row == 1) {
-							$first_column = strtolower($dataval);
-							$data_header[$col] = strtolower($dataval);
-						}
-						else
-						{
-							$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval);
-							$data[$row][$data_header[$col]] = $dataval;
-						}
-					}
-					if (!empty($data)) {
-						$data = self::importData($survey,$master_code,$data);
-					}
-					// Break
-					if (empty($data[$row]) && $row != 1) {
-						break;
-					}
-					$data = array();
+				if (empty($data[$row]) && $row != 1) {
+					break;
 				}
-	    }
+			}
+			// Save z to MongoDB
+			if (!empty($data)) {
+				$participant = new ParticipantTemporary;
+				$participant->survey_id = $survey->id;
+				$participant->delayed_job_id = $delayed_jobs->id;
+				$participant->data = json_encode($data);
+				$participant->save();
+			}
+
+			// Saving total data
+		  $delayed_jobs->information = count($data);
+		  $delayed_jobs->save();
+
 	  return $data;
 	}
 }

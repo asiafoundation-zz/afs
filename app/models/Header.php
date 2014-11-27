@@ -1,13 +1,13 @@
 <?php
 
-class Assign extends MongoLid {
+class Header extends MongoLid {
 	protected $database = 'asia_foundation_survey';
-	protected $collection = 'assign_collections';
+	protected $collection = 'header_collections';
 	/* Mass Assignment */
 	public $fillable = array(
 		'survey_id',
 		'delayed_job_id',
-		'data',
+		'data'
 		);
 	public $guarded = array('id');
 
