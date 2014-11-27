@@ -59,13 +59,11 @@ class MasterCode extends Eloquent {
 		return $this->hasMany('Code');
 	}
 
-	public static function savingProcess($request=array())
+	public static function savingProcess($survey,$request=array())
 	{
 		try{
 			DB::beginTransaction();
-
-			$options_selecteds = json_decode($request['data']);
-			$options_selected = (array)$options_selecteds;
+			$options_selected = (array)$request;
 			
 			$options_selected = array(
 				'category' => $options_selected['category'],
@@ -83,7 +81,7 @@ class MasterCode extends Eloquent {
 			if (!isset($master_codes_data)) {
 				$master_code = new MasterCode;
 				$master_code->master_code = $master_code_label;
-				$master_code->survey_id = $request['survey_id'];
+				$master_code->survey_id = $survey->id;
 				$master_code->save();
 
 				$master_codes_data = $master_code;
@@ -98,7 +96,7 @@ class MasterCode extends Eloquent {
 			// Save question and question category
 			if ($options_selected['category'] == 4) {
 				// Save category question 
-				$question_category = QuestionCategory::checkData($options_selected['category_question'],$code->id,$request['survey_id']);
+				$question_category = QuestionCategory::checkData($options_selected['category_question'],$code->id,$survey->id);
 				// Save question
 				$question = Question::checkData($options_selected['label'],$code->id,$question_category->id);
 			}
