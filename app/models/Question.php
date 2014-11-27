@@ -485,7 +485,7 @@ class Question extends Eloquent {
 							(select max(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.idleft join answers on answers.question_id = questions.id";
+									left join answers on answers.question_id = questions.idleft join answers on answers.question_id = questions.id ";
 			
 			if (!empty($request['region'])) {
 				$query_raw .= " left join amounts on amounts.answer_id = answers.id
@@ -532,7 +532,7 @@ class Question extends Eloquent {
 							(select min(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.id";
+									left join answers on answers.question_id = questions.id ";
 			
 			if (!empty($request['region'])) {
 				$query_raw .= " left join amounts on amounts.answer_id = answers.id

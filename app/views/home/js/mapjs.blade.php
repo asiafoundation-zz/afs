@@ -172,7 +172,7 @@
 
       $.get( "filter-select", { SelectedFilter:"area", region: FilterSelect.region, region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
           .done(function(data) {
-             $('html, body').animate({scrollTop: $(".filter").offset().top + 100}, 1000);
+             
           });
     }
 
