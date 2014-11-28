@@ -2,6 +2,8 @@
 
 @section('content')
 
+<script type="text/javascript" src="{{ Theme::asset('js/category.js') }}"></script>
+
 <div>
 	<input type=hidden name="survey_id" id="survey_id" value="{{ $survey->id }}">
 	<h3 id="category_title">{{ $content[0] }}</h3>
@@ -16,14 +18,14 @@
 					<select multiple="multiple" id="header-select" name="header[]">
 						@if($base_header == true)
 							@foreach ($header as $header_single)
-									<option  class="header-options" id="header-option-{{ $header_single['header1']}}" value="{{ $header_single['header1']}};{{ $header_single['header2']}}" ondblclick="category_clicked(
+									<option  class="header-options" id="header-option-{{ $header_single->header1}}" value="{{ $header_single->header1}};{{ $header_single->header2}}" ondblclick="category_clicked(
 									'region',
-									'{{ $header_single['header0'] }}',
-									'{{ $header_single['header1'] }}',
-									'{{ $header_single['header2'] }}',
-									'{{ $header_single['header3'] }}',
-									'{{ $header_single['header4'] }}',
-									'{{ $header_single['header5'] }}')">{{ $header_single['header3']}}</option>
+									'{{ $header_single->header0 }}',
+									'{{ $header_single->header1 }}',
+									'{{ $header_single->header2 }}',
+									'{{ $header_single->header3 }}',
+									'{{ $header_single->header4 }}',
+									'{{ $header_single->header5 }}')">{{ $header_single->header3}}</option>
 							@endforeach
 						@endif
 					</select>

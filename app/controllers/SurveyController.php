@@ -9,7 +9,7 @@ class SurveyController extends AvelcaController {
 	
 	public function getIndex()
 	{
-		list($data['surveys'],$data['is_refresh']) = Survey::getSurveys();
+		list($data['surveys'],$data['is_refresh'],$data['category_show']) = Survey::getSurveys();
 		// Paginations
 		$data['no'] = (Input::get('page') -1) * 10 +1;
 
@@ -101,12 +101,15 @@ class SurveyController extends AvelcaController {
 
 			if($validator->passes())
 			{
-				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::file('excel')->getClientOriginalName(), 'geojson_file' => Input::file('geojson')->getClientOriginalName(),'publish' => 0));
+				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::file('excel')->getClientOriginalName(), 'geojson_file' => Input::file('geojson')->getClientOriginalName(),'publish' => 3));
 
 				if($survey)
 				{
 					self::postUpload($files);
-					return Redirect::to('/admin/survey/category/'. $survey->id);
+
+					// Self to delayed Job
+					$delayed_jobs = DelayedJob::create(array('type' => 'parsingfile','survey_id' => $survey->id,'data' => 0,'queue' => 1));
+					return Redirect::to('/admin/survey');
 				}
 			}
 			else
@@ -135,7 +138,8 @@ class SurveyController extends AvelcaController {
 	{
 		$survey = Survey::where('id', '=', $id)->first();
 		
-		$header = Survey::readHeader($survey->baseline_file, 'E', 0,$survey);
+		$header = Header::find(['survey_id'=>$survey->id])->first();
+		$header = json_decode($header->data);
 
 		$content = array("Select 'Region' Filter","Please select select 'Region' with clicking a list on the left");
 
@@ -152,6 +156,7 @@ class SurveyController extends AvelcaController {
 	public function postCategory()
 	{
 		$status = 1;
+		$request = Input::get();
 		// Load survey
 		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
 		$survey->publish = 2;
@@ -160,16 +165,12 @@ class SurveyController extends AvelcaController {
 		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 1));
 		$delayed_job_id = $insert_queue->id;
 
-		$assigns = array();
-		foreach (Input::get('options_selected') as $key_input => $value) {
-			$assign = new Assign;
-			$assign->survey_id = Input::get('survey_id');
-			$assign->delayed_job_id = (string)$delayed_job_id;
-			$assign->queueline = (string)$key_input;
-			$assign->data = json_encode($value);
-			$assign->save();
-		}
-
+		$assign = new Assign;
+		$assign->survey_id = Input::get('survey_id');
+		$assign->delayed_job_id = (string)$delayed_job_id;
+		$assign->data = json_encode($request['options_selected']);
+		$assign->save();
+		
 		Session::flash('alert-class', 'alert-success'); 
 		Session::flash('message', 'Importing File is in progress');
 		
