@@ -46,7 +46,7 @@ class SurveyController extends AvelcaController {
 		$cursors = Assign::all();
 		foreach ($cursors as $key => $cursor) {
 			// Delete document in collections monggodb
-			$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id,'queueline'=>(string)$cursor->queueline])->first();
+			$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id])->first();
 			// Delete actions
 			$assign_delete->delete();
 		}

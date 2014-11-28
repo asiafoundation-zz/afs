@@ -237,6 +237,22 @@ function clear_all_filter()
   });
   return false;
 }
+
+function clear_all_filter_nosurvey(){
+  var option_filters = [];
+  $(".dropdown-filter .selected_filter_option").each(function(){
+    if ($(this).attr("data-type") === 'region') {
+      FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
+    }else{
+      var data_value = $(this).attr("data-value");
+        filter_text = $('.title-filters',$(this).parent('ul')).html();
+
+        $('#custom-text-title-'+filter_text.toUpperCase()).html("");
+        $('#custom-text-title-'+filter_text.toUpperCase()).html(filter_text);
+    }
+  });
+  return false; 
+}
 /*
 * -----------------------------------------END Filter Category  JS--------------------------
 */
