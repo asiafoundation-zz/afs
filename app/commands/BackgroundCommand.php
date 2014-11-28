@@ -48,8 +48,8 @@ class BackgroundCommand extends Command {
 		// while (true) {
 		$delayed_jobs = DelayedJob::where('queue','=',1)->orderBy('id', 'DESC')->first();
 		if (isset($delayed_jobs)) {
-			// $delayed_jobs->queue = 0;
-			// $delayed_jobs->save();
+			$delayed_jobs->queue = 0;
+			$delayed_jobs->save();
 
 			$status = 0;
 			$survey = Survey::where('id', '=', $delayed_jobs->survey_id)->first();
