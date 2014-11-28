@@ -130,11 +130,27 @@ class HomeController extends BaseController {
 					break;
 
 				case 'next_question':
-					$empty_question = Question::select(DB::raw('distinct questions.id'))
-									->join('answers', 'answers.question_id', '=', 'questions.id')	 
-									->where('questions.id','=', Input::get('question'))	 
-									->where('questions.question_category_id', '=', Input::get('category'))	 
-									->first();	 
+					$empty_question = Question::select(DB::raw('distinct questions.id'));
+
+					if(!empty(Input::get('region'))){
+
+						$region_name = Region::where('name', '=', Input::get('region')) 
+								->orWhere('name', '=', Input::get('region_dapil'))
+								->first();
+	 
+						Input::merge(array('region' => $region_name->id));
+
+						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
+											->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+											->join('regions', 'regions.id', '=', 'amounts.region_id')
+											->where('regions.id', '=', Input::get('region'));
+					}else{
+						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id');
+					}
+
+					$empty_question = $empty_question->where('questions.id','=', Input::get('question'))	 
+										->where('questions.question_category_id', '=', Input::get('category'))	 
+										->first();
 
 					if(isset($empty_question)){
 						Input::merge(array('empty' => 0));	 
@@ -173,7 +189,7 @@ class HomeController extends BaseController {
 	 
 					$region_name = Region::where('name', '=', Input::get('region')) 
 								->orWhere('name', '=', Input::get('region_dapil'))
-								->first();	
+								->first();
 	 
 					Input::merge(array('region' => $region_name->id));
 
