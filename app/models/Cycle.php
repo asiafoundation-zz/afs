@@ -80,6 +80,7 @@ class Cycle extends Eloquent {
 	public static function checkData($data,$cycle_type)
 	{
 		$cycle = Cycle::where('name', '=', $data)->first();
+		
 		if(!isset($cycle))
 		{
 			$cycle = Cycle::create(array('name' => $data,'cycle_type' => $cycle_type));
