@@ -147,12 +147,12 @@ class Question extends Eloquent {
 				$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id')
 									   ->join('answers','answers.question_id','=','questions.id')
 									   ->join('amounts','amounts.answer_id','=','answers.id')
-									   ->leftjoin('regions','regions.id','=','amounts.region_id');
+									   ->join('regions','regions.id','=','amounts.region_id');
 			}else{
 				$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id');
 			}
 			
-
+			$questions = $questions->where('amounts.sample_type', '=', 0);			
 		}else{
 			$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id')
 							->join('answers','answers.question_id','=','questions.id')
@@ -161,7 +161,7 @@ class Question extends Eloquent {
 							->join('colors','answers.color_id','=','colors.id');
 
 			if (!empty($request['region'])) {
-				$questions =  $questions->leftjoin('regions','regions.id','=','amounts.region_id');
+				$questions =  $questions->join('regions','regions.id','=','amounts.region_id');
 			}
 
 			$questions = $questions->where('amounts.sample_type', '=', 0);
@@ -280,13 +280,8 @@ class Question extends Eloquent {
 				}
 				if (!empty($request['region'])) {
 
-					$questions =  $questions
-									->where('regions.id', '=', $request['region'])
-									->whereRaw('questions.id = (select min(questions.id) from questions
-												inner join answers on answers.question_id = questions.id
-												inner join amounts on amounts.answer_id = answers.id
-												inner join regions on regions.id = amounts.region_id
-												where regions.name = name)');
+					$questions =  $questions->where('regions.id', '=', $request['region'])
+									->where('questions.id', '=', $request['question']);
 				}
 			}
 
@@ -504,7 +499,7 @@ class Question extends Eloquent {
 					}
 				}
 				if (!empty($request['region'])) {
-					$query_raw .= " and regions.name = '". $request['region'] ."'";
+					$query_raw .= " and regions.id = ". (integer)$request['region'];
 				}
 			}
 
@@ -551,7 +546,7 @@ class Question extends Eloquent {
 					}
 				}
 				if (!empty($request['region'])) {
-					$query_raw .= " and regions.name = '". $request['region'] ."'";
+					$query_raw .= " and regions.id = ". (integer)$request['region'];
 				}
 			}
 			
@@ -561,7 +556,6 @@ class Question extends Eloquent {
 									->select('id')
 									->whereRaw($query_raw)
 									->first();
-			// $request['question'] =  DB::table('questions')->select('id')->whereRaw("questions.id = (select min(id) from questions where questions.id > ".$request['question'].")")->first();
 									
 			// If no forard
 			if (!count($request['question'])) {

@@ -130,6 +130,15 @@ class HomeController extends BaseController {
 					break;
 
 				case 'next_question':
+					
+					if(!empty(Input::get('region'))){
+						$region_name = Region::where('name', '=', Input::get('region')) 
+								->orWhere('name', '=', Input::get('region_dapil'))
+								->first();
+	 
+						Input::merge(array('region' => $region_name->id));
+					}
+
 					$empty_question = Question::select(DB::raw('distinct questions.id'))
 									->join('answers', 'answers.question_id', '=', 'questions.id')	 
 									->where('questions.id','=', Input::get('question'))	 
@@ -173,7 +182,7 @@ class HomeController extends BaseController {
 	 
 					$region_name = Region::where('name', '=', Input::get('region')) 
 								->orWhere('name', '=', Input::get('region_dapil'))
-								->first();	
+								->first();
 	 
 					Input::merge(array('region' => $region_name->id));
 

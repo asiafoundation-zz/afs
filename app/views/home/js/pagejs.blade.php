@@ -270,11 +270,10 @@
 
     function next_question(move)
     {
-      clear_all_filter();
+      clear_all_filter_nosurvey();
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
-
       // Get cycles functions
       $.get( "filter-select", { SelectedFilter:"next_question",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle,FilterMove:move, empty: FilterSelect.empty_question})
         .done(function( data ) {
@@ -294,6 +293,7 @@
 
             if(data.regions != 0){
               $('#chart_canvas').show();
+              // console.log("i am here");
               // Re assingn Filter data
               
 
@@ -313,8 +313,10 @@
               }).addTo(map);
             }
             else{
+
               var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
+              $('#chart_canvas').hide();
               $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter data
               // DefaultSelectAssign(DefaultSelect);   
@@ -323,6 +325,7 @@
           {
             var last_question = $('#s2id_select-question').children().children().html();
             $('.loading-flag').hide();
+            $('#chart_canvas').hide();
             $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
