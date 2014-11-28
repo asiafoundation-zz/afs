@@ -2,15 +2,18 @@
 
 @section('content')
 <script type="text/javascript">
+$( document ).ready(function() {
+	@if($category_show)
+	// $('#category_filter_notification').modal('show');
+	@endif
+});
+
 @if($is_refresh)
 setInterval(function() {
   window.location.reload();
 }, 3000);
 @endif
 
-@if($category_show)
-$('#category_filter_notification').modal('show');
-@endif
 </script>
 
 <div class="row">

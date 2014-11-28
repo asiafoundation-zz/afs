@@ -161,10 +161,6 @@ class Survey extends Eloquent {
 	{
 		set_time_limit(0);
 		// parse data
-		$excel_data = json_decode($excel_data['data']);
-		print '<pre>';
-print_r($excel_data);
-print '<pre>';
 		$status = 0;
 		// try{
 		// 	DB::beginTransaction();
@@ -363,11 +359,6 @@ print '<pre>';
 				$participant->data = json_encode($data);
 				$participant->save();
 			}
-
-			// Saving total data
-		  $delayed_jobs->information = count($data);
-		  $delayed_jobs->save();
-
-	  return $data;
+			return $data;
 	}
 }
