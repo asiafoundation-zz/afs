@@ -29,5 +29,7 @@ return array(
 	"availability" => "Availability",
 	"manage_display_name" => "Manage Display Name",
 	"order_no" => "Order Number",
+	"select_category" => "Select Category",
 	"parsing_finish" => "Parsing data finished. Please start to mapping category filter",
+	"mapping_category" => "Start Mapping Category: ",
 );

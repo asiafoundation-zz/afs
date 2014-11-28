@@ -64,7 +64,7 @@ class Answer extends Eloquent {
 		return compact('fields');
 	}
 
-	public static function checkData($data,$question_id, $cycle_id, $color_id, $question_id)
+	public static function checkData($data,$question_id, $cycle_id, $color_id)
 	{
 		$answer = Answer::where('answer', '=', $data)
 				->where('question_id','=',$question_id)

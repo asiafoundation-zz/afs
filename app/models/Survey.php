@@ -85,6 +85,7 @@ class Survey extends Eloquent {
 		$surveys = array();
 		$is_refresh = false;
 		$category_show = false;
+		$category_id = 0;
 		foreach ($survey_lists as $key_survey_lists => $survey_list) {
 			$surveys[$key_survey_lists]['id'] = $survey_list->id;
 			$surveys[$key_survey_lists]['name'] = $survey_list->name;
@@ -137,6 +138,7 @@ class Survey extends Eloquent {
 					$surveys[$key_survey_lists]['publish_text'] = "Select Category";
 					$surveys[$key_survey_lists]['publish_style'] = "category";
 					$category_show = true;
+					$category_id = $survey_list->id;
 					break;
 
 				default:
@@ -145,7 +147,7 @@ class Survey extends Eloquent {
 					break;
 			}
 		}
-		return array($surveys,$is_refresh,$category_show);
+		return array($surveys,$is_refresh,$category_show,$category_id );
 	}
 
 	public static function getSurveys()
@@ -172,8 +174,6 @@ class Survey extends Eloquent {
 					if (!empty($master_code[$column])) {
 						// remove special characters and number
 						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
-
-						$cycle_id = 1;
 						$oversample_id = 0;;
 						switch ($master_code[$column]['type']) {
 							case 0:
@@ -236,9 +236,8 @@ class Survey extends Eloquent {
 				foreach ($questions_list as $key => $question_list) {
 					if (!empty($question_list['data'])) {
 						$question = Question::where('code_id','=',$question_list['code_id'])->where('question_category_id','=',$question_list['question_category_id'])->first();
-
-						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'], $key, $question->id);
 						
+						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'],$key);
 						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
 					}
 				}
@@ -246,18 +245,14 @@ class Survey extends Eloquent {
 				foreach ($category_items as $category_item) {
 					if (!empty($category_item['data'])) {
 						$category_item_data = CategoryItem::checkData($category_item['data'],$category_item['category_id']);
-
 						$filter_participant = new FilterParticipant;
 						$filter_participant->category_item_id = $category_item_data->id;
 						$filter_participant->participant_id = $participant->id;
 						$filter_participant->save();
 					}
 				}
-
 				AmountFilter::checkData($participant->id);
-
 			}
-
 		// 	DB::commit();
 		// 	$status = 1;
 		// }
