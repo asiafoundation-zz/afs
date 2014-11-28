@@ -112,6 +112,10 @@ function change_page(move) {
 			title = title.replace(/Region/g, "Wave");
 			text = text.replace(/Region/g, "Wave");
 		}
+		//Redirect back 
+		if (move == 'back') {
+			window.location.href = "/admin/survey/index";
+		}
 		// Remove Header Selected Value
 		$('#header-selected').find('option').remove().end();
 	};

@@ -79,11 +79,11 @@ class Cycle extends Eloquent {
 
 	public static function checkData($data,$cycle_type)
 	{
-		$cycle = Cycle::where('name', '=', $data)->first();
+		$cycle = Cycle::where('name', '=', $data)->where('cycle_type','=',$cycle_type)->first();
 		
 		if(!isset($cycle))
 		{
-			$cycle = Cycle::create(array('name' => $data,'cycle_type' => $cycle_type));
+			$cycle = Cycle::create(array('name' => $data,'cycle_type','=',$cycle_type));
 		}
 		$cycle_id = $cycle->id;
 		return $cycle_id;

@@ -4,7 +4,7 @@
 <script type="text/javascript">
 $( document ).ready(function() {
 	@if($category_show)
-	// $('#category_filter_notification').modal('show');
+	$('#category_filter_notification').modal('show');
 	@endif
 });
 
@@ -99,6 +99,8 @@ setInterval(function() {
         <h4 class="modal-title">{{ Lang::get('backend.parsing_finish') }}</h4>
       </div>
       <div class="modal-body" id="popup_detail_question_body">
+      	{{ Lang::get('backend.mapping_category') }}
+      	<a href="/admin/survey/category/{{$survey_category_id}}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('backend.select_category')}}</button></a>
       </div>
       <div class="modal-footer">
         <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.back')}}</a>
