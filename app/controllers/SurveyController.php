@@ -9,7 +9,11 @@ class SurveyController extends AvelcaController {
 	
 	public function getIndex()
 	{
-		list($data['surveys'],$data['is_refresh'],$data['category_show']) = Survey::getSurveys();
+		list(
+			$data['surveys'],
+			$data['is_refresh'],
+			$data['category_show'],
+			$data['survey_category_id']) = Survey::getSurveys();
 		// Paginations
 		$data['no'] = (Input::get('page') -1) * 10 +1;
 
