@@ -75,31 +75,14 @@ class Question extends Eloquent {
 
 	public static function DefaultLoad($request)
 	{
-		// $questions =  DB::table('questions');
-
-		if (!empty($request['region']))
-		{
-			if(!empty($request['empty']) && $request['empty'] == 1){
-
-				$query = 'questions.id as id_question,
-					questions.code_id as question_code,
-					questions.question as question,
-					question_categories.id as id_question_categories,
-					question_categories.name as question_categories,
-					regions.id as id_region,
-					regions.name,
-					0 AS indexlabel';	
-			}else{
-
-				$query = 'questions.id as id_question,
+		// if there's no region and answer is not empty
+		$query = 'questions.id as id_question,
 					questions.code_id as question_code,
 					questions.question as question,
 					question_categories.id as id_question_categories,
 					question_categories.name as question_categories,
 					answers.id  as id_answer,
 					answers.answer as answer,
-					regions.id as id_region,
-					regions.name,
 					colors.color,
 					cycles.id  as id_cycle,
 					cycles.cycle_type  as cycle_type,
@@ -107,36 +90,47 @@ class Question extends Eloquent {
 					(SELECT sum(amounts.amount) 
 						from amounts 
 						where amounts.answer_id = id_answer) AS amount,
-					0 AS indexlabel';	
-			}
-			
-		}else
-		{
-			if(!empty($request['empty']) && $request['empty'] == 1){
-				
-				$query = 'questions.id as id_question,
-					questions.code_id as question_code,
-					questions.question as question,
-					question_categories.id as id_question_categories,
-					question_categories.name as question_categories,
-					0 AS indexlabel';	
-			}else{
+					0 AS indexlabel';
 
-				$query = 'questions.id as id_question,
+		if(!empty($request['empty']) && $request['empty'] == 1){
+
+			//if there's no region and answer is empty
+			$query = 'questions.id as id_question,
 						questions.code_id as question_code,
 						questions.question as question,
 						question_categories.id as id_question_categories,
 						question_categories.name as question_categories,
-						answers.id  as id_answer,
-						answers.answer as answer,
-						colors.color,
-						cycles.id  as id_cycle,
-						cycles.cycle_type  as cycle_type,
-						cycles.name as cycle,
-						(SELECT sum(amounts.amount) 
-							from amounts 
-							where amounts.answer_id = id_answer) AS amount,
-						0 AS indexlabel';
+						0 AS indexlabel';			
+
+			if(!empty($request['region'])){
+				//if there's a region and answer is empty
+				$query = 'questions.id as id_question,
+							questions.code_id as question_code,
+							questions.question as question,
+							question_categories.id as id_question_categories,
+							question_categories.name as question_categories,
+							regions.id as id_region,
+							regions.name,
+							0 AS indexlabel';
+			}else{
+				//if there's no region and answer is empty
+				$query = 'questions.id as id_question,
+							questions.code_id as question_code,
+							questions.question as question,
+							question_categories.id as id_question_categories,
+							question_categories.name as question_categories,
+							answers.id  as id_answer,
+							answers.answer as answer,
+							regions.id as id_region,
+							regions.name,
+							colors.color,
+							cycles.id  as id_cycle,
+							cycles.cycle_type  as cycle_type,
+							cycles.name as cycle,
+							(SELECT sum(amounts.amount) 
+								from amounts 
+								where amounts.answer_id = id_answer) AS amount,
+							0 AS indexlabel';	
 			}
 		}
 
@@ -480,7 +474,7 @@ class Question extends Eloquent {
 							(select max(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.idleft join answers on answers.question_id = questions.id ";
+									left join answers on answers.question_id = questions.id ";
 			
 			if (!empty($request['region'])) {
 				$query_raw .= " left join amounts on amounts.answer_id = answers.id
@@ -582,13 +576,13 @@ class Question extends Eloquent {
 				if (!empty($request['question'])) {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
-				if($request['empty'] == 0){
+				// if($request['empty'] == 0){
 					if (!empty($request['cycle'])) {
 						$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
 					}
-				}
+				// }
 				if (!empty($request['region'])) {
-					$questions =  $questions->where('regions.name', '=', (string)$request['region']);
+					$questions =  $questions->where('regions.id', '=', (integer)$request['region']);
 				}
 			}
 
@@ -602,10 +596,6 @@ class Question extends Eloquent {
 			}else{
 				$questions =  $questions->get();
 			}
-
-			
-
-		
 
 		return $questions;
 	}

@@ -8,6 +8,7 @@
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
+          $('.region-name').remove();
           $('#chart_canvas').show();
           $('.loading-flag').hide();
           if (data != false) {
