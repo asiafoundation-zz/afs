@@ -72,11 +72,11 @@
       @endforeach
       return color;
     }
-    function getColorDynamic(d) {
+    function getColorDynamic(provinsi, dapil) {
       var color = 'white';
 
       for (i = 0; i < dynamicRegions.length; i++) {
-        if (dynamicRegions[i].name == d) 
+        if (dynamicRegions[i].name == provinsi || dynamicRegions[i].name == dapil) 
         {
           color = dynamicRegions[i].color;
         }
@@ -101,7 +101,7 @@
         color: '#8E73F1',
         dashArray: '3',
         fillOpacity: 0.7,
-        fillColor: getColorDynamic(feature.properties.nm_provinsi)
+        fillColor: getColorDynamic(feature.properties.nm_provinsi, feature.properties.nm_dapil)
       };
     }
     function highlightDynamic(feature) {

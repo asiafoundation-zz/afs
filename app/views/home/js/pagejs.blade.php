@@ -294,7 +294,6 @@
 
             if(data.regions != 0){
               $('#chart_canvas').show();
-              // console.log("i am here");
               // Re assingn Filter data
               
 
@@ -336,6 +335,7 @@
 
     function find_survey_dynamic()
     {
+      clear_all_filter_nosurvey();
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
@@ -345,7 +345,6 @@
         .done(function( data ) {
           if (data != false) {
             $('html, body').animate({scrollTop: $("#filter").offset().top}, 1000);
-            console.log(data);
             
             FilterSelect.question = parseInt(data.default_question.id_question);
             FilterSelect.category = parseInt(data.default_question.id_question_categories);
