@@ -58,7 +58,7 @@ class BackgroundCommand extends Command {
 			{
 				// try{
 				// 	DB::beginTransaction();
-			    $survey->publish = 2;
+			    $survey->publish = 3;
 			    $survey->save();
 
 				  // Load data from collections MonggoDB and saving master code and codes
@@ -78,10 +78,19 @@ class BackgroundCommand extends Command {
 				  $master_code = MasterCode::loadData($delayed_jobs->survey_id);
 
 				  // Load data from collections MonggoDB and saving master code and codes
-				  $data = ParticipantTemporary::find(['survey_id'=>$survey->id])->first();
+				  $data_load = ParticipantTemporary::find(['survey_id'=>$survey->id])->first();
+				  $data = json_decode($data_load['data']);
 				  // Delete impotfiledata
-				  $participant_delete = ParticipantTemporary::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
-				  // $participant_delete->delete();
+				  if ($data_load) {
+				  	$data_load->delete();
+				  }
+
+				  // Saving Change status
+				  $survey->publish = 2;
+			    $survey->save();
+			    // Saving total data
+				  $delayed_jobs->information = count((array)$data);
+				  $delayed_jobs->save();
 
 				  // Load Excel Data
 				  $excel_data = Survey::importData($survey,$master_code,$data);
