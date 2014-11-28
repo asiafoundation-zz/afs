@@ -239,7 +239,6 @@ class Survey extends Eloquent {
 
 						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'],$key);
 
-						
 						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
 					}
 				}
