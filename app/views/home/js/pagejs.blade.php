@@ -3,6 +3,7 @@
      function find_survey()
      {
       // Get cycles functions
+      clear_all_filter_nosurvey();
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
