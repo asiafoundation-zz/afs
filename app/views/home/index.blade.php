@@ -3,11 +3,37 @@
 @section('content')
 
   @include('partial/homeasset')
+  <a href="" class="sticky-filter"></a>
+
   <section class="header">
+      <p>{{ $survey->name }}</p>
+  </section>
+  <!-- <section class="header">
     <div class="container">
       <p>{{ $survey->name }}</p>
     </div>
-  </section>
+  </section> -->
+
+<!--Update-->
+<div class="elheader-wrapper"> <!-- add element wrapper - 28112014 -->
+  <div class="search-wrp header-select">
+    <select class="select2-custom select-cycle" id="select-cycle">
+      @foreach ($cycles as $cycle)
+      <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
+      @endforeach
+    </select><!-- Custom Select -->
+    <select class="select2-custom select-category" id="select-category">
+      @foreach ($question_categories as $question_category)
+      <option value="{{ $question_category->id }}" @if( $default_question->id_question_categories == $question_category->id) selected @endif >{{ $question_category->name }}</option>
+      @endforeach 
+    </select><!-- Custom Select -->
+    <select class="select2-custom select-question" id="select-question">
+      <option value="{{ $default_question->id_question }}">{{ $default_question->question }}</option>
+    </select><!-- Custom Select -->
+  </div>
+</div> 
+
+<!--End Update-->
 
   <section class="map">
     <div class="top-nav">
@@ -15,72 +41,87 @@
         <p id="select_region_label"></p>
       </div>
     </div>
-    <div class="search-wrp header-select">
-      <!-- <select class="select-control select-cycle"> -->
+
+    <!--Update-->
+    <div class="flash-message">
+      <p>Silahkan pilih salah satu provinsi untuk melanjutkan ke hasil survey</p>
+      <a href="">X</a>
+    </div>
+    <!--End Update-->
+
+    <!-- <div class="search-wrp header-select">
       <select class="select2-custom select-cycle" id="select-cycle">
         @foreach ($cycles as $cycle)
         <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
         @endforeach
-      </select><!-- Custom Select -->
-      <select class="select2-custom select-category" id="select-category">
+      </select> --><!-- Custom Select -->
+      <!-- <select class="select2-custom select-category" id="select-category">
         @foreach ($question_categories as $question_category)
         <option value="{{ $question_category->id }}" @if( $default_question->id_question_categories == $question_category->id) selected @endif >{{ $question_category->name }}</option>
-        @endforeach
-      </select><!-- Custom Select -->
-      <select class="select2-custom select-question" id="select-question">
+        @endforeach 
+      </select> --><!-- Custom Select -->
+      <!-- <select class="select2-custom select-question" id="select-question">
         <option value="{{ $default_question->id_question }}">{{ $default_question->question }}</option>
-      </select><!-- Custom Select -->
-    </div>
+      </select> --><!-- Custom Select -->
+    <!-- </div> -->
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>
   </section>
 
   <section class="filter" id="filter">
     <div class="container">
+      <a href="" class="close-stickyselect"></a>
+      <div class="row">
+        <div class="col-md-12">
+          <a class="selectarea" href="">Pilihan Wilayah</a>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-1">
           &nbsp;
         </div>
         <div class="col-md-11">
-          <span class="custom-select-control-custom-text" style="color:white;">{{ Lang::get('frontend.filter_by') }}:</span>
+          <span class="custom-select-control-custom-text" style="color:white;">Sortir Hasil Survey:</span>
         </div>
       </div>
       
       <div class="row">
         <div class="col-md-12 dropdown-filter">
-          <!-- <div class="col-xs-6 col-sm-3">Filter Participant by</div> -->
           <ul>
-  <!--           <li>
-              <select class="select-control">
-                <option class="selectik-filter-region">{{ Lang::get('frontend.all_region') }}</option>
-                @foreach ($regions as $region)
-                <option value="{{ $region['region_id'] }}" class="selectik-filter-region">{{ $region['name'] }}</option>
-                @endforeach
-              </select>
-            </li> -->
-            @foreach ($filters as $key_filters => $filter)
+          @foreach ($filters as $key_filters => $filter)
             <li>
-              <select class="select-control">
+              <select class="select-control msdd" data-maincss="blue">
                 <option>{{ $filter['category_name'] }}</option>
                 @foreach ($filter['category_items'] as $filter_items)
                 <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
                 @endforeach
-              </select><!-- Custom Select -->
+              </select>
             </li>
             @endforeach
-            <li>
-  						<a class="clear-all" onclick='clear_all_filter()'>{{Lang::get('frontend.clear_all')}}</a>
+            <!-- Update 28112014 -->
+
+             <li>          
+              <a class="clear-all" onclick='clear_all_filter()'>{{Lang::get('frontend.clear_all')}}</a>
             </li>
           </ul>
         </div>
       </div>
     </div>
   </section>
+<!--End Update-->
 
   <section class="survey-pemilu">
+    <div class="survey-question">
+      <div class="container center">
+        <div class="col-xs-1 center"><a class="arrowleft" onclick="next_question(0)"></a></div>
+        <p id="question-name" class="col-xs-10">" {{ $default_question->question }} "</p>
+        <div class="col-xs-1 center"><a class="arrowright" onclick="next_question(1)"></a></div>
+      </div>
+    </div>
+
     <div class="container center">
       <div class="col-md-12 chart-div">
-        <h3 id="survey-question">{{Lang::get('frontend.survey_question')}}</h3>
-        <p id="question-name">" {{ $default_question->question }} "</p>
+        <!-- <h3 id="survey-question">{{Lang::get('frontend.survey_question')}}</h3>
+        <p id="question-name">" {{ $default_question->question }} "</p> -->
         @include('home/cross_question')
         <div class="chart chart-flag">
           <div class="notification">&nbsp;</div>
