@@ -7,6 +7,7 @@
   <script type="text/javascript" src="{{ Theme::asset('javascript/base.js') }}"></script>
   <script type="text/javascript" src="{{ Theme::asset('javascript/cross.js') }}"></script>
   <script type="text/javascript" src="{{ Theme::asset('javascript/select2.js') }}"></script>
+  <script type="text/javascript" src="{{ Theme::asset('javascript/jquery.dd.js') }}"></script> <!-- Update 28112014 -->
 
   @include('home/js/mapjs')
 	@include('home/js/pagejs')

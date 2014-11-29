@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/select2.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/dd.css') }}">
 
     <script src="{{ Theme::asset('javascript/jquery-1.7.2.min.js') }}"></script>
     <script src="{{ Theme::asset('javascript/modernizr-2.6.2.min.js') }}"></script>
