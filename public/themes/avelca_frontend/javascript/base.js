@@ -296,4 +296,4 @@ $(".sticky-filter").click(function(){
       return false;
     });
 
-    $(".msdd").msDropDown();
+    // $(".msdd").msDropDown();
