@@ -97,26 +97,27 @@ $(document).ready(function(){
   });
 
   $('.select-category').change(function(){
-    if($(this).val() == 0){
-      FilterSelect.question = default_q;
-      FilterSelect.category = default_cat;
-      FilterSelect.cycle = default_cy;
-      find_survey();
-    }else{FilterSelect.category = parseInt($(this).val());}
+    // if($(this).val() == 0){
+    //   FilterSelect.question = default_q;
+    //   FilterSelect.category = default_cat;
+    //   FilterSelect.cycle = default_cy;
+    //   find_survey();
+    // }
+    // else{FilterSelect.category = parseInt($(this).val());}
     
     var value = $(this).val();
     $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
-      FilterSelect.empty_question = 0;
+      // FilterSelect.empty_question = 0;
       var data_exist = parseInt(data[1]);
 
-      if(data[1] == null){
-        data_exist = 0;
-        FilterSelect.question = parseInt(data[0][0].id);
-        FilterSelect.empty_question = 1;
-      }else{
-        FilterSelect.question = data_exist;  
-      }
+      // if(data[1] == null){
+      //   data_exist = 0;
+      //   FilterSelect.question = parseInt(data[0][0].id);
+      //   FilterSelect.empty_question = 1;
+      // }else{
+      //   FilterSelect.question = data_exist;  
+      // }
 
       $('.header-select #select-question option').remove();
       $('.header-select #select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
@@ -149,6 +150,8 @@ $(document).ready(function(){
       find_survey();
     }else{
       FilterSelect.question = parseInt($(this).val());
+      FilterSelect.category = parseInt($('#select-category').val());
+      FilterSelect.cycle = parseInt($('#select-cycle').val());
 
       find_survey();  
     }
@@ -156,17 +159,17 @@ $(document).ready(function(){
   });
 
   $('.select-cycle').change(function(){
-    if($(this).val() == 0){
-      FilterSelect.question = default_q;
-      FilterSelect.category = default_cat;
-      FilterSelect.cycle = default_cy;
-      // console.log(default_q);
-      find_survey();
-    }else{
-      FilterSelect.cycle = parseInt($(this).val());
+    // if($(this).val() == 0){
+    //   FilterSelect.question = default_q;
+    //   FilterSelect.category = default_cat;
+    //   FilterSelect.cycle = default_cy;
+    //   // find_survey();
+    // }
+    // else{
+    //   FilterSelect.cycle = parseInt($(this).val());
 
-      cycle_select(parseInt($(this).val()));  
-    }
+    //   cycle_select(parseInt($(this).val()));  
+    // }
     
   });
 })
