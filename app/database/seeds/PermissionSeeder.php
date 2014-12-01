@@ -13,6 +13,7 @@ class PermissionSeeder extends Seeder {
 			"survey.view",
 			"survey.edit",
 			"survey.delete",
+			"survey.singledelete",
 			"survey.print-pdf",
 			"survey.export",
 			"survey.cycle",
