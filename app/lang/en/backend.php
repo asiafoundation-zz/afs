@@ -40,4 +40,5 @@ return array(
 	"region" => "Region",
 	"oversample" => "oversample",
 	"cycle" => "Cycle",
+	"delete_survey" => "Delete Survey",
 );

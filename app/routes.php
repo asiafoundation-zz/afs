@@ -49,6 +49,7 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 	Route::post('/admin/filterorder', 'CategoryController@postFilterorder');
 	Route::get('/admin/filterorder', 'CategoryController@getFilterorder');
 	Route::get('/admin/logs/', 'LogController@getIndex');
+	Route::get('/survey/singledelete/{id}', 'SurveyController@deleteSurvey');
 
 	Route::get('/admin/questioncategory', function(){
 		$question_category = QuestionCategory::all();

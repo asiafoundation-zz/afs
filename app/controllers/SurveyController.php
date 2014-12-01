@@ -295,4 +295,10 @@ class SurveyController extends AvelcaController {
 
 		return $post_cycle;
 	}
+
+	public function deleteSurvey($id)
+	{
+		Survey::deleteSurvey($id);
+		return Redirect::to('/admin/survey');
+	}
 }

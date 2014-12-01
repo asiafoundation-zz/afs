@@ -356,4 +356,105 @@ class Survey extends Eloquent {
 			}
 			return $data;
 	}
+	public static function deleteSurvey($id)
+	{
+		$status = 0;
+		try{
+			DB::beginTransaction();
+
+			$question_categories = array();
+			$question_categories_data = DB::table('question_categories')->where('survey_id','=',$id);
+			$question_categories_loads = $question_categories_data->get();
+			foreach ($question_categories_loads as $question_categories_load) {
+				array_push($question_categories, $question_categories_load->id);
+			}
+
+			$questions = array();
+			if (count($question_categories) > 0) {
+				$question_datas = DB::table('questions')->whereIn('question_category_id',$question_categories);
+				$question_loads = $question_datas->get();
+				foreach ($question_loads as $question_load) {
+					array_push($questions, $question_load->id);
+				}
+
+				$answers = array();
+				$answer_data = DB::table('answers')->whereIn('question_id',$questions);
+				$answer_loads = $answer_data->get();
+				foreach ($answer_loads as $answer_load) {
+					array_push($answers, $answer_load->id);
+				}
+				$amounts = DB::table('amounts')->whereIn('answer_id',$answers)->delete();
+				$amount_filters = DB::table('amount_filters')->whereIn('answer_id',$answers)->delete();
+
+				$answer_data->delete();
+				$question_datas->delete();
+				$question_categories_data->delete();
+			}
+
+			$participants = array();
+			$participant_data = DB::table('participants')->where('survey_id','=',$id);
+			$participant_loads = $participant_data->get();
+			foreach ($participant_loads as $participant_load) {
+				array_push($participants, $participant_load->id);
+			}
+			if (count($participants) > 0) {
+				$filter_participants = array();
+				$filter_participant_data = DB::table('filter_participants')->whereIn('participant_id',$participants);
+				$filter_participant_loads = $filter_participant_data->get();
+
+				foreach ($filter_participant_loads as $filter_participant_load) {
+					array_push($filter_participants, $filter_participant_load->category_item_id);
+				}
+
+				$category_items = array();
+				$category_items_data = DB::table('category_items')->whereIn('id',$filter_participants);
+				$category_items_loads = $category_items_data->get();
+				foreach ($category_items_loads as $category_items_load) {
+					array_push($category_items, $category_items_load->category_id);
+				}
+				$category = DB::table('categories')->whereIn('id',$category_items)->delete();
+
+				$filter_participant_data->delete();
+				$category_items_data->delete();
+				$participant_data->delete();
+
+				$question_participants = array();
+				$question_participant_data = DB::table('question_participants')->whereIn('participant_id',$participants);
+				$question_participant_loads = $question_participant_data->get();
+				foreach ($question_participant_loads as $question_participant_load) {
+					array_push($question_participants, $question_participant_load->region_id);
+				}
+				$regions = Region::whereIn('id',$question_participants)->delete();
+				$question_participant_data->delete();
+			}
+
+			$master_codes = array();
+			$master_codes_data = DB::table('master_codes')->where('survey_id','=',$id);
+			$master_codes_loads = $master_codes_data->get();
+			foreach ($master_codes_loads as $master_code) {
+				array_push($master_codes, $master_code->id);
+			}
+			if (count($master_codes) > 0) {
+				$codes = array();
+				$codes_data = DB::table('codes')->whereIn('master_code_id',$master_codes);
+				$codes_loads = $codes_data->get();
+				foreach ($master_codes_loads as $master_code) {
+					array_push($codes, $master_code->id);
+				}
+				$codes_data->delete();
+			}
+
+
+			$master_codes_data->delete();
+
+			Survey::destroy($id);
+			DB::commit();
+			$status = 1;
+		}
+		catch(\PDOException $e){
+			DB::rollback();
+			$status = 0;
+    }
+    return $status;
+	}
 }

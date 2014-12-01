@@ -80,6 +80,7 @@ setInterval(function() {
 							@elseif($survey['publish_style'] == "completed" || $survey['publish_style'] == "publish" || $survey['publish_style'] == "unpublish")
 							<a href="/admin/filter/{{ $survey['id'] }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_filter')}}</button></a>
 							@endif
+							<a href="/survey/singledelete/{{ $survey['id'] }}" style="aligh:right;"><button class="btn btn-danger">{{Lang::get('backend.delete_survey')}}</button></a>
 						</td>
 					</tr>
 				<?php $no = $no+1; ?>
