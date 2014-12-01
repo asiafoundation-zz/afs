@@ -134,11 +134,11 @@ class HomeController extends BaseController {
 
 					if(!empty(Input::get('region'))){
 
-						$region_name = Region::where('name', '=', Input::get('region')) 
-								->orWhere('name', '=', Input::get('region_dapil'))
-								->first();
+						// $region_name = Region::where('name', '=', Input::get('region')) 
+						// 		->orWhere('name', '=', Input::get('region_dapil'))
+						// 		->first();
 	 
-						Input::merge(array('region' => $region_name->id));
+						// Input::merge(array('region' => $region_name->id));
 
 						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
 											->join('amounts', 'amounts.answer_id', '=', 'answers.id')
@@ -187,11 +187,11 @@ class HomeController extends BaseController {
 
 				case 'survey_area_dynamic':
 	 
-					$region_name = Region::where('name', '=', Input::get('region')) 
-								->orWhere('name', '=', Input::get('region_dapil'))
-								->first();
+					// $region_name = Region::where('name', '=', Input::get('region')) 
+					// 			->orWhere('name', '=', Input::get('region_dapil'))
+					// 			->first();
 	 
-					Input::merge(array('region' => $region_name->id));
+					// Input::merge(array('region' => $region_name->id));
 
 					$default_questions = Question::loadRegion(Input::get());
 					if (empty($default_questions)) {
