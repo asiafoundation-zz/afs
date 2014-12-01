@@ -172,4 +172,9 @@ $(document).ready(function(){
     // }
     
   });
+
+  $('#select-region').change(function(){
+    FilterSelect.region = parseInt($(this).val());
+    find_survey_dynamic();
+  });
 })

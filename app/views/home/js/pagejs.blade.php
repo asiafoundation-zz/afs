@@ -9,6 +9,7 @@
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
+          console.log(data);
           $('.region-name').remove();
           $('#chart_canvas').show();
           $('.loading-flag').hide();
@@ -340,7 +341,6 @@
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
-      // console.log("I am here");
       // Get cycles functions
       $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
@@ -427,7 +427,7 @@
           }
         });
 
-      // find_survey();
+      find_survey();
     }
 
     function color_set(assign_color)

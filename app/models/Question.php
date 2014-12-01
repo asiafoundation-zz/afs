@@ -313,12 +313,13 @@ class Question extends Eloquent {
 				}
 				if (!empty($request['region'])) {
 					$region = $request['region'];
-					$region_dapil = $request['region_dapil'];
-					$questions = $questions->where(
-						function ($query) use ($region,$region_dapil) {
-							$query->where('regions.name', '=', (string)$region)
-							->orWhere('regions.name', '=', (string)$region_dapil);
-					});
+					$questions =  $questions->where('regions.id', '=', $region);
+					// $region_dapil = $request['region_dapil'];
+					// $questions = $questions->where(
+					// 	function ($query) use ($region,$region_dapil) {
+					// 		$query->where('regions.name', '=', (string)$region)
+					// 		->orWhere('regions.name', '=', (string)$region_dapil);
+					// });
 				}
 				if (!empty($request['cycle'])) {
 					$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
