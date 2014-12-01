@@ -32,4 +32,12 @@ return array(
 	"select_category" => "Select Category",
 	"parsing_finish" => "Parsing data finished. Please start to mapping category filter",
 	"mapping_category" => "Start Mapping Category: ",
+	"participant_no" => "Participant No:",
+	"questions" => "Questions",
+	"all_participants" => "Data All participants",
+	"main_sample" => "Main Sample",
+	"oversample" => "oversample",
+	"region" => "Region",
+	"oversample" => "oversample",
+	"cycle" => "Cycle",
 );

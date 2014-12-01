@@ -37,7 +37,9 @@
 				<a href="#">Upload Oversampling Survey</a>
 			</li>
 		</ul-->
-
+		<li>
+			<a href="/admin/logs">{{Lang::get('general.logs')}}</a>
+		</li>
 	@if( $user->hasAccess('setting') || $user->hasAccess('user') || $user->hasAccess('group') )
 	<li>
 		<a href="#"><i class="fa fa-cog fa-fw"></i> Administration<span class="fa arrow"></span></a>
