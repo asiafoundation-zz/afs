@@ -236,8 +236,9 @@ class Survey extends Eloquent {
 				foreach ($questions_list as $key => $question_list) {
 					if (!empty($question_list['data'])) {
 						$question = Question::where('code_id','=',$question_list['code_id'])->where('question_category_id','=',$question_list['question_category_id'])->first();
-						
+
 						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'],$key);
+
 						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
 					}
 				}
