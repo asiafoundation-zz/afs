@@ -48,6 +48,7 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 	Route::post('/admin/filter', 'CategoryController@postManagefilter');
 	Route::post('/admin/filterorder', 'CategoryController@postFilterorder');
 	Route::get('/admin/filterorder', 'CategoryController@getFilterorder');
+	Route::get('/admin/logs/', 'LogController@getIndex');
 
 	Route::get('/admin/questioncategory', function(){
 		$question_category = QuestionCategory::all();
@@ -67,7 +68,7 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 | Frontend
 |--------------------------------------------------------------------------
 */
-
+Route::get('/', 'HomeController@getIndex');
 Route::group(array('prefix' => LaravelLocalization::setLocale(), 'before' => 'frontend_theme'), function()
 {
 	Route::get('/', 'HomeController@getIndex');

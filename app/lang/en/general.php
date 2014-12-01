@@ -89,5 +89,8 @@ return array(
 	"upload_map" => "Upload Map",
 	"is_default" => "Is Default",
 	"manage_filter" => "Manage Filter",
-	"remove_all_surveys" => "Remove All Survey"
+	"remove_all_surveys" => "Remove All Survey",
+
+	"logs" => "Logs",
+	"manage_survey" => "Manage Survey"
 );
