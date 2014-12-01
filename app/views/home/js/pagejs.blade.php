@@ -3,6 +3,7 @@
      function find_survey()
      {
       // Get cycles functions
+      clear_all_filter_nosurvey();
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
@@ -212,7 +213,7 @@
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
-            $('html, body').animate({scrollTop: $("#filter").offset().top}, 1000);
+            $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
             $('#chart_canvas').show();
             $('.loading-flag').hide();
             // Build chart
@@ -344,7 +345,7 @@
       $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
           if (data != false) {
-            $('html, body').animate({scrollTop: $("#filter").offset().top}, 1000);
+            $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
             
             FilterSelect.question = parseInt(data.default_question.id_question);
             FilterSelect.category = parseInt(data.default_question.id_question_categories);

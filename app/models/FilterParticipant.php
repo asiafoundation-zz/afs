@@ -75,7 +75,7 @@ class FilterParticipant extends Eloquent {
 			if (!empty($request['region'])) {
 					$region = $request['region'];
 					$region_dapil = $request['region_dapil'];
-					$questions =  $questions->where(
+					$filter_queries =  $filter_queries->where(
 						function ($query) use ($region,$region_dapil) {
 						$query->where('regions.name', '=', (string)$region)
 						->orWhere('regions.name', '=', (string)$region_dapil);

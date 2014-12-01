@@ -275,3 +275,25 @@ $('.search-wrp > div > a#question + .dropdown-path').hide();
 })
 
 $('.dropdown-scroll').alternateScroll({ 'vertical-bar-class': 'styled-v-bar', 'hide-bars': false });
+
+/*STICKY FILTER*/
+
+$(".sticky-filter").click(function(){
+      $("#filter").animate({left:'0'});
+      return false
+    }); 
+
+    $(".selectarea").click(function(){
+      $("#filter").animate({left:'-340px'});
+      $('html, body').animate({scrollTop : 0},800);
+      setTimeout(function(){$('.flash-message').css("display","block");}, 1400);
+      setTimeout(function(){$('.flash-message').css("display","none");}, 5000);
+      return false
+    });  
+
+    $(".close-stickyselect").click(function(){
+      $("#filter").animate({left:'-340px'});
+      return false;
+    });
+
+    // $(".msdd").msDropDown();

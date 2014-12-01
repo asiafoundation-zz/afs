@@ -663,3 +663,304 @@ footer p {
 	background: url(../img/detective.png) no-repeat top center;
 	display: block;
 }
+
+/*Update index new style - */
+
+.header p {
+	color: #ffffff;
+    
+	font-size: 19px;
+    font-weight: normal;
+    line-height: normal;
+	padding: 6px 10px;
+}
+.header {
+	background: #333;
+	padding: 10px 0;
+	color: #fff;
+}
+.elheader-wrapper {
+	background: none repeat scroll 0 0 #1fb6b7;
+    height: 65px;
+    
+    
+    width: 100%;
+    z-index: 10;
+	position: relative;
+}
+.map .search-wrp {
+    bottom: 0;
+    margin-left: 0;
+    position: relative;
+    width: 100%;
+    z-index: 11;
+    float: left;
+    margin: 0;
+    left: auto;
+}
+
+#s2id_select-cycle,
+#s2id_select-category {
+	background: url("../img/select-question.png") #1ba5a6 no-repeat  scroll 97% center;
+    box-shadow: none !important;
+    color: #fff !important;
+    font-family: "DINNextLTPro-Bold";
+    font-size: 14px;
+    line-height: 52px;
+    overflow: hidden;
+    padding: 0 42px 0 5px;
+    text-align: left;
+    text-transform: uppercase;
+    
+	border-radius: 3px;
+	width: 36% !important;
+}
+#s2id_select-cycle{
+	width: 13% !important;
+}
+#s2id_select-question {
+	background: url("../img/select-question.png") #1ba5a6 no-repeat  scroll 97% center;
+    box-shadow: none !important;
+    color: #fff !important;
+    font-family: "DINNextLTPro-Bold";
+    font-size: 14px;
+    line-height: 52px;
+    overflow: hidden;
+    padding: 0 42px 0 5px;
+    text-align: left;
+    text-transform: uppercase;
+    width: 45% !important;
+	border-radius: 3px;
+}
+#s2id_select-cycle .select2-arrow {
+	display: none;
+}
+.select2-choice {
+  background: none repeat scroll 0 0 transparent !important;
+}
+.select2-chosen {
+	color: #fff !important
+}
+.select2-drop {
+	padding-top: 5px;
+}
+.select2-container-active .select2-choice, .select2-container-active .select2-choices {
+	box-shadow: none !important;
+}
+.sticky-filter {
+	background: url("../img/sticky-filter.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 119px;
+    left: 0;
+    margin-top: -60px;
+    position: fixed;
+    top: 50%;
+    width: 69px;
+    z-index: 50;
+}
+#filter {
+	background: none repeat scroll 0 0 #555555;
+    height: 100%;
+    left: -340px;
+    position: fixed;
+    top: 0;
+    width: 235px;
+    
+	z-index: 999999;
+}
+#filter .container,
+.filter [class*="col-"] > ul {
+	width: 100%
+}
+.custom-select-control .custom-text {
+	background: url("../img/sticky-select.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) !important;
+    height: 46px !important;
+    width: 200px !important;
+    color: #a7a7a7 !important;
+    position: relative;
+    z-index: 11;
+}
+.custom-scroll {
+	z-index: 20 !important
+}
+.filter [class*="col-"] > ul > li {
+	width: 200px;
+	margin-bottom: 10px;
+}
+.select-list {
+	width: 200px !important
+}
+.custom-select-control {
+	width: 200px !important;
+    /*z-index: 10 !important;*/
+}
+#filter > .container > .row > .col-md-1 {
+	display: none;
+}
+#filter > .container > .row > .col-md-11 {
+	width: 100%;
+}
+#filter > .container > .row > .col-md-11 .custom-select-control-custom-text {
+	border-top: 1px solid #fff;
+    display: block;
+    font-family: "DINNextLTPro-Regular";
+    height: auto;
+    line-height: normal;
+    margin-top: 20px;
+    padding: 12px 0;
+    text-transform: capitalize;
+}
+.selectarea,
+.selectarea:hover {
+	background: #fdc45b;
+	border-radius: 5px;
+    color: #ffffff;
+    font-family: "DINNextLTPro-Regular";
+    font-size: 14px;
+    left: 0;
+    line-height: 18px;
+    
+	margin: 10px 0 0;
+    padding: 15px 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+}
+.clear-all, .clear-all:hover {
+    background: none repeat scroll 0 0 #973a4f;
+    border-radius: 5px;
+    color: #ffffff;
+    font-family: "DINNextLTPro-Regular";
+    font-size: 14px;
+    left: 0;
+    line-height: 18px;
+    padding: 15px 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+    z-index: 0;
+}
+.compare-survey .col-md-6 {
+	width: 100%
+}
+.survey-question {
+	background: #1fb7b8;
+	padding: 15px 0;
+}
+#question-name {
+	color: #fff;
+    font-family: "DINNextLTPro-Regular";
+    font-size: 24px !important;
+}
+.survey-question .arrowleft {
+	background: url("../img/arrow-left.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    display: block;
+    height: 34px;
+    margin: 0 auto;
+    margin-top: 50%;
+    padding: 5% 0;
+    text-align: center;
+    width: 34px;
+}
+.survey-question .arrowright {
+	background: url("../img/arrow-right.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    display: block;
+    height: 34px;
+    margin: 0 auto;
+    margin-top: 50%;
+    padding: 5% 0;
+    text-align: center;
+    width: 34px;
+}
+.survey-question .arrowright {}
+.compare-survey .col-md-6:nth-child(1) p {
+	font-size: 14px;
+}
+.flash-message {
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    left: 50%;
+    margin-left: -480px;
+    padding: 20px 0;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 960px;
+    z-index: 10;
+    display: none;
+}
+.flash-message p {
+	color: #555555;
+	font-size: 24px;
+	margin: 0;
+}
+.flash-message a {
+	color: #1ba5a6;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+.compare-survey h4 {
+	font-size: 14px;
+}
+.chart-pagination li:nth-child(1),
+.chart-pagination li:nth-child(3) {
+	display: none;
+}
+.compare-survey .extras {
+	float: left;
+    margin: 0;
+    width: 50%;
+}
+.compare-survey .col-md-6:nth-child(1) + .col-md-6 {
+	border-left: medium none;
+    border-top: 1px solid #ededed;
+    margin-top: 30px;
+    padding-top: 30px;
+}
+.compare-survey .extras h4 {
+	font-size: 18px;
+}
+.compare-survey .col-md-6:nth-child(2) p {
+    color: #888888;
+    font-family: "DINNextLTPro-Regular";
+    font-size: 14px;
+}
+footer {
+	height: 60px;
+    line-height: 60px;
+    text-align: center;
+}
+.footer p {
+	color: #fff;
+    font-family: "DINNextLTPro-Regular";
+    font-size: 14px;
+    text-align: center;
+    margin: 0;
+}
+.chart {
+	padding: 50px 0;
+}
+.clear-all {
+	cursor: pointer;
+}
+.close-stickyselect,
+.close-stickyselect:hover {
+	background: url("../img/sticky-filterblock.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 119px;
+    left: 235px;
+    margin-top: -60px;
+    position: absolute !important;
+    top: 50%;
+    width: 69px;
+    z-index: 50;
+}
+
+.map{
+	top:0;
+	overflow: hidden;
+}
+
+#map{
+}
