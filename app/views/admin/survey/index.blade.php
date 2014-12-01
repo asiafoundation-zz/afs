@@ -50,12 +50,12 @@ setInterval(function() {
 					<tr>
 						<td>{{ $no }}</td>
 						<td>
-							@if($survey['publish'] == 1 || $survey['publish'] == 3 || $survey['publish'] == 4)
+							@if($survey['publish'] == 0 || $survey['publish'] == 2 || $survey['publish'] == 3 || $survey['publish'] == 6)
+							{{ $survey['name'] }}
+							@else
 							<a href="{{ URL::to('admin/survey/managesurvey') }}/{{ $survey['id'] }}">
 								{{ $survey['name'] }}
 							</a>
-							@else
-							{{ $survey['name'] }}
 							@endif
 						</td>
 						<td>
@@ -80,6 +80,7 @@ setInterval(function() {
 							@elseif($survey['publish_style'] == "completed" || $survey['publish_style'] == "publish" || $survey['publish_style'] == "unpublish")
 							<a href="/admin/filter/{{ $survey['id'] }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_filter')}}</button></a>
 							@endif
+							<a href="/survey/singledelete/{{ $survey['id'] }}" style="aligh:right;"><button class="btn btn-danger">{{Lang::get('backend.delete_survey')}}</button></a>
 						</td>
 					</tr>
 				<?php $no = $no+1; ?>
