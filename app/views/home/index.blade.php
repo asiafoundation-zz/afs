@@ -87,7 +87,7 @@
         <div class="container">
          <div class="row">
             <div class="col-md-11">
-               <span class="custom-select-control-custom-text" style="color:white;">Sortir Hasil Survey:</span>
+               <span class="custom-select-control-custom-text" style="color:white;">Saring Hasil Survey:</span>
             </div>
          </div>
         <div class="row">

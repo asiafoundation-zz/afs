@@ -13,7 +13,7 @@ return array(
 	"filter_by_income" => "Pendapatan",
 	"filter_by_education" => "Pendidikan",
 	"filter_by_gender" => "Jenis Kelamin",
-	"clear_all" => "Hapus pencarian",
+	"clear_all" => "Atur ulang filter",
 	"cycle" => "Pilih cycle",
 	"compare_this_survey" => "Bandingkan dengan survey lain",
 	"return" => "Kembali",
