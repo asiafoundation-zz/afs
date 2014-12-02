@@ -21,9 +21,9 @@
 
       chartjs(color_set_data,data_points_data,data_points_pie_data);
 
-      $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
-      $('#select-category').prepend("<option value='0'>Pilih category</option>");
-      $('#select-cycle').prepend("<option value='0'>Pilih jenis survey</option>");
+      // $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
+      // $('#select-category').prepend("<option value='0'>Pilih category</option>");
+      // $('#select-cycle').prepend("<option value='0'>Pilih jenis survey</option>");
       // $('html, body').animate({scrollTop: $(".filter").offset().top + 100}, 1000);
     }
   </script>

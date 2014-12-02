@@ -112,25 +112,6 @@ class Question extends Eloquent {
 							regions.id as id_region,
 							regions.name,
 							0 AS indexlabel';
-			}else{
-				//if there's no region and answer is empty
-				$query = 'questions.id as id_question,
-							questions.code_id as question_code,
-							questions.question as question,
-							question_categories.id as id_question_categories,
-							question_categories.name as question_categories,
-							answers.id  as id_answer,
-							answers.answer as answer,
-							regions.id as id_region,
-							regions.name,
-							colors.color,
-							cycles.id  as id_cycle,
-							cycles.cycle_type  as cycle_type,
-							cycles.name as cycle,
-							(SELECT sum(amounts.amount) 
-								from amounts 
-								where amounts.answer_id = id_answer) AS amount,
-							0 AS indexlabel';	
 			}
 		}
 
@@ -146,7 +127,7 @@ class Question extends Eloquent {
 				$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id');
 			}
 			
-			$questions = $questions->where('amounts.sample_type', '=', 0);			
+			// $questions = $questions->where('amounts.sample_type', '=', 0);			
 		}else{
 			$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id')
 							->join('answers','answers.question_id','=','questions.id')
@@ -219,7 +200,11 @@ class Question extends Eloquent {
 		$questions =  self::DefaultLoad($request);
 
 			if (!empty($request['cycle'])) {
-				$questions = $questions->where('answers.cycle_id', '=',$request['cycle']);
+
+				if($request['empty'] == 0){
+					$questions = $questions->where('answers.cycle_id', '=',$request['cycle']);	
+				}
+				
 				if (!empty($request['category'])) {
 					$questions =  $questions->where('question_categories.id', '=', $request['category']);
 				}
@@ -229,11 +214,7 @@ class Question extends Eloquent {
 				if (!empty($request['region'])) {
 					$region = $request['region'];
 					$region_dapil = $request['region_dapil'];
-					$questions = $questions->where(
-						function ($query) use ($region,$region_dapil) {
-							$query->where('regions.name', '=', (string)$region)
-							->orWhere('regions.name', '=', (string)$region_dapil);
-					});
+					$questions = $questions->where('regions.id', '=', $region);
 				}
 			}
 			else{
@@ -322,24 +303,26 @@ class Question extends Eloquent {
 					// });
 				}
 				if (!empty($request['cycle'])) {
-					$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
+					if($request['empty'] == 0){
+						$questions = $questions->where('answers.cycle_id', '=',$request['cycle']);	
+					}
 				}
 			}
 
-			$questions =  $questions
-				->groupBy('answer')
-				->get();
-		
+			if($request['empty'] == 0){
+				$questions =  $questions->groupBy('answer')->get();
+				if (count($questions)) {
+					// if (!empty($request['answers'])) {
+					// 	if (count($questions) != count($request['answers'])) {
+					$questions = self::DifferentAnswer($questions,$request);
+					// 	}
+					// }
 
-		if (count($questions)) {
-			// if (!empty($request['answers'])) {
-			// 	if (count($questions) != count($request['answers'])) {
-			$questions = self::DifferentAnswer($questions,$request);
-			// 	}
-			// }
-
-			$questions = self::IndexLabel($questions);
-		}
+					$questions = self::IndexLabel($questions);
+				}
+			}else{
+				$questions =  $questions->get();
+			}
 
 			// exit;
 		return $questions;
@@ -570,11 +553,11 @@ class Question extends Eloquent {
 				if (!empty($request['question'])) {
 					$questions =  $questions->where('questions.id', '=', $request['question']);
 				}
-				// if($request['empty'] == 0){
+				if($request['empty'] == 0){
 					if (!empty($request['cycle'])) {
 						$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
 					}
-				// }
+				}
 				if (!empty($request['region'])) {
 					$questions =  $questions->where('regions.id', '=', (integer)$request['region']);
 				}
@@ -629,11 +612,7 @@ class Question extends Eloquent {
 			if (!empty($request['region'])) {
 					$region = $request['region'];
 					$region_dapil = $request['region_dapil'];
-					$questions = $questions->where(
-						function ($query) use ($region,$region_dapil) {
-							$query->where('regions.name', '=', (string)$region)
-							->orWhere('regions.name', '=', (string)$region_dapil);
-					});
+					$questions = $questions->where('regions.id', '=', $region);
 				}
 			if (!empty($request['cycle'])) {
 				$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
