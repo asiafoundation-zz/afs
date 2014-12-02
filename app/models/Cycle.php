@@ -79,13 +79,6 @@ class Cycle extends Eloquent {
 
 	public static function checkData($data,$cycle_type)
 	{
-		print '<---->';
-		print '<pre>';
-print_r($data);
-print '<pre>';
-print '<pre>';
-print_r($cycle_type);
-print '<pre>';print '<---->';
 		$cycle = Cycle::where('name', '=', $data)->where('cycle_type','=',$cycle_type)->first();
 		
 		if(is_null($cycle))

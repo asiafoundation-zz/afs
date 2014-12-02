@@ -253,7 +253,8 @@ class Survey extends Eloquent {
 					}
 				}
 				AmountFilter::checkData($participant->id);
-			}echo "a"; die();
+				Log::info('Participant:'.$participant->id);
+			}
 		// 	DB::commit();
 		// 	$status = 1;
 		// }
@@ -442,32 +443,23 @@ class Survey extends Eloquent {
 
 
 			$master_codes_data->delete();
+			// Remove Survey and file
+			$survey = Survey::find($id);
 
-			Survey::destroy($id);
+			File::delete(public_path()."/uploads/".$survey->baseline_file);
+			File::delete(public_path()."/uploads/".$survey->geojson_file);
 
 			// Remove data in mongo
 			// Emptying mongo data
+			$header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
+			$header_delete->delete();
+			$assign_delete = Assign::find(['survey_id'=>(string)$survey->id])->first();
+			$assign_delete->delete();
+			$participant_delete = ParticipantTemporary::find(['survey_id'=>(string)$survey->id])->first();
+			$participant_delete->delete();
 			$cursors = Assign::all();
-			foreach ($cursors as $key => $cursor) {
-			// Delete document in collections monggodb
-				$assign_delete = Assign::find(['survey_id'=>(string)$id])->first();
-			// Delete actions
-				$assign_delete->delete();
-			}
-			$cursors = Header::all();
-			foreach ($cursors as $key => $cursor) {
-			// Delete document in collections monggodb
-				$header_delete = Header::find(['survey_id'=>(string)$id])->first();
-				// Delete actions
-				$header_delete->delete();
-			}
-			$cursors = ParticipantTemporary::all();
-			foreach ($cursors as $key => $cursor) {
-			// Delete document in collections monggodb
-				$participant_delete = ParticipantTemporary::find(['survey_id'=>(string)$id])->first();
-				// Delete actions
-				$participant_delete->delete();
-			}
+
+			$survey->delete();
 			DB::commit();
 			$status = 1;
 		}

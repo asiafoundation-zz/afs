@@ -61,7 +61,13 @@ class BackgroundCommand extends Command {
 			    $survey->publish = 3;
 			    $survey->save();
 
-				  // Load data from collections MonggoDB and saving master code and codes
+			    // Delete Header Data
+			    $header_delete = Header::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
+			    if ($header_delete) {
+			    	$header_delete->delete();
+			    }
+
+			    // Load data from collections MonggoDB and saving master code and codes
 				  $cursors_load = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
 				  
 				  if ($cursors_load) {
