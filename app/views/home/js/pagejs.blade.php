@@ -16,6 +16,17 @@
             // Re declare object filter data 
             cycle_id = FilterSelect.cycle;
 
+            $("#question-name").html(data.default_question.question);
+            $("#select_cycle_label").html(cycle_text);
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,15)+" ...");
+            $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
+
+             if(data.empty_answer == 1){
+              $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}} <br>'+ data.default_question.question +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $(".chart #chart_canvas").hide();
+              return false;
+            }
+
             FilterSelect.answers = [];
             for (var key in data.question) {
               if (data.question.hasOwnProperty(key)) {
@@ -44,12 +55,7 @@
             chartjs(color_set_data,data_points_data,data_points_pie_data);
 
             var cycle_text = $("#cycle_select_"+cycle_id).text();
-            $("#cycle_list").html(cycle_list);
-
-            $("#question-name").html(data.default_question.question);
-            $("#select_cycle_label").html(cycle_text);
-            $("#select_category_label").html(data.default_question.question_categories.slice(0,15)+" ...");
-            $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
+            $("#cycle_list").html(cycle_list);            
 
             // Is Has Compare Cycle
             var is_has_compare = data_cycles_length > 1 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
@@ -295,6 +301,12 @@
             $("#question-name").html(data.default_question.question);
             $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
+
+            if(data.empty_answer == 1){
+              $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}} <br>'+ data.default_question.question +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $(".chart #chart_canvas").hide();
+              return false;
+            }
 
             FilterSelect.question = data.default_question.id_question;
             for (var key in data.question) {

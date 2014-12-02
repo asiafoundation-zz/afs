@@ -79,6 +79,29 @@ class HomeController extends BaseController {
 					break;
 
 				case 'survey':
+					/*-- Define empty answers --*/
+					$empty_question = Question::select(DB::raw('distinct questions.id'));
+
+					if(!empty(Input::get('region'))){
+						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
+											->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+											->join('regions', 'regions.id', '=', 'amounts.region_id')
+											->where('regions.id', '=', Input::get('region'));
+					}else{
+						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id');
+					}
+
+					$empty_question = $empty_question->where('questions.id','=', Input::get('question'))	 
+										->where('questions.question_category_id', '=', Input::get('category'))	 
+										->first();
+
+					if(isset($empty_question)){
+						Input::merge(array('empty' => 0)); 
+					}else{
+	 					Input::merge(array('empty' => 1));
+					}
+					/*-- End --*/
+
 					$default_questions = Question::LoadQuestion(Input::get());
 					if (empty($default_questions)) {
 						return 0;
@@ -86,13 +109,18 @@ class HomeController extends BaseController {
 
 					$default_question = reset($default_questions);
 
+					$cycle_data = Input::get('empty') == 0 ? Cycle::QuestionCycle($default_question) : 0;
+					$region_color = Input::get('empty') == 0 ? QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions) : 0;
+					$empty_answer = Input::get('empty') == 0 ? 0 : 1;
+
 					$load_filter = array();
 					$load_filter = array(
 						"survey" => Survey::first(),
 						"default_question" => $default_question,
 						"question" => $default_questions,
-						"cycles" => Cycle::QuestionCycle($default_question),
-						"regions" => QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions),
+						"cycles" => $cycle_data,
+						"regions" => $region_color,
+						"empty_answer" => $empty_answer
 					);
 
 					$return = count($default_questions) > 0 ? $load_filter : 0;
@@ -159,13 +187,17 @@ class HomeController extends BaseController {
 						return 0;
 					}
 
+					/*-- Define condition for empty answer --*/
+					$empty_answer = 0;
 					if(empty(Input::get('empty'))){	 
 						$region_color = QuestionParticipant::RegionColor(0,$default_questions);	 
 					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 0){	 
 						$region_color = QuestionParticipant::RegionColor(0,$default_questions);	 
 					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 1){	 
 						$region_color = 0;	 
+						$empty_answer = 1;
 					}
+					/*-- End --*/
 
 					/*-- Inisiate compare availability --*/
 					$compare_available = 0;
@@ -189,7 +221,8 @@ class HomeController extends BaseController {
 						"default_question" => $default_question,
 						"question" => $default_questions,
 						"regions" => $region_color,
-						"compare_available" => $compare_available
+						"compare_available" => $compare_available,
+						"empty_answer" => $empty_answer
 					);
 
 					$return = count($default_questions) > 0 ? $load_filter : 0;
