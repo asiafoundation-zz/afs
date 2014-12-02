@@ -313,12 +313,13 @@ class Question extends Eloquent {
 				}
 				if (!empty($request['region'])) {
 					$region = $request['region'];
-					$region_dapil = $request['region_dapil'];
-					$questions = $questions->where(
-						function ($query) use ($region,$region_dapil) {
-							$query->where('regions.name', '=', (string)$region)
-							->orWhere('regions.name', '=', (string)$region_dapil);
-					});
+					$questions =  $questions->where('regions.id', '=', $region);
+					// $region_dapil = $request['region_dapil'];
+					// $questions = $questions->where(
+					// 	function ($query) use ($region,$region_dapil) {
+					// 		$query->where('regions.name', '=', (string)$region)
+					// 		->orWhere('regions.name', '=', (string)$region_dapil);
+					// });
 				}
 				if (!empty($request['cycle'])) {
 					$questions =  $questions->where('answers.cycle_id', '=', $request['cycle']);
@@ -368,8 +369,7 @@ class Question extends Eloquent {
 			->join('question_categories','questions.question_category_id','=','question_categories.id')
 			->join('answers','answers.question_id','=','questions.id')
 			->join('cycles','cycles.id','=','answers.cycle_id')
-			->join('colors','answers.color_id','=','colors.id')
-			;
+			->join('colors','answers.color_id','=','colors.id');
 
 			if (count($request)) {
 				if (!empty($request['category'])) {
@@ -444,17 +444,11 @@ class Question extends Eloquent {
 			if (!empty($request['region'])) {
 				$region = $request['region'];
 				$region_dapil = $request['region_dapil'];
-				$questions = $questions->where(
-					function ($query) use ($region,$region_dapil) {
-						$query->where('regions.name', '=', (string)$region)
-						->orWhere('regions.name', '=', (string)$region_dapil);
-					});
+				$questions = $questions->where('regions.id', '=', $region);
 			}
 		}
 
-		$is_cycles = $questions
-		->groupBy('cycle_type')
-		->get();
+		$is_cycles = $questions->groupBy('cycle_type')->get();
 		if (count($is_cycles) < 2) {
 			list($questions,$request) = Question::CompareCycle($request);self::CompareCycle($request);
 		}else{
@@ -481,7 +475,7 @@ class Question extends Eloquent {
 								left join regions on regions.id = amounts.region_id ";	
 			}
 
-			$query_raw .= "where questions.id > ".$request['question'];
+			$query_raw .= "where questions.id < ".$request['question'];
 
 			if (count($request)) {
 				if (!empty($request['category'])) {

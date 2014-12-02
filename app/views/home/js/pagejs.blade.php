@@ -282,6 +282,16 @@
           if (data != false) {
             $('.loading-flag').hide();
 
+            /*-- compare availability --*/
+            $('#chart_pagination_text a').show();
+            if(data.compare_available == 0){
+              $('#chart_pagination_text a').hide();
+            }
+            /*-- End --*/
+
+            $('#select-question').val(data.default_question.id_question);
+            $('.select-question .select2-chosen').text(data.default_question.question);
+
             $("#question-name").html(data.default_question.question);
             $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
@@ -292,6 +302,7 @@
                 FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
               }
             }
+
 
             if(data.regions != 0){
               $('#chart_canvas').show();
@@ -340,7 +351,6 @@
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
-      // console.log("I am here");
       // Get cycles functions
       $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
@@ -427,7 +437,7 @@
           }
         });
 
-      // find_survey();
+      find_survey();
     }
 
     function color_set(assign_color)

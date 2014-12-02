@@ -3,7 +3,6 @@
 @section('content')
 
   @include('partial/homeasset')
-  <a href="" class="sticky-filter"></a>
 
   <section class="header">
       <p>{{ $survey->name }}</p>
@@ -17,19 +16,28 @@
 <!--Update-->
 <div class="elheader-wrapper"> <!-- add element wrapper - 28112014 -->
   <div class="search-wrp header-select">
-    <select class="select2-custom select-cycle" id="select-cycle">
-      @foreach ($cycles as $cycle)
-      <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
-      @endforeach
-    </select><!-- Custom Select -->
-    <select class="select2-custom select-category" id="select-category">
-      @foreach ($question_categories as $question_category)
-      <option value="{{ $question_category->id }}" @if( $default_question->id_question_categories == $question_category->id) selected @endif >{{ $question_category->name }}</option>
-      @endforeach 
-    </select><!-- Custom Select -->
-    <select class="select2-custom select-question" id="select-question">
-      <option value="{{ $default_question->id_question }}">{{ $default_question->question }}</option>
-    </select><!-- Custom Select -->
+    <div class="select-1">
+      <label>(1).Pilih Jenis Survey</label>
+      <select class="select2-custom select-cycle" id="select-cycle">
+        @foreach ($cycles as $cycle)
+        <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
+        @endforeach
+      </select><!-- Custom Select -->
+    </div>
+    <div class="select-2">
+      <label>(2).Pilih Kategori</label>
+      <select class="select2-custom select-category" id="select-category">
+        @foreach ($question_categories as $question_category)
+        <option value="{{ $question_category->id }}" @if( $default_question->id_question_categories == $question_category->id) selected @endif >{{ $question_category->name }}</option>
+        @endforeach 
+      </select><!-- Custom Select -->
+    </div>
+    <div class="select-3">
+      <label>(3).Pilih Pertanyaan</label>
+      <select class="select2-custom select-question" id="select-question">
+        <option value="{{ $default_question->id_question }}">{{ $default_question->question }}</option>
+      </select><!-- Custom Select -->
+    </div>
   </div>
 </div> 
 
@@ -66,57 +74,54 @@
     <!-- </div> -->
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>
   </section>
-
-  <section class="filter" id="filter">
-    <div class="container">
-      <a href="" class="close-stickyselect"></a>
-      <div class="row">
-        <div class="col-md-12">
-          <a class="selectarea" href="">Pilihan Wilayah</a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-1">
-          &nbsp;
-        </div>
-        <div class="col-md-11">
-          <span class="custom-select-control-custom-text" style="color:white;">Sortir Hasil Survey:</span>
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col-md-12 dropdown-filter">
-          <ul>
-          @foreach ($filters as $key_filters => $filter)
-            <li>
-              <select class="select-control msdd" data-maincss="blue">
-                <option>{{ $filter['category_name'] }}</option>
-                @foreach ($filter['category_items'] as $filter_items)
-                <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
-                @endforeach
-              </select>
-            </li>
-            @endforeach
-            <!-- Update 28112014 -->
-
-             <li>          
-              <a class="clear-all" onclick='clear_all_filter()'>{{Lang::get('frontend.clear_all')}}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-<!--End Update-->
-
   <section class="survey-pemilu">
     <div class="survey-question">
+      <label>PERTANYAAN SURVEY</label>
       <div class="container center">
         <div class="col-xs-1 center"><a class="arrowleft" onclick="next_question(0)"></a></div>
         <p id="question-name" class="col-xs-10">" {{ $default_question->question }} "</p>
         <div class="col-xs-1 center"><a class="arrowright" onclick="next_question(1)"></a></div>
       </div>
     </div>
+      <section class="filter" id="filter">
+        <div class="container">
+         <div class="row">
+            <div class="col-md-11">
+               <span class="custom-select-control-custom-text" style="color:white;">Saring Hasil Survey:</span>
+            </div>
+         </div>
+        <div class="row">
+          <div class="col-md-12 dropdown-filter">
+            <ul>
+            <li>
+               <select class="select-control" id="select-region">
+                  <option>Wilayah</option>
+                  @foreach ($regions as $region)
+                  <option value="{{ $region['region_id'] }}" class="selectik-filter-region">{{ $region['name'] }}</option>
+                  @endforeach
+               </select>
+            </li>
+            @foreach ($filters as $key_filters => $filter)
+              <li>
+                <select class="select-control msdd" data-maincss="blue">
+                  <option>{{ $filter['category_name'] }}</option>
+                  @foreach ($filter['category_items'] as $filter_items)
+                  <option value="{{ $filter_items['category_item_id'] }}">{{ $filter_items['category_item_name'] }}</option>
+                  @endforeach
+                </select>
+              </li>
+              @endforeach
+              <!-- Update 28112014 -->
+
+               <li>          
+                <a class="clear-all">{{Lang::get('frontend.clear_all')}}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  <!--End Update-->
 
     <div class="container center">
       <div class="col-md-12 chart-div">

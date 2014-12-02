@@ -223,33 +223,42 @@ function select_category(category_id)
 function clear_all_filter()
 {
   var option_filters = [];
+  var refresh = 0;
+  // FilterSelect.region = "";
   $(".dropdown-filter .selected_filter_option").each(function(){
-    if ($(this).attr("data-type") === 'region') {
-      FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
-    }else{
+    // if ($(this).attr("data-type") === 'region') {
+    //   FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
+    // }else{
       var data_value = $(this).attr("data-value");
+        refresh = 1;
         filter_text = $('.title-filters',$(this).parent('ul')).html();
 
         $('#custom-text-title-'+filter_text.toUpperCase()).html("");
         $('#custom-text-title-'+filter_text.toUpperCase()).html(filter_text);
-        find_survey();
-    }
+    // }
   });
+
+  if(refresh == 1){
+    find_survey();
+  }
   return false;
 }
 
 function clear_all_filter_nosurvey(){
   var option_filters = [];
+  // FilterSelect.region = "";
   $(".dropdown-filter .selected_filter_option").each(function(){
-    if ($(this).attr("data-type") === 'region') {
-      FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
-    }else{
+    // if ($(this).attr("data-type") === 'region') {
+    //   FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
+    // }
+    // else
+    // {
       var data_value = $(this).attr("data-value");
         filter_text = $('.title-filters',$(this).parent('ul')).html();
 
         $('#custom-text-title-'+filter_text.toUpperCase()).html("");
         $('#custom-text-title-'+filter_text.toUpperCase()).html(filter_text);
-    }
+    // }
   });
   return false; 
 }
@@ -278,22 +287,22 @@ $('.dropdown-scroll').alternateScroll({ 'vertical-bar-class': 'styled-v-bar', 'h
 
 /*STICKY FILTER*/
 
-$(".sticky-filter").click(function(){
-      $("#filter").animate({left:'0'});
-      return false
-    }); 
+// $(".sticky-filter").click(function(){
+//       $("#filter").animate({left:'0'});
+//       return false
+//     }); 
 
-    $(".selectarea").click(function(){
-      $("#filter").animate({left:'-340px'});
-      $('html, body').animate({scrollTop : 0},800);
-      setTimeout(function(){$('.flash-message').css("display","block");}, 1400);
-      setTimeout(function(){$('.flash-message').css("display","none");}, 5000);
-      return false
-    });  
+//     $(".selectarea").click(function(){
+//       $("#filter").animate({left:'-340px'});
+//       $('html, body').animate({scrollTop : 0},800);
+//       setTimeout(function(){$('.flash-message').css("display","block");}, 1400);
+//       setTimeout(function(){$('.flash-message').css("display","none");}, 5000);
+//       return false
+//     });  
 
-    $(".close-stickyselect").click(function(){
-      $("#filter").animate({left:'-340px'});
-      return false;
-    });
+//     $(".close-stickyselect").click(function(){
+//       $("#filter").animate({left:'-340px'});
+//       return false;
+//     });
 
     // $(".msdd").msDropDown();
