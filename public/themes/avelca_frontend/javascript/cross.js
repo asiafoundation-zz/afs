@@ -159,17 +159,6 @@ $(document).ready(function(){
   });
 
   $('.select-cycle').change(function(){
-    // if($(this).val() == 0){
-    //   FilterSelect.question = default_q;
-    //   FilterSelect.category = default_cat;
-    //   FilterSelect.cycle = default_cy;
-    //   // find_survey();
-    // }
-    // else{
-    //   FilterSelect.cycle = parseInt($(this).val());
-
-    //   cycle_select(parseInt($(this).val()));  
-    // }
     
   });
 
@@ -177,4 +166,10 @@ $(document).ready(function(){
     FilterSelect.region = parseInt($(this).val());
     find_survey_dynamic();
   });
+
+  $('.clear-all').click(function(){
+    FilterSelect.region = "";
+    clear_all_filter_nosurvey();
+    find_survey();
+  })
 })
