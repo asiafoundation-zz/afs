@@ -54,6 +54,20 @@ class SurveyController extends AvelcaController {
 			// Delete actions
 			$assign_delete->delete();
 		}
+		$cursors = Header::all();
+		foreach ($cursors as $key => $cursor) {
+			// Delete document in collections monggodb
+			$header_delete = Header::find(['delayed_job_id'=>(string)$cursor->delayed_job_id])->first();
+			// Delete actions
+			$header_delete->delete();
+		}
+		$cursors = ParticipantTemporary::all();
+		foreach ($cursors as $key => $cursor) {
+			// Delete document in collections monggodb
+			$participant_delete = ParticipantTemporary::find(['delayed_job_id'=>(string)$cursor->delayed_job_id])->first();
+			// Delete actions
+			$participant_delete->delete();
+		}
 
 		Session::flash('survey_deleted', 'Survey Deleted');
 		return Redirect::to('/admin/survey');
@@ -78,6 +92,7 @@ class SurveyController extends AvelcaController {
 				return Redirect::to('/admin/survey/managesurvey/'. $survey->id);
 			}
 			elseif (!empty($request['excel'])) {
+				$survey->publish = 3;
 				$survey->baseline_file = $request['excel'];
 				$survey->save();
 
@@ -113,6 +128,8 @@ class SurveyController extends AvelcaController {
 
 					// Self to delayed Job
 					$delayed_jobs = DelayedJob::create(array('type' => 'parsingfile','survey_id' => $survey->id,'data' => 0,'queue' => 1));
+					Session::flash('alert-class', 'alert-success');
+					Session::flash('message', 'Save Succeed and Parsing File Started');
 					return Redirect::to('/admin/survey');
 				}
 			}
@@ -128,6 +145,7 @@ class SurveyController extends AvelcaController {
 		
 		foreach ($files as $key_files => $file) {
 			$filename = $file->getClientOriginalName();
+			File::delete(public_path()."/uploads/".$filename);
 
 			if(!file_exists($filename))
 			{
@@ -163,7 +181,7 @@ class SurveyController extends AvelcaController {
 		$request = Input::get();
 		// Load survey
 		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
-		$survey->publish = 2;
+		$survey->publish = 3;
 		$survey->save();
 
 		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 1));

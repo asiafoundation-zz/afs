@@ -53,7 +53,7 @@
 						<div class="form-group">
 							{{ Form::label("Cycle Name", "", array("class" => "control-label col-md-3")) }}
 							<div class="col-md-9">
-								{{ Form::select('cycle_select', $cycles,$default_question->id_cycle, array("id" => "cycle_select_modal","class" => "control-label col-md-9","onchange"=>"cycle_select_option($survey->id)")) }}
+								{{ Form::select('cycle_select', $cycles,$default_question->id_cycle, array("id" => "cycle_select_modal","class" => "col-md-9","onchange"=>"cycle_select_option($survey->id)")) }}
 							</div>
 						</div>
 					</div>
@@ -66,7 +66,7 @@
 						<div class="form-group">
 							{{ Form::label("Question Name", "", array("class" => "control-label col-md-3")) }}
 							<div class="col-md-9">
-								{{ Form::select('question_select', $question_lists,$default_question->id_question, array("id" => "question_select_modal","class" => "control-label col-md-9")) }}
+								{{ Form::select('question_select', $question_lists,$default_question->id_question, array("id" => "question_select_modal","class" => "col-md-9")) }}
 							</div>
 						</div>
 					</div>

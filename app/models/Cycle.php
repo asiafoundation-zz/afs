@@ -68,7 +68,7 @@ class Cycle extends Eloquent {
 				)
 			->join('answers','answers.cycle_id','=','cycles.id')
 			->join('questions','questions.id','=','answers.question_id')
-			->join('question_categories','question_categories.id','=','questions.question_category_id')
+			->join('question_categories','questin_categories.id','=','questions.question_category_id')
 			->where('question_categories.survey_id', '=',$survey_id)
 			->GroupBy('name')
 			->orderBy('cycle_type', 'asc')
@@ -81,9 +81,9 @@ class Cycle extends Eloquent {
 	{
 		$cycle = Cycle::where('name', '=', $data)->where('cycle_type','=',$cycle_type)->first();
 		
-		if(!isset($cycle))
+		if(is_null($cycle))
 		{
-			$cycle = Cycle::create(array('name' => $data,'cycle_type','=',$cycle_type));
+			$cycle = Cycle::create(array('name' => $data,'cycle_type'=>$cycle_type));
 		}
 		$cycle_id = $cycle->id;
 		return $cycle_id;

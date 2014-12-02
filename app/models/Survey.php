@@ -174,7 +174,7 @@ class Survey extends Eloquent {
 					if (!empty($master_code[$column])) {
 						// remove special characters and number
 						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
-						$oversample_id = 0;;
+						$oversample_id = 0;
 						switch ($master_code[$column]['type']) {
 							case 0:
 								// Check region exist
@@ -253,6 +253,7 @@ class Survey extends Eloquent {
 					}
 				}
 				AmountFilter::checkData($participant->id);
+				Log::info('Participant:'.$participant->id);
 			}
 		// 	DB::commit();
 		// 	$status = 1;
@@ -279,10 +280,6 @@ class Survey extends Eloquent {
 	    {
 	        die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
 	    }
-
-	    // Change Status
-    	$survey->publish = 2;
-	    $survey->save();
 
 	    // Set variable data
 	    $data_label = array();
@@ -446,8 +443,23 @@ class Survey extends Eloquent {
 
 
 			$master_codes_data->delete();
+			// Remove Survey and file
+			$survey = Survey::find($id);
 
-			Survey::destroy($id);
+			File::delete(public_path()."/uploads/".$survey->baseline_file);
+			File::delete(public_path()."/uploads/".$survey->geojson_file);
+
+			// Remove data in mongo
+			// Emptying mongo data
+			$header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
+			$header_delete->delete();
+			$assign_delete = Assign::find(['survey_id'=>(string)$survey->id])->first();
+			$assign_delete->delete();
+			$participant_delete = ParticipantTemporary::find(['survey_id'=>(string)$survey->id])->first();
+			$participant_delete->delete();
+			$cursors = Assign::all();
+
+			$survey->delete();
 			DB::commit();
 			$status = 1;
 		}

@@ -61,7 +61,13 @@ class BackgroundCommand extends Command {
 			    $survey->publish = 3;
 			    $survey->save();
 
-				  // Load data from collections MonggoDB and saving master code and codes
+			    // Delete Header Data
+			    $header_delete = Header::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
+			    if ($header_delete) {
+			    	$header_delete->delete();
+			    }
+
+			    // Load data from collections MonggoDB and saving master code and codes
 				  $cursors_load = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
 				  
 				  if ($cursors_load) {
@@ -70,12 +76,12 @@ class BackgroundCommand extends Command {
 				  		$codes = MasterCode::savingProcess($survey,$cursor);
 				  	}
 				  	// Delete impotfiledata
-				  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursors_load->delayed_job_id])->first();
+				  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
 				  	$assign_delete->delete();
 				  }
 				  
 				  // Load Master Code Data
-				  $master_code = MasterCode::loadData($delayed_jobs->survey_id);
+				  $master_code = MasterCode::loadData($survey->id);
 
 				  // Load data from collections MonggoDB and saving master code and codes
 				  $data_load = ParticipantTemporary::find(['survey_id'=>$survey->id])->first();
