@@ -445,17 +445,11 @@ class Question extends Eloquent {
 			if (!empty($request['region'])) {
 				$region = $request['region'];
 				$region_dapil = $request['region_dapil'];
-				$questions = $questions->where(
-					function ($query) use ($region,$region_dapil) {
-						$query->where('regions.name', '=', (string)$region)
-						->orWhere('regions.name', '=', (string)$region_dapil);
-					});
+				$questions = $questions->where('regions.id', '=', $region);
 			}
 		}
 
-		$is_cycles = $questions
-		->groupBy('cycle_type')
-		->get();
+		$is_cycles = $questions->groupBy('cycle_type')->get();
 		if (count($is_cycles) < 2) {
 			list($questions,$request) = Question::CompareCycle($request);self::CompareCycle($request);
 		}else{

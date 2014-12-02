@@ -130,16 +130,10 @@ class HomeController extends BaseController {
 					break;
 
 				case 'next_question':
+					/*-- Define empty answers --*/
 					$empty_question = Question::select(DB::raw('distinct questions.id'));
 
 					if(!empty(Input::get('region'))){
-
-						// $region_name = Region::where('name', '=', Input::get('region')) 
-						// 		->orWhere('name', '=', Input::get('region_dapil'))
-						// 		->first();
-	 
-						// Input::merge(array('region' => $region_name->id));
-
 						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
 											->join('amounts', 'amounts.answer_id', '=', 'answers.id')
 											->join('regions', 'regions.id', '=', 'amounts.region_id')
@@ -157,7 +151,8 @@ class HomeController extends BaseController {
 					}else{
 	 					Input::merge(array('empty' => 1));
 					}
-	 
+
+					/*-- End --*/
 
 					$default_questions = Question::NextQuestion(Input::get());
 					if (empty($default_questions)) {
@@ -172,12 +167,29 @@ class HomeController extends BaseController {
 						$region_color = 0;	 
 					}
 
+					/*-- Inisiate compare availability --*/
+					$compare_available = 0;
+					$compare = Question::select(DB::raw('questions.id, cycles.cycle_type'))
+								->join('answers', 'answers.question_id', '=', 'questions.id')
+								->join('cycles', 'cycles.id', '=', 'answers.cycle_id')
+								->where('questions.id', '=', $default_questions[0]->id_question)
+								->where('questions.question_category_id', '=', Input::get('category'))
+								->groupBy('cycles.cycle_type')
+								->get()
+								->toArray();
+
+					if(count($compare) == 2){
+						$compare_available = 1;
+					}
+					/*-- End --*/
+
 					$default_question = reset($default_questions);
 					$load_filter = array(
 						"survey" => Survey::first(),
 						"default_question" => $default_question,
 						"question" => $default_questions,
 						"regions" => $region_color,
+						"compare_available" => $compare_available
 					);
 
 					$return = count($default_questions) > 0 ? $load_filter : 0;
