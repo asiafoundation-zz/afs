@@ -464,11 +464,11 @@ class Question extends Eloquent {
 				if (!empty($request['category'])) {
 					$query_raw .= " and question_categories.id = ". $request['category'];
 				}
-				if($request['empty'] == 0){
-					if (!empty($request['cycle'])) {
-						$query_raw .= " and answers.cycle_id = ". $request['cycle'];
-					}
-				}
+				// if($request['empty'] == 0){
+				// 	if (!empty($request['cycle'])) {
+				// 		$query_raw .= " and answers.cycle_id = ". $request['cycle'];
+				// 	}
+				// }
 				if (!empty($request['region'])) {
 					$query_raw .= " and regions.id = ". (integer)$request['region'];
 				}
@@ -511,11 +511,11 @@ class Question extends Eloquent {
 				if (!empty($request['category'])) {
 					$query_raw .= " and question_categories.id = ". $request['category'];
 				}
-				if($request['empty'] == 0){
-					if (!empty($request['cycle'])) {
-						$query_raw .= " and answers.cycle_id = ". $request['cycle'];
-					}
-				}
+				// if($request['empty'] == 0){
+				// 	if (!empty($request['cycle'])) {
+				// 		$query_raw .= " and answers.cycle_id = ". $request['cycle'];
+				// 	}
+				// }
 				if (!empty($request['region'])) {
 					$query_raw .= " and regions.id = ". (integer)$request['region'];
 				}
@@ -542,6 +542,32 @@ class Question extends Eloquent {
 
 		// Load answers
 		$request['answers'] =  DB::table('questions')->select('answers.id as id','answers.answer')->join('answers','answers.question_id','=','questions.id')->where('questions.id', '=', $request['question'])->get();
+
+		/*-- Define empty answers --*/
+		$empty_question = Question::select(DB::raw('distinct questions.id'));
+
+		if(!empty($request['region'])){
+			$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
+								->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+								->join('regions', 'regions.id', '=', 'amounts.region_id')
+								->where('regions.id', '=', $request['region']);
+		}else{
+			$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id');
+		}
+
+		$empty_question = $empty_question->where('questions.id','=', $request['question'])	 
+							->where('questions.question_category_id', '=', $request['category'])	 
+							->first();
+
+		$is_empty = 0;
+		if(isset($empty_question)){
+			$request['empty'] = 0;	 
+		}else{
+			$request['empty'] = 1;
+			$is_empty = 1;
+		}
+
+		/*-- End --*/
 
 		// Load Question
 		$questions =  self::DefaultLoad($request);
@@ -574,7 +600,7 @@ class Question extends Eloquent {
 				$questions =  $questions->get();
 			}
 
-		return $questions;
+		return array($questions, $is_empty);
 	}
 
 	public static function CompareQuestion($request = array())

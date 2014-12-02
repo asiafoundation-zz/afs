@@ -302,13 +302,13 @@
             $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
 
+            FilterSelect.question = parseInt(data.default_question.id_question);
             if(data.empty_answer == 1){
               $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}} <br>'+ data.default_question.question +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               $(".chart #chart_canvas").hide();
               return false;
             }
 
-            FilterSelect.question = data.default_question.id_question;
             for (var key in data.question) {
               if (data.question.hasOwnProperty(key)) {
                 FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});

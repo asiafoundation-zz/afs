@@ -179,21 +179,19 @@ class HomeController extends BaseController {
 					}else{
 	 					Input::merge(array('empty' => 1));
 					}
-
 					/*-- End --*/
 
 					$default_questions = Question::NextQuestion(Input::get());
-					if (empty($default_questions)) {
+					// print_r($default_questions);
+					if (empty($default_questions[0])) {
 						return 0;
 					}
 
 					/*-- Define condition for empty answer --*/
-					$empty_answer = 0;
-					if(empty(Input::get('empty'))){	 
-						$region_color = QuestionParticipant::RegionColor(0,$default_questions);	 
-					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 0){	 
-						$region_color = QuestionParticipant::RegionColor(0,$default_questions);	 
-					}elseif(!empty(Input::get('empty')) && Input::get('empty') == 1){	 
+					$empty_answer = 0; 
+					if($default_questions[1] == 0){	 
+						$region_color = QuestionParticipant::RegionColor(0,$default_questions[0]);	 
+					}elseif($default_questions[1] == 1){	 
 						$region_color = 0;	 
 						$empty_answer = 1;
 					}
@@ -204,7 +202,7 @@ class HomeController extends BaseController {
 					$compare = Question::select(DB::raw('questions.id, cycles.cycle_type'))
 								->join('answers', 'answers.question_id', '=', 'questions.id')
 								->join('cycles', 'cycles.id', '=', 'answers.cycle_id')
-								->where('questions.id', '=', $default_questions[0]->id_question)
+								->where('questions.id', '=', $default_questions[0][0]->id_question)
 								->where('questions.question_category_id', '=', Input::get('category'))
 								->groupBy('cycles.cycle_type')
 								->get()
@@ -218,8 +216,8 @@ class HomeController extends BaseController {
 					$default_question = reset($default_questions);
 					$load_filter = array(
 						"survey" => Survey::first(),
-						"default_question" => $default_question,
-						"question" => $default_questions,
+						"default_question" => $default_question[0],
+						"question" => $default_questions[0],
 						"regions" => $region_color,
 						"compare_available" => $compare_available,
 						"empty_answer" => $empty_answer
