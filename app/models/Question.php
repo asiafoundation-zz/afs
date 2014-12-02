@@ -369,8 +369,7 @@ class Question extends Eloquent {
 			->join('question_categories','questions.question_category_id','=','question_categories.id')
 			->join('answers','answers.question_id','=','questions.id')
 			->join('cycles','cycles.id','=','answers.cycle_id')
-			->join('colors','answers.color_id','=','colors.id')
-			;
+			->join('colors','answers.color_id','=','colors.id');
 
 			if (count($request)) {
 				if (!empty($request['category'])) {
