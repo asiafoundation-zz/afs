@@ -70,12 +70,12 @@ class BackgroundCommand extends Command {
 				  		$codes = MasterCode::savingProcess($survey,$cursor);
 				  	}
 				  	// Delete impotfiledata
-				  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursors_load->delayed_job_id])->first();
+				  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
 				  	$assign_delete->delete();
 				  }
 				  
 				  // Load Master Code Data
-				  $master_code = MasterCode::loadData($delayed_jobs->survey_id);
+				  $master_code = MasterCode::loadData($survey->id);
 
 				  // Load data from collections MonggoDB and saving master code and codes
 				  $data_load = ParticipantTemporary::find(['survey_id'=>$survey->id])->first();

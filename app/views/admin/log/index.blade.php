@@ -54,7 +54,7 @@
 
 					<tr>
 						<td>
-							<div class="questions" style="overflow-x:scroll;width:1200px;">
+							<div class="questions" style="overflow-x:scroll;width:900px;">
 							<table class="datatable table table-striped table-bordered">
 								<thead>
 									@foreach($log['questions'] as $filter)

@@ -174,7 +174,7 @@ class Survey extends Eloquent {
 					if (!empty($master_code[$column])) {
 						// remove special characters and number
 						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
-						$oversample_id = 0;;
+						$oversample_id = 0;
 						switch ($master_code[$column]['type']) {
 							case 0:
 								// Check region exist
@@ -253,7 +253,7 @@ class Survey extends Eloquent {
 					}
 				}
 				AmountFilter::checkData($participant->id);
-			}
+			}echo "a"; die();
 		// 	DB::commit();
 		// 	$status = 1;
 		// }
@@ -279,10 +279,6 @@ class Survey extends Eloquent {
 	    {
 	        die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
 	    }
-
-	    // Change Status
-    	$survey->publish = 2;
-	    $survey->save();
 
 	    // Set variable data
 	    $data_label = array();
@@ -448,6 +444,30 @@ class Survey extends Eloquent {
 			$master_codes_data->delete();
 
 			Survey::destroy($id);
+
+			// Remove data in mongo
+			// Emptying mongo data
+			$cursors = Assign::all();
+			foreach ($cursors as $key => $cursor) {
+			// Delete document in collections monggodb
+				$assign_delete = Assign::find(['survey_id'=>(string)$id])->first();
+			// Delete actions
+				$assign_delete->delete();
+			}
+			$cursors = Header::all();
+			foreach ($cursors as $key => $cursor) {
+			// Delete document in collections monggodb
+				$header_delete = Header::find(['survey_id'=>(string)$id])->first();
+				// Delete actions
+				$header_delete->delete();
+			}
+			$cursors = ParticipantTemporary::all();
+			foreach ($cursors as $key => $cursor) {
+			// Delete document in collections monggodb
+				$participant_delete = ParticipantTemporary::find(['survey_id'=>(string)$id])->first();
+				// Delete actions
+				$participant_delete->delete();
+			}
 			DB::commit();
 			$status = 1;
 		}
