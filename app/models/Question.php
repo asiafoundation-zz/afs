@@ -475,7 +475,7 @@ class Question extends Eloquent {
 								left join regions on regions.id = amounts.region_id ";	
 			}
 
-			$query_raw .= "where questions.id > ".$request['question'];
+			$query_raw .= "where questions.id < ".$request['question'];
 
 			if (count($request)) {
 				if (!empty($request['category'])) {
