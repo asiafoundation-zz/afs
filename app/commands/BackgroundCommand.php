@@ -91,12 +91,12 @@ class BackgroundCommand extends Command {
 			    	$header_delete->delete();
 			    }
 
-				  // Saving Change status
-				  $survey->publish = 2;
+			    // Saving Change status
+			    $survey->publish = 2;
 			    $survey->save();
 			    // Saving total data
-				  $delayed_jobs->information = count((array)$data);
-				  $delayed_jobs->save();
+			    $delayed_jobs->information = count((array)$data);
+			    $delayed_jobs->save();
 
 				  // Load Excel Data
 				  $excel_data = Survey::importData($survey,$master_code,$data);
