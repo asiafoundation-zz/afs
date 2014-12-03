@@ -35,5 +35,8 @@ return array(
 <p>Untuk survey tahun 2013, pengambilan data lapangan dilakukan dari 17 September - 30 Oktober 2013 melibatkan sampel acak 460 responden di masing-masing provinsi, sehingga total keseluruhan dari enam propinsi sebanyak 2,760 responden.</p><p> Batas kesalahan hasil survei di enam provinsi adalah +/- 1,9% pada tingkat kepercayaan 95%. Sementara batsas kesalahan untuk hasil survey di masing-masing provinsi adalah +/- 4,5% pada tingkat kepercayaan 95%.</p>",
 	"show_responnden_filter_result" => "Menampilkan hasil survey berdasarkan responden: ",
 	"next_question" => "Pertanyaan berikutnya",
-	"preveous_question" => "Pertanyaan sebelumnya"
+	"preveous_question" => "Pertanyaan sebelumnya",
+	"choose_survey" =>"Pilih Jenis Survey",
+	"choose_category" => "Pilih Kategori",
+	"choose_question" => "Pilih Pertanyaan",
 );

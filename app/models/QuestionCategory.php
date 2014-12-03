@@ -46,7 +46,7 @@ class QuestionCategory extends Eloquent {
 	
 	public static function checkData($data,$code_id,$survey_id)
 	{
-		$data = empty($data) ? "Other Category" : $data;
+		$data = empty($data) ? "Uncategorized" : $data;
 		$question_category = QuestionCategory::where('name', '=', $data)->first();
 		if(!isset($question_category))
 		{
@@ -60,18 +60,23 @@ class QuestionCategory extends Eloquent {
 		$question_categories =  DB::table('question_categories')
 			->select(
 				DB::raw(
-					'question_categories.id as id_question_categories,
+					'surveys.id as survey_id,
+					question_categories.id as id_question_categories,
 					question_categories.name as question_categories,
 					questions.id as id_question,
 					questions.question as question'
 					)
 				)
-			->join('questions','questions.question_category_id','=','question_categories.id');
+			->join('questions','questions.question_category_id','=','question_categories.id')
+			->join('surveys','surveys.id','=','question_categories.survey_id');
 			// if (!empty($request['region'])) {
 			// 	$question_categories = $question_categories->where('question_categories','=',$request['region']);
 			// }
 			if (!empty($request['category'])) {
 				$question_categories = $question_categories->where('question_categories.id','=',$request['category']);
+			}
+			if (empty($request['survey_id'])) {
+				$question_categories = $question_categories->where('surveys.is_default','=',1);
 			}
 			$question_categories = $question_categories->GroupBy('id_question_categories')
 			->GroupBy('id_question')
