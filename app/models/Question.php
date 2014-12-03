@@ -92,6 +92,26 @@ class Question extends Eloquent {
 						where amounts.answer_id = id_answer) AS amount,
 					0 AS indexlabel';
 
+		if(!empty($request['region'])){
+			$query = 'questions.id as id_question,
+						questions.code_id as question_code,
+						questions.question as question,
+						question_categories.id as id_question_categories,
+						question_categories.name as question_categories,
+						answers.id  as id_answer,
+						answers.answer as answer,
+						colors.color,
+						cycles.id  as id_cycle,
+						cycles.cycle_type  as cycle_type,
+						cycles.name as cycle,
+						regions.id as id_region,
+						regions.name as name,
+						(SELECT sum(amounts.amount) 
+							from amounts 
+							where amounts.answer_id = id_answer) AS amount,
+						0 AS indexlabel';	
+		}
+		
 		if(!empty($request['empty']) && $request['empty'] == 1){
 
 			//if there's no region and answer is empty
@@ -165,6 +185,7 @@ class Question extends Eloquent {
 				$answer_diff[$question->id_answer]->cycle = $question->cycle;
 				$answer_diff[$question->id_answer]->id_cycle = $question->id_cycle;
 				$answer_diff[$question->id_answer]->id_region = !empty($question->id_region) ? $question->id_region : "";
+				$answer_diff[$question->id_answer]->region_name = !empty($question->name) ? $question->name : "";
 
 				$answer_diff[$question->id_answer]->amount = 0;
 			}
@@ -262,8 +283,7 @@ class Question extends Eloquent {
 
 			$questions =  $questions
 				->groupBy('answer')
-				->get();
-		
+				->get();		
 
 		if (count($questions)) {
 			// if (!empty($request['answers'])) {
@@ -543,6 +563,32 @@ class Question extends Eloquent {
 		// Load answers
 		$request['answers'] =  DB::table('questions')->select('answers.id as id','answers.answer')->join('answers','answers.question_id','=','questions.id')->where('questions.id', '=', $request['question'])->get();
 
+		/*-- Define empty answers --*/
+		$empty_question = Question::select(DB::raw('distinct questions.id'));
+
+		if(!empty($request['region'])){
+			$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
+								->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+								->join('regions', 'regions.id', '=', 'amounts.region_id')
+								->where('regions.id', '=', $request['region']);
+		}else{
+			$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id');
+		}
+
+		$empty_question = $empty_question->where('questions.id','=', $request['question'])	 
+							->where('questions.question_category_id', '=', $request['category'])	 
+							->first();
+
+		$is_empty = 0;
+		if(isset($empty_question)){
+			$request['empty'] = 0;	 
+		}else{
+			$request['empty'] = 1;
+			$is_empty = 1;
+		}
+
+		/*-- End --*/
+
 		// Load Question
 		$questions =  self::DefaultLoad($request);
 
@@ -574,7 +620,7 @@ class Question extends Eloquent {
 				$questions =  $questions->get();
 			}
 
-		return $questions;
+		return array($questions, $is_empty);
 	}
 
 	public static function CompareQuestion($request = array())

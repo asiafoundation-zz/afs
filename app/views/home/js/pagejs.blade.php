@@ -5,6 +5,7 @@
       // Get cycles functions
       clear_all_filter_nosurvey();
       clear_text_notification();
+      $('.survey-question label span').remove(); 
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
@@ -302,13 +303,13 @@
             $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
 
+            FilterSelect.question = parseInt(data.default_question.id_question);
             if(data.empty_answer == 1){
               $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}} <br>'+ data.default_question.question +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               $(".chart #chart_canvas").hide();
               return false;
             }
 
-            FilterSelect.question = data.default_question.id_question;
             for (var key in data.question) {
               if (data.question.hasOwnProperty(key)) {
                 FilterSelect.answers.push({ id: data.question[key].id_answer, answer: data.question[key].answer});
@@ -379,8 +380,8 @@
             // $("#question-name").html(data.default_question.question);
             $("#question-name").html(data.default_question.question);
             if(FilterSelect.region != ""){
-              $("#survey-question .region-name").remove();
-              $("#survey-question").append('<span class="region-name"> di '+FilterSelect.region+'</span>');
+              $('.survey-question label span').remove();
+              $('.survey-question label').append('<span> DI '+ data.default_question.region_name.toUpperCase() +'</span>');
             }
 
             // Re assingn Filter data
@@ -452,33 +453,33 @@
       find_survey();
     }
 
-    function color_set(assign_color)
-    {
-      if (assign_color != null) 
-      {
-        var color_set = [];
-        for (var key in assign_color) {
-          if (assign_color.hasOwnProperty(key)) {
-            color_set.push(assign_color[key]['color']);
-          }
-        }
-      }
-      else
-      {
-        var color_set = [//colorSet Array
-          @foreach ($question as $answer)
-            "{{ $answer->color }}",
-          @endforeach                 
-          ];
-      }
-      var data_points = [];
-      for (i = 0; i < color_set.length; i++) {
-        if (color_set[i].y != 0) {
-          data_points.push(color_set[i]);    
-        }
-      }
-      return data_points;
-    }
+    // function color_set(assign_color)
+    // {
+    //   if (assign_color != null) 
+    //   {
+    //     var color_set = [];
+    //     for (var key in assign_color) {
+    //       if (assign_color.hasOwnProperty(key)) {
+    //         color_set.push(assign_color[key]['color']);
+    //       }
+    //     }
+    //   }
+    //   else
+    //   {
+    //     var color_set = [//colorSet Array
+    //       @foreach ($question as $answer)
+    //         "{{ $answer->color }}",
+    //       @endforeach                 
+    //       ];
+    //   }
+    //   var data_points = [];
+    //   for (i = 0; i < color_set.length; i++) {
+    //     if (color_set[i].y != 0) {
+    //       data_points.push(color_set[i]);    
+    //     }
+    //   }
+    //   return data_points;
+    // }
     function data_points(assign_answer)
     {
       if (assign_answer != null) 
@@ -509,6 +510,38 @@
         }
       return data_points;
     }
+
+    function color_set(assign_answer)
+    {
+      if (assign_answer != null) 
+      {
+        var data_list = [];
+        for (var key in assign_answer) {
+          if (assign_answer.hasOwnProperty(key)) {
+            data_list.push(
+              { color: assign_answer[key]['color'], answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
+              );
+          }
+        }
+      }
+      else
+      {
+        var data_list = [//colorSet Array
+          @foreach ($question as $key => $answer)
+            { color: "{{ $answer->color }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
+          @endforeach
+          ];
+      }
+
+        var data_points = [];
+        for (i = 0; i < data_list.length; i++) {
+          if (data_list[i].y != 0) {
+            data_points.push(data_list[i].color);    
+          }
+        }
+      return data_points;
+    }
+
     function data_points_pie(assign_answer)
     {
       if (assign_answer != null) 

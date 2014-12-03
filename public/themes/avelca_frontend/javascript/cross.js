@@ -163,8 +163,13 @@ $(document).ready(function(){
   });
 
   $('#select-region').change(function(){
-    FilterSelect.region = parseInt($(this).val());
-    find_survey_dynamic();
+    if($(this).val() != null){
+      FilterSelect.region = parseInt($(this).val());
+      find_survey_dynamic();
+    }else{
+      FilterSelect.region = "";
+      find_survey();
+    }
   });
 
   $('.clear-all').click(function(){
