@@ -17,7 +17,7 @@
 <div class="elheader-wrapper"> <!-- add element wrapper - 28112014 -->
   <div class="search-wrp header-select">
     <div class="select-1">
-      <label>(1.{{ Lang::get('frontend.choose_survey') }}</label>
+      <label>1) {{ Lang::get('frontend.choose_survey') }}</label>
       <select class="select2-custom select-cycle" id="select-cycle">
         @foreach ($cycles as $cycle)
         <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
@@ -25,7 +25,7 @@
       </select><!-- Custom Select -->
     </div>
     <div class="select-2">
-      <label>(2.{{ Lang::get('frontend.choose_category') }}</label>
+      <label>2) {{ Lang::get('frontend.choose_category') }}</label>
       <select class="select2-custom select-category" id="select-category">
         @foreach ($question_categories as $question_category)
         <option value="{{ $question_category->id }}" @if( $default_question->id_question_categories == $question_category->id) selected @endif >{{ $question_category->name }}</option>
@@ -33,7 +33,7 @@
       </select><!-- Custom Select -->
     </div>
     <div class="select-3">
-      <label>(3.{{ Lang::get('frontend.choose_question') }}</label>
+      <label>3) {{ Lang::get('frontend.choose_question') }}</label>
       <select class="select2-custom select-question" id="select-question">
         @foreach ($question_lists as $question_list)
         <option value="{{ $question_list->id }}" @if( $default_question->id_question == $question_list->id) selected @endif >{{ $question_list->question }}</option>

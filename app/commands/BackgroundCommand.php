@@ -61,12 +61,6 @@ class BackgroundCommand extends Command {
 			    $survey->publish = 3;
 			    $survey->save();
 
-			    // Delete Header Data
-			    $header_delete = Header::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
-			    if ($header_delete) {
-			    	$header_delete->delete();
-			    }
-
 			    // Load data from collections MonggoDB and saving master code and codes
 				  $cursors_load = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
 				  
@@ -91,12 +85,18 @@ class BackgroundCommand extends Command {
 				  	$data_load->delete();
 				  }
 
-				  // Saving Change status
-				  $survey->publish = 2;
+				  // Delete Header Data
+			    $header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
+			    if ($header_delete) {
+			    	$header_delete->delete();
+			    }
+
+			    // Saving Change status
+			    $survey->publish = 2;
 			    $survey->save();
 			    // Saving total data
-				  $delayed_jobs->information = count((array)$data);
-				  $delayed_jobs->save();
+			    $delayed_jobs->information = count((array)$data);
+			    $delayed_jobs->save();
 
 				  // Load Excel Data
 				  $excel_data = Survey::importData($survey,$master_code,$data);
