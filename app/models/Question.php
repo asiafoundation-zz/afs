@@ -108,7 +108,7 @@ class Question extends Eloquent {
 						regions.name as name,
 						(SELECT sum(amounts.amount) 
 							from amounts 
-							where amounts.answer_id = id_answer) AS amount,
+							where amounts.answer_id = id_answer and region_id = id_region) AS amount,
 						0 AS indexlabel';	
 		}
 		
