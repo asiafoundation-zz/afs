@@ -5,6 +5,7 @@
       // Get cycles functions
       clear_all_filter_nosurvey();
       clear_text_notification();
+      $('.survey-question label span').remove(); 
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
@@ -379,8 +380,8 @@
             // $("#question-name").html(data.default_question.question);
             $("#question-name").html(data.default_question.question);
             if(FilterSelect.region != ""){
-              $("#survey-question .region-name").remove();
-              $("#survey-question").append('<span class="region-name"> di '+FilterSelect.region+'</span>');
+              $('.survey-question label span').remove();
+              $('.survey-question label').append('<span> DI '+ data.default_question.region_name.toUpperCase() +'</span>');
             }
 
             // Re assingn Filter data

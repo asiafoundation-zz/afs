@@ -93,7 +93,7 @@
         <div class="row">
           <div class="col-md-12 dropdown-filter">
             <ul>
-            <li>
+            <li class="li-region">
                <select class="select-control" id="select-region">
                   <option>Wilayah</option>
                   @foreach ($regions as $region)

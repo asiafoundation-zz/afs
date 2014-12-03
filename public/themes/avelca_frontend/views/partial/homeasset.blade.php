@@ -21,6 +21,8 @@
 
       chartjs(color_set_data,data_points_data,data_points_pie_data);
 
+      $('.li-region li.title-filters').removeAttr('onclick');
+      $('.li-region .title-filters').data('value', '0');
       // $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
       // $('#select-category').prepend("<option value='0'>Pilih category</option>");
       // $('#select-cycle').prepend("<option value='0'>Pilih jenis survey</option>");
