@@ -170,11 +170,11 @@ class Survey extends Eloquent {
 				$questions_list = array();
 				$category_items = array();
 				$i=0;$j=0;
+				$oversample_id = 0;
 				foreach ($lists_data as $column => $data) {
 					if (!empty($master_code[$column])) {
 						// remove special characters and number
 						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
-						$oversample_id = 0;
 						switch ($master_code[$column]['type']) {
 							case 0:
 								// Check region exist
@@ -232,6 +232,7 @@ class Survey extends Eloquent {
 				// Save participant
 				$participant = new Participant;
 				$participant->survey_id = $survey->id;
+				$participant->sample_type = $oversample_id;
 				$participant->save();
 				foreach ($questions_list as $key => $question_list) {
 					if (!empty($question_list['data'])) {

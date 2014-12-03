@@ -46,6 +46,10 @@ class QuestionParticipant extends Eloquent {
 				'type' => 'number',
 				'onIndex' => true
 			),
+			'sample_type' => array(
+				'type' => 'number',
+				'onIndex' => true
+			),
 		);
 
 		return compact('fields');
@@ -68,7 +72,9 @@ class QuestionParticipant extends Eloquent {
 		{
 			$question_participant = QuestionParticipant::create(array('answer_id' => $answer_id,'participant_id' => $participant_id,'region_id' => $region_id,'sample_type' => $sample_type));
 
-			$amount = Amount::checkData($answer_id, $region_id, $sample_type);
+			if (!$sample_type) {
+				$amount = Amount::checkData($answer_id, $region_id, $sample_type);
+			}
 		}
 		return $question_participant;
 	}
