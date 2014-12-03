@@ -120,7 +120,6 @@ $(document).ready(function(){
       // }
 
       $('.header-select #select-question option').remove();
-      $('.header-select #select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
       $.each(data[0], function(index, obj){
         $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
       });
@@ -139,7 +138,7 @@ $(document).ready(function(){
   });
 
   $('.select-question').change(function(e){
-    $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
+    // $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
     if(FilterSelect.empty_question == 0){
       FilterSelect.empty_question = 0;
     }
