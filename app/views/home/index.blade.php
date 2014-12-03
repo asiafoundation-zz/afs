@@ -36,7 +36,7 @@
       <label>(3.{{ Lang::get('frontend.choose_question') }}</label>
       <select class="select2-custom select-question" id="select-question">
         @foreach ($question_lists as $question_list)
-        <option value="{{ $question_list->id }}" @if( $default_question->id_question_categories == $question_list->id) selected @endif >{{ $question_list->question }}</option>
+        <option value="{{ $question_list->id }}" @if( $default_question->id_question == $question_list->id) selected @endif >{{ $question_list->question }}</option>
         @endforeach 
       </select><!-- Custom Select -->
     </div>
