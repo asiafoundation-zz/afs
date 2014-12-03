@@ -46,7 +46,7 @@ class QuestionCategory extends Eloquent {
 	
 	public static function checkData($data,$code_id,$survey_id)
 	{
-		$data = empty($data) ? "Other Category" : $data;
+		$data = empty($data) ? "Uncategorized" : $data;
 		$question_category = QuestionCategory::where('name', '=', $data)->first();
 		if(!isset($question_category))
 		{

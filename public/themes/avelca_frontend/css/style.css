@@ -683,8 +683,7 @@ footer p {
 .elheader-wrapper {
 	/*background: none repeat scroll 0 0 #1fb6b7;*/
     height: 65px;
-    
-    
+    margin: 15px 0px;
     width: 100%;
     z-index: 10;
 	position: relative;
@@ -848,6 +847,7 @@ footer p {
 .survey-question {
 	/*background: #1fb7b8; new design*/
 	padding: 15px 0;
+	margin: 15px 0;
 }
 #question-name {
 	/*color: #fff;*/
@@ -981,7 +981,7 @@ z-index: 999999;
 #filter > .container > .row > .col-md-11 .custom-select-control-custom-text {
 border-top: none;
 padding: 0 0 10px;
-margin-top: 5px;
+margin: 15px 0;
 }
 
 .filter [class*="col-"] > ul > li {
