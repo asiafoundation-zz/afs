@@ -72,7 +72,7 @@ class CategoryItem extends Eloquent {
 	}
 	public static function checkData($data,$category_id)
 	{
-		$category_item = CategoryItem::where('name', '=', $data)->first();
+		$category_item = CategoryItem::where('name', '=', $data)->where('category_id','=', $category_id)->first();
 		if(!isset($category_item))
 		{
 			$category_item = CategoryItem::create(array('name' => $data, 'category_id' => $category_id));

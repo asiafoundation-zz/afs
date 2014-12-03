@@ -233,7 +233,7 @@ function clear_all_filter_nosurvey(){
         filter_text = $('.title-filters',$(this).parent('ul')).html();
 
         $(this).attr('class', 'filter_option_label_'+data_value);
-        if (typeof filter_text === 'undefined') {
+        if (typeof filter_text !== 'undefined') {
           $('#custom-text-title-'+filter_text.toUpperCase()).html("");
           $('#custom-text-title-'+filter_text.toUpperCase()).html(filter_text);
         }
