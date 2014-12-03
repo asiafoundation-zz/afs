@@ -141,13 +141,22 @@
         },"html");
      }
 
-     function filter_option(category_id)
+     function filter_option(value)
      {
         clear_text_notification();
         var option_filters = [];
         var is_region = false;
 
+        if(option_filters_default.length != 0){
+          for(i = 0; i < option_filters_default.length; i++) {
+            if (value.toString() === option_filters_default[i].toString()) {
+              return false;
+            };
+          }
+        }
+
         var filter_text_type = "";
+        option_filters_default = [];
         $(".dropdown-filter .selected_filter_option").each(function(){
           if ($(this).attr("data-type") === 'region') {
             FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
@@ -157,6 +166,12 @@
               // Filter Text
               filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
               option_filters += $(this).attr("data-value")+",";
+
+              // Set Default Value for option filters
+              option_filters_default.push($(this).attr("data-value"));
+            }else{
+              // Set Default Value for option filters
+              option_filters_default.push($(this).text());
             }
           }
         });
