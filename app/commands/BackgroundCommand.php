@@ -85,6 +85,12 @@ class BackgroundCommand extends Command {
 				  	$data_load->delete();
 				  }
 
+				  // Delete Header Data
+			    $header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
+			    if ($header_delete) {
+			    	$header_delete->delete();
+			    }
+
 				  // Saving Change status
 				  $survey->publish = 2;
 			    $survey->save();
@@ -113,12 +119,6 @@ class BackgroundCommand extends Command {
 			    		->update(array(
 			    			'cycle_default' => 1
 			    		));
-			    }
-
-			    // Delete Header Data
-			    $header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
-			    if ($header_delete) {
-			    	$header_delete->delete();
 			    }
 
 			    // Update publish status
