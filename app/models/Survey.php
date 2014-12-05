@@ -323,6 +323,8 @@ class Survey extends Eloquent {
 				$header->save();
 			}
 
+			$multiple_flag = 50;Log::info($highestRow_2);
+
     	for($row = 1; $row <= $highestRow_2; ++$row){
 				for($col = 0; $col <= $highestColumnIndex_2; ++$col){
 					$dataval = $objWorksheet_2->getCellByColumnAndRow($col, $row)->getValue();
@@ -340,17 +342,29 @@ class Survey extends Eloquent {
 						$data[$row][$data_header[$col]] = $dataval;
 					}
 				}
-				if (empty($data[$row]) && $row != 1) {
-					break;
+				if ($row == $multiple_flag) {Log::info('Row'.json_encode($data));
+					// Save z to MongoDB
+					if (!empty($data)) {
+						$participant = new ParticipantTemporary;
+						$participant->survey_id = $survey->id;
+						$participant->delayed_job_id = $delayed_jobs->id;
+						$participant->data = json_encode($data);
+						$participant->save();
+						// Reset Data
+						$data = array();
+
+						$multiple_flag +=50;
+					}
 				}
 			}
-			// Save z to MongoDB
-			if (!empty($data)) {
+			if (!empty($data)) {Log::info('LastRow'.json_encode($data));
 				$participant = new ParticipantTemporary;
 				$participant->survey_id = $survey->id;
 				$participant->delayed_job_id = $delayed_jobs->id;
 				$participant->data = json_encode($data);
 				$participant->save();
+				// Reset Data
+				$data = array();
 			}
 			return $data;
 	}

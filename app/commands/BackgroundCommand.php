@@ -77,31 +77,29 @@ class BackgroundCommand extends Command {
 				  // Load Master Code Data
 				  $master_code = MasterCode::loadData($survey->id);
 
-				  // Load data from collections MonggoDB and saving master code and codes
-				  $data_load = ParticipantTemporary::find(['survey_id'=>$survey->id])->first();
-				  $data = json_decode($data_load['data']);
-				  // Delete impotfiledata
-				  if ($data_load) {
-				  	$data_load->delete();
-				  }
+				  // Saving Change status
+				  $survey->publish = 2;
+				  $survey->save();
 
+				  // Load data from collections MonggoDB and saving master code and codes
+				  $data_loads = ParticipantTemporary::where(['survey_id'=>$survey->id]);
+				  foreach ($data_loads as $data_load) {
+				  	$data = json_decode($data_load['data']);
+				  	// Load Excel Data
+				  	$excel_data = Survey::importData($survey,$master_code,$data);
+
+				  	// Delete data from Mongo
+				  	if ($data_load) {
+				  		$data_load->delete();
+				  	}
+				  }
 				  // Delete Header Data
 			    $header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
 			    if ($header_delete) {
 			    	$header_delete->delete();
 			    }
 
-			    // Saving Change status
-			    $survey->publish = 2;
-			    $survey->save();
-			    // Saving total data
-			    $delayed_jobs->information = count((array)$data);
-			    $delayed_jobs->save();
-
-				  // Load Excel Data
-				  $excel_data = Survey::importData($survey,$master_code,$data);
-
-				  $active_delayed_job_id = $delayed_jobs->id;
+			    $active_delayed_job_id = $delayed_jobs->id;
 				  $active_delayed_job = DelayedJob::find($active_delayed_job_id);
 				  $active_delayed_job->delete();
 
