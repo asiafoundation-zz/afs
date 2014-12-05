@@ -144,39 +144,11 @@
      function filter_option(value)
      {
         clear_text_notification();
-        var option_filters = [];
         var is_region = false;
 
-        if(option_filters_default.length != 0){
-          for(i = 0; i < option_filters_default.length; i++) {
-            if (value.toString() === option_filters_default[i].toString()) {
-              return false;
-            };
-          }
-        }
-
-        var filter_text_type = "";
-        option_filters_default = [];
-        $(".dropdown-filter .selected_filter_option").each(function(){
-          if ($(this).attr("data-type") === 'region') {
-            FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
-          }else{
-            var data_value = $(this).attr("data-value");
-            if(data_value % 1 === 0){
-              // Filter Text
-              filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
-              option_filters += $(this).attr("data-value")+",";
-
-              // Set Default Value for option filters
-              option_filters_default.push($(this).attr("data-value"));
-            }else{
-              // Set Default Value for option filters
-              option_filters_default.push($(this).text());
-            }
-          }
-        });
-        filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text_type;
-        filter_text = filter_text.substring(0, filter_text.length - 1);
+        text_area_filter_process = text_area_filter(value);
+        var option_filters = text_area_filter_process[0];
+        var filter_text = text_area_filter_process[1];
 
         if(option_filters.length != 0){
         // Get cycles functions
@@ -373,8 +345,13 @@
         },"html");
     }
 
-    function find_survey_dynamic()
+    function find_survey_dynamic(value)
     {
+      // Show text information under graph
+      text_area_filter_process = text_area_filter(value);
+
+      var filter_text = text_area_filter_process[1];
+
       clear_all_filter_nosurvey();
       clear_text_notification();
       $('#chart_canvas').hide();
@@ -414,6 +391,9 @@
             var data_points_data = data_points(data.question);
             var data_points_pie_data = data_points_pie(data.question);
             chartjs(color_set_data,data_points_data,data_points_pie_data);
+
+            // Show label
+            $("#filter-by-label").text(filter_text);
           }else
           {
             var last_question = $('#s2id_select-question').children().children().html();
@@ -591,5 +571,46 @@
       $("#filter-by-label").text("");
       // Remove Notification
       $(".notification").html("&nbsp;");
+    }
+
+    function text_area_filter(value){
+      var option_filters = [];
+        
+      if(option_filters_default.length != 0){
+          for(i = 0; i < option_filters_default.length; i++) {
+            if (value.toString() === option_filters_default[i].toString()) {
+              return false;
+            };
+          }
+        }
+
+        var filter_text_type = "";
+        option_filters_default = [];
+        $(".dropdown-filter .selected_filter_option").each(function(){
+          if ($(this).attr("data-type") === 'region') {
+            // Set Default Value for option filters
+            option_filters_default.push($(this).text());
+            // Filter Text
+            filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
+            FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
+          }else{
+            var data_value = $(this).attr("data-value");
+            if(data_value % 1 === 0){
+              // Filter Text
+              filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
+              option_filters += $(this).attr("data-value")+",";
+
+              // Set Default Value for option filters
+              option_filters_default.push($(this).attr("data-value"));
+            }else{
+              // Set Default Value for option filters
+              option_filters_default.push($(this).text());
+            }
+          }
+        });
+        filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text_type;
+        filter_text = filter_text.substring(0, filter_text.length - 1);
+
+        return [option_filters, filter_text];
     }
 </script>

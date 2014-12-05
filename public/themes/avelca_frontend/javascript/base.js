@@ -222,25 +222,29 @@ function select_category(category_id)
 
 function clear_all_filter_nosurvey(){
   var option_filters = [];
-  // FilterSelect.region = "";
+  FilterSelect.region = "";
   $(".dropdown-filter .selected_filter_option").each(function(){
-    // if ($(this).attr("data-type") === 'region') {
-    //   FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
-    // }
-    // else
-    // {
-        var data_value = $(this).attr("data-value");
-        filter_text = $('.title-filters',$(this).parent('ul')).html();
-
-        $(this).attr('class', 'filter_option_label_'+data_value);
-        if (typeof filter_text !== 'undefined') {
-          $('#custom-text-title-'+filter_text.toUpperCase()).html("");
-          $('#custom-text-title-'+filter_text.toUpperCase()).html(filter_text);
-        }
-    // }
+    var data_value = $(this).attr("data-value");
+    filter_text = $('.title-filters',$(this).parent('ul')).html();
+    if (typeof filter_text !== 'undefined' && filter_text != null) {
+      $(this).attr('class', 'filter_option_label_'+data_value);
+      filter_text = filter_text.toUpperCase();
+      $('#custom-text-title-'+filter_text).html("");
+      $('#custom-text-title-'+filter_text).html(filter_text);
+    }
   });
   return false; 
 }
+function find_survey_dynamic_select(region_id,value){
+    var region = $("#filter_option_label_"+region_id);
+    if(region.val() != null){
+      FilterSelect.region = parseInt(region.val());
+      find_survey_dynamic(value);
+    }else{
+      FilterSelect.region = "";
+      find_survey();
+    }
+  }
 /*
 * -----------------------------------------END Filter Category  JS--------------------------
 */

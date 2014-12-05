@@ -102,10 +102,10 @@
 				var $this = $(this.$collection[i]);
 				if ($.isNumeric( $this[0].value )) 
 				{
-					html += '<li class="'+ ($this.attr('disabled') === 'disabled' ? 'disabled' : '') +'" id="filter_option_label_'+$this[0].value+'" '+($this[0].className == 'selectik-filter-region' ? 'data-type="region"' : 'onclick="filter_option('+$this[0].value+')" data-type="filter"')+' data-value="'+$this[0].value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
+					html += '<li id="filter_option_label_'+$this[0].value+'" '+($this[0].className == 'selectik-filter-region' ? 'onclick="find_survey_dynamic_select('+$this[0].value+',\''+$this[0].text+'\')" data-type="region"' : 'onclick="filter_option('+$this[0].value+')" data-type="filter"')+' data-value="'+$this[0].value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
 				}
 				else{
-					html += '<li class="title-filters" id="filter_option_label_'+$this[0].value+'" '+($this[0].className == 'selectik-filter-region' ? 'data-type="region"' : 'onclick="filter_option(\''+$this[0].text.toUpperCase()+'\')" data-type="filter"')+'data-title="'+$this[0].text.toUpperCase()+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text.toUpperCase())+'</li>';
+					html += '<li class="title-filters" id="filter_option_label_'+$this[0].value+'" '+($this[0].className == 'selectik-filter-region' ? 'onclick="find_survey_dynamic_select('+$this[0].text+')" data-type="region"' : 'onclick="filter_option(\''+$this[0].text.toUpperCase()+'\')" data-type="filter"')+'data-title="'+$this[0].text.toUpperCase()+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text.toUpperCase())+'</li>';
 				}
 			 };
 			return html;
