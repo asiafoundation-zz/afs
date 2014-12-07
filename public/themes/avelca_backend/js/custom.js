@@ -84,6 +84,9 @@ $(document).ready(function(){
 	    $('#select-question').select2({});
 	});
 
+	$('#question_select_modal').select2({});
+	$('#cycle_select_modal').select2({});
+
 });
 
 $('.survey_is_default').click(function(){
@@ -93,3 +96,4 @@ $('.survey_is_default').click(function(){
 	});
 
 });
+

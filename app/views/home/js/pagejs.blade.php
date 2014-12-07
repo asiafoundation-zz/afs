@@ -352,7 +352,7 @@
 
       var filter_text = text_area_filter_process[1];
 
-      clear_all_filter_nosurvey();
+      // clear_all_filter_nosurvey();
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
