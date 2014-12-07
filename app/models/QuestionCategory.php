@@ -55,34 +55,31 @@ class QuestionCategory extends Eloquent {
 		return $question_category;
 	}
 
-	public static function QuestionCategoryFilterRegion($request = array())
+	public static function QuestionCategoryFilterRegion()
 	{
 		$question_categories =  DB::table('question_categories')
 			->select(
 				DB::raw(
 					'surveys.id as survey_id,
 					question_categories.id as id_question_categories,
-					question_categories.name as question_categories,
-					questions.id as id_question,
-					questions.question as question'
+					question_categories.name as question_categories'
 					)
 				)
 			->join('questions','questions.question_category_id','=','question_categories.id')
 			->join('surveys','surveys.id','=','question_categories.survey_id');
-			// if (!empty($request['region'])) {
-			// 	$question_categories = $question_categories->where('question_categories','=',$request['region']);
-			// }
-			if (!empty($request['category'])) {
-				$question_categories = $question_categories->where('question_categories.id','=',$request['category']);
-			}
+
 			if (empty($request['survey_id'])) {
 				$question_categories = $question_categories->where('surveys.is_default','=',1);
 			}
-			$question_categories = $question_categories->GroupBy('id_question_categories')
-			->GroupBy('id_question')
-			->get();
+			$question_categories = $question_categories->GroupBy('id_question_categories')->get();
 
 		return $question_categories;
+	}
+
+	public static function QuestionByCategory($request = array()){
+		$question = Question::where('question_category_id', '=', $request['category'])->get();
+
+		return $question;
 	}
 
 	public static function SplitQuestionsCategory($question_categories)
@@ -91,10 +88,6 @@ class QuestionCategory extends Eloquent {
 
 		if (count($question_categories)) {
 			foreach ($question_categories as $key_question_categories => $question_category) {
-				$split_data['question_lists'][$key_question_categories] = new stdClass;
-				$split_data['question_lists'][$key_question_categories]->id = $question_category->id_question;
-				$split_data['question_lists'][$key_question_categories]->question = $question_category->question;
-
 				$split_data['question_categories'][$question_category->id_question_categories] = new stdClass;
 				$split_data['question_categories'][$question_category->id_question_categories]->id = $question_category->id_question_categories;
 				$split_data['question_categories'][$question_category->id_question_categories]->name = $question_category->question_categories;

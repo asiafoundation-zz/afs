@@ -242,24 +242,12 @@ class Question extends Eloquent {
 				$questions = $questions->where('questions.is_default', '=', 1);
 			}
 
-			if(!empty($request['cycle'])){
-				$questions = $questions
-				->havingRaw('min(id_answer)')
-				->get();	
-			}else{
-				$questions = $questions
-				->groupBy('answer')
-				->get();
-			}
+			$questions = $questions
+			->groupBy('answer')
+			->get();
 
 			if (count($questions)) {
-				// if (!empty($request['answers'])) {
-				// 	if (count($questions) != count($request['answers'])) {
-
 				$questions = self::DifferentAnswer($questions,$request);
-				// 	}
-				// }
-
 				$questions = self::IndexLabel($questions);
 			}
 
