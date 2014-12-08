@@ -77,7 +77,7 @@ class SurveyController extends AvelcaController {
 	{
 		$request = Input::get();
 		$files = Input::file();
-		
+
 		if (!empty($request['survey_id'])) {
 			$survey = Survey::where('id', '=', $request['survey_id'])->first();
 			if(!empty($request['geojson'])){
@@ -120,7 +120,7 @@ class SurveyController extends AvelcaController {
 
 			if($validator->passes())
 			{
-				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::file('excel')->getClientOriginalName(), 'geojson_file' => Input::file('geojson')->getClientOriginalName(),'publish' => 3));
+				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::file('baseline_file')->getClientOriginalName(),'header_file' => Input::file('header_file')->getClientOriginalName(), 'geojson_file' => Input::file('geojson')->getClientOriginalName(),'publish' => 3));
 
 				if($survey)
 				{
@@ -159,10 +159,21 @@ class SurveyController extends AvelcaController {
 	public function getCategory($id)
 	{
 		$survey = Survey::where('id', '=', $id)->first();
-		
-		$header = Header::find(['survey_id'=>$survey->id])->first();
-		$header = json_decode($header->data);
 
+		$temporary_headers = DB::table('temporary_headers')->get();
+		$header = array();
+		foreach ($temporary_headers as $key_temporary_headers => $temporary_header) {
+			$row = 0;
+			if ($key_temporary_headers > 2) {
+				foreach ($temporary_header as $key => $value) {
+					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|""]\n\r/', '', $value);
+					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
+
+					$header[$key_temporary_headers]['header'.$row] = $dataval;
+					$row++;
+				}
+			}
+		}
 		$content = array("Select 'Region' Filter","Please select select 'Region' with clicking a list on the left");
 
 		$button_value = "Next";
@@ -181,7 +192,7 @@ class SurveyController extends AvelcaController {
 		$request = Input::get();
 		// Load survey
 		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
-		$survey->publish = 3;
+		$survey->publish = 6;
 		$survey->save();
 
 		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 1));

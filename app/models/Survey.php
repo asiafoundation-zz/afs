@@ -31,7 +31,7 @@ class Survey extends Eloquent {
 		'name',
 		'geojson_file',
 		'baseline_file',
-		'endline_file',
+		'header_file',
 		'publish',
 		'is_default'
 		);
@@ -42,7 +42,7 @@ class Survey extends Eloquent {
 		'name' => 'required',
 		'geojson_file' => 'required',
 		'baseline_file' => 'required',
-		'endline_file' => 'required',
+		'header_file' => 'required',
 		'publish' => 'required',
 		'is_default' => 'required'
 		);
@@ -63,7 +63,7 @@ class Survey extends Eloquent {
 						'type' => 'text',
 						'onIndex' => true
 					),
-			'endline_file' => array(
+			'header_file' => array(
 						'type' => 'text',
 						'onIndex' => true
 					),
@@ -197,29 +197,34 @@ class Survey extends Eloquent {
 
 								// Check category exist
 								$category = Category::checkData($code_label,$master_code[$column]['code_id'],$survey->id);
+
+								$category_item_data = CategoryItem::checkData($data,$category->id);
 								$category_items[$i] = array(
-									'data' => $data,
-									'category_id' => $category->id
+									'category_item_id' => $category_item_data
 									);
 								$i++;
 								break;
 							case 4:
+								if (!empty($data)) {
 								// Check answers exist
 								$question_category = Question::select(
-													DB::raw(
-																'question_categories.id as question_category_id'
-															)
-														)
-													->join('question_categories', 'question_categories.id', '=', 'questions.question_category_id')
-													->where('questions.code_id', '=', $master_code[$column]['code_id'])
-													->first();
+									DB::raw(
+										'question_categories.id as question_category_id'
+										)
+									)
+								->join('question_categories', 'question_categories.id', '=', 'questions.question_category_id')
+								->where('questions.code_id', '=', $master_code[$column]['code_id'])
+								->first();
 
-								$questions_list[$j]['cycle_id'] = $cycle_id;
+								$question = Question::where('code_id','=',$master_code[$column]['code_id'])->where('question_category_id','=',$question_category->question_category_id)->first();
+								$answer = Answer::checkData($data,$question->id,$cycle_id,1);
+
+								$questions_list[$j]['answer_id'] = $answer->id;
+								$questions_list[$j]['region_id'] = $region_id;
 								$questions_list[$j]['sample_type'] = $oversample_id;
-								$questions_list[$j]['data'] = $data;
-								$questions_list[$j]['code_id'] = $master_code[$column]['code_id'];
-								$questions_list[$j]['question_category_id'] = $question_category->question_category_id;
 								$j++;
+								}
+								
 								break;
 
 							default:
@@ -234,25 +239,53 @@ class Survey extends Eloquent {
 				$participant->survey_id = $survey->id;
 				$participant->sample_type = $oversample_id;
 				$participant->save();
+
+				$question_participants_massive_save = array();
+				$amount_massive_save = array();
+				$l=0;
 				foreach ($questions_list as $key => $question_list) {
-					if (!empty($question_list['data'])) {
-						$question = Question::where('code_id','=',$question_list['code_id'])->where('question_category_id','=',$question_list['question_category_id'])->first();
 
-						$answer = Answer::checkData($question_list['data'],$question->id,$question_list['cycle_id'],$key);
+					$question_participants_massive_save[$key] = array(
+							'answer_id' => $question_list['answer_id'],
+							'participant_id' => $participant->id,
+							'region_id' => $question_list['region_id'],
+							'sample_type' => $question_list['sample_type'],
+							);
 
-						$question_participant = QuestionParticipant::checkData($answer->id,$participant->id,$region_id,$question_list['sample_type']);
+						if (!$question_list['sample_type']) {
+							$amount = Amount::where('answer_id', '=', $question_list['answer_id'])
+							->where('region_id','=', $question_list['region_id'])
+							->where('sample_type', '=', 0)
+							->first();
+
+							if(!isset($amount))
+							{
+								$amount_massive_save[$l] = array(
+									'answer_id' => $question_list['answer_id'],
+									'participant_id' => $participant->id,
+									'region_id' => $question_list['region_id'],
+									'sample_type' => $question_list['sample_type'],
+								);
+								$l++;
+							}
+							else
+							{
+								$amount->amount = $amount->amount+1;
+								$amount->save();	
+							}
+						}
 					}
-				}
 
-				foreach ($category_items as $category_item) {
-					if (!empty($category_item['data'])) {
-						$category_item_data = CategoryItem::checkData($category_item['data'],$category_item['category_id']);
-						$filter_participant = new FilterParticipant;
-						$filter_participant->category_item_id = $category_item_data->id;
-						$filter_participant->participant_id = $participant->id;
-						$filter_participant->save();
-					}
+				$amount_massive_save = array();
+				foreach ($category_items as $key => $category_item) {
+					$amount_massive_save[$key] = array(
+						'participant_id'=>$participant->id,
+						'category_item_id'=>$category_item['category_item_id']
+					);
 				}
+				DB::table('question_participants')->insert($question_participants_massive_save);
+				DB::table('filter_participants')->insert($amount_massive_save);
+
 				AmountFilter::checkData($participant->id);
 				Log::info('Participant:'.$participant->id);
 			}
@@ -264,6 +297,37 @@ class Survey extends Eloquent {
   //     $status = 0;
   //   }
     return $status;
+	}
+	Public static function readHeaderCSV($survey,$delayed_jobs = array())
+	{
+		set_time_limit(0);
+		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
+
+		// Set variable data
+		$data_label = array();
+
+		$columns = "";
+		$survey = Survey::where('id', '=', 1)->first();
+		$inputFileName = public_path().'/uploads/'.$survey->header_file;
+		$fp = fopen($inputFileName, 'r');
+		$frow = fgetcsv($fp);
+
+		$schema_texts = array();
+		foreach($frow as $key => $column) {
+			$schema_texts[$key] = $column;
+		}
+
+		Schema::create('temporary_headers', function($table) use ($schema_texts) {
+			$table->bigIncrements("id")->unsigned();
+
+			foreach ($schema_texts as $key => $schema_text) {
+				$table->text($schema_text)->nullable();
+			}
+		}
+		);
+		DB::raw("LOAD DATA LOCAL INFILE '$inputFileName' into table 'header_participants' fields terminated by '|' ignore 1 lines");
+
+		return $data_label;
 	}
 
 	Public static function readHeader($survey,$delayed_jobs = array())
@@ -368,6 +432,7 @@ class Survey extends Eloquent {
 			}
 			return $data;
 	}
+
 	public static function deleteSurvey($id)
 	{
 		$status = 0;
@@ -462,6 +527,7 @@ class Survey extends Eloquent {
 			$survey = Survey::find($id);
 
 			File::delete(public_path()."/uploads/".$survey->baseline_file);
+			File::delete(public_path()."/uploads/".$survey->header_file);
 			File::delete(public_path()."/uploads/".$survey->geojson_file);
 
 			// Remove data in mongo
