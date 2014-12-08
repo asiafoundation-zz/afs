@@ -173,7 +173,7 @@ $(document).ready(function(){
 
   $('.clear-all').click(function(){
     FilterSelect.region = "";
-    // option_filters_default = [];
+    option_filters_default = [];
     filter_option(0);
     clear_all_filter_nosurvey();
     find_survey();
