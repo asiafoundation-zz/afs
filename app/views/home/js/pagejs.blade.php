@@ -148,7 +148,7 @@
         $('.notification').html("");
                 
         text_area_filter_process = text_area_filter(value);
-        
+
         if(value == 0){
           var option_filters = "";
           var filter_text = "";
@@ -205,6 +205,7 @@
         }else{
           find_survey();
         }
+        console.log(filter_text);
      }
 
     function compare_cycle(move)
@@ -613,10 +614,12 @@
 
                 // Set Default Value for option filters
                 option_filters_default.push($(this).attr("data-value"));
-              }else{
-                // Set Default Value for option filters
-                option_filters_default.push($(this).text());
+                console.log(option_filters);
               }
+              // else{
+              //   // Set Default Value for option filters
+              //   option_filters_default.push($(this).text());
+              // }
             }
           });
           filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text_type;
