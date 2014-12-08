@@ -70,8 +70,7 @@ class BackgroundCommand extends Command {
 				  		$codes = MasterCode::savingProcess($survey,$cursor);
 				  	}
 				  	// Delete impotfiledata
-				  	$assign_delete = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
-				  	$assign_delete->delete();
+				  	$cursors_load->delete();
 				  }
 				  
 				  // Load Master Code Data
@@ -84,14 +83,13 @@ class BackgroundCommand extends Command {
 				  // Load data from collections MonggoDB and saving master code and codes
 				  $data_loads = ParticipantTemporary::where(['survey_id'=>$survey->id]);
 				  foreach ($data_loads as $data_load) {
-				  	$data = json_decode($data_load['data']);
+				  	$data = json_decode($data_load['data'],true);
 				  	// Load Excel Data
 				  	$excel_data = Survey::importData($survey,$master_code,$data);
 
 				  	// Delete data from Mongo
-				  	if ($data_load) {
-				  		$data_load->delete();
-				  	}
+				  	$data_load_delete = ParticipantTemporary::first((string)$data_load['_id']);
+				  	$data_load_delete->delete();
 				  }
 				  // Delete Header Data
 			    $header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
@@ -131,7 +129,7 @@ class BackgroundCommand extends Command {
 			}
 			if ($delayed_jobs->type == 'parsingfile') {
 				// Load and parsing Excel Data
-				$excel_data = Survey::readHeader($survey,$delayed_jobs);
+				$excel_data = Survey::readHeaderCSV($survey,$delayed_jobs);
 
 				// Delete Delayed Jobs
 				$delayed_jobs->delete();
