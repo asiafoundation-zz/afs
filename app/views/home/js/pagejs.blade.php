@@ -143,13 +143,19 @@
 
      function filter_option(value)
      {
-        clear_text_notification();
+        // clear_text_notification();
         var is_region = false;
-
+        $('.notification').html("");
         text_area_filter_process = text_area_filter(value);
         var option_filters = text_area_filter_process[0];
         var filter_text = text_area_filter_process[1];
 
+        console.log(value);
+        if(value == 0){
+          option_filters = "";
+          filter_text = ""
+        }
+        // console.log(option_filters.length);  
         if(option_filters.length != 0){
         // Get cycles functions
           $('#chart_canvas').hide();
@@ -188,8 +194,10 @@
             {
               var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
-              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_filter_data')}}'+filter_text_type+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
-              // Re assingn Filter data
+              $("#chart_canvas").hide();
+              $('.chart chart-flag .chart-pagination').hide();
+              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_filter_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              // Re assingn Filter `
               DefaultSelectAssign(DefaultSelect);
             }
           },"html");
@@ -207,7 +215,7 @@
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
-            $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
+            // $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
             $('#chart_canvas').show();
             $('.loading-flag').hide();
             // Build chart
@@ -352,15 +360,16 @@
 
       var filter_text = text_area_filter_process[1];
 
-      clear_all_filter_nosurvey();
+      // clear_all_filter_nosurvey();
+      $(".notification").html("");
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: value,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
           if (data != false) {
-            $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
+            // $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
             
             FilterSelect.question = parseInt(data.default_question.id_question);
             FilterSelect.category = parseInt(data.default_question.id_question_categories);
@@ -371,10 +380,10 @@
 
             // $("#question-name").html(data.default_question.question);
             $("#question-name").html(data.default_question.question);
-            if(FilterSelect.region != ""){
-              $('.survey-question label span').remove();
-              $('.survey-question label').append('<span> DI '+ data.default_question.region_name.toUpperCase() +'</span>');
-            }
+            // if(FilterSelect.region != ""){
+            //   $('.survey-question label span').remove();
+            //   $('.survey-question label').append('<span> DI '+ data.default_question.region_name.toUpperCase() +'</span>');
+            // }
 
             // Re assingn Filter data
             FilterSelect.question = data.default_question.id_question;
@@ -575,7 +584,7 @@
 
     function text_area_filter(value){
       var option_filters = [];
-        
+      
       if(option_filters_default.length != 0){
           for(i = 0; i < option_filters_default.length; i++) {
             if (value.toString() === option_filters_default[i].toString()) {

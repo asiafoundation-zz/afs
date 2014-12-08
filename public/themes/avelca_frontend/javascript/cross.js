@@ -15,7 +15,7 @@ $(document).ready(function(){
   $('.show-cross').click(function(e){
     e.preventDefault();
 
-    $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
+    // $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
     $('.cross-question').show();
     $('.chart-flag').hide();
   });
@@ -90,7 +90,7 @@ $(document).ready(function(){
   $('.cross-back').click(function(e){
     e.preventDefault();
     
-    $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
+    // $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
     $('.cross-question').hide().css('display', 'none').fadeOut('slow');
     $('.chart-flag').show();
     find_survey();
@@ -173,7 +173,8 @@ $(document).ready(function(){
 
   $('.clear-all').click(function(){
     FilterSelect.region = "";
-    option_filters_default = [];
+    // option_filters_default = [];
+    filter_option(0);
     clear_all_filter_nosurvey();
     find_survey();
   })

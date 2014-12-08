@@ -20,16 +20,19 @@ class HomeController extends BaseController {
 		}
 		$default_question = reset($default_questions);
 
+		$request = array('category' => $default_question->id_question_categories);
+
 		// Get catefory and question list
-		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
+		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion();
 		$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
+		$question_by_category = QuestionCategory::questionByCategory($request);
 
 		$data = array(
 			"survey" => $survey,
 			"filters" => Code::getFilter(),
 			"cycles" => Cycle::AllCycle($survey->id),
 			"question_categories" => $split_data['question_categories'],
-			"question_lists" => $split_data['question_lists'],
+			"question_lists" => $question_by_category,
 			"default_question" => $default_question,
 			"question" => $default_questions,
 			"public_path" => public_path(),

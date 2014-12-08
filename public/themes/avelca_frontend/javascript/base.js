@@ -237,9 +237,9 @@ function clear_all_filter_nosurvey(){
 }
 function find_survey_dynamic_select(region_id,value){
     var region = $("#filter_option_label_"+region_id);
-    if(region.val() != null){
-      FilterSelect.region = parseInt(region.val());
-      find_survey_dynamic(value);
+    if(region.data('value') != null){
+      FilterSelect.region = parseInt(region_id);
+      find_survey_dynamic(region_id);
     }else{
       FilterSelect.region = "";
       find_survey();

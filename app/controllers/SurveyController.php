@@ -220,9 +220,12 @@ class SurveyController extends AvelcaController {
 
 		$default_question = reset($default_questions);
 
+		$request = array('category' => $default_question->id_question_categories);
+
 		// Get catefory and question list
 		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
 		$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
+		$question_by_category = QuestionCategory::questionByCategory($request);
 
 		$cycles = array();
 		$loadcycles = Cycle::QuestionCycle($default_question);
@@ -231,7 +234,7 @@ class SurveyController extends AvelcaController {
 		}
 
 		$questions_all = array();
-		foreach ($split_data['question_lists'] as $key_question_lists => $value_question_list) {
+		foreach ($question_by_category as $key_question_lists => $value_question_list) {
 			$questions_all[$value_question_list->id] = $value_question_list->question;
 		}
 
