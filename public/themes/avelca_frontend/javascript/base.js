@@ -224,15 +224,18 @@ function clear_all_filter_nosurvey(){
   FilterSelect.region = "";
 
    $(".dropdown-filter .selected_filter_option").each(function(){
-     // var data_value = $(this).attr("data-value");
-     // console.log(data_value);
      filter_text = $('.title-filters', $(this).parent('ul')).html();
      if (filter_text != null) {
-       // $(this).attr('class', 'filter_option_label_'+data_value);
-       // $(this, 'filter_option_label_'+data_value);
        var display_text = filter_text.toUpperCase();
        filter_text = filter_text.toUpperCase().split(' ').join('_');
-       // $(this).attr('onclick', '"filter_option='+filter_text+'"');
+
+       /* Remove class selected li */
+       $(this).removeClass('selected_filter_option');
+       
+       /* Add class to default li */
+       $('#filter_option_label_'+ filter_text).addClass('selected_filter_option');
+
+       /* Change filter text */
        $('#custom-text-title-'+filter_text).html("");
        $('#custom-text-title-'+filter_text).html(display_text);
      }

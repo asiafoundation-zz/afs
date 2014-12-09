@@ -5,7 +5,6 @@
       // Get cycles functions
       clear_all_filter_nosurvey();
       clear_text_notification();
-      $('.survey-question label span').remove(); 
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
@@ -152,7 +151,6 @@
         if(value == 0){
           var option_filters = "";
           var filter_text = "";
-          console.log(value);
         }else{
           var option_filters = text_area_filter_process[0];
           var filter_text = text_area_filter_process[1];
@@ -205,7 +203,6 @@
         }else{
           find_survey();
         }
-        console.log(filter_text);
      }
 
     function compare_cycle(move)
@@ -459,33 +456,36 @@
       find_survey();
     }
 
-    // function color_set(assign_color)
-    // {
-    //   if (assign_color != null) 
-    //   {
-    //     var color_set = [];
-    //     for (var key in assign_color) {
-    //       if (assign_color.hasOwnProperty(key)) {
-    //         color_set.push(assign_color[key]['color']);
-    //       }
-    //     }
-    //   }
-    //   else
-    //   {
-    //     var color_set = [//colorSet Array
-    //       @foreach ($question as $answer)
-    //         "{{ $answer->color }}",
-    //       @endforeach                 
-    //       ];
-    //   }
-    //   var data_points = [];
-    //   for (i = 0; i < color_set.length; i++) {
-    //     if (color_set[i].y != 0) {
-    //       data_points.push(color_set[i]);    
-    //     }
-    //   }
-    //   return data_points;
-    // }
+    /*
+    //Default color
+    function color_set(assign_color)
+    {
+      if (assign_color != null) 
+      {
+        var color_set = [];
+        for (var key in assign_color) {
+          if (assign_color.hasOwnProperty(key)) {
+            color_set.push(assign_color[key]['color']);
+          }
+        }
+      }
+      else
+      {
+        var color_set = [//colorSet Array
+          @foreach ($question as $answer)
+            "{{ $answer->color }}",
+          @endforeach                 
+          ];
+      }
+      var data_points = [];
+      for (i = 0; i < color_set.length; i++) {
+        if (color_set[i].y != 0) {
+          data_points.push(color_set[i]);    
+        }
+      }
+      return data_points;
+    }*/
+
     function data_points(assign_answer)
     {
       if (assign_answer != null) 
@@ -614,12 +614,11 @@
 
                 // Set Default Value for option filters
                 option_filters_default.push($(this).attr("data-value"));
-                console.log(option_filters);
               }
-              // else{
-              //   // Set Default Value for option filters
-              //   option_filters_default.push($(this).text());
-              // }
+              else{
+                // Set Default Value for option filters
+                option_filters_default.push($(this).text());
+              }
             }
           });
           filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text_type;
