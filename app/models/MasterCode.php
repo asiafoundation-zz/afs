@@ -63,7 +63,7 @@ class MasterCode extends Eloquent {
 	{
 		try{
 			DB::beginTransaction();
-			$options_selected = (array)$request;
+			$options_selected = $request;
 			
 			$options_selected = array(
 				'category' => $options_selected['category'],
