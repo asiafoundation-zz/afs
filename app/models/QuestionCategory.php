@@ -78,7 +78,10 @@ class QuestionCategory extends Eloquent {
 
 	public static function QuestionByCategory($request = array()){
 		if(!empty($request['category'])){
-			$question = Question::where('question_category_id', '=', $request['category'])->get();
+			$question = Question::select(DB::raw('questions.id, questions.question'))
+						->join('answers', 'answers.question_id', '=', 'questions.id')
+						->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+						->where('question_category_id', '=', $request['category'])->get();
 		}else{
 			$question = Question::all();
 		}
