@@ -48,8 +48,8 @@ class BackgroundCommand extends Command {
 		// while (true) {
 		$delayed_jobs = DelayedJob::where('queue','=',1)->orderBy('id', 'DESC')->first();
 		if (isset($delayed_jobs)) {
-			$delayed_jobs->queue = 0;
-			$delayed_jobs->save();
+			// $delayed_jobs->queue = 0;
+			// $delayed_jobs->save();
 
 			$status = 0;
 			$survey = Survey::where('id', '=', $delayed_jobs->survey_id)->first();
@@ -61,36 +61,15 @@ class BackgroundCommand extends Command {
 			    $survey->publish = 3;
 			    $survey->save();
 
-			    // Load data from collections MonggoDB and saving master code and codes
-				  $cursors_load = Assign::find(['delayed_job_id'=>(string)$delayed_jobs->id])->first();
-				  
-				  if ($cursors_load) {
-				  	$cursors = json_decode($cursors_load->data);
-				  	foreach ($cursors as $key => $cursor) {
-				  		$codes = MasterCode::savingProcess($survey,$cursor);
-				  	}
-				  	// Delete impotfiledata
-				  	$cursors_load->delete();
-				  }
-				  
-				  // Load Master Code Data
+			    // Load Master Code Data
 				  $master_code = MasterCode::loadData($survey->id);
 
 				  // Saving Change status
 				  $survey->publish = 2;
 				  $survey->save();
 
-				  // Load data from collections MonggoDB and saving master code and codes
-				  $data_loads = ParticipantTemporary::where(['survey_id'=>$survey->id]);
-				  foreach ($data_loads as $data_load) {
-				  	$data = json_decode($data_load['data'],true);
-				  	// Load Excel Data
-				  	$excel_data = Survey::importData($survey,$master_code,$data);
+				  $import = Survey::importDataQuery($survey,$master_code);
 
-				  	// Delete data from Mongo
-				  	$data_load_delete = ParticipantTemporary::first((string)$data_load['_id']);
-				  	$data_load_delete->delete();
-				  }
 				  // Delete Header Data
 			    $header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
 			    if ($header_delete) {
@@ -99,7 +78,7 @@ class BackgroundCommand extends Command {
 
 			    $active_delayed_job_id = $delayed_jobs->id;
 				  $active_delayed_job = DelayedJob::find($active_delayed_job_id);
-				  $active_delayed_job->delete();
+				  // $active_delayed_job->delete();
 
 			    $question_default = Question::where('is_default','=',1)->count();
 			    if ($question_default == 0) {
