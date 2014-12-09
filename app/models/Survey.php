@@ -41,8 +41,8 @@ class Survey extends Eloquent {
 	public static $rules = array(
 		'name' => 'required',
 		'geojson_file' => 'required',
-		'baseline_file' => 'required',
-		'header_file' => 'required',
+		'baseline_file' => 'required|mimes:csv',
+		'header_file' => 'required|mimes:csv',
 		'publish' => 'required',
 		'is_default' => 'required'
 		);
@@ -310,7 +310,7 @@ class Survey extends Eloquent {
 		$survey = Survey::where('id', '=', 1)->first();
 		$inputFileName = public_path().'/uploads/'.$survey->header_file;
 		$fp = fopen($inputFileName, 'r');
-		$frow = fgetcsv($fp);
+		$frow = fgetcsv($fp,0, "|");
 
 		$schema_texts = array();
 		foreach($frow as $key => $column) {
@@ -331,7 +331,7 @@ class Survey extends Eloquent {
 		$survey = Survey::where('id', '=', 1)->first();
 		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
 		$fp = fopen($inputFileName, 'r');
-		$frow = fgetcsv($fp);
+		$frow = fgetcsv($fp,0, "|");
 
 		$schema_texts = array();
 		foreach($frow as $key => $column) {
