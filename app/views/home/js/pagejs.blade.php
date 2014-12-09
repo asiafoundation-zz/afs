@@ -147,9 +147,14 @@
         $('.notification').html("");
                 
         text_area_filter_process = text_area_filter(value);
-        var option_filters = text_area_filter_process[0];
-        var filter_text = text_area_filter_process[1];
 
+        if(value == 0){
+          var option_filters = "";
+          var filter_text = "";
+        }else{
+          var option_filters = text_area_filter_process[0];
+          var filter_text = text_area_filter_process[1];
+        }
         if(option_filters.length != 0){
         // Get cycles functions
           $('#chart_canvas').hide();
@@ -582,41 +587,48 @@
     function text_area_filter(value){
       var option_filters = [];
       
-      if(option_filters_default.length != 0){
-          for(i = 0; i < option_filters_default.length; i++) {
-            if (value.toString() === option_filters_default[i].toString()) {
-              return false;
-            };
-          }
-        }
-
-        var filter_text_type = "";
-        option_filters_default = [];
-        $(".dropdown-filter .selected_filter_option").each(function(){
-          if ($(this).attr("data-type") === 'region') {
-            // Set Default Value for option filters
-            option_filters_default.push($(this).text());
-            // Filter Text
-            filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
-            FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
-          }else{
-            var data_value = $(this).attr("data-value");
-            if(data_value % 1 === 0){
-              // Filter Text
-              filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
-              option_filters += $(this).attr("data-value")+",";
-
-              // Set Default Value for option filters
-              option_filters_default.push($(this).attr("data-value"));
+      if(value != 0){
+        if(option_filters_default.length != 0){
+            for(i = 0; i < option_filters_default.length; i++) {
+              if (value.toString() === option_filters_default[i].toString()) {
+                return false;
+              };
             }
-            else{
+          }
+
+          var filter_text_type = "";
+          option_filters_default = [];
+          $(".dropdown-filter .selected_filter_option").each(function(){
+            if ($(this).attr("data-type") === 'region') {
               // Set Default Value for option filters
               option_filters_default.push($(this).text());
+              // Filter Text
+              filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
+              FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
+            }else{
+              var data_value = $(this).attr("data-value");
+              if(data_value % 1 === 0){
+                // Filter Text
+                filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
+                option_filters += $(this).attr("data-value")+",";
+
+                // Set Default Value for option filters
+                option_filters_default.push($(this).attr("data-value"));
+              }
+              else{
+                // Set Default Value for option filters
+                option_filters_default.push($(this).text());
+              }
             }
-          }
-        });
-        filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text_type;
-        filter_text = filter_text.substring(0, filter_text.length - 1);
+          });
+          filter_text = "{{Lang::get('frontend.show_responnden_filter_result')}}"+filter_text_type;
+          filter_text = filter_text.substring(0, filter_text.length - 1);
+        }else{
+          option_filters_default.length = 0;
+          option_filters = [];
+          filter_text = "";
+        }
+
         return [option_filters, filter_text];
     }
 </script>
