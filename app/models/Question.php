@@ -239,7 +239,8 @@ class Question extends Eloquent {
 				}
 			}
 			else{
-				$questions = $questions->where('questions.is_default', '=', 1);
+				$questions = $questions->where('questions.is_default', '=', 1)
+							->where('answers.cycle_default', '=', 1);
 			}
 
 			$questions = $questions
