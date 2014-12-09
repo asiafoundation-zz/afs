@@ -131,7 +131,6 @@ return array(
 		'Barryvdh\DomPDF\ServiceProvider',
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 		'Marcelgwerder\ApiHandler\ApiHandlerServiceProvider',
-		'Zizaco\MongolidLaravel\MongolidServiceProvider',
 		),
 
 	/*
@@ -215,7 +214,6 @@ return array(
 		'PDF'                 => 'Barryvdh\DomPDF\Facade',
 		'AuthorizationServer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizationServerFacade',
 		'ResourceServer'      => 'LucaDegasperi\OAuth2Server\Facades\ResourceServerFacade',
-		'MongoLid'    => 'Zizaco\MongolidLaravel\MongoLid',
 		),
 
 );
