@@ -242,16 +242,34 @@ function clear_all_filter_nosurvey(){
   });
   return false; 
 }
+
 function find_survey_dynamic_select(region_id,value){
-    var region = $("#filter_option_label_"+region_id);
-    if(region.data('value') != null){
-      FilterSelect.region = parseInt(region_id);
-      find_survey_dynamic(region_id);
-    }else{
-      FilterSelect.region = "";
-      find_survey();
-    }
+  var region = $("#filter_option_label_"+region_id);
+  if(region.data('value') != null){
+    FilterSelect.region = parseInt(region_id);
+    find_survey_dynamic(region_id);
+  }else{
+    FilterSelect.region = "";
+    find_survey();
   }
+}
+
+function disable_anchor(selector, enable_flag){
+  if(enable_flag == 1){
+    selector.css({
+      'pointer-events' : '',
+      'cursor' : '',
+      'background-color' : '' 
+    });    
+  }else{
+    selector.css({
+      'pointer-events' : 'none',
+      'cursor' : 'default',
+      'background-color' : '#AA6071' 
+    });
+  }
+}
+
 /*
 * -----------------------------------------END Filter Category  JS--------------------------
 */

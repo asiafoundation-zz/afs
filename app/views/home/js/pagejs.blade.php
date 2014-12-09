@@ -143,6 +143,7 @@
      function filter_option(value)
      {
         // clear_text_notification();
+
         var is_region = false;
         $('.notification').html("");
                 
@@ -155,8 +156,13 @@
           var option_filters = text_area_filter_process[0];
           var filter_text = text_area_filter_process[1];
         }
+        // if(option_filters)
+
+
         if(option_filters.length != 0){
         // Get cycles functions
+          disable_anchor($('.clear-all'), 1);
+
           $('#chart_canvas').hide();
           $('.loading-flag').show();
           $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
@@ -202,6 +208,7 @@
           },"html");
         }else{
           find_survey();
+          disable_anchor($('.clear-all'), 0);
         }
      }
 
@@ -355,6 +362,7 @@
     function find_survey_dynamic(value)
     {
       // Show text information under graph
+      disable_anchor($('.clear-all'), 1);
       text_area_filter_process = text_area_filter(value);
 
       var filter_text = text_area_filter_process[1];

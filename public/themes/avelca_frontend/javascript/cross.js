@@ -177,5 +177,7 @@ $(document).ready(function(){
     filter_option(0);
     clear_all_filter_nosurvey();
     find_survey();
+
+    disable_anchor($(this), 0);
   })
 })
