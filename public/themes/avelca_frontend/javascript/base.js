@@ -119,13 +119,15 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
         type: "bar",
         showInLegend: true,
         legendText: baseline_text+" (Hasil survey 2013)",
-        dataPoints: first_list
+        dataPoints: first_list,
+        toolTipContent: "{label}: <strong>{y}%</strong>"
       },
       {
         type: "bar",
         showInLegend: true,
         legendText: endline_text+" (Hasil survey 2014)",
-        dataPoints: end_list
+        dataPoints: end_list,
+        toolTipContent: "{label}: <strong>{y}%</strong>"
       }
       ]
   });
