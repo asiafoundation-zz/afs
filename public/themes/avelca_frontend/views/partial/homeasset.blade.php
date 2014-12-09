@@ -24,7 +24,7 @@
       $('.li-region li.title-filters').removeAttr('onclick');
       $('.li-region .title-filters').data('value', '0');
 
-      
+      disable_anchor($('.clear-all'), 0);
 
       // $(".dropdown-filter .selected_filter_option").each(function(){
       //     if ($(this).attr("data-type") === 'region') {

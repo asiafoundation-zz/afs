@@ -63,6 +63,8 @@
 
             $(".chart-pagination").html(chart_pagination);
 
+            $("#filter-by-label").text("{{Lang::get('frontend.all_survey')}}");
+
             // Re assign map
             dynamicRegions = data.regions;
             // Load New map
@@ -143,6 +145,7 @@
      function filter_option(value)
      {
         // clear_text_notification();
+
         var is_region = false;
         $('.notification').html("");
                 
@@ -155,8 +158,11 @@
           var option_filters = text_area_filter_process[0];
           var filter_text = text_area_filter_process[1];
         }
+
         if(option_filters.length != 0){
         // Get cycles functions
+          disable_anchor($('.clear-all'), 1);
+
           $('#chart_canvas').hide();
           $('.loading-flag').show();
           $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
@@ -181,8 +187,8 @@
                 }
               }
               var is_has_compare = data_cycles_length > 1 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
-              var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
-              $(".chart-pagination").html(chart_pagination);
+              // var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+              // $(".chart-pagination").html(chart_pagination);
 
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
@@ -195,13 +201,14 @@
               $('.loading-flag').hide();
               $("#chart_canvas").hide();
               $('.chart chart-flag .chart-pagination').hide();
-              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_filter_data')}} '+ filter_text +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_filter_data')}} '+ text_area_filter_process[2] +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter `
               DefaultSelectAssign(DefaultSelect);
             }
           },"html");
         }else{
           find_survey();
+          disable_anchor($('.clear-all'), 0);
         }
      }
 
@@ -228,6 +235,22 @@
             var question_text = "";
 
             FilterSelect.answers = [];
+
+            var total_amount_base = 0;
+            var total_amount_end = 0;
+
+            for (i = 0; i < data.question.length; i++) {
+              if (data.question[i].cycle_type == 0) {
+                total_amount_base = total_amount_base + parseInt(data.question[i].amount);
+              }
+
+              if (data.question[i].cycle_type == 1) {
+                total_amount_end = total_amount_end + parseInt(data.question[i].amount); 
+              }
+            }
+
+            console.log('base : '+ total_amount_base +' | end : '+ total_amount_end);
+
             for (i = 0; i < data.question.length; i++) {
               if (data.question[i].cycle_type == 0) {
 
@@ -235,14 +258,19 @@
                 question_text = data.question[i].question;
                 FilterSelect.question = data.question[i].id_question;
 
-                first_list.push({ y: parseInt(data.question[i].amount), label: data.question[i].answer});
+                var amount_percent = (parseInt(data.question[i].amount) / total_amount_base) * 100;
+
+                first_list.push({ y: parseInt(amount_percent), label: data.question[i].answer});
 
                 colorSet.push(data.question[i].color);
                 FilterSelect.answers.push({ id: data.question[i].id_answer, answer: data.question[i].answer});
               }
               if (data.question[i].cycle_type == 1) {
                 endline_text = data.question[i].cycle;
-                end_list.push({ y: parseInt(data.question[i].amount), label: data.question[i].answer});
+
+                var amount_percent = (parseInt(data.question[i].amount) / total_amount_end) * 100;
+
+                end_list.push({ y: parseInt(amount_percent), label: data.question[i].answer});
               }
             }
 
@@ -355,6 +383,7 @@
     function find_survey_dynamic(value)
     {
       // Show text information under graph
+      disable_anchor($('.clear-all'), 1);
       text_area_filter_process = text_area_filter(value);
 
       var filter_text = text_area_filter_process[1];
@@ -430,7 +459,7 @@
 
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
-              $('.chart-pagination').html('<li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+              // $('.chart-pagination').html('<li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
             }else
             {
               var last_question = $('#s2id_select-question').children().children().html();
@@ -629,6 +658,6 @@
           filter_text = "";
         }
 
-        return [option_filters, filter_text];
+        return [option_filters, filter_text, filter_text_type];
     }
 </script>
