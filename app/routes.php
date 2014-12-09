@@ -69,7 +69,7 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 | Frontend
 |--------------------------------------------------------------------------
 */
-Route::get('filter-select', 'HomeController@getIndex');
+Route::get('filter-select', 'HomeController@filterSelect');
 Route::get('/', 'HomeController@getIndex');
 Route::group(array('prefix' => LaravelLocalization::setLocale(), 'before' => 'frontend_theme'), function()
 {
