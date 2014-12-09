@@ -81,56 +81,55 @@ class HomeController extends BaseController {
 					return $return;
 					break;
 
-				
-				// case 'survey':
-				// 	/*-- Define empty answers --*/
-				// 	$empty_question = Question::select(DB::raw('distinct questions.id'));
+				case 'survey':
+					/*-- Define empty answers --*/
+					$empty_question = Question::select(DB::raw('distinct questions.id'));
 
-				// 	if(!empty(Input::get('region'))){
-				// 		$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
-				// 							->join('amounts', 'amounts.answer_id', '=', 'answers.id')
-				// 							->join('regions', 'regions.id', '=', 'amounts.region_id')
-				// 							->where('regions.id', '=', Input::get('region'));
-				// 	}else{
-				// 		$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id');
-				// 	}
+					if(!empty(Input::get('region'))){
+						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
+											->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+											->join('regions', 'regions.id', '=', 'amounts.region_id')
+											->where('regions.id', '=', Input::get('region'));
+					}else{
+						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id');
+					}
 
-				// 	$empty_question = $empty_question->where('questions.id','=', Input::get('question'))	 
-				// 						->where('questions.question_category_id', '=', Input::get('category'))	 
-				// 						->first();
+					$empty_question = $empty_question->where('questions.id','=', Input::get('question'))	 
+										->where('questions.question_category_id', '=', Input::get('category'))	 
+										->first();
 
-				// 	if(isset($empty_question)){
-				// 		Input::merge(array('empty' => 0)); 
-				// 	}else{
-	 		// 			Input::merge(array('empty' => 1));
-				// 	}
-				// 	/*-- End --*/
+					if(isset($empty_question)){
+						Input::merge(array('empty' => 0)); 
+					}else{
+	 					Input::merge(array('empty' => 1));
+					}
+					/*-- End --*/
 
-				// 	$default_questions = Question::LoadQuestion(Input::get());
-				// 	if (empty($default_questions)) {
-				// 		return 0;
-				// 	}
+					$default_questions = Question::LoadQuestion(Input::get());
+					if (empty($default_questions)) {
+						return 0;
+					}
 
-				// 	$default_question = reset($default_questions);
+					$default_question = reset($default_questions);
 
-				// 	$cycle_data = Input::get('empty') == 0 ? Cycle::QuestionCycle($default_question) : 0;
-				// 	$region_color = Input::get('empty') == 0 ? QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions) : 0;
-				// 	$empty_answer = Input::get('empty') == 0 ? 0 : 1;
+					$cycle_data = Input::get('empty') == 0 ? Cycle::QuestionCycle($default_question) : 0;
+					$region_color = Input::get('empty') == 0 ? QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions) : 0;
+					$empty_answer = Input::get('empty') == 0 ? 0 : 1;
 
-				// 	$load_filter = array();
-				// 	$load_filter = array(
-				// 		"survey" => Survey::first(),
-				// 		"default_question" => $default_question,
-				// 		"question" => $default_questions,
-				// 		"cycles" => $cycle_data,
-				// 		"regions" => $region_color,
-				// 		"empty_answer" => $empty_answer
-				// 	);
+					$load_filter = array();
+					$load_filter = array(
+						"survey" => Survey::first(),
+						"default_question" => $default_question,
+						"question" => $default_questions,
+						"cycles" => $cycle_data,
+						"regions" => $region_color,
+						"empty_answer" => $empty_answer
+					);
 
-				// 	$return = count($default_questions) > 0 ? $load_filter : 0;
+					$return = count($default_questions) > 0 ? $load_filter : 0;
 
-				// 	return $return;
-				// 	break; 
+					return $return;
+					break;
 
 				case 'filters':
 					$default_questions = Question::FilterQuestion(Input::get());;
@@ -161,76 +160,76 @@ class HomeController extends BaseController {
 					return $return;
 					break;
 
-				// case 'next_question':
-				// 	/*-- Define empty answers --*/
-				// 	$empty_question = Question::select(DB::raw('distinct questions.id'));
+				case 'next_question':
+					/*-- Define empty answers --*/
+					$empty_question = Question::select(DB::raw('distinct questions.id'));
 
-				// 	if(!empty(Input::get('region'))){
-				// 		$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
-				// 							->join('amounts', 'amounts.answer_id', '=', 'answers.id')
-				// 							->join('regions', 'regions.id', '=', 'amounts.region_id')
-				// 							->where('regions.id', '=', Input::get('region'));
-				// 	}else{
-				// 		$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id');
-				// 	}
+					if(!empty(Input::get('region'))){
+						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id')
+											->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+											->join('regions', 'regions.id', '=', 'amounts.region_id')
+											->where('regions.id', '=', Input::get('region'));
+					}else{
+						$empty_question = $empty_question->join('answers', 'answers.question_id', '=', 'questions.id');
+					}
 
-				// 	$empty_question = $empty_question->where('questions.id','=', Input::get('question'))	 
-				// 						->where('questions.question_category_id', '=', Input::get('category'))	 
-				// 						->first();
+					$empty_question = $empty_question->where('questions.id','=', Input::get('question'))	 
+										->where('questions.question_category_id', '=', Input::get('category'))	 
+										->first();
 
-				// 	if(isset($empty_question)){
-				// 		Input::merge(array('empty' => 0));	 
-				// 	}else{
-	 		// 			Input::merge(array('empty' => 1));
-				// 	}
-				// 	/*-- End --*/
+					if(isset($empty_question)){
+						Input::merge(array('empty' => 0));	 
+					}else{
+	 					Input::merge(array('empty' => 1));
+					}
+					/*-- End --*/
 
-				// 	$default_questions = Question::NextQuestion(Input::get());
-				// 	// print_r($default_questions);
-				// 	if (empty($default_questions[0])) {
-				// 		return 0;
-				// 	}
+					$default_questions = Question::NextQuestion(Input::get());
+					// print_r($default_questions);
+					if (empty($default_questions[0])) {
+						return 0;
+					}
 
-				// 	/*-- Define condition for empty answer --*/
-				// 	$empty_answer = 0; 
-				// 	if($default_questions[1] == 0){	 
-				// 		$region_color = QuestionParticipant::RegionColor(0,$default_questions[0]);	 
-				// 	}elseif($default_questions[1] == 1){	 
-				// 		$region_color = 0;	 
-				// 		$empty_answer = 1;
-				// 	}
-				// 	/*-- End --*/
+					/*-- Define condition for empty answer --*/
+					$empty_answer = 0; 
+					if($default_questions[1] == 0){	 
+						$region_color = QuestionParticipant::RegionColor(0,$default_questions[0]);	 
+					}elseif($default_questions[1] == 1){	 
+						$region_color = 0;	 
+						$empty_answer = 1;
+					}
+					/*-- End --*/
 
-				// 	/*-- Inisiate compare availability --*/
-				// 	$compare_available = 0;
-				// 	$compare = Question::select(DB::raw('questions.id, cycles.cycle_type'))
-				// 				->join('answers', 'answers.question_id', '=', 'questions.id')
-				// 				->join('cycles', 'cycles.id', '=', 'answers.cycle_id')
-				// 				->where('questions.id', '=', $default_questions[0][0]->id_question)
-				// 				->where('questions.question_category_id', '=', Input::get('category'))
-				// 				->groupBy('cycles.cycle_type')
-				// 				->get()
-				// 				->toArray();
+					/*-- Inisiate compare availability --*/
+					$compare_available = 0;
+					$compare = Question::select(DB::raw('questions.id, cycles.cycle_type'))
+								->join('answers', 'answers.question_id', '=', 'questions.id')
+								->join('cycles', 'cycles.id', '=', 'answers.cycle_id')
+								->where('questions.id', '=', $default_questions[0][0]->id_question)
+								->where('questions.question_category_id', '=', Input::get('category'))
+								->groupBy('cycles.cycle_type')
+								->get()
+								->toArray();
 
-				// 	if(count($compare) == 2){
-				// 		$compare_available = 1;
-				// 	}
-				// 	/*-- End --*/
+					if(count($compare) == 2){
+						$compare_available = 1;
+					}
+					/*-- End --*/
 
-				// 	$default_question = reset($default_questions);
-				// 	$load_filter = array(
-				// 		"survey" => Survey::first(),
-				// 		"default_question" => $default_question[0],
-				// 		"question" => $default_questions[0],
-				// 		"regions" => $region_color,
-				// 		"compare_available" => $compare_available,
-				// 		"empty_answer" => $empty_answer
-				// 	);
+					$default_question = reset($default_questions);
+					$load_filter = array(
+						"survey" => Survey::first(),
+						"default_question" => $default_question[0],
+						"question" => $default_questions[0],
+						"regions" => $region_color,
+						"compare_available" => $compare_available,
+						"empty_answer" => $empty_answer
+					);
 
-				// 	$return = count($default_questions) > 0 ? $load_filter : 0;
+					$return = count($default_questions) > 0 ? $load_filter : 0;
 
-				// 	return $return;
-				// 	break;
+					return $return;
+					break;
 
 				case 'survey_area_dynamic':
 	 
