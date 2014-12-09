@@ -166,7 +166,8 @@ class SurveyController extends AvelcaController {
 			$row = 0;
 			if ($key_temporary_headers > 2) {
 				foreach ($temporary_header as $key => $value) {
-					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|""]\n\r/', '', $value);
+					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $value);
+					$dataval = str_replace('"', "", $dataval);
 					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
 
 					$header[$key_temporary_headers]['header'.$row] = $dataval;
@@ -192,18 +193,14 @@ class SurveyController extends AvelcaController {
 		$request = Input::get();
 		// Load survey
 		$survey = Survey::where('id', '=', Input::get('survey_id'))->first();
-		$survey->publish = 6;
+		$survey->publish = 3;
 		$survey->save();
 
-		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 1));
-		$delayed_job_id = $insert_queue->id;
+		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 0));
+		foreach ($request['options_selected'] as $key_options_selected => $options_selected) {
+			MasterCode::savingProcess($survey,$options_selected);
+		}
 
-		$assign = new Assign;
-		$assign->survey_id = Input::get('survey_id');
-		$assign->delayed_job_id = (string)$delayed_job_id;
-		$assign->data = json_encode($request['options_selected']);
-		$assign->save();
-		
 		Session::flash('alert-class', 'alert-success'); 
 		Session::flash('message', 'Importing File is in progress');
 		

@@ -327,6 +327,27 @@ class Survey extends Eloquent {
 		);
 		DB::raw("LOAD DATA LOCAL INFILE '$inputFileName' into table 'header_participants' fields terminated by '|' ignore 1 lines");
 
+		$columns = "";
+		$survey = Survey::where('id', '=', 1)->first();
+		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
+		$fp = fopen($inputFileName, 'r');
+		$frow = fgetcsv($fp);
+
+		$schema_texts = array();
+		foreach($frow as $key => $column) {
+			$schema_texts[$key] = $column;
+		}
+
+		Schema::create('temporary_participants', function($table) use ($schema_texts) {
+			$table->bigIncrements("id")->unsigned();
+
+			foreach ($schema_texts as $key => $schema_text) {
+				$table->text($schema_text)->nullable();
+			}
+		}
+		);
+		DB::raw("LOAD DATA LOCAL INFILE '$inputFileName' into table 'temporary_participants' fields terminated by '|' ignore 1 lines");
+
 		return $data_label;
 	}
 
