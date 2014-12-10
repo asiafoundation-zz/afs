@@ -24,8 +24,7 @@
 									'{{ $header_single['header1'] }}',
 									'{{ $header_single['header2'] }}',
 									'{{ $header_single['header3'] }}',
-									'{{ $header_single['header4'] }}',
-									'{{ $header_single['header5'] }}')">{{ $header_single['header3']}}</option>
+									'{{ $header_single['header4'] }}')">{{ $header_single['header3']}}</option>
 							@endforeach
 						@endif
 					</select>
