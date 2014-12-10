@@ -6,6 +6,7 @@
       // console.log("clear");
       clear_all_filter_nosurvey();
       clear_text_notification();
+      $(".chart-pagination").show();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
