@@ -434,8 +434,6 @@ class Survey extends Eloquent {
 		}
 
 		Schema::create('temporary_headers', function($table) use ($schema_texts) {
-			$table->bigIncrements("id")->unsigned();
-
 			foreach ($schema_texts as $key => $schema_text) {
 				$table->text($schema_text)->nullable();
 			}
