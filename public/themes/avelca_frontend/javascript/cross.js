@@ -159,12 +159,16 @@ $(document).ready(function(){
   // });
 
   $('.clear-all').click(function(){
-    FilterSelect.region = "";
-    option_filters_default = [];
-    filter_option(0);
-    clear_all_filter_nosurvey();
-    find_survey();
-
-    disable_anchor($(this), 0);
+    clear_filter();    
   })
 })
+
+function clear_filter(){
+  FilterSelect.region = "";
+  option_filters_default = [];
+  filter_option(0);
+  clear_all_filter_nosurvey();
+  find_survey();
+
+  disable_anchor($(this), 0);
+}
