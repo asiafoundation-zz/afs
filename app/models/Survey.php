@@ -441,7 +441,7 @@ class Survey extends Eloquent {
 			}
 		}
 		);
-		DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table header_participants FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
+		DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table temporary_headers FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
 
 		return $data_label;
 	}
