@@ -254,8 +254,6 @@
               }
             }
 
-            console.log('base : '+ total_amount_base +' | end : '+ total_amount_end);
-
             for (i = 0; i < data.question.length; i++) {
               if (data.question[i].cycle_type == 0) {
 
