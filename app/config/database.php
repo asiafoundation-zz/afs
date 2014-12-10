@@ -62,11 +62,7 @@ return array(
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 		),
-		/*
-			'database'  => 'agusam_asia_foundation_survey',
-			'username'  => 'agusam',
-			'password'  => 'agusam1010',
-			*/
+
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
@@ -85,16 +81,7 @@ return array(
 			'username' => 'root',
 			'password' => '',
 			'prefix'   => '',
-		),
-		
-		'mongodb' => array(
-			'driver'   => 'mongodb',
-			'host'     => 'localhost',
-			'port'     => 27017,
-			'username' => '',
-			'password' => '',
-			'database' => 'asia_foundation_survey'
-		),
+		)
 	),
 
 	/*
