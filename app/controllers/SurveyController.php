@@ -196,7 +196,7 @@ class SurveyController extends AvelcaController {
 		$survey->publish = 3;
 		$survey->save();
 
-		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 0));
+		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 1));
 		foreach ($request['options_selected'] as $key_options_selected => $options_selected) {
 			MasterCode::savingProcess($survey,$options_selected);
 		}

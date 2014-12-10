@@ -48,8 +48,8 @@ class BackgroundCommand extends Command {
 		// while (true) {
 		$delayed_jobs = DelayedJob::where('queue','=',1)->orderBy('id', 'DESC')->first();
 		if (isset($delayed_jobs)) {
-			// $delayed_jobs->queue = 0;
-			// $delayed_jobs->save();
+			$delayed_jobs->queue = 0;
+			$delayed_jobs->save();
 
 			$status = 0;
 			$survey = Survey::where('id', '=', $delayed_jobs->survey_id)->first();
@@ -71,14 +71,9 @@ class BackgroundCommand extends Command {
 				  $import = Survey::importDataQuery($survey,$master_code);
 
 				  // Delete Header Data
-			    $header_delete = Header::find(['survey_id'=>(string)$survey->id])->first();
-			    if ($header_delete) {
-			    	$header_delete->delete();
-			    }
-
-			    $active_delayed_job_id = $delayed_jobs->id;
+				  $active_delayed_job_id = $delayed_jobs->id;
 				  $active_delayed_job = DelayedJob::find($active_delayed_job_id);
-				  // $active_delayed_job->delete();
+				  $active_delayed_job->delete();
 
 			    $question_default = Question::where('is_default','=',1)->count();
 			    if ($question_default == 0) {

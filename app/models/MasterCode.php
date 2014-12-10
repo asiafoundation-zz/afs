@@ -95,7 +95,7 @@ class MasterCode extends Eloquent {
 
 			// Save question and question category
 			if ($options_selected['category'] == 3) {
-				$category = Category::checkData($code_labels,$code->id,$survey->id);
+				$category = Category::checkData($options_selected['code'],$code->id,$survey->id);
 			}
 			if ($options_selected['category'] == 4) {
 				// Save category question 

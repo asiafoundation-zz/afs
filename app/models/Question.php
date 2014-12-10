@@ -159,7 +159,7 @@ class Question extends Eloquent {
 				$questions =  $questions->join('regions','regions.id','=','amounts.region_id');
 			}
 
-			$questions = $questions->where('amounts.sample_type', '=', 0);
+			// $questions = $questions->where('amounts.sample_type', '=', 0);
 		}
 
 		return $questions;

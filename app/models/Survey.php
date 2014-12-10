@@ -161,67 +161,84 @@ class Survey extends Eloquent {
 
 	public static function importDataQuery($survey,$master_code)
 	{
-		// $columns = "";
-		// $survey = Survey::where('id', '=', 1)->first();
-		// $inputFileName = public_path().'/uploads/'.$survey->baseline_file;
-		// $fp = fopen($inputFileName, 'r');
-		// $frow = fgetcsv($fp,0, ',');
+		$columns = "";
+		$survey = Survey::where('id', '=', 1)->first();
+		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
+		$fp = fopen($inputFileName, 'r');
+		$frow = fgetcsv($fp,0, ',');
 
-		// $schema_texts = array();
-		// foreach($frow as $key => $column) {
-		// 	$schema_texts[$key] = $column;
-		// }
+		$schema_texts = array();
+		foreach($frow as $key => $column) {
+			$schema_texts[$key] = $column;
+		}
 
-		// Schema::create('temporary_participants', function($table) use ($schema_texts) {
-		// 	foreach ($schema_texts as $key => $schema_text) {
-		// 		$table->text($schema_text)->nullable();
-		// 	}
-		// }
-		// );
-		// DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table temporary_participants FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
+		Schema::create('temporary_participants', function($table) use ($schema_texts) {
+			foreach ($schema_texts as $key => $schema_text) {
+				$table->text($schema_text)->nullable();
+			}
+		}
+		);
+		DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table temporary_participants FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
+		DB::table('participants')->truncate();
 
-		// DB::statement("ALTER TABLE temporary_participants ADD(participant_id int)");
-		// DB::statement("UPDATE temporary_participants, (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
+		DB::statement("ALTER TABLE temporary_participants ADD(participant_id int)");
+		DB::statement("UPDATE temporary_participants, (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
 
 		DB::statement("INSERT INTO cycles(NAME, cycle_type)
 			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM temporary_participants)");
 		DB::statement("INSERT INTO regions(NAME, code_id)
 			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM temporary_participants)");
+		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
+			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM temporary_participants)");
 
-		// $sql_commands = "
-		// UPDATE temporary_participants a 
-		// SET
-		// ";
-		// $update_filter_sql = "";
-		// foreach ($master_code as $key_master_code => $single_code) {
-		// 	if ($single_code['type'] == 0) {
-		// 		$update_filter_sql .= "sfl_prov = (SELECT id FROM regions WHERE name = substr(a.sfl_prov, 4, length(a.sfl_prov)) LIMIT 1),";
-		// 	}
-		// 	if ($single_code['type'] == 1) {
-		// 		$update_filter_sql .= "sfl_wave = (SELECT id FROM cycles WHERE name = a.sfl_wave LIMIT 1),";
-		// 	}
-		// 	//Not implemets
-		// 	if ($single_code['type'] == 2) {
-		// 		$update_filter_sql .= "";
-		// 	}
-		// 	if ($single_code['type'] == 3) {
-		// 		DB::statement("INSERT INTO categories(NAME, code_id, display_name)
-		// 			(SELECT DISTINCT ".strtolower($single_code['code']).",".$single_code['code_id'].",".$single_code['code']." FROM temporary_participants)");
+		$sql_commands = "
+		UPDATE temporary_participants a 
+		SET
+		";
+		$update_filter_sql = "";
+		foreach ($master_code as $key_master_code => $single_code) {
+			if ($single_code['type'] == 0) {
+				$update_filter_sql .= "sfl_prov = (SELECT id FROM regions WHERE name = substr(a.sfl_prov, 4, length(a.sfl_prov))),";
+			}
+			if ($single_code['type'] == 1) {
+				$update_filter_sql .= "sfl_wave = (SELECT id FROM cycles WHERE name = a.sfl_wave),";
+				break;
+			}
+		}
+		$update_filter_sql = substr_replace($update_filter_sql ,";",-1);
 
-		// 		$update_filter_sql .= strtolower($single_code['code'])." = (SELECT id FROM categories WHERE name = a.".strtolower($single_code['code'])." LIMIT 1),";
-		// 	}
-		// }
-		// $update_filter_sql = substr_replace($update_filter_sql ,";",-1);
-
-		// $sql_commands .= $update_filter_sql;
-		// DB::statement($sql_commands);
+		$sql_commands .= $update_filter_sql;
+		DB::statement($sql_commands);
 
 		DB::table('answers')->truncate();
 		DB::table('question_participants')->truncate();
+		DB::table('filter_participants')->truncate();
+
+		$categories = DB::table('categories')->get();
+		foreach ($categories as $key_categories => $category) {
+			$sql_commands = "
+			INSERT INTO category_items(NAME, category_id, TYPE, `ORDER`)
+			(SELECT distinct CASE IFNULL( sfl_".$category->name.", ' ') WHEN ' ' THEN 'Not Answered' ELSE sfl_".$category->name." END , ".$category->id.", 0,0 FROM temporary_participants)
+				";
+			DB::statement($sql_commands);
+
+			$sql_commands = "
+			UPDATE temporary_participants t
+			SET sfl_".$category->name." =
+			(SELECT id FROM category_items c WHERE t.sfl_".$category->name." = c.name LIMIT 1)
+			";
+			DB::statement($sql_commands);
+
+			$sql_commands = "
+			INSERT INTO filter_participants(participant_id, category_item_id)
+			(SELECT participant_id, sfl_".$category->name." FROM temporary_participants)
+			";
+			DB::statement($sql_commands);
+		}
 
 		foreach ($master_code as $key_master_code => $single_code)
 		{
-				if($single_code['type'] == 4){
+			if($single_code['type'] == 4){
 				$question_id = DB::select(DB::raw("SELECT q.id FROM questions q
 					JOIN codes c ON q.code_id = c.id JOIN master_codes m ON c.master_code_id = m.id
 					WHERE m.master_code = '".$single_code['master_code']."'"));
@@ -229,7 +246,7 @@ class Survey extends Eloquent {
 
 				$sql_commands = "
 				INSERT INTO answers(answer, question_id, cycle_id)
-				(SELECT distinct '".$single_code['code']."', ".$question_id.", sfl_wave FROM temporary_participants);
+				(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave FROM temporary_participants);
 				";
 				DB::statement($sql_commands);
 
@@ -237,7 +254,7 @@ class Survey extends Eloquent {
 				UPDATE temporary_participants t
 
 				SET ".$single_code['code']." = (SELECT id FROM answers a
-           WHERE question_id = ".$question_id." AND t.".$single_code['code']." = t.answer LIMIT 1);";
+           WHERE question_id = ".$question_id." AND t.".$single_code['code']." = a.answer LIMIT 1);";
 				DB::statement($sql_commands);
 
 				$sql_commands = "
@@ -247,11 +264,22 @@ class Survey extends Eloquent {
 				DB::statement($sql_commands);
 				}
 			}
-			die();
-		Schema::drop('temporary_headers');
-		Schema::drop('temporary_participants');
+			DB::statement("INSERT INTO amounts(amount, answer_id, region_id, sample_type) (SELECT q.participant_id, q.answer_id, q.region_id, p.sample_type FROM question_participants q JOIN participants p ON p.id = q.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type);");
+			DB::statement("INSERT INTO amount_filters(amount, answer_id, region_id, sample_type, category_item_id)(SELECT q.participant_id, q.answer_id, q.region_id, p.sample_type, f.category_item_id FROM question_participants q JOIN participants p ON p.id = q.participant_id JOIN filter_participants f ON q.participant_id = f.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type, f.category_item_id)");
 
-	}
+			$answers = DB::table('answers')->select(DB::raw("count(*) as count"))->groupBy('question_id')->groupBy('cycle_id')->get();
+
+			foreach ($answers as $key_answers => $answer) {
+				$color = 0;
+				for ($i=0; $i < (int)$answer->count; $i++) {
+					$color = $color == 30 ? 1 : $color++;
+					DB::statement("UPDATE answers SET color_id = ".$color);
+				}
+			}
+
+			Schema::drop('temporary_headers');
+			Schema::drop('temporary_participants');
+		}
 
 	public static function importData($survey,$master_code,$excel_data)
 	{
