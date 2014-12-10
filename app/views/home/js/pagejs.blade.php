@@ -3,6 +3,7 @@
      function find_survey()
      {
       // Get cycles functions
+      // console.log("clear");
       clear_all_filter_nosurvey();
       clear_text_notification();
       $('#chart_canvas').hide();
@@ -154,6 +155,7 @@
         if(value == 0){
           var option_filters = "";
           var filter_text = "";
+          return false;
         }else{
           var option_filters = text_area_filter_process[0];
           var filter_text = text_area_filter_process[1];

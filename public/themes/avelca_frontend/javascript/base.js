@@ -273,6 +273,16 @@ function disable_anchor(selector, enable_flag){
   }
 }
 
+function clear_filter(){
+  FilterSelect.region = "";
+  option_filters_default = [];
+  filter_option(0);
+  clear_all_filter_nosurvey();
+  find_survey();
+
+  disable_anchor($(this), 0);
+}
+
 /*
 * -----------------------------------------END Filter Category  JS--------------------------
 */
