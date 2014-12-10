@@ -460,11 +460,11 @@ class Question extends Eloquent {
 							(select max(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.id ";
+									inner join answers on answers.question_id = questions.id
+									inner join amounts on amounts.answer_id = answers.id ";
 			
 			if (!empty($request['region'])) {
-				$query_raw .= " left join amounts on amounts.answer_id = answers.id
-								left join regions on regions.id = amounts.region_id ";	
+				$query_raw .= " inner join regions on regions.id = amounts.region_id ";	
 			}
 
 			$query_raw .= "where questions.id < ".$request['question'];
@@ -507,11 +507,11 @@ class Question extends Eloquent {
 							(select min(questions.id) 
 								from questions 
 									inner join question_categories on question_categories.id=questions.question_category_id
-									left join answers on answers.question_id = questions.id ";
+									inner join answers on answers.question_id = questions.id
+									inner join amounts on amounts.answer_id = answers.id ";
 			
 			if (!empty($request['region'])) {
-				$query_raw .= " left join amounts on amounts.answer_id = answers.id
-								left join regions on regions.id = amounts.region_id ";	
+				$query_raw .= " inner join regions on regions.id = amounts.region_id ";	
 			}
 
 			$query_raw .= "where questions.id > ".$request['question'];
