@@ -344,6 +344,7 @@
               }
             }
 
+            $("#filter-by-label").text("{{Lang::get('frontend.all_survey')}}");
 
             if(data.regions != 0){
               $('#chart_canvas').show();
