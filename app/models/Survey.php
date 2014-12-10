@@ -439,8 +439,9 @@ class Survey extends Eloquent {
 			foreach ($schema_texts as $key => $schema_text) {
 				$table->text($schema_text)->nullable();
 			}
+		}
 		);
-		DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table header_participants FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");return $data_label;
+		DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table header_participants FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
 
 		return $data_label;
 	}
