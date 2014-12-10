@@ -116,7 +116,7 @@
               <!-- Update 28112014 -->
 
                <li>          
-                <a class="clear-all">{{Lang::get('frontend.clear_all')}}</a>
+                <a class="clear-all" onclick="clear_filter()">{{Lang::get('frontend.clear_all')}}</a>
               </li>
             </ul>
           </div>
