@@ -164,140 +164,134 @@ class Survey extends Eloquent {
 		set_time_limit(0);
 		// parse data
 		$status = 0;
-		// try{
-		// 	DB::beginTransaction();
-			foreach ($excel_data as $lists_data) {
-				$questions_list = array();
-				$category_items = array();
-				$i=0;$j=0;
-				$oversample_id = 0;
-				foreach ($lists_data as $column => $data) {
-					if (!empty($master_code[$column])) {
-						// remove special characters and number
-						$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
-						switch ($master_code[$column]['type']) {
-							case 0:
-								// Check region exist
-								$data_str = $data_str[0] == " " ? substr($data_str,1) : $data_str;
-								$region_id = Region::checkData($data_str,$master_code[$column]['code_id']);
-								break;
-							case 1:
-								$cycle_type = strtolower($data) == 'baseline' ? 0 : 1;
-								// Check wave exist
-								$cycle_id = Cycle::checkData($data_str,$cycle_type);
-								break;
-							case 2:
-								// Check oversample
-								$oversample_id = preg_replace('/[^0-9]/', "", $data);
-								$oversample_id = $oversample_id == 1 ? 0 : 1;
-								break;
-							case 3:
-								$column_piece = explode("_", $column);
-								$code_label = !empty($column_piece[1]) ? $column_piece[1] : "";
 
-								// Check category exist
-								$category = Category::checkData($code_label,$master_code[$column]['code_id'],$survey->id);
+		foreach ($excel_data as $lists_data) {
+			$questions_list = array();
+			$category_items = array();
+			$i=0;$j=0;
+			$oversample_id = 0;
+			foreach ($lists_data as $column => $data) {
+				if (!empty($master_code[$column])) {
+					// remove special characters and number
+					$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
+					switch ($master_code[$column]['type']) {
+						case 0:
+							// Check region exist
+							$data_str = $data_str[0] == " " ? substr($data_str,1) : $data_str;
+							$region_id = Region::checkData($data_str,$master_code[$column]['code_id']);
+							break;
+						case 1:
+							$cycle_type = strtolower($data) == 'baseline' ? 0 : 1;
+							// Check wave exist
+							$cycle_id = Cycle::checkData($data_str,$cycle_type);
+							break;
+						case 2:
+							// Check oversample
+							$oversample_id = preg_replace('/[^0-9]/', "", $data);
+							$oversample_id = $oversample_id == 1 ? 0 : 1;
+							break;
+						case 3:
+							$column_piece = explode("_", $column);
+							$code_label = !empty($column_piece[1]) ? $column_piece[1] : "";
 
-								$category_item_data = CategoryItem::checkData($data,$category->id);
-								$category_items[$i] = array(
-									'category_item_id' => $category_item_data
-									);
-								$i++;
-								break;
-							case 4:
-								if (!empty($data)) {
-								// Check answers exist
-								$question_category = Question::select(
-									DB::raw(
-										'question_categories.id as question_category_id'
-										)
+							// Check category exist
+							$category = Category::checkData($code_label,$master_code[$column]['code_id'],$survey->id);
+
+							$category_item_data = CategoryItem::checkData($data,$category->id);
+							$category_items[$i] = array(
+								'category_item_id' => $category_item_data
+								);
+							$i++;
+							break;
+						case 4:
+							if (!empty($data)) {
+							// Check answers exist
+							$question_category = Question::select(
+								DB::raw(
+									'question_categories.id as question_category_id'
 									)
-								->join('question_categories', 'question_categories.id', '=', 'questions.question_category_id')
-								->where('questions.code_id', '=', $master_code[$column]['code_id'])
-								->first();
-
-								$question = Question::where('code_id','=',$master_code[$column]['code_id'])->where('question_category_id','=',$question_category->question_category_id)->first();
-								$answer = Answer::checkData($data,$question->id,$cycle_id,1);
-
-								$questions_list[$j]['answer_id'] = $answer->id;
-								$questions_list[$j]['region_id'] = $region_id;
-								$questions_list[$j]['sample_type'] = $oversample_id;
-								$j++;
-								}
-								
-								break;
-
-							default:
-								continue;
-								break;
-						}
-					}
-				}
-
-				// Save participant
-				$participant = new Participant;
-				$participant->survey_id = $survey->id;
-				$participant->sample_type = $oversample_id;
-				$participant->save();
-
-				$question_participants_massive_save = array();
-				$amount_massive_save = array();
-				$l=0;
-				foreach ($questions_list as $key => $question_list) {
-
-					$question_participants_massive_save[$key] = array(
-							'answer_id' => $question_list['answer_id'],
-							'participant_id' => $participant->id,
-							'region_id' => $question_list['region_id'],
-							'sample_type' => $question_list['sample_type'],
-							);
-
-						if (!$question_list['sample_type']) {
-							$amount = Amount::where('answer_id', '=', $question_list['answer_id'])
-							->where('region_id','=', $question_list['region_id'])
-							->where('sample_type', '=', 0)
+								)
+							->join('question_categories', 'question_categories.id', '=', 'questions.question_category_id')
+							->where('questions.code_id', '=', $master_code[$column]['code_id'])
 							->first();
 
-							if(!isset($amount))
-							{
-								$amount_massive_save[$l] = array(
-									'answer_id' => $question_list['answer_id'],
-									'participant_id' => $participant->id,
-									'region_id' => $question_list['region_id'],
-									'sample_type' => $question_list['sample_type'],
-								);
-								$l++;
+							$question = Question::where('code_id','=',$master_code[$column]['code_id'])->where('question_category_id','=',$question_category->question_category_id)->first();
+							$answer = Answer::checkData($data,$question->id,$cycle_id,1);
+
+							$questions_list[$j]['answer_id'] = $answer->id;
+							$questions_list[$j]['region_id'] = $region_id;
+							$questions_list[$j]['sample_type'] = $oversample_id;
+							$j++;
 							}
-							else
-							{
-								$amount->amount = $amount->amount+1;
-								$amount->save();	
-							}
+							
+							break;
+
+						default:
+							continue;
+							break;
+					}
+				}
+			}
+
+			// Save participant
+			$participant = new Participant;
+			$participant->survey_id = $survey->id;
+			$participant->sample_type = $oversample_id;
+			$participant->save();
+
+			$question_participants_massive_save = array();
+			$amount_massive_save = array();
+			$l=0;
+			foreach ($questions_list as $key => $question_list) {
+
+				$question_participants_massive_save[$key] = array(
+						'answer_id' => $question_list['answer_id'],
+						'participant_id' => $participant->id,
+						'region_id' => $question_list['region_id'],
+						'sample_type' => $question_list['sample_type'],
+						);
+
+					if (!$question_list['sample_type']) {
+						$amount = Amount::where('answer_id', '=', $question_list['answer_id'])
+						->where('region_id','=', $question_list['region_id'])
+						->where('sample_type', '=', 0)
+						->first();
+
+						if(!isset($amount))
+						{
+							$amount_massive_save[$l] = array(
+								'answer_id' => $question_list['answer_id'],
+								'participant_id' => $participant->id,
+								'region_id' => $question_list['region_id'],
+								'sample_type' => $question_list['sample_type'],
+							);
+							$l++;
+						}
+						else
+						{
+							$amount->amount = $amount->amount+1;
+							$amount->save();	
 						}
 					}
-
-				$amount_massive_save = array();
-				foreach ($category_items as $key => $category_item) {
-					$amount_massive_save[$key] = array(
-						'participant_id'=>$participant->id,
-						'category_item_id'=>$category_item['category_item_id']
-					);
 				}
-				DB::table('question_participants')->insert($question_participants_massive_save);
-				DB::table('filter_participants')->insert($amount_massive_save);
 
-				AmountFilter::checkData($participant->id);
-				Log::info('Participant:'.$participant->id);
+			$amount_massive_save = array();
+			foreach ($category_items as $key => $category_item) {
+				$amount_massive_save[$key] = array(
+					'participant_id'=>$participant->id,
+					'category_item_id'=>$category_item['category_item_id']
+				);
 			}
-		// 	DB::commit();
-		// 	$status = 1;
-		// }
-		// catch(\PDOException $e){
-  //     DB::rollback();
-  //     $status = 0;
-  //   }
-    return $status;
+			DB::table('question_participants')->insert($question_participants_massive_save);
+			DB::table('filter_participants')->insert($amount_massive_save);
+
+			AmountFilter::checkData($participant->id);
+			Log::info('Participant:'.$participant->id);
+		}
+
+    	return $status;
 	}
+
 	Public static function readHeaderCSV($survey,$delayed_jobs = array())
 	{
 		set_time_limit(0);
@@ -323,8 +317,7 @@ class Survey extends Eloquent {
 			foreach ($schema_texts as $key => $schema_text) {
 				$table->text($schema_text)->nullable();
 			}
-		}
-		);
+		});
 		DB::raw("LOAD DATA LOCAL INFILE '$inputFileName' into table 'header_participants' fields terminated by '|' ignore 1 lines");
 
 		$columns = "";
@@ -385,73 +378,73 @@ class Survey extends Eloquent {
 	    $highestColumnIndex_2 = PHPExcel_Cell::columnIndexFromString($highest_column_2);
 
 	    // Reformat Array
-			for($row = 5; $row <= $highestRow_1; ++$row){
-				for($col = 0; $col <= $highestColumnIndex_1; ++$col){
-					$dataval = $objWorksheet_1->getCellByColumnAndRow($col, $row)->getValue();
-					if ($col != 1) {
-						$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|\n\r]/', '', $dataval);
-						$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
-					}
-					$data_label[$row]['header'.$col] = $dataval;
+		for($row = 5; $row <= $highestRow_1; ++$row){
+			for($col = 0; $col <= $highestColumnIndex_1; ++$col){
+				$dataval = $objWorksheet_1->getCellByColumnAndRow($col, $row)->getValue();
+				if ($col != 1) {
+					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|\n\r]/', '', $dataval);
+					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
 				}
-
-				if (empty($data_label[$row]['header1'])) {
-					break;
-				}
-			}
-			// Save header to MongoDB
-			if (!empty($data_label)) {
-				$header = new Header;
-				$header->survey_id = $survey->id;
-				$header->delayed_job_id = $delayed_jobs->id;
-				$header->data = json_encode($data_label);
-				$header->save();
+				$data_label[$row]['header'.$col] = $dataval;
 			}
 
-			$multiple_flag = 50;Log::info($highestRow_2);
+			if (empty($data_label[$row]['header1'])) {
+				break;
+			}
+		}
+		// Save header to MongoDB
+		if (!empty($data_label)) {
+			$header = new Header;
+			$header->survey_id = $survey->id;
+			$header->delayed_job_id = $delayed_jobs->id;
+			$header->data = json_encode($data_label);
+			$header->save();
+		}
+
+		$multiple_flag = 50;Log::info($highestRow_2);
 
     	for($row = 1; $row <= $highestRow_2; ++$row){
-				for($col = 0; $col <= $highestColumnIndex_2; ++$col){
-					$dataval = $objWorksheet_2->getCellByColumnAndRow($col, $row)->getValue();
+			for($col = 0; $col <= $highestColumnIndex_2; ++$col){
+				$dataval = $objWorksheet_2->getCellByColumnAndRow($col, $row)->getValue();
 
-					$dataval_header = $objWorksheet_2->getCellByColumnAndRow($col, $row)->getValue();
-					$dataval_header = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval_header);
-					
-					if ($row == 1) {
-						$first_column = strtolower($dataval);
-						$data_header[$col] = strtolower($dataval);
-					}
-					else
-					{
-						$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval);
-						$data[$row][$data_header[$col]] = $dataval;
-					}
+				$dataval_header = $objWorksheet_2->getCellByColumnAndRow($col, $row)->getValue();
+				$dataval_header = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval_header);
+				
+				if ($row == 1) {
+					$first_column = strtolower($dataval);
+					$data_header[$col] = strtolower($dataval);
 				}
-				if ($row == $multiple_flag) {Log::info('Row'.json_encode($data));
-					// Save z to MongoDB
-					if (!empty($data)) {
-						$participant = new ParticipantTemporary;
-						$participant->survey_id = $survey->id;
-						$participant->delayed_job_id = $delayed_jobs->id;
-						$participant->data = json_encode($data);
-						$participant->save();
-						// Reset Data
-						$data = array();
-
-						$multiple_flag +=50;
-					}
+				else
+				{
+					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $dataval);
+					$data[$row][$data_header[$col]] = $dataval;
 				}
 			}
-			if (!empty($data)) {Log::info('LastRow'.json_encode($data));
-				$participant = new ParticipantTemporary;
-				$participant->survey_id = $survey->id;
-				$participant->delayed_job_id = $delayed_jobs->id;
-				$participant->data = json_encode($data);
-				$participant->save();
-				// Reset Data
-				$data = array();
+			if ($row == $multiple_flag) {Log::info('Row'.json_encode($data));
+				// Save z to MongoDB
+				if (!empty($data)) {
+					$participant = new ParticipantTemporary;
+					$participant->survey_id = $survey->id;
+					$participant->delayed_job_id = $delayed_jobs->id;
+					$participant->data = json_encode($data);
+					$participant->save();
+					// Reset Data
+					$data = array();
+
+					$multiple_flag +=50;
+				}
 			}
-			return $data;
+		}
+		if (!empty($data)) {Log::info('LastRow'.json_encode($data));
+			$participant = new ParticipantTemporary;
+			$participant->survey_id = $survey->id;
+			$participant->delayed_job_id = $delayed_jobs->id;
+			$participant->data = json_encode($data);
+			$participant->save();
+			// Reset Data
+			$data = array();
+		}
+		return $data;
 	}
 
 	public static function deleteSurvey($id)
@@ -568,7 +561,7 @@ class Survey extends Eloquent {
 		catch(\PDOException $e){
 			DB::rollback();
 			$status = 0;
-    }
-    return $status;
+    	}
+    	return $status;
 	}
 }
