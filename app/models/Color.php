@@ -9,10 +9,6 @@ class Color extends Eloquent {
 	public $table = "colors";
 	public $timestamps = true;
 
-	
-
-	
-
 	/* Disabled Basic Actions */
 	public static $disabledActions = array();
 

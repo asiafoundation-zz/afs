@@ -28,7 +28,6 @@ class Question extends Eloquent {
 	public static $rules = array(
 		'code' => 'required',
 		'code_id' => 'required',
-		// 'question' => 'required',
 		'question_category_id' => 'required',
 		'is_default' => 'required'
 		);
@@ -147,7 +146,6 @@ class Question extends Eloquent {
 				$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id');
 			}
 			
-			// $questions = $questions->where('amounts.sample_type', '=', 0);			
 		}else{
 			$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id')
 							->join('answers','answers.question_id','=','questions.id')
@@ -275,16 +273,11 @@ class Question extends Eloquent {
 				->get();		
 
 		if (count($questions)) {
-			// if (!empty($request['answers'])) {
-			// 	if (count($questions) != count($request['answers'])) {
 			$questions = self::DifferentAnswer($questions,$request);
-			// 	}
-			// }
-
 			$questions = self::IndexLabel($questions);
 		}
 
-			// exit;
+		// exit;
 		return $questions;
 	}
 
@@ -304,12 +297,6 @@ class Question extends Eloquent {
 				if (!empty($request['region'])) {
 					$region = $request['region'];
 					$questions =  $questions->where('regions.id', '=', $region);
-					// $region_dapil = $request['region_dapil'];
-					// $questions = $questions->where(
-					// 	function ($query) use ($region,$region_dapil) {
-					// 		$query->where('regions.name', '=', (string)$region)
-					// 		->orWhere('regions.name', '=', (string)$region_dapil);
-					// });
 				}
 				if (!empty($request['cycle'])) {
 					if($request['empty'] == 0){
@@ -321,19 +308,14 @@ class Question extends Eloquent {
 			if($request['empty'] == 0){
 				$questions =  $questions->groupBy('answer')->get();
 				if (count($questions)) {
-					// if (!empty($request['answers'])) {
-					// 	if (count($questions) != count($request['answers'])) {
 					$questions = self::DifferentAnswer($questions,$request);
-					// 	}
-					// }
-
 					$questions = self::IndexLabel($questions);
 				}
 			}else{
 				$questions =  $questions->get();
 			}
 
-			// exit;
+		// exit;
 		return $questions;
 	}
 
