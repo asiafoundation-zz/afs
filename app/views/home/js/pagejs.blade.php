@@ -258,11 +258,9 @@
 
             for (i = 0; i < data.question.length; i++) {
               if (data.question[i].cycle_type == 0) {
-
                 baseline_text = data.question[i].cycle;
                 question_text = data.question[i].question;
                 FilterSelect.question = data.question[i].id_question;
-
                 var amount_percent = (parseInt(data.question[i].amount) / total_amount_base) * 100;
 
                 first_list.push({ y: parseInt(amount_percent), label: data.question[i].answer});
@@ -309,6 +307,7 @@
     {
       clear_all_filter_nosurvey();
       clear_text_notification();
+      disable_anchor($('.clear-all'), 0);
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions

@@ -203,7 +203,7 @@ class Question extends Eloquent {
 
 		// Count index label percentage
 		foreach ($questions as $key_questions => $question) {
-			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,1);
+			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,0);
 		}
 		// sort array based on amounts
 		usort($questions, function($a, $b) {
@@ -422,14 +422,12 @@ class Question extends Eloquent {
 			}
 		}
 
-		$is_cycles = $questions->groupBy('cycle_type')->get();
-		if (count($is_cycles) < 2) {
-			list($questions,$request) = Question::CompareCycle($request);self::CompareCycle($request);
-		}else{
-			$questions = $questions
+		// $is_cycles = $questions->groupBy('cycle_type')->get();
+		$questions = $questions->groupBy('cycle_type')
 			->groupBy('id_answer')
+			->orderBy('answer')
 			->get();
-		}
+
 		return array($questions,$request);
 	}
 

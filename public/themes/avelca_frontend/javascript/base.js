@@ -279,8 +279,8 @@ function clear_filter(){
   filter_option(0);
   clear_all_filter_nosurvey();
   find_survey();
-
-  disable_anchor($(this), 0);
+  
+  disable_anchor($('.clear-all'), 0);
 }
 
 /*
