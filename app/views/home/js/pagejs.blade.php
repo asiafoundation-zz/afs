@@ -3,8 +3,10 @@
      function find_survey()
      {
       // Get cycles functions
+      // console.log("clear");
       clear_all_filter_nosurvey();
       clear_text_notification();
+      $(".chart-pagination").show();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
@@ -80,7 +82,7 @@
             var last_question = $('#s2id_select-question').children().children().html();
             $('.loading-flag').hide();
             // $('#chart_canvas .col-md-7, #chart_canvas .col-md-5').hide();
-            $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+            $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -135,7 +137,7 @@
             {
               var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
-              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }
@@ -154,6 +156,7 @@
         if(value == 0){
           var option_filters = "";
           var filter_text = "";
+          return false;
         }else{
           var option_filters = text_area_filter_process[0];
           var filter_text = text_area_filter_process[1];
@@ -200,8 +203,13 @@
               var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
               $("#chart_canvas").hide();
-              $('.chart chart-flag .chart-pagination').hide();
-              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_filter_data')}} '+ text_area_filter_process[2] +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $('.chart-flag .chart-pagination').hide();
+              
+              /* Show error notification */
+              $(".notification").html('<div class="alert alert-info"><div><h4>{{Lang::get('frontend.empty_filter_data')}} '+ text_area_filter_process[2] +'</h4></div><div class="clear-all-alert"><a class="clear-all" style="background-color: #808080" onclick="clear_filter()">{{Lang::get('frontend.clear_all')}}</a></div></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+
+              /* show caption filter */
+              $("#filter-by-label").text("");
               // Re assingn Filter `
               DefaultSelectAssign(DefaultSelect);
             }
@@ -249,15 +257,11 @@
               }
             }
 
-            console.log('base : '+ total_amount_base +' | end : '+ total_amount_end);
-
             for (i = 0; i < data.question.length; i++) {
               if (data.question[i].cycle_type == 0) {
-
                 baseline_text = data.question[i].cycle;
                 question_text = data.question[i].question;
                 FilterSelect.question = data.question[i].id_question;
-
                 var amount_percent = (parseInt(data.question[i].amount) / total_amount_base) * 100;
 
                 first_list.push({ y: parseInt(amount_percent), label: data.question[i].answer});
@@ -274,7 +278,8 @@
               }
             }
 
-            compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
+            // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
+            compare_chart(first_list,end_list, ["#FA0C0C", "#E600FF"], baseline_text,endline_text);
 
             if (move == 0) {
               $('.chart-pagination').html('<li>&nbsp;</li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li>&nbsp;</li>');
@@ -292,7 +297,7 @@
           {
             var last_question = $('#s2id_select-question').children().children().html();
             $('.loading-flag').hide();
-            $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.comparing_cycle_failed')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+            $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.comparing_cycle_failed')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -303,6 +308,7 @@
     {
       clear_all_filter_nosurvey();
       clear_text_notification();
+      disable_anchor($('.clear-all'), 0);
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
@@ -338,6 +344,7 @@
               }
             }
 
+            $("#filter-by-label").text("{{Lang::get('frontend.all_survey')}}");
 
             if(data.regions != 0){
               $('#chart_canvas').show();
@@ -364,7 +371,7 @@
               var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
               $('#chart_canvas').hide();
-              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter data
               // DefaultSelectAssign(DefaultSelect);   
             }
@@ -373,7 +380,7 @@
             var last_question = $('#s2id_select-question').children().children().html();
             $('.loading-flag').hide();
             $('#chart_canvas').hide();
-            $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+            $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -397,7 +404,6 @@
       $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: value,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
           if (data != false) {
-            // $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
             
             FilterSelect.question = parseInt(data.default_question.id_question);
             FilterSelect.category = parseInt(data.default_question.id_question_categories);
@@ -435,7 +441,7 @@
           {
             var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
-              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
             // Re assingn Filter data
             DefaultSelectAssign(DefaultSelect);
           }
@@ -459,12 +465,13 @@
 
               // Re assingn Filter data
               DefaultSelectAssign(FilterSelect);
+              $('.chart-pagination').html('<li>&nbsp;</li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li>&nbsp;</li>');
               // $('.chart-pagination').html('<li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="detail_chart('+answer_id+','+data.default_question.id_category+',2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
             }else
             {
               var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
-              $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.detail_chart_failed')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+              $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.detail_chart_failed')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
               // Re assingn Filter data
               DefaultSelectAssign(DefaultSelect);
             }

@@ -74,7 +74,7 @@ Route::group(array('prefix' => LaravelLocalization::setLocale(), 'before' => 'fr
 {
 	Route::get('/', 'HomeController@getIndex');
 	Route::get('home', 'HomeController@getIndex');
-	Route::get('filter-select', 'HomeController@filterSelect');
+	Route::get('/filter-select', 'HomeController@filterSelect');
 });
 
 Route::post('cross', 'AnswerController@postCross');

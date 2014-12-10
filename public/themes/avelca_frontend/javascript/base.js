@@ -100,7 +100,7 @@ function chartjs(color_set,data_points,data_points_pie)
 function compare_chart(first_list, end_list, colorSet, baseline_text,endline_text)
 {
   CanvasJS.addColorSet("greenShades",colorSet);
-
+  // console.log(first_list);
   var chart = new CanvasJS.Chart("compareChart",
   {
       title:{
@@ -125,6 +125,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
       {
         type: "bar",
         showInLegend: true,
+        axisYType: "secondary",
         legendText: endline_text+" (Hasil survey 2014)",
         dataPoints: end_list,
         toolTipContent: "{label}: <strong>{y}%</strong>"
@@ -270,6 +271,16 @@ function disable_anchor(selector, enable_flag){
       'background-color' : '#AA6071' 
     });
   }
+}
+
+function clear_filter(){
+  FilterSelect.region = "";
+  option_filters_default = [];
+  filter_option(0);
+  clear_all_filter_nosurvey();
+  find_survey();
+  
+  disable_anchor($('.clear-all'), 0);
 }
 
 /*

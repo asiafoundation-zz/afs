@@ -7,11 +7,6 @@
   <section class="header">
       <p>{{ $survey->name }}</p>
   </section>
-  <!-- <section class="header">
-    <div class="container">
-      <p>{{ $survey->name }}</p>
-    </div>
-  </section> -->
 
 <!--Update-->
 <div class="elheader-wrapper"> <!-- add element wrapper - 28112014 -->
@@ -59,21 +54,6 @@
     </div>
     <!--End Update-->
 
-    <!-- <div class="search-wrp header-select">
-      <select class="select2-custom select-cycle" id="select-cycle">
-        @foreach ($cycles as $cycle)
-        <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
-        @endforeach
-      </select> --><!-- Custom Select -->
-      <!-- <select class="select2-custom select-category" id="select-category">
-        @foreach ($question_categories as $question_category)
-        <option value="{{ $question_category->id }}" @if( $default_question->id_question_categories == $question_category->id) selected @endif >{{ $question_category->name }}</option>
-        @endforeach 
-      </select> --><!-- Custom Select -->
-      <!-- <select class="select2-custom select-question" id="select-question">
-        <option value="{{ $default_question->id_question }}">{{ $default_question->question }}</option>
-      </select> --><!-- Custom Select -->
-    <!-- </div> -->
     <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 100%"></div>
   </section>
   <section class="survey-pemilu">
@@ -116,7 +96,7 @@
               <!-- Update 28112014 -->
 
                <li>          
-                <a class="clear-all">{{Lang::get('frontend.clear_all')}}</a>
+                <a class="clear-all" onclick="clear_filter()">{{Lang::get('frontend.clear_all')}}</a>
               </li>
             </ul>
           </div>
@@ -127,8 +107,6 @@
 
     <div class="container center">
       <div class="col-md-12 chart-div">
-        <!-- <h3 id="survey-question">{{Lang::get('frontend.survey_question')}}</h3>
-        <p id="question-name">" {{ $default_question->question }} "</p> -->
         @include('home/cross_question')
         <div class="chart chart-flag">
           <div class="notification">&nbsp;</div>

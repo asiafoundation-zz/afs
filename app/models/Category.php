@@ -186,7 +186,6 @@ class Category extends Eloquent {
 		foreach ($get_answers as $key_get_answers => $get_answer) {
 			$datas[$get_answer->answer_id]['answer_id'] = $get_answer->answer_id;
 			$datas[$get_answer->answer_id]['answer'] = $get_answer->answer;
-
 			$datas[$get_answer->answer_id]['category_id'] = $get_answer->category_id;
 
 			// To count participant choose certain answer with certain category

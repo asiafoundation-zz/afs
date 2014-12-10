@@ -19,7 +19,6 @@ class Amount extends Eloquent {
 	protected $guarded = array('id');
 
 	public static function checkData($answer_id, $region_id, $sample_type){
-		// $amount_count = 1;
 		if($sample_type == 0)
 		{
 			$amount = Amount::where('answer_id', '=', $answer_id)

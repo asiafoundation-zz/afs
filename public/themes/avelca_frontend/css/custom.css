@@ -115,3 +115,16 @@
 .survey-question a {
 	cursor: pointer !important;	
 }
+
+.clear-all, .clear-all:hover {
+	padding: auto !important;
+}
+
+.notification .alert{
+	margin-top: 20px;
+}
+
+.clear-all-alert {
+	padding-top: 15px;
+	padding-bottom: 10px;
+}
