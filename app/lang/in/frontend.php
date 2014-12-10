@@ -39,5 +39,5 @@ return array(
 	"choose_survey" =>"Pilih Jenis Survey",
 	"choose_category" => "Pilih Kategori",
 	"choose_question" => "Pilih Pertanyaan",
-	"all_survey" => "Survey keseluruhan",
+	"all_survey" => "Menampilkan hasil survey untuk Seluruh Wilayah",
 );

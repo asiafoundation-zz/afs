@@ -201,7 +201,12 @@
               $('.loading-flag').hide();
               $("#chart_canvas").hide();
               $('.chart chart-flag .chart-pagination').hide();
+              
+              /* Show error notification */
               $(".notification").html('<div class="alert alert-info"><button class="close" type="button" data-dismiss="alert">×</button><h4>{{Lang::get('frontend.empty_filter_data')}} '+ text_area_filter_process[2] +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+
+              /* show caption filter */
+              $("#filter-by-label").text(filter_text);
               // Re assingn Filter `
               DefaultSelectAssign(DefaultSelect);
             }
@@ -249,8 +254,6 @@
               }
             }
 
-            console.log('base : '+ total_amount_base +' | end : '+ total_amount_end);
-
             for (i = 0; i < data.question.length; i++) {
               if (data.question[i].cycle_type == 0) {
 
@@ -274,7 +277,8 @@
               }
             }
 
-            compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
+            // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
+            compare_chart(first_list,end_list, ["#FA0C0C", "#E600FF"], baseline_text,endline_text);
 
             if (move == 0) {
               $('.chart-pagination').html('<li>&nbsp;</li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li>&nbsp;</li>');
@@ -397,7 +401,6 @@
       $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: value,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
           if (data != false) {
-            // $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
             
             FilterSelect.question = parseInt(data.default_question.id_question);
             FilterSelect.category = parseInt(data.default_question.id_question_categories);
