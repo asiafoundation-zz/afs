@@ -183,7 +183,7 @@ class Survey extends Eloquent {
 
 		DB::table('participants')->truncate();
 
-		DB::statement("ALTER TABLE temporary_participants ADD(participant_id int)");
+		// DB::statement("ALTER TABLE temporary_participants ADD(participant_id int)");
 		DB::statement("UPDATE temporary_participants, (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
 
 		DB::statement("INSERT INTO cycles(NAME, cycle_type)
@@ -227,7 +227,7 @@ class Survey extends Eloquent {
 			$sql_commands = "
 			UPDATE temporary_participants t
 			SET ".$category->name." =
-			(SELECT id FROM category_items c WHERE t.".$category->name." = c.name LIMIT 1)
+			(SELECT id FROM category_items c WHERE t.".$category->name." = c.name  AND category_id=".$category->id.")
 			";
 			DB::statement($sql_commands);
 
@@ -238,13 +238,11 @@ class Survey extends Eloquent {
 			DB::statement($sql_commands);
 		}
 
-		foreach ($master_code as $key_master_code => $single_code)
+		foreach ($master_code as $key_answers_code => $single_code)
 		{
 			if($single_code['type'] == 4){
-				$question_id = DB::select(DB::raw("SELECT q.id FROM questions q
-					JOIN codes c ON q.code_id = c.id JOIN master_codes m ON c.master_code_id = m.id
-					WHERE m.master_code = '".$single_code['master_code']."'"));
-				$question_id = $question_id[0]->id;
+				$question_id = DB::table('questions')->where('code_id','=',$single_code['code_id'])->first();
+				$question_id = $question_id->id;
 
 				$sql_commands = "
 				INSERT INTO answers(answer, question_id, cycle_id)
@@ -256,7 +254,7 @@ class Survey extends Eloquent {
 				UPDATE temporary_participants t
 
 				SET ".$single_code['code']." = (SELECT id FROM answers a
-           WHERE question_id = ".$question_id." AND t.".$single_code['code']." = a.answer LIMIT 1);";
+           WHERE question_id = ".$question_id." AND t.".$single_code['code']." = a.answer  AND t.sfl_wave = a.cycle_id);";
 				DB::statement($sql_commands);
 
 				$sql_commands = "
@@ -266,22 +264,13 @@ class Survey extends Eloquent {
 				DB::statement($sql_commands);
 			}
 		}
-		DB::statement("INSERT INTO amounts(amount, answer_id, region_id, sample_type) (SELECT q.participant_id, q.answer_id, q.region_id, p.sample_type FROM question_participants q JOIN participants p ON p.id = q.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type);");
-		DB::statement("INSERT INTO amount_filters(amount, answer_id, region_id, sample_type, category_item_id)(SELECT q.participant_id, q.answer_id, q.region_id, p.sample_type, f.category_item_id FROM question_participants q JOIN participants p ON p.id = q.participant_id JOIN filter_participants f ON q.participant_id = f.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type, f.category_item_id)");
+		DB::statement("INSERT INTO amounts(amount, answer_id, region_id, sample_type) (SELECT count(q.participant_id), q.answer_id, q.region_id, p.sample_type FROM question_participants q JOIN participants p ON p.id = q.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type);");
+		DB::statement("INSERT INTO amount_filters(amount, answer_id, region_id, sample_type, category_item_id)(SELECT count(q.participant_id), q.answer_id, q.region_id, p.sample_type, f.category_item_id FROM question_participants q JOIN participants p ON p.id = q.participant_id JOIN filter_participants f ON q.participant_id = f.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type, f.category_item_id)");
 
 		DB::statement("UPDATE answers, (SELECT @rownum:=0) r SET color_id = (CASE @rownum WHEN 30 THEN @rownum:=1 ELSE @rownum:=@rownum+1 END)");
 
-			// $answers = DB::table('answers')->select(DB::raw("count(*) as count"))->groupBy('question_id')->groupBy('cycle_id')->get();
-
-			// foreach ($answers as $key_answers => $answer) {
-			// 	$color = 0;
-			// 	for ($i=0; $i < (int)$answer->count; $i++) {
-			// 		$color = $color == 30 ? 1 : $color++;
-			// 		DB::statement("UPDATE answers SET color_id = ".$color);
-			// 	}
-			// }
 		Schema::drop('temporary_headers');
-		// Schema::drop('temporary_participants');
+		Schema::drop('temporary_participants');
 		return $status;
 	}
 
