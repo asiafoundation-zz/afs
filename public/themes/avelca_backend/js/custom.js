@@ -2,6 +2,7 @@ $(document).ready(function(){
 	// $('#header-select').multiSelect();
 	// $('.ms-visible').hide();
 	$('.progress').show();
+	$('.loading-flag').hide();
 
 	// $('.excel-upload').change(function(){
 	// 	var file = this.files[0];

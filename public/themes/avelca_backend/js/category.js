@@ -218,6 +218,10 @@ function change_page(move) {
 }
 
 function post_category() {
+	$('#popup_modal').hide();
+	$('.loading-flag').show();
+	$('#button-footer').hide();
+
 	var survey_id_val = $("#survey_id").val();
 	$.post( "survey/category", { survey_id: survey_id_val, options_selected: options_selected })
 	.done(function( data ) {

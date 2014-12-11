@@ -161,6 +161,7 @@ class Survey extends Eloquent {
 
 	public static function importDataQuery($survey,$master_code)
 	{
+		$status = true;
 		$columns = "";
 		$survey = Survey::where('id', '=', 1)->first();
 		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
@@ -179,6 +180,7 @@ class Survey extends Eloquent {
 		}
 		);
 		DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table temporary_participants FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
+
 		DB::table('participants')->truncate();
 
 		DB::statement("ALTER TABLE temporary_participants ADD(participant_id int)");
@@ -218,20 +220,20 @@ class Survey extends Eloquent {
 		foreach ($categories as $key_categories => $category) {
 			$sql_commands = "
 			INSERT INTO category_items(NAME, category_id, TYPE, `ORDER`)
-			(SELECT distinct CASE IFNULL( sfl_".$category->name.", ' ') WHEN ' ' THEN 'Not Answered' ELSE sfl_".$category->name." END , ".$category->id.", 0,0 FROM temporary_participants)
+			(SELECT distinct CASE IFNULL( ".$category->name.", ' ') WHEN ' ' THEN 'Not Answered' ELSE ".$category->name." END , ".$category->id.", 0,0 FROM temporary_participants)
 				";
 			DB::statement($sql_commands);
 
 			$sql_commands = "
 			UPDATE temporary_participants t
-			SET sfl_".$category->name." =
-			(SELECT id FROM category_items c WHERE t.sfl_".$category->name." = c.name LIMIT 1)
+			SET ".$category->name." =
+			(SELECT id FROM category_items c WHERE t.".$category->name." = c.name LIMIT 1)
 			";
 			DB::statement($sql_commands);
 
 			$sql_commands = "
 			INSERT INTO filter_participants(participant_id, category_item_id)
-			(SELECT participant_id, sfl_".$category->name." FROM temporary_participants)
+			(SELECT participant_id, ".$category->name." FROM temporary_participants)
 			";
 			DB::statement($sql_commands);
 		}
@@ -262,24 +264,26 @@ class Survey extends Eloquent {
 					 (SELECT participant_id, ".$single_code['code'].", sfl_prov FROM temporary_participants);
 				";
 				DB::statement($sql_commands);
-				}
 			}
-			DB::statement("INSERT INTO amounts(amount, answer_id, region_id, sample_type) (SELECT q.participant_id, q.answer_id, q.region_id, p.sample_type FROM question_participants q JOIN participants p ON p.id = q.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type);");
-			DB::statement("INSERT INTO amount_filters(amount, answer_id, region_id, sample_type, category_item_id)(SELECT q.participant_id, q.answer_id, q.region_id, p.sample_type, f.category_item_id FROM question_participants q JOIN participants p ON p.id = q.participant_id JOIN filter_participants f ON q.participant_id = f.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type, f.category_item_id)");
-
-			$answers = DB::table('answers')->select(DB::raw("count(*) as count"))->groupBy('question_id')->groupBy('cycle_id')->get();
-
-			foreach ($answers as $key_answers => $answer) {
-				$color = 0;
-				for ($i=0; $i < (int)$answer->count; $i++) {
-					$color = $color == 30 ? 1 : $color++;
-					DB::statement("UPDATE answers SET color_id = ".$color);
-				}
-			}
-
-			Schema::drop('temporary_headers');
-			Schema::drop('temporary_participants');
 		}
+		DB::statement("INSERT INTO amounts(amount, answer_id, region_id, sample_type) (SELECT q.participant_id, q.answer_id, q.region_id, p.sample_type FROM question_participants q JOIN participants p ON p.id = q.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type);");
+		DB::statement("INSERT INTO amount_filters(amount, answer_id, region_id, sample_type, category_item_id)(SELECT q.participant_id, q.answer_id, q.region_id, p.sample_type, f.category_item_id FROM question_participants q JOIN participants p ON p.id = q.participant_id JOIN filter_participants f ON q.participant_id = f.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type, f.category_item_id)");
+
+		DB::statement("UPDATE answers, (SELECT @rownum:=0) r SET color_id = (CASE @rownum WHEN 30 THEN @rownum:=1 ELSE @rownum:=@rownum+1 END)");
+
+			// $answers = DB::table('answers')->select(DB::raw("count(*) as count"))->groupBy('question_id')->groupBy('cycle_id')->get();
+
+			// foreach ($answers as $key_answers => $answer) {
+			// 	$color = 0;
+			// 	for ($i=0; $i < (int)$answer->count; $i++) {
+			// 		$color = $color == 30 ? 1 : $color++;
+			// 		DB::statement("UPDATE answers SET color_id = ".$color);
+			// 	}
+			// }
+		Schema::drop('temporary_headers');
+		// Schema::drop('temporary_participants');
+		return $status;
+	}
 
 	public static function importData($survey,$master_code,$excel_data)
 	{
@@ -417,7 +421,6 @@ class Survey extends Eloquent {
 	Public static function readHeaderCSV($survey,$delayed_jobs = array())
 	{
 		set_time_limit(0);
-		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
 
 		// Set variable data
 		$data_label = array();

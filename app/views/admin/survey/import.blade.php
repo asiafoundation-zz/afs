@@ -50,6 +50,9 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">{{ Lang::get('backend.category_selected') }}</h4>
       </div>
+      <div class="loading-flag">
+      		<img src="{{ Theme::asset('img/ajax-loader.gif') }}">
+      	</div>
       <div class="modal-body" id="popup_modal">
       	<div class="row">
 	      	<div class="col-md-3">
@@ -118,7 +121,7 @@
 				</div>
 				
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" id="button-footer">
         <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.cancel')}}</a>
         <a type="button" class="btn btn-primary" onclick="post_category()">{{Lang::get('general.save_changes')}}</a>
       </div>
