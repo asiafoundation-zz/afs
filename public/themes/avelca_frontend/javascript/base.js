@@ -235,7 +235,7 @@ function clear_all_filter_nosurvey(){
        /* Remove class selected li */
        $(this).removeClass('selected_filter_option');
        
-       /* Add class to default li */
+       /* Add class to first li */
        $('#filter_option_label_'+ filter_text).addClass('selected_filter_option');
 
        /* Change filter text */
@@ -246,11 +246,18 @@ function clear_all_filter_nosurvey(){
   return false; 
 }
 
-function find_survey_dynamic_select(region_id,value){
+function find_survey_dynamic_select(region_id){
   var region = $("#filter_option_label_"+region_id);
   if(region.data('value') != null){
     FilterSelect.region = parseInt(region_id);
-    find_survey_dynamic(region_id);
+    
+    /* Detect filter exist or not. this also differentiate what filter is selected first */
+    if(FilterSelect.filter_exist == 0){
+      find_survey_dynamic(region_id);  
+    }else{
+      filter_option(region_id);
+    }
+    
   }else{
     FilterSelect.region = "";
     find_survey();

@@ -21,34 +21,13 @@
 
       chartjs(color_set_data,data_points_data,data_points_pie_data);
 
-      $('.li-region li.title-filters').removeAttr('onclick');
-      $('.li-region .title-filters').data('value', '0');
+      // $('.li-region li.title-filters').attr('onclick');
+      // $('.li-region .title-filters').data('value', '0');
 
       disable_anchor($('.clear-all'), 0);
 
-      // $(".dropdown-filter .selected_filter_option").each(function(){
-      //     if ($(this).attr("data-type") === 'region') {
-      //       FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
-      //       // Set Default Value for option filters
-      //       option_filters_default.push($(this).attr("data-value"));
-      //     }else{
-      //       var data_value = $(this).attr("data-value");
-      //       if(data_value % 1 === 0){
-      //         // Filter Text
-      //         filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
-      //         option_filters += $(this).attr("data-value")+",";
-
-      //         // Set Default Value for option filters
-      //         option_filters_default.push($(this).attr("data-value"));
-      //       }else{
-      //         // Set Default Value for option filters
-      //         option_filters_default.push($(this).text());
-      //       }
-      //     }
-      //   });
       // $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
       // $('#select-category').prepend("<option value='0'>Pilih category</option>");
       // $('#select-cycle').prepend("<option value='0'>Pilih jenis survey</option>");
-      // $('html, body').animate({scrollTop: $(".filter").offset().top + 100}, 1000);
     }
   </script>

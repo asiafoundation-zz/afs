@@ -156,6 +156,7 @@
         if(value == 0){
           var option_filters = "";
           var filter_text = "";
+
           return false;
         }else{
           var option_filters = text_area_filter_process[0];
@@ -163,16 +164,17 @@
         }
 
         if(option_filters.length != 0){
-        // Get cycles functions
-          disable_anchor($('.clear-all'), 1);
 
+          disable_anchor($('.clear-all'), 1);
           $('#chart_canvas').hide();
           $('.loading-flag').show();
+
           $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
           .done(function( data ) {
             $('.loading-flag').hide();
             $('#chart_canvas').show();
             if (data != false) {
+              FilterSelect.filter_exist = 1;
               // Build chart
               var color_set_data = color_set(data.question);
               var data_points_data = data_points(data.question);
@@ -198,8 +200,7 @@
 
               // Show label
               $("#filter-by-label").text(filter_text);
-            }else
-            {
+            }else{
               var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
               $("#chart_canvas").hide();
@@ -214,7 +215,11 @@
               DefaultSelectAssign(DefaultSelect);
             }
           },"html");
+        }else if(FilterSelect.region != ""){
+          FilterSelect.filter_exist = 0;
+          find_survey_dynamic_select(FilterSelect.region,"");
         }else{
+          FilterSelect.filter_exist = 0;
           find_survey();
           disable_anchor($('.clear-all'), 0);
         }
@@ -229,7 +234,7 @@
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
-            // $('html, body').animate({scrollTop: $(".survey-question").offset().top}, 1000);
+
             $('#chart_canvas').show();
             $('.loading-flag').hide();
             // Build chart
@@ -394,6 +399,9 @@
       text_area_filter_process = text_area_filter(value);
 
       var filter_text = text_area_filter_process[1];
+      var region_filter = text_area_filter_process[0];
+
+      console.log(FilterSelect.region);
 
       // clear_all_filter_nosurvey();
       $(".notification").html("");
@@ -401,7 +409,7 @@
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: value,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
           if (data != false) {
             
@@ -437,8 +445,7 @@
 
             // Show label
             $("#filter-by-label").text(filter_text);
-          }else
-          {
+          }else{
             var last_question = $('#s2id_select-question').children().children().html();
               $('.loading-flag').hide();
               $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}}'+last_question+'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
@@ -635,12 +642,16 @@
           var filter_text_type = "";
           option_filters_default = [];
           $(".dropdown-filter .selected_filter_option").each(function(){
-            if ($(this).attr("data-type") === 'region') {
+            if ($(this).attr("data-type") === 'region'){
+              var data_value = $(this).attr("data-value");
+              if(data_value % 1 === 0){
+                option_filters_default.push($(this).text());
+                option_filters += $(this).attr("data-value")+",";
+                // Filter Text
+                filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
+                FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
+              }
               // Set Default Value for option filters
-              option_filters_default.push($(this).text());
-              // Filter Text
-              filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
-              FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
             }else{
               var data_value = $(this).attr("data-value");
               if(data_value % 1 === 0){
