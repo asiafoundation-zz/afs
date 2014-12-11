@@ -102,12 +102,13 @@
 				var $this = $(this.$collection[i]);
 				var this_value = $this[0].value.split(' ').join('_');
 				
+				
 				if ($.isNumeric( $this[0].value )) 
 				{
-					html += '<li id="filter_option_label_'+ this_value +'" '+($this[0].className == 'selectik-filter-region' ? 'onclick="find_survey_dynamic_select('+this_value+',\''+$this[0].text+'\')" data-type="region"' : 'onclick="filter_option('+this_value+')" data-type="filter"')+' data-value="'+this_value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
+					html += '<li id="filter_option_label_'+ this_value +'" '+($this[0].className == 'selectik-filter-region' ? 'onclick="find_survey_dynamic_select('+[this_value]+', \''+'region'+'\')" data-type="region"' : 'onclick="filter_option('+this_value+', \''+'filter'+'\')" data-type="filter"')+' data-value="'+this_value+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text)+'</li>';
 				}
 				else{
-					html += '<li class="title-filters" id="filter_option_label_'+ this_value +'" '+($this[0].className == 'selectik-filter-region' ? 'onclick="find_survey_dynamic_select('+$this[0].text+')" data-type="region"' : 'onclick="filter_option(\''+$this[0].text.toUpperCase().split(' ').join('_')+'\')" data-type="filter"')+'data-title="'+$this[0].text.toUpperCase().split(' ').join('_')+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text.toUpperCase())+'</li>';
+					html += '<li class="title-filters" id="filter_option_label_'+ this_value +'" '+($this[0].className == 'selectik-filter-region' ? 'onclick="find_survey_dynamic_select(\''+$this[0].text+'\', \''+'region'+'\')" data-type="region"' : 'onclick="filter_option(\''+$this[0].text.toUpperCase().split(' ').join('_')+'\', \''+'filter'+'\')" data-type="filter"')+'data-title="'+$this[0].text.toUpperCase().split(' ').join('_')+'">'+($this.data('selectik') ? $this.data('selectik') : $this[0].text.toUpperCase())+'</li>';
 				}
 			 };
 			return html;

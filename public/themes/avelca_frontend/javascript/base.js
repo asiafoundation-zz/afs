@@ -235,7 +235,7 @@ function clear_all_filter_nosurvey(){
        /* Remove class selected li */
        $(this).removeClass('selected_filter_option');
        
-       /* Add class to default li */
+       /* Add class to first li */
        $('#filter_option_label_'+ filter_text).addClass('selected_filter_option');
 
        /* Change filter text */
@@ -246,18 +246,38 @@ function clear_all_filter_nosurvey(){
   return false; 
 }
 
-function find_survey_dynamic_select(region_id,value){
+function find_survey_dynamic_select(region_id, type){
   var region = $("#filter_option_label_"+region_id);
+  var value = [region_id, type];
+
   if(region.data('value') != null){
     FilterSelect.region = parseInt(region_id);
-    find_survey_dynamic(region_id);
-  }else{
+    
+    /* Detect filter exist or not. this also differentiate what filter is selected first */
+    if(FilterSelect.filter_exist == 0){
+      find_survey_dynamic(value);
+    }else{
+      // text_area_filter(region_id);
+      filter_option(region_id, type);
+    }
+    
+  }
+  else{
     FilterSelect.region = "";
-    find_survey();
+
+    if(FilterSelect.filter_exist == 0){
+      find_survey();
+    }else{
+      // text_area_filter(region_id);
+      filter_option(region_id, type);
+    }
+
   }
 }
 
 function disable_anchor(selector, enable_flag){
+  FilterSelect.filter_exist = 0;
+
   if(enable_flag == 1){
     selector.css({
       'pointer-events' : '',

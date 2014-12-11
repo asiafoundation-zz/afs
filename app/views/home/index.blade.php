@@ -77,7 +77,7 @@
             <ul>
             <li class="li-region">
                <select class="select-control" id="select-region">
-                  <option>Wilayah</option>
+                  <option class="selectik-filter-region">Wilayah</option>
                   @foreach ($regions as $region)
                   <option value="{{ $region['region_id'] }}" class="selectik-filter-region">{{ $region['name'] }}</option>
                   @endforeach

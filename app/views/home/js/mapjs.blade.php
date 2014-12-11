@@ -12,6 +12,7 @@
       default_question: {{ $default_question->id_question }},
       question_code: {{ $default_question->question_code }},
       empty_question: 0,
+      filter_exist: 0, /* identifier for filter exist or not to handle when user click filter and then click wilayah filter */
       cycle:{{ $default_question->id_cycle }},
       default_cycle:{{ $default_question->id_cycle }},
       answers:[
@@ -38,6 +39,7 @@
     var dynamicRegions = [];
 
     var option_filters_default = [];
+    var region_filters_default = [];
 
     // Re assign Default Filter Select
     function DefaultSelectAssign(data) {
