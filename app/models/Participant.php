@@ -60,7 +60,7 @@ class Participant extends Eloquent {
 				'participants.id as participant_id',
 				'regions.name as region',
 				'answers.answer as answers',
-				'cycles.name as cycle',
+				'question_participants.sample_type as cycle',
 				'questions.id as question_id',
 				'questions.question as questions',
 				'codes.code',
@@ -96,8 +96,9 @@ class Participant extends Eloquent {
 			->orderBy('category_id', 'asc')
 			->get();
 
+			$cycle = DB::table('cycles')->where('cycle_type','=',$participants[$participant_load->id]['questions'][0]->cycle)->first();
 			$participants[$participant_load->id]['region'] = $participants[$participant_load->id]['questions'][0]->region;
-			$participants[$participant_load->id]['cycle'] = $participants[$participant_load->id]['questions'][0]->cycle;
+			$participants[$participant_load->id]['cycle'] = $cycle->name;
 			$participants[$participant_load->id]['sample_type'] = $participants[$participant_load->id]['filters'][0]->sample_type;
 		}
 		return $participants;

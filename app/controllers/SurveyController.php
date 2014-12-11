@@ -46,29 +46,6 @@ class SurveyController extends AvelcaController {
 			if(is_file($file))
 			unlink($file);
 		}
-		// Emptying mongo data
-		$cursors = Assign::all();
-		foreach ($cursors as $key => $cursor) {
-			// Delete document in collections monggodb
-			$assign_delete = Assign::find(['delayed_job_id'=>(string)$cursor->delayed_job_id])->first();
-			// Delete actions
-			$assign_delete->delete();
-		}
-		$cursors = Header::all();
-		foreach ($cursors as $key => $cursor) {
-			// Delete document in collections monggodb
-			$header_delete = Header::find(['delayed_job_id'=>(string)$cursor->delayed_job_id])->first();
-			// Delete actions
-			$header_delete->delete();
-		}
-		$cursors = ParticipantTemporary::all();
-		foreach ($cursors as $key => $cursor) {
-			// Delete document in collections monggodb
-			$participant_delete = ParticipantTemporary::find(['delayed_job_id'=>(string)$cursor->delayed_job_id])->first();
-			// Delete actions
-			$participant_delete->delete();
-		}
-
 		Session::flash('survey_deleted', 'Survey Deleted');
 		return Redirect::to('/admin/survey');
 	}
@@ -196,7 +173,7 @@ class SurveyController extends AvelcaController {
 		$survey->publish = 3;
 		$survey->save();
 
-		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 0));
+		$insert_queue = DelayedJob::create(array('type' => 'importfile','survey_id' => $survey->id,'data' => count(Input::get('options_selected')),'queue' => 1));
 		foreach ($request['options_selected'] as $key_options_selected => $options_selected) {
 			MasterCode::savingProcess($survey,$options_selected);
 		}

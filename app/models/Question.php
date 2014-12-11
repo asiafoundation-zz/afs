@@ -157,7 +157,7 @@ class Question extends Eloquent {
 				$questions =  $questions->join('regions','regions.id','=','amounts.region_id');
 			}
 
-			$questions = $questions->where('amounts.sample_type', '=', 0);
+			// $questions = $questions->where('amounts.sample_type', '=', 0);
 		}
 
 		return $questions;
@@ -203,6 +203,7 @@ class Question extends Eloquent {
 
 		// Count index label percentage
 		foreach ($questions as $key_questions => $question) {
+			$question->answer = trim(preg_replace('/\s\s+/', ' ', $question->answer));;
 			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,0);
 		}
 		// sort array based on amounts
