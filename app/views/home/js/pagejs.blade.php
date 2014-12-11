@@ -218,7 +218,7 @@
           },"html");
         }else if(FilterSelect.region != ""){
           FilterSelect.filter_exist = 0;
-          find_survey_dynamic_select(FilterSelect.region,"");
+          find_survey_dynamic_select(parseInt(FilterSelect.region),'filter');
         }else{
           FilterSelect.filter_exist = 0;
           find_survey();
@@ -397,9 +397,12 @@
     {
       // Show text information under graph
 
-      if(value[0] == region_filters_default){
-        return false;
-      };
+      if(value[1] != 'filter'){
+        if(value[0] == region_filters_default){
+          return false;
+        };  
+      }
+      
 
       disable_anchor($('.clear-all'), 1);
       text_area_filter_process = text_area_filter(value);
