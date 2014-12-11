@@ -255,7 +255,7 @@ function find_survey_dynamic_select(region_id, type){
     
     /* Detect filter exist or not. this also differentiate what filter is selected first */
     if(FilterSelect.filter_exist == 0){
-      find_survey_dynamic(value); 
+      find_survey_dynamic(value);
     }else{
       // text_area_filter(region_id);
       filter_option(region_id, type);
