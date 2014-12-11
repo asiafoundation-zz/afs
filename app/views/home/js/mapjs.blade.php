@@ -39,6 +39,7 @@
     var dynamicRegions = [];
 
     var option_filters_default = [];
+    var region_filters_default = [];
 
     // Re assign Default Filter Select
     function DefaultSelectAssign(data) {

@@ -246,21 +246,32 @@ function clear_all_filter_nosurvey(){
   return false; 
 }
 
-function find_survey_dynamic_select(region_id){
+function find_survey_dynamic_select(region_id, type){
   var region = $("#filter_option_label_"+region_id);
+  var value = [region_id, type];
+
   if(region.data('value') != null){
     FilterSelect.region = parseInt(region_id);
     
     /* Detect filter exist or not. this also differentiate what filter is selected first */
     if(FilterSelect.filter_exist == 0){
-      find_survey_dynamic(region_id);  
+      find_survey_dynamic(value); 
     }else{
-      filter_option(region_id);
+      // text_area_filter(region_id);
+      filter_option(region_id, type);
     }
     
-  }else{
+  }
+  else{
     FilterSelect.region = "";
-    find_survey();
+
+    if(FilterSelect.filter_exist == 0){
+      find_survey();
+    }else{
+      // text_area_filter(region_id);
+      filter_option(region_id, type);
+    }
+
   }
 }
 
