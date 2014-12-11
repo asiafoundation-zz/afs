@@ -3,7 +3,6 @@
      function find_survey()
      {
       // Get cycles functions
-      // console.log("clear");
       clear_all_filter_nosurvey();
       clear_text_notification();
       $(".chart-pagination").show();
@@ -162,7 +161,7 @@
           var option_filters = text_area_filter_process[0];
           var filter_text = text_area_filter_process[1];
         }
-
+        
         if(option_filters.length != 0){
 
           disable_anchor($('.clear-all'), 1);
@@ -400,8 +399,6 @@
 
       var filter_text = text_area_filter_process[1];
       var region_filter = text_area_filter_process[0];
-
-      console.log(FilterSelect.region);
 
       // clear_all_filter_nosurvey();
       $(".notification").html("");
@@ -643,14 +640,10 @@
           option_filters_default = [];
           $(".dropdown-filter .selected_filter_option").each(function(){
             if ($(this).attr("data-type") === 'region'){
-              var data_value = $(this).attr("data-value");
-              if(data_value % 1 === 0){
-                option_filters_default.push($(this).text());
-                option_filters += $(this).attr("data-value")+",";
-                // Filter Text
-                filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
-                FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
-              }
+              option_filters_default.push($(this).text());
+              // Filter Text
+              filter_text_type = filter_text_type+$('.title-filters',$(this).parent('ul')).text()+" "+$(this).text()+","
+              FilterSelect.region = $(this).attr("data-value") == 0 ? FilterSelect.region : $(this).attr("data-value");
               // Set Default Value for option filters
             }else{
               var data_value = $(this).attr("data-value");

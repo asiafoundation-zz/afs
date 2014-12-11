@@ -265,6 +265,8 @@ function find_survey_dynamic_select(region_id){
 }
 
 function disable_anchor(selector, enable_flag){
+  FilterSelect.filter_exist = 0;
+
   if(enable_flag == 1){
     selector.css({
       'pointer-events' : '',
