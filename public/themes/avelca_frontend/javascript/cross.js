@@ -101,7 +101,16 @@ $(document).ready(function(){
     var value = $(this).val();
     $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
-      // var data_exist = parseInt(data[1]);
+      
+      /* Switch selected option to pilih pertanyaan */
+      $('#select-question').val(0);
+      $('.select-question .select2-chosen').text("Pilih pertanyaan");  
+
+      /* clear chart and create warning */
+      $(".notification").html('<div class="alert alert-info"><div><h4> Silahkan pilih kategori dan pertanyaan diatas untuk menampilkan hasil survey</h4></div></div>');
+      $("#chart_canvas").hide();
+      $(".chart-pagination").hide();
+      $("#filter-by-label").text("");
 
       $('.header-select #select-question option').remove();
       $('.header-select #select-question').append($("<option></option>").attr("value","0").text("Pilih pertanyaan"))
