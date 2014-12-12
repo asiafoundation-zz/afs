@@ -107,7 +107,7 @@ $(document).ready(function(){
       $('.select-question .select2-chosen').text("Pilih pertanyaan");  
 
       /* clear chart and create warning */
-      $(".notification").html('<div class="alert alert-info"><div><h4> Silahkan pilih kategori dan pertanyaan diatas untuk menampilkan hasil survey</h4></div></div>');
+      $(".notification").html('<div class="alert alert-info"><div><h4> Silahkan pilih pertanyaan diatas untuk menampilkan hasil survey</h4></div></div>');
       $("#chart_canvas").hide();
       $(".chart-pagination").hide();
       $("#filter-by-label").text("");
