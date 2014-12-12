@@ -56,11 +56,11 @@ return array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
 			'database'  => 'agusam_asia_foundation_survey',
-			'username'  => 'agusam',
-			'password'  => 'agusam1003',
+			'username'  => 'root',
+			'password'  => '',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '',
+			'prefix'    => ''
 		),
 
 		'pgsql' => array(
