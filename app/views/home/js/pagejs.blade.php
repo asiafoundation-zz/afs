@@ -546,7 +546,7 @@
             }
 
             data_list.push(
-              { label: answer_label, answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
+              { label: answer_label, name: answer, answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
               );
           }
         }
@@ -558,7 +558,7 @@
             <?php 
               $answer_string = strlen($answer->answer) > 30 ? substr($answer->answer, 0,30)." ..." : $answer->answer;
             ?>
-            { label: "{{ $answer_string }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
+            { label: "{{ $answer_string }}", name: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
           @endforeach
           ];
       }
@@ -618,7 +618,7 @@
             }
 
             data_list.push(
-              { y: parseInt(assign_answer[key]['amount']), label: answer_label, answer_id: assign_answer[key]['id_answer']}
+              { y: parseInt(assign_answer[key]['amount']), label: answer_label, name: answer, answer_id: assign_answer[key]['id_answer']}
               );
           }
         }
@@ -630,7 +630,7 @@
               <?php 
                 $answer_string = strlen($answer->answer) > 30 ? substr($answer->answer, 0,30)." ..." : $answer->answer;
                ?>
-              { y: {{ $answer->amount }}, label: "{{ $answer_string }}", answer_id: "{{ $answer->id_answer }}"},
+              { y: {{ $answer->amount }}, label: "{{ $answer_string }}", name: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
           @endforeach                  
           ];
       }
