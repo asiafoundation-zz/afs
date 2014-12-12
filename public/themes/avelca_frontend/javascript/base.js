@@ -23,7 +23,7 @@ function chartjs(color_set,data_points,data_points_pie)
       startAngle:0,
       indexLabelFontColor: "#ffffff",       
       indexLabelPlacement: "inside", 
-      toolTipContent: "{label}: {y} - <strong>#percent%</strong>",
+      toolTipContent: "{name}: {y} - <strong>#percent%</strong>",
       showInLegend: false,
       indexLabel: " ", 
       dataPoints: data_points_pie
@@ -84,7 +84,7 @@ function chartjs(color_set,data_points,data_points_pie)
           indexLabelFontColor: "gray",
           indexLabelFontFamily: "DINNextLTPro-Regular",
           indexLabelPlacement:"inside",
-          toolTipContent: "{label}: <strong>{y}%</strong>",
+          toolTipContent: "{name}: <strong>{y}%</strong>",
           type: "bar",
           click: function(e){
             detail_chart(e.dataPoint.answer_id,0,0)
