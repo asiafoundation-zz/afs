@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <title>Asia Foundation Survey - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ Theme::asset('img/favicon.ico') }}">
     {{ HTML::style(Theme::asset('css/login.css')) }}
     {{ HTML::style(Theme::asset('css/bootstrap.min.css')) }}
     {{ HTML::style(Theme::asset('css/custom.css')) }}
