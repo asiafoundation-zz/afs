@@ -61,8 +61,8 @@ class MasterCode extends Eloquent {
 
 	public static function savingProcess($survey,$request=array())
 	{
-		try{
-			DB::beginTransaction();
+		// try{
+		// 	DB::beginTransaction();
 			$options_selected = $request;
 			
 			$options_selected = array(
@@ -78,6 +78,9 @@ class MasterCode extends Eloquent {
 
 			// Saving
 			$master_codes_data = DB::table('master_codes')->where('master_code','=',$master_code_label)->first();
+
+			
+
 			if (!isset($master_codes_data)) {
 				$master_code = new MasterCode;
 				$master_code->master_code = $master_code_label;
@@ -104,13 +107,14 @@ class MasterCode extends Eloquent {
 				$question = Question::checkData($options_selected['label'],$code->id,$question_category->id);
 			}
 
-			DB::commit();
-			$status = true;
-		}
-		catch(\PDOException $e){
-      DB::rollback();
-      $status = false;
-    }
+		// 	DB::commit();
+		// 	$status = true;
+		// }
+		// catch(\PDOException $e){
+  //     DB::rollback();
+  //     $status = false;
+  //   }
+			$status = false;
 		return $status;
 	}
 	

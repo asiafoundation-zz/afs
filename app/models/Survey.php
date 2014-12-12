@@ -236,6 +236,7 @@ class Survey extends Eloquent {
 			(SELECT participant_id, ".$category->name." FROM temporary_participants)
 			";
 			DB::statement($sql_commands);
+			Log::info('Category:'.$category->name);
 		}
 
 		foreach ($master_code as $key_answers_code => $single_code)
@@ -262,11 +263,17 @@ class Survey extends Eloquent {
 					 (SELECT participant_id, ".$single_code['code'].", sfl_prov FROM temporary_participants);
 				";
 				DB::statement($sql_commands);
+
+				Log::info('Question:'.$single_code['code']);
 			}
 		}
+		Log::info('amount');
 		DB::statement("INSERT INTO amounts(amount, answer_id, region_id, sample_type) (SELECT count(q.participant_id), q.answer_id, q.region_id, p.sample_type FROM question_participants q JOIN participants p ON p.id = q.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type);");
+
+		Log::info('filters');
 		DB::statement("INSERT INTO amount_filters(amount, answer_id, region_id, sample_type, category_item_id)(SELECT count(q.participant_id), q.answer_id, q.region_id, p.sample_type, f.category_item_id FROM question_participants q JOIN participants p ON p.id = q.participant_id JOIN filter_participants f ON q.participant_id = f.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type, f.category_item_id)");
 
+		Log::info('color_id');
 		DB::statement("UPDATE answers, (SELECT @rownum:=0) r SET color_id = (CASE @rownum WHEN 30 THEN @rownum:=1 ELSE @rownum:=@rownum+1 END)");
 
 		Schema::drop('temporary_headers');
