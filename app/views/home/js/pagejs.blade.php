@@ -534,11 +534,19 @@
     {
       if (assign_answer != null) 
       {
+        
         var data_list = [];
         for (var key in assign_answer) {
-          if (assign_answer.hasOwnProperty(key)) {
+          if (assign_answer.hasOwnProperty(key)){
+            var answer = assign_answer[key]['answer'];
+            var answer_label = answer.substring(30,0);
+
+            if(answer.length > 30){
+                answer_label = answer_label+' ...';
+            }
+
             data_list.push(
-              { label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
+              { label: answer_label, answer_id: assign_answer[key]['id_answer'], y: assign_answer[key]['indexlabel'] }
               );
           }
         }
@@ -547,7 +555,10 @@
       {
         var data_list = [//colorSet Array
           @foreach ($question as $key => $answer)
-            { label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
+            <?php 
+              $answer_string = strlen($answer->answer) > 30 ? substr($answer->answer, 0,30)." ..." : $answer->answer;
+            ?>
+            { label: "{{ $answer_string }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
           @endforeach
           ];
       }
@@ -599,8 +610,15 @@
         var data_list = [];
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
+            var answer = assign_answer[key]['answer'];
+            var answer_label = answer.substring(30,0);
+
+            if(answer.length > 30){
+                answer_label = answer_label+' ...';
+            }
+
             data_list.push(
-              { y: parseInt(assign_answer[key]['amount']), label: assign_answer[key]['answer'], answer_id: assign_answer[key]['id_answer']}
+              { y: parseInt(assign_answer[key]['amount']), label: answer_label, answer_id: assign_answer[key]['id_answer']}
               );
           }
         }
@@ -609,7 +627,10 @@
       {
         var data_list = [//colorSet Array
           @foreach ($question as $answer)
-              { y: {{ $answer->amount }}, label: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
+              <?php 
+                $answer_string = strlen($answer->answer) > 30 ? substr($answer->answer, 0,30)." ..." : $answer->answer;
+               ?>
+              { y: {{ $answer->amount }}, label: "{{ $answer_string }}", answer_id: "{{ $answer->id_answer }}"},
           @endforeach                  
           ];
       }
