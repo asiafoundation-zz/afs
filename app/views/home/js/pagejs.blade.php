@@ -486,20 +486,6 @@
           },"html");
     }
 
-    // function filter_option_regions(region_id,region_text)
-    // {
-    //   $(".title-filters").each(function(){
-    //       if ($(this).attr("data-type") === 'region') {
-    //         FilterSelect.region = region_id;
-    //       }else{
-    //         var title = $(this).attr("data-title");
-    //         $('#custom-text-title-'+title).text(title);
-    //       }
-    //     });
-
-    //   find_survey();
-    // }
-
     /*
     //Default color
     function color_set(assign_color)
