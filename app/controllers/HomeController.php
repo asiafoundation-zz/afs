@@ -20,7 +20,7 @@ class HomeController extends BaseController {
 		}
 		$default_question = reset($default_questions);
 
-		$request = array('category' => $default_question->id_question_categories);
+		$request = array('category' => $default_question->id_question_categories, 'cycle' => $default_question->id_cycle);
 
 		// Get catefory and question list
 		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion();
@@ -147,6 +147,21 @@ class HomeController extends BaseController {
 					}
 
 					$default_question = reset($default_questions);
+
+					// $first_amount_total = 0;
+					// $second_amount_total = 0;
+					// foreach($default_questions as $row){
+					// 	if($row->cycle_type = 0){
+					// 		echo $row->amount.', ';
+					// 		$first_amount_total += $row->amount;
+					// 	}
+
+					// 	if($row->cycle_type = 1){
+					// 		$second_amount_total += $row->amount;	
+					// 	}
+					// }
+
+					// print_r($default_questions);
 
 					$load_filter = array();
 					$load_filter = array(
