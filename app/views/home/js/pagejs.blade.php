@@ -235,7 +235,7 @@
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
-
+            // console.log(data.question.first_data[0].amount)
             $('#chart_canvas').show();
             $('.loading-flag').hide();
             // Build chart
@@ -253,35 +253,12 @@
             var total_amount_base = 0;
             var total_amount_end = 0;
 
-            for (i = 0; i < data.question.length; i++) {
-              if (data.question[i].cycle_type == 0) {
-                total_amount_base = total_amount_base + parseInt(data.question[i].amount);
-              }
-
-              if (data.question[i].cycle_type == 1) {
-                total_amount_end = total_amount_end + parseInt(data.question[i].amount); 
-              }
+            for (i = 0; i < data.question.first_data.length; i++) {
+              first_list.push({ y: data.question.first_data[i].amount, label: data.question.first_data[i].answer});
             }
 
-            for (i = 0; i < data.question.length; i++) {
-              if (data.question[i].cycle_type == 0) {
-                baseline_text = data.question[i].cycle;
-                question_text = data.question[i].question;
-                FilterSelect.question = data.question[i].id_question;
-                var amount_percent = (parseInt(data.question[i].amount) / total_amount_base) * 100;
-
-                first_list.push({ y: parseInt(amount_percent), label: data.question[i].answer});
-
-                colorSet.push(data.question[i].color);
-                FilterSelect.answers.push({ id: data.question[i].id_answer, answer: data.question[i].answer});
-              }
-              if (data.question[i].cycle_type == 1) {
-                endline_text = data.question[i].cycle;
-
-                var amount_percent = (parseInt(data.question[i].amount) / total_amount_end) * 100;
-
-                end_list.push({ y: parseInt(amount_percent), label: data.question[i].answer});
-              }
+            for (i = 0; i < data.question.second_data.length; i++) {
+              end_list.push({ y: data.question.second_data[i].amount, label: data.question.second_data[i].answer});
             }
 
             // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
