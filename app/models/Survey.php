@@ -161,7 +161,7 @@ class Survey extends Eloquent {
 
 	public static function importDataQuery($survey,$master_code)
 	{
-		// $status = true;
+		$status = true;
 		// $columns = "";
 		// $survey = Survey::where('id', '=', 1)->first();
 		// $inputFileName = public_path().'/uploads/'.$survey->baseline_file;
@@ -246,7 +246,7 @@ class Survey extends Eloquent {
 		foreach ($master_code as $key_answers_code => $single_code)
 		{
 			if($single_code['type'] == 4){
-				if (!empty($temporary_participants[strtoupper($single_code['code'])])) {
+				if (!empty($temporary_participants[$single_code['code']])) {
 					$question_id = DB::table('questions')->where('code_id','=',$single_code['code_id'])->first();
 					$question_id = $question_id->id;
 
