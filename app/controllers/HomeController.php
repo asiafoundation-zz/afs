@@ -148,25 +148,40 @@ class HomeController extends BaseController {
 
 					$default_question = reset($default_questions);
 
-					// $first_amount_total = 0;
-					// $second_amount_total = 0;
-					// foreach($default_questions as $row){
-					// 	if($row->cycle_type = 0){
-					// 		echo $row->amount.', ';
-					// 		$first_amount_total += $row->amount;
-					// 	}
+					$first_amount_total = 0;
+					$second_amount_total = 0;
+					$answer_data = array();
+					foreach($default_questions as $row){
+						if($row->cycle_type == 0){
+							$first_amount_total += $row->amount;
+						}
 
-					// 	if($row->cycle_type = 1){
-					// 		$second_amount_total += $row->amount;	
-					// 	}
-					// }
+						if($row->cycle_type == 1){
+							$second_amount_total += $row->amount;	
+						}
+					}
 
-					// print_r($default_questions);
+					$first_index = 0;
+					$second_index = 0;
+					foreach($default_questions as $row){
+						
+						if($row->cycle_type == 0){
+							$answer_data['first_data'][$first_index]['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);	
+							$answer_data['first_data'][$first_index]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
+							$first_index++;
+						}
+
+						if($row->cycle_type == 1){
+							$answer_data['second_data'][$second_index]['amount'] = !$second_amount_total ? 0 : round(($row->amount / $second_amount_total) * 100,2);	
+							$answer_data['second_data'][$second_index]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
+							$second_index++;
+						}
+					}
 
 					$load_filter = array();
 					$load_filter = array(
 						"default_question" => $default_question,
-						"question" => $default_questions,
+						"question" => $answer_data,
 						"cycles" => Cycle::QuestionCycle($default_question),
 					);
 
