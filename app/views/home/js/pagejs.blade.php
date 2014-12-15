@@ -278,10 +278,12 @@
 
             for (i = 0; i < data.question.first_data.length; i++) {
               first_list.push({ y: data.question.first_data[i].amount, label: data.question.first_data[i].answer});
+              baseline_text = data.question.first_data[0].cycle;
             }
 
             for (i = 0; i < data.question.second_data.length; i++) {
               end_list.push({ y: data.question.second_data[i].amount, label: data.question.second_data[i].answer});
+              endline_text = data.question.first_data[0].cycle;
             }
 
             // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);

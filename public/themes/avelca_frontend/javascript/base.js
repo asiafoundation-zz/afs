@@ -297,7 +297,6 @@ function disable_anchor(selector, color, enable_flag){
       var background = "";
     }
 
-
     selector.css({
       'pointer-events' : '',
       'cursor' : '',
