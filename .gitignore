@@ -5,7 +5,7 @@ composer.phar
 composer.lock
 .DS_Store
 Thumbs.db
-/app/config/database.php
+app/config/database.php
 /app/config/app.php
 /app/storage
 readme.md
