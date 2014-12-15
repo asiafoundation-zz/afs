@@ -384,7 +384,7 @@
       }
       
 
-      disable_anchor($('.clear-all'), 1);
+      disable_anchor($('.clear-all'), '', 1);
       text_area_filter_process = text_area_filter(value);
 
       var filter_text = text_area_filter_process[1];
