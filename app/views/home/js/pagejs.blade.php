@@ -17,6 +17,7 @@
           if (data != false) {
             // Re declare object filter data 
             cycle_id = FilterSelect.cycle;
+            FilterSelect.is_compare = 0;
 
             $("#question-name").html(data.default_question.question);
             $("#select_cycle_label").html(cycle_text);
@@ -229,14 +230,23 @@
 
     function compare_cycle(move)
     {
+
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
+
+      // FilterSelect.filter_exist = 0;
+      // text_area_filter(FilterSelect.region);
+      // $("#filter-by-label").text(text_area_filter[1]);
+
       // Get cycles functions
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
             // console.log(data.question.first_data[0].amount)
+
+            FilterSelect.is_compare = 1;
+            clear_all_filter_nosurvey();
             disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
 
             $('#chart_canvas').show();
