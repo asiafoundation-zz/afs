@@ -9,13 +9,6 @@ class SurveyController extends AvelcaController {
 	
 	public function getIndex()
 	{
-		$database = Config::get('database.connections.mysql.database');
-		$username = Config::get('database.connections.mysql.username');
-		$password = Config::get('database.connections.mysql.password');
-		print '<pre>';
-print_r($username);
-print '<pre>';
-exit();
 		list(
 			$data['surveys'],
 			$data['is_refresh'],
