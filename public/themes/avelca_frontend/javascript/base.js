@@ -60,7 +60,7 @@ function chartjs(color_set,data_points,data_points_pie)
   var chartbar = new CanvasJS.Chart("chartContainer", {
       colorSet: "greenShades",
       axisY: {
-        maximum: 100,
+        // maximum: 100,
         minimum:0,
         interval: 10,
         tickLength: 0,
@@ -257,7 +257,6 @@ function find_survey_dynamic_select(region_id, type){
     if(FilterSelect.filter_exist == 0){
       find_survey_dynamic(value);
     }else{
-      // text_area_filter(region_id);
       filter_option(region_id, type);
     }
     
@@ -268,16 +267,15 @@ function find_survey_dynamic_select(region_id, type){
     if(FilterSelect.filter_exist == 0){
       find_survey();
     }else{
-      // text_area_filter(region_id);
       filter_option(region_id, type);
     }
 
   }
 }
 
-function disable_anchor(selector, enable_flag){
+function disable_anchor(selector, color, enable_flag){
   FilterSelect.filter_exist = 0;
-
+  
   if(enable_flag == 1){
     selector.css({
       'pointer-events' : '',
@@ -288,7 +286,7 @@ function disable_anchor(selector, enable_flag){
     selector.css({
       'pointer-events' : 'none',
       'cursor' : 'default',
-      'background-color' : '#AA6071' 
+      'background-color' : color 
     });
   }
 }
@@ -300,7 +298,7 @@ function clear_filter(){
   clear_all_filter_nosurvey();
   find_survey();
   
-  disable_anchor($('.clear-all'), 0);
+  disable_anchor($('.clear-all'), '#AA6071', 0);
 }
 
 /*

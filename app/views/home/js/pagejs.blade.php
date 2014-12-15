@@ -3,6 +3,7 @@
      function find_survey()
      {
       // Get cycles functions
+      disable_anchor($('.li-filter .custom-text'), '',  1);
       clear_all_filter_nosurvey();
       clear_text_notification();
       $(".chart-pagination").show();
@@ -166,7 +167,7 @@
 
         if(option_filters.length != 0){
 
-          disable_anchor($('.clear-all'), 1);
+          disable_anchor($('.clear-all'), '#AA6071', 1);
           $('#chart_canvas').hide();
           $('.loading-flag').show();
 
@@ -222,7 +223,7 @@
         }else{
           FilterSelect.filter_exist = 0;
           find_survey();
-          disable_anchor($('.clear-all'), 0);
+          disable_anchor($('.clear-all'),'#AA6071', 0);
         }
      }
 
@@ -236,6 +237,8 @@
         .done(function( data ) {
           if (data != false) {
             // console.log(data.question.first_data[0].amount)
+            disable_anchor($('.li-filter .custom-text'), 0);
+
             $('#chart_canvas').show();
             $('.loading-flag').hide();
             // Build chart
@@ -291,7 +294,7 @@
     {
       clear_all_filter_nosurvey();
       clear_text_notification();
-      disable_anchor($('.clear-all'), 0);
+      disable_anchor($('.clear-all'),'#AA6071', 0);
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions

@@ -101,7 +101,7 @@ $(document).ready(function(){
     var value = $(this).val();
 
     clear_all_filter_nosurvey();
-    disable_anchor($('.clear-all'), 0);
+    disable_anchor($('.clear-all'),'#AA6071', 0);
 
     $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
@@ -159,7 +159,7 @@ $(document).ready(function(){
 
   $('.select-cycle').change(function(){
     clear_all_filter_nosurvey();
-    disable_anchor($('.clear-all'), 0);
+    disable_anchor($('.clear-all'),'#AA6071', 0);
 
     $('#select-question option:first-child').remove();
     $('#select-category option:first-child').remove();
