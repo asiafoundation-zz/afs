@@ -60,7 +60,7 @@ function chartjs(color_set,data_points,data_points_pie)
   var chartbar = new CanvasJS.Chart("chartContainer", {
       colorSet: "greenShades",
       axisY: {
-        maximum: 100,
+        // maximum: 100,
         minimum:0,
         interval: 10,
         tickLength: 0,
