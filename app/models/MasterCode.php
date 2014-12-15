@@ -61,8 +61,9 @@ class MasterCode extends Eloquent {
 
 	public static function savingProcess($survey,$request=array())
 	{
-		try{
-			DB::beginTransaction();
+		$status = true;
+		// try{
+		// 	DB::beginTransaction();
 			$options_selected = $request;
 			
 			$options_selected = array(
@@ -99,18 +100,19 @@ class MasterCode extends Eloquent {
 			}
 			if ($options_selected['category'] == 4) {
 				// Save category question 
+				Log::info($options_selected['category_question']);
 				$question_category = QuestionCategory::checkData($options_selected['category_question'],$code->id,$survey->id);
 				// Save question
 				$question = Question::checkData($options_selected['label'],$code->id,$question_category->id);
 			}
 
-			DB::commit();
-			$status = true;
-		}
-		catch(\PDOException $e){
-      DB::rollback();
-      $status = false;
-    }
+		// 	DB::commit();
+		// 	$status = true;
+		// }
+		// catch(\PDOException $e){
+  //     DB::rollback();
+  //     $status = false;
+  //   }
 		return $status;
 	}
 	
