@@ -1,8 +1,0 @@
-<p>Hi <?php echo $full_name; ?>,</p>
-
-<p>Thank you for contacting us. Below is the email we received :</p><br>
-
-<p>Full Name : <?php echo $full_name; ?></p>
-<p>Email : <?php echo $email; ?></p>
-<p>Message : </p>
-<?php echo $visitor_message; ?>
