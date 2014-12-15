@@ -24,7 +24,7 @@
       // $('.li-region li.title-filters').removeAttr('onclick');
       // $('.li-region .title-filters').data('value', '0');
 
-      disable_anchor($('.clear-all'), 0);
+      disable_anchor($('.clear-all'),'#AA6071', 0);
 
       // $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
       // $('#select-category').prepend("<option value='0'>Pilih category</option>");

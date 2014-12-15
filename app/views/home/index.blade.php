@@ -84,7 +84,7 @@
                </select>
             </li>
             @foreach ($filters as $key_filters => $filter)
-              <li>
+              <li class="li-filter">
                 <select class="select-control msdd" data-maincss="blue">
                   <option>{{ $filter['category_name'] }}</option>
                   @foreach ($filter['category_items'] as $filter_items)
