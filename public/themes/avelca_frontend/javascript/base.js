@@ -277,16 +277,24 @@ function disable_anchor(selector, color, enable_flag){
   FilterSelect.filter_exist = 0;
   
   if(enable_flag == 1){
+
+    if(color != ""){
+      var background = color
+    }else{
+      var background = "";
+    }
+
+
     selector.css({
       'pointer-events' : '',
       'cursor' : '',
-      'background-color' : '' 
+      'background' : background
     });    
   }else{
     selector.css({
       'pointer-events' : 'none',
       'cursor' : 'default',
-      'background-color' : color 
+      'background' : color
     });
   }
 }

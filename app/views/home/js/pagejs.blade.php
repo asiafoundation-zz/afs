@@ -3,7 +3,7 @@
      function find_survey()
      {
       // Get cycles functions
-      disable_anchor($('.li-filter .custom-text'), '',  1);
+      disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter.png') }}) no-repeat right center transparent", 1);
       clear_all_filter_nosurvey();
       clear_text_notification();
       $(".chart-pagination").show();
@@ -167,7 +167,7 @@
 
         if(option_filters.length != 0){
 
-          disable_anchor($('.clear-all'), '#AA6071', 1);
+          disable_anchor($('.clear-all'), '', 1);
           $('#chart_canvas').hide();
           $('.loading-flag').show();
 
@@ -237,7 +237,7 @@
         .done(function( data ) {
           if (data != false) {
             // console.log(data.question.first_data[0].amount)
-            disable_anchor($('.li-filter .custom-text'), 0);
+            disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
 
             $('#chart_canvas').show();
             $('.loading-flag').hide();
