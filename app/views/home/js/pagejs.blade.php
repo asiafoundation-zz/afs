@@ -4,6 +4,7 @@
      {
       // Get cycles functions
       disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter.png') }}) no-repeat right center transparent", 1);
+      disable_anchor($('.clear-all'), '#AA6071', 0);
       clear_all_filter_nosurvey();
       clear_text_notification();
       $(".chart-pagination").show();
@@ -231,13 +232,23 @@
     function compare_cycle(move)
     {
 
+      
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
 
-      // FilterSelect.filter_exist = 0;
-      // text_area_filter(FilterSelect.region);
-      // $("#filter-by-label").text(text_area_filter[1]);
+      var value = 0;
+      if(FilterSelect.region != ""){
+        value = [FilterSelect.region, "region"];
+
+        text_area_filter_process = text_area_filter(value);
+        var filter_text = text_area_filter_process[1];
+
+        $("#filter-by-label").text(filter_text);
+      }else{
+        clear_all_filter_nosurvey();  
+        $("#filter-by-label").text("{{Lang::get('frontend.all_survey')}}");
+      }     
 
       // Get cycles functions
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
@@ -246,7 +257,6 @@
             // console.log(data.question.first_data[0].amount)
 
             FilterSelect.is_compare = 1;
-            clear_all_filter_nosurvey();
             disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
 
             $('#chart_canvas').show();
@@ -626,6 +636,8 @@
     }
 
     function text_area_filter(value){
+
+      console.log(value);
       var option_filters = [];
 
       if(value[0] != 0){
