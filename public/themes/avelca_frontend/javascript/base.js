@@ -225,13 +225,8 @@ function select_category(category_id)
 
 function clear_all_filter_nosurvey(){
   FilterSelect.region = "";
-  var li_edintifier = "";
 
-  if(FilterSelect.is_compare == 1){
-    li_edintifier = ".li-filter ";
-  }
-
-   $(li_edintifier +".dropdown-filter .selected_filter_option").each(function(){
+   $(".dropdown-filter .selected_filter_option").each(function(){
      filter_text = $('.title-filters', $(this).parent('ul')).html();
      if (filter_text != null) {
        var display_text = filter_text.toUpperCase();
@@ -259,6 +254,7 @@ function find_survey_dynamic_select(region_id, type){
     FilterSelect.region = parseInt(region_id);
     
     if(FilterSelect.is_compare == 1){
+      disable_anchor($('.clear-all'), '', 1);
       FilterSelect.filter_exist = 0;
       compare_cycle(0);
     }
@@ -273,6 +269,12 @@ function find_survey_dynamic_select(region_id, type){
   }
   else{
     FilterSelect.region = "";
+
+    if(FilterSelect.is_compare == 1){
+      FilterSelect.filter_exist = 0;
+      compare_cycle(0);
+      return false;
+    }
 
     if(FilterSelect.filter_exist == 0){
       find_survey();
