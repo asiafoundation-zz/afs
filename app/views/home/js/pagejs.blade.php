@@ -3,6 +3,8 @@
      function find_survey()
      {
       // Get cycles functions
+      disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter.png') }}) no-repeat right center transparent", 1);
+      disable_anchor($('.clear-all'), '#AA6071', 0);
       clear_all_filter_nosurvey();
       clear_text_notification();
       $(".chart-pagination").show();
@@ -16,6 +18,7 @@
           if (data != false) {
             // Re declare object filter data 
             cycle_id = FilterSelect.cycle;
+            FilterSelect.is_compare = 0;
 
             $("#question-name").html(data.default_question.question);
             $("#select_cycle_label").html(cycle_text);
@@ -166,7 +169,7 @@
 
         if(option_filters.length != 0){
 
-          disable_anchor($('.clear-all'), 1);
+          disable_anchor($('.clear-all'), '', 1);
           $('#chart_canvas').hide();
           $('.loading-flag').show();
 
@@ -222,19 +225,39 @@
         }else{
           FilterSelect.filter_exist = 0;
           find_survey();
-          disable_anchor($('.clear-all'), 0);
+          disable_anchor($('.clear-all'),'#AA6071', 0);
         }
      }
 
     function compare_cycle(move)
     {
+
+      
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
+
+      var value = 0;
+      if(FilterSelect.region != ""){
+        value = [FilterSelect.region, "region"];
+
+        text_area_filter_process = text_area_filter(value);
+        var filter_text = text_area_filter_process[1];
+
+        $("#filter-by-label").text(filter_text);
+      }else{
+        clear_all_filter_nosurvey();  
+        $("#filter-by-label").text("{{Lang::get('frontend.all_survey')}}");
+      }     
+
       // Get cycles functions
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
+            // console.log(data.question.first_data[0].amount)
+
+            FilterSelect.is_compare = 1;
+            disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
 
             $('#chart_canvas').show();
             $('.loading-flag').hide();
@@ -253,35 +276,12 @@
             var total_amount_base = 0;
             var total_amount_end = 0;
 
-            for (i = 0; i < data.question.length; i++) {
-              if (data.question[i].cycle_type == 0) {
-                total_amount_base = total_amount_base + parseInt(data.question[i].amount);
-              }
-
-              if (data.question[i].cycle_type == 1) {
-                total_amount_end = total_amount_end + parseInt(data.question[i].amount); 
-              }
+            for (i = 0; i < data.question.first_data.length; i++) {
+              first_list.push({ y: data.question.first_data[i].amount, label: data.question.first_data[i].answer});
             }
 
-            for (i = 0; i < data.question.length; i++) {
-              if (data.question[i].cycle_type == 0) {
-                baseline_text = data.question[i].cycle;
-                question_text = data.question[i].question;
-                FilterSelect.question = data.question[i].id_question;
-                var amount_percent = (parseInt(data.question[i].amount) / total_amount_base) * 100;
-
-                first_list.push({ y: parseInt(amount_percent), label: data.question[i].answer});
-
-                colorSet.push(data.question[i].color);
-                FilterSelect.answers.push({ id: data.question[i].id_answer, answer: data.question[i].answer});
-              }
-              if (data.question[i].cycle_type == 1) {
-                endline_text = data.question[i].cycle;
-
-                var amount_percent = (parseInt(data.question[i].amount) / total_amount_end) * 100;
-
-                end_list.push({ y: parseInt(amount_percent), label: data.question[i].answer});
-              }
+            for (i = 0; i < data.question.second_data.length; i++) {
+              end_list.push({ y: data.question.second_data[i].amount, label: data.question.second_data[i].answer});
             }
 
             // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
@@ -314,7 +314,7 @@
     {
       clear_all_filter_nosurvey();
       clear_text_notification();
-      disable_anchor($('.clear-all'), 0);
+      disable_anchor($('.clear-all'),'#AA6071', 0);
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
@@ -404,7 +404,7 @@
       }
       
 
-      disable_anchor($('.clear-all'), 1);
+      disable_anchor($('.clear-all'), '', 1);
       text_area_filter_process = text_area_filter(value);
 
       var filter_text = text_area_filter_process[1];
@@ -636,6 +636,8 @@
     }
 
     function text_area_filter(value){
+
+      console.log(value);
       var option_filters = [];
 
       if(value[0] != 0){

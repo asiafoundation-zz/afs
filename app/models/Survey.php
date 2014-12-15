@@ -161,41 +161,46 @@ class Survey extends Eloquent {
 
 	public static function importDataQuery($survey,$master_code)
 	{
-		// $status = true;
-		// $columns = "";
-		// $survey = Survey::where('id', '=', 1)->first();
-		// $inputFileName = public_path().'/uploads/'.$survey->baseline_file;
-		// $fp = fopen($inputFileName, 'r');
-		// $frow = fgetcsv($fp,0, ',');
+		$status = true;
+		$columns = "";
+		$survey = Survey::where('id', '=', 1)->first();
+		$file_name = $survey->baseline_file;
+		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
+		$fp = fopen($inputFileName, 'r');
+		$frow = fgetcsv($fp,0, ',');
 
-		// $schema_texts = array();
-		// foreach($frow as $key => $column) {
-		// 	$schema_texts[$key] = $column;
-		// }
+		$schema_texts = array();
+		foreach($frow as $key => $column) {
+			$schema_texts[$key] = $column;
+		}
 
-		// Schema::create('temporary_participants', function($table) use ($schema_texts) {
-		// 	foreach ($schema_texts as $key => $schema_text) {
-		// 		$table->text($schema_text)->nullable();
-		// 	}
-		// }
-		// );
+		Schema::create($file_name, function($table) use ($schema_texts) {
+			foreach ($schema_texts as $key => $schema_text) {
+				$table->text($schema_text)->nullable();
+			}
+		}
+		);
 
-		// DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table temporary_participants FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
+		$database = Config::get('database.connections.mysql.database');
+		$username = Config::get('database.connections.mysql.username');
+		$password = Config::get('database.connections.mysql.password');
+
+		shell_exec('mysqlimport  --ignore-lines=1 --fields-terminated-by=","  --local -u '.$username.' -p'.$password.' '.$database.' '.$inputFileName);
 
 		DB::table('participants')->truncate();
 
-		// DB::statement("ALTER TABLE temporary_participants ADD(participant_id int)");
-		DB::statement("UPDATE temporary_participants, (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
+		DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
+		DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
 
 		DB::statement("INSERT INTO cycles(NAME, cycle_type)
-			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM temporary_participants)");
+			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM ".$file_name.")");
 		DB::statement("INSERT INTO regions(NAME, code_id)
-			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM temporary_participants)");
+			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM ".$file_name.")");
 		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
-			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM temporary_participants)");
+			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM ".$file_name.")");
 
 		$sql_commands = "
-		UPDATE temporary_participants a 
+		UPDATE ".$file_name." a 
 		SET
 		";
 		$update_filter_sql = "";
@@ -221,12 +226,12 @@ class Survey extends Eloquent {
 		foreach ($categories as $key_categories => $category) {
 			$sql_commands = "
 			INSERT INTO category_items(NAME, category_id, TYPE, `ORDER`)
-			(SELECT distinct CASE IFNULL( ".$category->name.", ' ') WHEN ' ' THEN 'Not Answered' ELSE ".$category->name." END , ".$category->id.", 0,0 FROM temporary_participants)
+			(SELECT distinct CASE IFNULL( ".$category->name.", ' ') WHEN ' ' THEN 'Not Answered' ELSE ".$category->name." END , ".$category->id.", 0,0 FROM ".$file_name.")
 				";
 			DB::statement($sql_commands);
 
 			$sql_commands = "
-			UPDATE temporary_participants t
+			UPDATE ".$file_name." t
 			SET ".$category->name." =
 			(SELECT id FROM category_items c WHERE t.".$category->name." = c.name  AND category_id=".$category->id.")
 			";
@@ -234,38 +239,40 @@ class Survey extends Eloquent {
 
 			$sql_commands = "
 			INSERT INTO filter_participants(participant_id, category_item_id)
-			(SELECT participant_id, ".$category->name." FROM temporary_participants)
+			(SELECT participant_id, ".$category->name." FROM ".$file_name.")
 			";
 			DB::statement($sql_commands);
 			Log::info('Category:'.$category->name);
 		}
 
-		$temporary_participants = Schema::getColumnListing('temporary_participants');
+		$temporary_participants = Schema::getColumnListing($file_name);
 		$temporary_participants = array_flip($temporary_participants);
 
 		foreach ($master_code as $key_answers_code => $single_code)
 		{
 			if($single_code['type'] == 4){
-				if (!empty($temporary_participants[strtoupper($single_code['code'])])) {
+				if (!empty($temporary_participants[$single_code['code']])) {
 					$question_id = DB::table('questions')->where('code_id','=',$single_code['code_id'])->first();
 					$question_id = $question_id->id;
 
 					$sql_commands = "
 					INSERT INTO answers(answer, question_id, cycle_id)
-					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave FROM temporary_participants);
+					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave FROM ".$file_name." WHERE ".$single_code['code']."!= '');
 					";
+
 					DB::statement($sql_commands);
 
 					$sql_commands = "
-						UPDATE temporary_participants t
+						UPDATE ".$file_name." t
 						SET ".$single_code['code']." = (SELECT id FROM answers a
-							WHERE question_id = ".$question_id." AND t.".$single_code['code']." = a.answer  AND t.sfl_wave = a.cycle_id);";
+							WHERE question_id = ".$question_id." AND t.".$single_code['code']." = a.answer  AND t.sfl_wave = a.cycle_id) WHERE ".$single_code['code']."!= ''
+							;";
 
 					DB::statement($sql_commands);
 
 					$sql_commands = "
 					INSERT INTO question_participants(participant_id, answer_id, region_id)
-					 (SELECT participant_id, ".$single_code['code'].", sfl_prov FROM temporary_participants);
+					 (SELECT participant_id, ".$single_code['code'].", sfl_prov FROM ".$file_name." WHERE ".$single_code['code']."!= '');
 					 ";
 					DB::statement($sql_commands);
 					Log::info('Question:'.$single_code['code']);
@@ -282,7 +289,7 @@ class Survey extends Eloquent {
 		DB::statement("UPDATE answers, (SELECT @rownum:=0) r SET color_id = (CASE @rownum WHEN 30 THEN @rownum:=1 ELSE @rownum:=@rownum+1 END)");
 
 		// Schema::drop('temporary_headers');
-		// Schema::drop('temporary_participants');
+		// Schema::drop($file_name);
 		return $status;
 	}
 
@@ -436,14 +443,28 @@ class Survey extends Eloquent {
 		foreach($frow as $key => $column) {
 			$schema_texts[$key] = $column;
 		}
-
 		Schema::create('temporary_headers', function($table) use ($schema_texts) {
 			foreach ($schema_texts as $key => $schema_text) {
 				$table->text($schema_text)->nullable();
 			}
 		}
 		);
-		DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table temporary_headers FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
+
+		$flag = true;
+		$i = 0;
+		$temporary_headers = array();
+		while (($emapData = fgetcsv($fp, 10000, ",")) !== FALSE)
+			if($flag) { 
+				foreach($frow as $key => $column) {
+					$temporary_headers[$i][(string)$column] = (string)$emapData[$key];
+				}
+				$i++;
+				continue; 
+			}
+
+		DB::table('temporary_headers')->insert(
+				$temporary_headers
+				);
 
 		return $data_label;
 	}
