@@ -62,7 +62,6 @@ class MasterCode extends Eloquent {
 	public static function savingProcess($survey,$request=array())
 	{
 		$status = true;
-
 		// try{
 		// 	DB::beginTransaction();
 			$options_selected = $request;
