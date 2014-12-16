@@ -4,7 +4,7 @@
 
 <script src="{{ Theme::asset('js/leaflet.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
-<script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
+<script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}.geojson"></script>
 
 @include('admin/survey/js/mapjs')
 
@@ -33,7 +33,7 @@
 		<div class="modal-footer">
 			<a style="align:right;" data-toggle="modal" href="#manage_default_question" ><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_default_question')}}</button></a>
 			<a data-toggle="modal" href="#upload_file" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_file')}}</button></a>
-			<a href="#" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.save')}}</button></a>
+			<a data-toggle="modal" href="#information_column" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.edit_information')}}</button></a>
 			<a href="/admin/survey/defaultquestion/{{ $survey->id }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.publish')}}</button></a>
 		</div>
 	</div>
@@ -132,6 +132,32 @@
 						    <span class="sr-only">0% Complete</span>
 						  </div>
 						</div>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.cancel')}}</a>
+        <button class="btn" type="submit" class="btn btn-primary">{{Lang::get('general.save')}}</button>
+      </div>
+      {{ Form::close() }}
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="information_column" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+			<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ Lang::get('general.edit_information') }}</h4>
+      </div>
+      {{ Form::open(array('url' => '/admin/survey', 'class' => 'form-horizontal')) }}
+      <div class="modal-body">
+      	<div class="form-group upload-field">
+      		{{ Form::hidden('survey_id', $survey->id) }}
+					{{ Form::label("Add Information Column:", "", array("class" => "control-label col-md-3")) }}
+					<div class="col-md-3">
+						{{ Form::textarea('information', $survey->information) }}
 					</div>
 				</div>
       </div>

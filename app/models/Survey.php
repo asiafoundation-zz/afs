@@ -33,6 +33,7 @@ class Survey extends Eloquent {
 		'baseline_file',
 		'header_file',
 		'publish',
+		'information',
 		'is_default'
 		);
 	protected $guarded = array('id');
@@ -74,7 +75,11 @@ class Survey extends Eloquent {
 			'is_default' => array(
 						'type' => 'number',
 						'onIndex' => true
-					)
+					),
+			'information' => array(
+						'type' => 'text',
+						'onIndex' => true
+					),
 		);
 
 		return compact('fields');

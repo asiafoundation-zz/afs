@@ -136,7 +136,7 @@
     <div class="container">
       <div class="col-md-6">
         <h4><b>{{ Lang::get('frontend.description') }}</b></h4>
-        {{ Lang::get('frontend.description_content') }}
+        {{ $survey->information }}
       </div>
       <div class="col-md-6">
         <div class="extras">
