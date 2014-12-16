@@ -70,7 +70,8 @@ class SurveyController extends AvelcaController {
 			}
 			elseif (!empty($request['excel'])) {
 				$survey->publish = 3;
-				$survey->baseline_file = $request['excel'];
+				$survey->baseline_file = self::fileRename($request['baseline_file']);
+				$survey->header_file = self::fileRename($request['header_file']);
 				$survey->save();
 
 				self::postUpload($files);
