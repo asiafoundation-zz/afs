@@ -51,8 +51,12 @@
         <h4 class="modal-title" id="myModalLabel">{{ Lang::get('backend.category_selected') }}</h4>
       </div>
       <div class="loading-flag">
+      	<div class="col-md-4">&nbsp;</div>
+      	<div class="col-md-4">
       		<img src="{{ Theme::asset('img/ajax-loader.gif') }}">
       	</div>
+      	<div class="col-md-4">&nbsp;</div>
+      </div>
       <div class="modal-body" id="popup_modal">
       	<div class="row">
 	      	<div class="col-md-3">

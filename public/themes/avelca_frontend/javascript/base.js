@@ -253,6 +253,12 @@ function find_survey_dynamic_select(region_id, type){
   if(region.data('value') != null){
     FilterSelect.region = parseInt(region_id);
     
+    if(FilterSelect.is_compare == 1){
+      disable_anchor($('.clear-all'), '', 1);
+      FilterSelect.filter_exist = 0;
+      compare_cycle(0);
+    }
+
     /* Detect filter exist or not. this also differentiate what filter is selected first */
     if(FilterSelect.filter_exist == 0){
       find_survey_dynamic(value);
@@ -263,6 +269,13 @@ function find_survey_dynamic_select(region_id, type){
   }
   else{
     FilterSelect.region = "";
+    disable_anchor($('.clear-all'), '#AA6071', 0);
+
+    if(FilterSelect.is_compare == 1){
+      FilterSelect.filter_exist = 0;
+      compare_cycle(0);
+      return false;
+    }
 
     if(FilterSelect.filter_exist == 0){
       find_survey();
@@ -277,16 +290,23 @@ function disable_anchor(selector, color, enable_flag){
   FilterSelect.filter_exist = 0;
   
   if(enable_flag == 1){
+
+    if(color != ""){
+      var background = color
+    }else{
+      var background = "";
+    }
+
     selector.css({
       'pointer-events' : '',
       'cursor' : '',
-      'background-color' : '' 
+      'background' : background
     });    
   }else{
     selector.css({
       'pointer-events' : 'none',
       'cursor' : 'default',
-      'background-color' : color 
+      'background' : color
     });
   }
 }
@@ -296,8 +316,13 @@ function clear_filter(){
   option_filters_default = [];
   filter_option(0);
   clear_all_filter_nosurvey();
-  find_survey();
   
+  if(FilterSelect.is_compare == 1){
+    compare_cycle(0);
+  }else{
+    find_survey();  
+  }
+ 
   disable_anchor($('.clear-all'), '#AA6071', 0);
 }
 
