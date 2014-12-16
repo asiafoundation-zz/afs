@@ -319,7 +319,7 @@ class HomeController extends BaseController {
 					break;
 
 				case 'loadcategory':
-					$question = Question::select(DB::raw('distinct questions.ida, questions.question'))
+					$question = Question::select(DB::raw('distinct questions.id, questions.question'))
 								->join('answers','answers.question_id', '=', 'questions.id')
 								->join('amounts', 'amounts.answer_id', '=', 'answers.id')
 								->where('question_category_id', '=', Input::get('category'))

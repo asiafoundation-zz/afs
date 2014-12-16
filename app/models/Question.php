@@ -88,8 +88,7 @@ class Question extends Eloquent {
 					cycles.name as cycle,
 					(SELECT sum(amounts.amount) 
 						from amounts 
-						where amounts.answer_id = id_answer
-						and amounts.sample_type = 1) AS amount,
+						where amounts.answer_id = id_answer) AS amount,
 					0 AS indexlabel';
 
 		if(!empty($request['region'])){
@@ -108,8 +107,7 @@ class Question extends Eloquent {
 						regions.name as name,
 						(SELECT sum(amounts.amount) 
 							from amounts 
-							where amounts.answer_id = id_answer and region_id = id_region
-							and amounts.sample_type = 1) AS amount,
+							where amounts.answer_id = id_answer and region_id = id_region) AS amount,
 						0 AS indexlabel';	
 		}
 		
@@ -158,9 +156,9 @@ class Question extends Eloquent {
 			if (!empty($request['region'])) {
 				$questions =  $questions->join('regions','regions.id','=','amounts.region_id');
 			}
+
+			$questions = $questions->where('amounts.sample_type', '=', 0);
 		}
-		
-		$questions = $questions->where('amounts.sample_type', '=', 0);
 
 		return $questions;
 	}
@@ -205,10 +203,7 @@ class Question extends Eloquent {
 
 		// Count index label percentage
 		foreach ($questions as $key_questions => $question) {
-			$answer = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $question->answer);
-			$answer = str_replace('"', "", $answer);
-
-			$question->answer = trim(preg_replace('/\s\s+/', ' ', $answer));
+			$question->answer = trim(preg_replace('/\s\s+/', ' ', $question->answer));
 			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
 		}
 		// sort array based on amounts
