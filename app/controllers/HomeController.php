@@ -161,58 +161,23 @@ class HomeController extends BaseController {
 						}
 					}
 
-					$baseline = array();
-					$endline = array();
+					$first_index = 0;
+					$second_index = 0;
 					foreach($default_questions as $row){
-						$answer = strtolower($row->answer);
-						$answer = preg_replace('/^([^a-z0-9])*/', '', $answer);
-						$answer = str_replace('"', "", $answer);
-						$answer = str_replace('(', "", $answer);
-						$answer = str_replace(')', "", $answer);
-						$answer = preg_replace('/\s+/', '', $answer);
-						$answer = trim(preg_replace('/\s\s+/', ' ', $answer));
-
+						
 						if($row->cycle_type == 0){
-							$baseline[$answer][$row->cycle_type]['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);
-							$baseline[$answer][$row->cycle_type]['cycle_type'] = $row->cycle_type;
+							$answer_data['first_data'][$first_index]['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);	
+							$answer_data['first_data'][$first_index]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
+							$answer_data['first_data'][$first_index]['cycle'] = $row->cycle;
 
-							$baseline[$answer][$row->cycle_type]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
+							$first_index++;
 						}
 
 						if($row->cycle_type == 1){
-							$endline[$answer][$row->cycle_type]['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);
-							$endline[$answer][$row->cycle_type]['cycle_type'] = $row->cycle_type;
-							$endline[$answer][$row->cycle_type]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
-						}
-					}
-
-					$answer_normalizes = array_merge($baseline,$endline);
-					$answer_data = array();
-					$first_index = 0;
-					$second_index = 0;
-					foreach ($answer_normalizes as $key => $answer_normalize) {
-
-						if (!empty($answer_normalize[0])) {
-							$answer_data['first_data'][$first_index]['amount'] = $answer_normalize[0]['amount'];
-							$answer_data['first_data'][$first_index]['answer'] = $answer_normalize[0]['answer'];
-
-							if (empty($answer_normalize[1])) {
-								$answer_data['second_data'][$second_index]['amount'] = 0;
-								$answer_data['second_data'][$second_index]['answer'] = "Tidak Menjawab";
-								$second_index++;
-							}
-							$first_index ++;
-						}
-						if (!empty($answer_normalize[1])) {
-							$answer_data['second_data'][$first_index]['amount'] = $answer_normalize[1]['amount'];
-							$answer_data['second_data'][$first_index]['answer'] = $answer_normalize[1]['answer'];
-
-							if (empty($answer_normalize[0])) {
-								$answer_data['first_data'][$second_index]['amount'] = 0;
-								$answer_data['first_data'][$second_index]['answer'] = "Tidak Menjawab";
-								$first_index++;
-							}
-							$second_index ++;
+							$answer_data['second_data'][$second_index]['amount'] = !$second_amount_total ? 0 : round(($row->amount / $second_amount_total) * 100,2);	
+							$answer_data['second_data'][$second_index]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
+							$answer_data['second_data'][$second_index]['cycle'] = $row->cycle;
+							$second_index++;
 						}
 					}
 
@@ -354,7 +319,7 @@ class HomeController extends BaseController {
 					break;
 
 				case 'loadcategory':
-					$question = Question::select(DB::raw('distinct questions.id, questions.question'))
+					$question = Question::select(DB::raw('distinct questions.ida, questions.question'))
 								->join('answers','answers.question_id', '=', 'questions.id')
 								->join('amounts', 'amounts.answer_id', '=', 'answers.id')
 								->where('question_category_id', '=', Input::get('category'))
