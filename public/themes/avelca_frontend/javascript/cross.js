@@ -159,6 +159,8 @@ $(document).ready(function(){
 
   $('.select-cycle').change(function(){
     clear_all_filter_nosurvey();
+    FilterSelect.cycle = parseInt($(this).val());
+
     disable_anchor($('.clear-all'),'#AA6071', 0);
 
     $('#select-question option:first-child').remove();
