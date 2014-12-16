@@ -158,7 +158,7 @@ class Question extends Eloquent {
 			}
 		}
 		
-		$questions = $questions->where('amounts.sample_type', '=', 0);
+		// $questions = $questions->where('amounts.sample_type', '=', 0);
 
 		return $questions;
 	}
