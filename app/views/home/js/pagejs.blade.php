@@ -63,7 +63,7 @@
 
             // Is Has Compare Cycle
             var is_has_compare = data_cycles_length > 1 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
-            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li>'+is_has_compare+'<li></li>';
 
             $(".chart-pagination").html(chart_pagination);
 
@@ -294,9 +294,9 @@
             }else{
               $("#question-name").html(question_text);
 
-              if (Object.keys(data.cycles).length > 1) {
-                $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
-              }
+              // if (Object.keys(data.cycles).length > 1) {
+              //   $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+              // }
             }
 
             // Re assingn Filter data
