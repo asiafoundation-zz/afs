@@ -55,30 +55,6 @@ class SurveyController extends AvelcaController {
 		$request = Input::get();
 		$files = Input::file();
 
-		$header_file = explode(".",Input::file('header_file')->getClientOriginalName());
-		$file_name = $header_file[0];
-		$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
-		$file_name = str_replace('"', "", $file_name);
-		$file_name = preg_replace('/\s+/', '', $file_name);
-		$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
-		$header_file = strtolower($file_name);
-
-		$baseline_file = explode(".",Input::file('baseline_file')->getClientOriginalName());
-		$file_name = $baseline_file[0];
-		$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
-		$file_name = str_replace('"', "", $file_name);
-		$file_name = preg_replace('/\s+/', '', $file_name);
-		$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
-		$baseline_file = strtolower($file_name);
-
-		$geojson = explode(".",Input::file('geojson')->getClientOriginalName());
-		$file_name = $geojson[0];
-		$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
-		$file_name = str_replace('"', "", $file_name);
-		$file_name = preg_replace('/\s+/', '', $file_name);
-		$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
-		$geojson = strtolower($file_name);
-
 		if (!empty($request['survey_id'])) {
 			$survey = Survey::where('id', '=', $request['survey_id'])->first();
 			if(!empty($request['geojson'])){
@@ -121,7 +97,7 @@ class SurveyController extends AvelcaController {
 
 			if($validator->passes())
 			{
-				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => $baseline_file,'header_file' => $header_file, 'geojson_file' => $geojson,'publish' => 3));
+				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => self::fileRename(Input::file('baseline_file')->getClientOriginalName()),'header_file' => self::fileRename(Input::file('header_file')->getClientOriginalName()), 'geojson_file' => self::fileRename(Input::file('geojson')->getClientOriginalName()),'publish' => 3));
 
 				if($survey)
 				{
@@ -146,17 +122,9 @@ class SurveyController extends AvelcaController {
 		
 		foreach ($files as $key_files => $file) {
 			$filename = $file->getClientOriginalName();
+			$file_name = $this->fileRename($filename);
 
-			$baseline_file = explode(".",$filename);
-			$file_name = $baseline_file[0];
-			$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
-			$file_name = str_replace('"', "", $file_name);
-			$file_name = preg_replace('/\s+/', '', $file_name);
-			$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
-			$file_name = strtolower($file_name);
-			File::delete(public_path()."/uploads/".$file_name);
-
-			if(!file_exists($filename))
+			if(!file_exists($file_name))
 			{
 				$uploaded = $file->move('uploads/', $file_name);	
 			}
@@ -337,5 +305,18 @@ class SurveyController extends AvelcaController {
 	{
 		Survey::deleteSurvey($id);
 		return Redirect::to('/admin/survey');
+	}
+
+	public static function fileRename($file_name)
+	{
+		$file_name = explode(".",$file_name);
+		$file_name = $file_name[0];
+		$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
+		$file_name = str_replace('"', "", $file_name);
+		$file_name = preg_replace('/\s+/', '', $file_name);
+		$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
+		$file_name = strtolower($file_name);
+
+		return $file_name;
 	}
 }
