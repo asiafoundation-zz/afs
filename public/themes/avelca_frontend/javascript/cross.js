@@ -163,8 +163,10 @@ $(document).ready(function(){
 
     disable_anchor($('.clear-all'),'#AA6071', 0);
 
-    $('#select-question option:first-child').remove();
-    $('#select-category option:first-child').remove();
+    if($('#select-question option:first-child').val() == 0){
+      $('#select-question option:first-child').remove();
+      $('#select-category option:first-child').remove();  
+    }
 
     $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
     $('#select-category').prepend("<option value='0'>Pilih category</option>");
