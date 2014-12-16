@@ -23,7 +23,7 @@
 			@foreach($cycles as $cycle_id_loop =>$cycle)
 			<a href="/admin/survey/cycle?cycle_id={{$cycle_id_loop}}&survey_id={{ $survey->id }}"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{$cycle}}</button></a>
 			@endforeach
-			<a data-toggle="modal" href="#upload_map" style="float:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.upload_file')}}</button></a>
+			<a data-toggle="modal" href="#upload_map" style="float:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.upload_file_geojson')}}</button></a>
 		</div>
 
 		<div class="modal-body" style="position: relative; right: 0px; top: 0px; width: 100%; height: 690px">
@@ -90,19 +90,20 @@
       </div>
       {{ Form::open(array('url' => '/admin/survey', 'class' => 'form-horizontal')) }}
       <div class="modal-body">
-      	<div class="form-group upload-field">
       	{{ Form::hidden('survey_id', $survey->id) }}
-				{{ Form::label("Add Excel file:", "", array("class" => "control-label col-md-3")) }}
-				<div class="col-md-3">
-					<input id="input-id" type="file" class="excel-upload" data-preview-file-type="text" name="excel">
-					<div class="progress" style="margin-top:10px;display: none;">
-					  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-					    <span class="sr-only">0% Complete</span>
-					  </div>
-					</div>
-				</div>
-			</div>
-      </div>
+      		<div class="row">
+      			{{ Form::label("Add Header Survey CSV file", "", array("class" => "control-label col-md-3")) }}
+      			<div class="col-md-3">
+      				<input id="input-id" type="file" class="excel-upload" data-preview-file-type="text" name="header_file">
+      			</div>
+      		</div>
+      		<div class="row">
+      			{{ Form::label("Add Participants Survey CSV file", "", array("class" => "control-label col-md-3")) }}
+      			<div class="col-md-3">
+      				<input id="input-id" type="file" class="excel-upload" data-preview-file-type="text" name="baseline_file">
+      			</div>
+      		</div>
+      	</div>
       <div class="modal-footer">
         <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.cancel')}}</a>
         <button class="btn" type="submit" class="btn btn-primary">{{Lang::get('general.save')}}</button>
