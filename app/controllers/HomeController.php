@@ -168,12 +168,15 @@ class HomeController extends BaseController {
 						if($row->cycle_type == 0){
 							$answer_data['first_data'][$first_index]['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);	
 							$answer_data['first_data'][$first_index]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
+							$answer_data['first_data'][$first_index]['cycle'] = $row->cycle;
+
 							$first_index++;
 						}
 
 						if($row->cycle_type == 1){
 							$answer_data['second_data'][$second_index]['amount'] = !$second_amount_total ? 0 : round(($row->amount / $second_amount_total) * 100,2);	
 							$answer_data['second_data'][$second_index]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
+							$answer_data['second_data'][$second_index]['cycle'] = $row->cycle;
 							$second_index++;
 						}
 					}
@@ -316,7 +319,7 @@ class HomeController extends BaseController {
 					break;
 
 				case 'loadcategory':
-					$question = Question::select(DB::raw('distinct questions.id, questions.question'))
+					$question = Question::select(DB::raw('distinct questions.ida, questions.question'))
 								->join('answers','answers.question_id', '=', 'questions.id')
 								->join('amounts', 'amounts.answer_id', '=', 'answers.id')
 								->where('question_category_id', '=', Input::get('category'))
