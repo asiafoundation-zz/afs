@@ -90,6 +90,14 @@ class SurveyController extends AvelcaController {
 
 				Session::flash('alert-class', 'alert-success');
 				Session::flash('message', 'Save Succeed');
+
+				return Redirect::to('/admin/survey/managesurvey/'. $survey->id);
+			}elseif(isset($request['information'])){
+				$survey->information = $request['information'];
+				$survey->save();
+
+				Session::flash('alert-class', 'alert-success');
+				Session::flash('message', 'Save Succeed');
 			}
 		}else{
 			$rule = array('survey_name' => 'Required');

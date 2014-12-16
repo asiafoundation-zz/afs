@@ -92,5 +92,7 @@ return array(
 	"remove_all_surveys" => "Remove All Survey",
 
 	"logs" => "Logs",
-	"manage_survey" => "Manage Survey"
+	"manage_survey" => "Manage Survey",
+	"information" => "Information",
+	"edit_information" => "Edit Information",
 );
