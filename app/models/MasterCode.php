@@ -79,6 +79,9 @@ class MasterCode extends Eloquent {
 
 			// Saving
 			$master_codes_data = DB::table('master_codes')->where('master_code','=',$master_code_label)->first();
+
+			
+
 			if (!isset($master_codes_data)) {
 				$master_code = new MasterCode;
 				$master_code->master_code = $master_code_label;
