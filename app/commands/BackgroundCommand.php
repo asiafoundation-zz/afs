@@ -64,11 +64,7 @@ class BackgroundCommand extends Command {
 			    // Load Master Code Data
 				  $master_code = MasterCode::loadData($survey->id);
 
-				  // Saving Change status
-				  $survey->publish = 2;
-				  $survey->save();
-
-				  $import = Survey::importDataQuery($survey,$master_code);
+				  $import = Survey::importDataQuery($delayed_jobs,$survey,$master_code);
 
 				  // Delete Header Data
 				  $active_delayed_job_id = $delayed_jobs->id;

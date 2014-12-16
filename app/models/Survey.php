@@ -159,43 +159,61 @@ class Survey extends Eloquent {
 		return $surveys;
 	}
 
-	public static function importDataQuery($survey,$master_code)
+	public static function importDataQuery($delayed_jobs,$survey,$master_code)
 	{
+		/*
+		 * Load Csv File
+		 */
 		$status = true;
-		// $columns = "";
-		// $survey = Survey::where('id', '=', 1)->first();
-		// $inputFileName = public_path().'/uploads/'.$survey->baseline_file;
-		// $fp = fopen($inputFileName, 'r');
-		// $frow = fgetcsv($fp,0, ',');
+		$columns = "";
+		$file_name = $survey->baseline_file;
+		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
+		$fp = fopen($inputFileName, 'r');
+		$frow = fgetcsv($fp,0, ',');
 
-		// $schema_texts = array();
-		// foreach($frow as $key => $column) {
-		// 	$schema_texts[$key] = $column;
-		// }
+		$schema_texts = array();
+		foreach($frow as $key => $column) {
+			$schema_texts[$key] = $column;
+		}
 
-		// Schema::create('temporary_participants', function($table) use ($schema_texts) {
-		// 	foreach ($schema_texts as $key => $schema_text) {
-		// 		$table->text($schema_text)->nullable();
-		// 	}
-		// }
-		// );
+		Schema::create($file_name, function($table) use ($schema_texts) {
+			foreach ($schema_texts as $key => $schema_text) {
+				$table->text($schema_text)->nullable();
+			}
+		}
+		);
 
-		// DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table temporary_participants FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
+		$database = Config::get('database.connections.mysql.database');
+		$username = Config::get('database.connections.mysql.username');
+		$password = Config::get('database.connections.mysql.password');
+
+		shell_exec('mysqlimport  --ignore-lines=1 --fields-terminated-by=","  --local -u '.$username.' -p'.$password.' '.$database.' '.$inputFileName);
 
 		DB::table('participants')->truncate();
 
-		// DB::statement("ALTER TABLE temporary_participants ADD(participant_id int)");
-		DB::statement("UPDATE temporary_participants, (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
+		/*
+		 * Mass Insert
+		 */
+
+		DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
+		DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
 
 		DB::statement("INSERT INTO cycles(NAME, cycle_type)
-			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM temporary_participants)");
+			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM ".$file_name.")");
 		DB::statement("INSERT INTO regions(NAME, code_id)
-			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM temporary_participants)");
+			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM ".$file_name.")");
 		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
-			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM temporary_participants)");
+			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM ".$file_name.")");
+
+		// Progress Bar Estimations
+		$delayed_jobs->information = 10;
+		$delayed_jobs->save();
+		// Change Status
+		$survey->publish = 2;
+		$survey->save();
 
 		$sql_commands = "
-		UPDATE temporary_participants a 
+		UPDATE ".$file_name." a 
 		SET
 		";
 		$update_filter_sql = "";
@@ -213,6 +231,10 @@ class Survey extends Eloquent {
 		$sql_commands .= $update_filter_sql;
 		DB::statement($sql_commands);
 
+		// Progress Bar Estimations
+		$delayed_jobs->information = 20;
+		$delayed_jobs->save();
+
 		DB::table('answers')->truncate();
 		DB::table('question_participants')->truncate();
 		DB::table('filter_participants')->truncate();
@@ -221,12 +243,12 @@ class Survey extends Eloquent {
 		foreach ($categories as $key_categories => $category) {
 			$sql_commands = "
 			INSERT INTO category_items(NAME, category_id, TYPE, `ORDER`)
-			(SELECT distinct CASE IFNULL( ".$category->name.", ' ') WHEN ' ' THEN 'Not Answered' ELSE ".$category->name." END , ".$category->id.", 0,0 FROM temporary_participants)
+			(SELECT distinct CASE IFNULL( ".$category->name.", ' ') WHEN ' ' THEN 'Not Answered' ELSE ".$category->name." END , ".$category->id.", 0,0 FROM ".$file_name.")
 				";
 			DB::statement($sql_commands);
 
 			$sql_commands = "
-			UPDATE temporary_participants t
+			UPDATE ".$file_name." t
 			SET ".$category->name." =
 			(SELECT id FROM category_items c WHERE t.".$category->name." = c.name  AND category_id=".$category->id.")
 			";
@@ -234,13 +256,17 @@ class Survey extends Eloquent {
 
 			$sql_commands = "
 			INSERT INTO filter_participants(participant_id, category_item_id)
-			(SELECT participant_id, ".$category->name." FROM temporary_participants)
+			(SELECT participant_id, ".$category->name." FROM ".$file_name.")
 			";
 			DB::statement($sql_commands);
 			Log::info('Category:'.$category->name);
 		}
 
-		$temporary_participants = Schema::getColumnListing('temporary_participants');
+		// Progress Bar Estimations
+		$delayed_jobs->information = 30;
+		$delayed_jobs->save();
+
+		$temporary_participants = Schema::getColumnListing($file_name);
 		$temporary_participants = array_flip($temporary_participants);
 
 		foreach ($master_code as $key_answers_code => $single_code)
@@ -252,171 +278,55 @@ class Survey extends Eloquent {
 
 					$sql_commands = "
 					INSERT INTO answers(answer, question_id, cycle_id)
-					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave FROM temporary_participants);
+					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave FROM ".$file_name." WHERE ".$single_code['code']."!= '');
 					";
+
 					DB::statement($sql_commands);
 
 					$sql_commands = "
-						UPDATE temporary_participants t
+						UPDATE ".$file_name." t
 						SET ".$single_code['code']." = (SELECT id FROM answers a
-							WHERE question_id = ".$question_id." AND t.".$single_code['code']." = a.answer  AND t.sfl_wave = a.cycle_id);";
+							WHERE question_id = ".$question_id." AND t.".$single_code['code']." = a.answer  AND t.sfl_wave = a.cycle_id) WHERE ".$single_code['code']."!= ''
+							;";
 
 					DB::statement($sql_commands);
 
 					$sql_commands = "
 					INSERT INTO question_participants(participant_id, answer_id, region_id)
-					 (SELECT participant_id, ".$single_code['code'].", sfl_prov FROM temporary_participants);
+					 (SELECT participant_id, ".$single_code['code'].", sfl_prov FROM ".$file_name." WHERE ".$single_code['code']."!= '');
 					 ";
 					DB::statement($sql_commands);
 					Log::info('Question:'.$single_code['code']);
 				}
 			}
 		}
+		// Progress Bar Estimations
+		$delayed_jobs->information = 70;
+		$delayed_jobs->save();
+
 		Log::info('amount');
 		DB::statement("INSERT INTO amounts(amount, answer_id, region_id, sample_type) (SELECT count(q.participant_id), q.answer_id, q.region_id, p.sample_type FROM question_participants q JOIN participants p ON p.id = q.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type);");
+		// Progress Bar Estimations
+		$delayed_jobs->information = 80;
+		$delayed_jobs->save();
 
 		Log::info('filters');
 		DB::statement("INSERT INTO amount_filters(amount, answer_id, region_id, sample_type, category_item_id)(SELECT count(q.participant_id), q.answer_id, q.region_id, p.sample_type, f.category_item_id FROM question_participants q JOIN participants p ON p.id = q.participant_id JOIN filter_participants f ON q.participant_id = f.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type, f.category_item_id)");
 
+		// Progress Bar Estimations
+		$delayed_jobs->information = 90;
+		$delayed_jobs->save();
+
 		Log::info('color_id');
 		DB::statement("UPDATE answers, (SELECT @rownum:=0) r SET color_id = (CASE @rownum WHEN 30 THEN @rownum:=1 ELSE @rownum:=@rownum+1 END)");
 
+		// Progress Bar Estimations
+		$delayed_jobs->information = 95;
+		$delayed_jobs->save();
+
 		// Schema::drop('temporary_headers');
-		// Schema::drop('temporary_participants');
+		// Schema::drop($file_name);
 		return $status;
-	}
-
-	public static function importData($survey,$master_code,$excel_data)
-	{
-		set_time_limit(0);
-		// parse data
-		$status = 0;
-
-		foreach ($excel_data as $lists_data) {
-			$questions_list = array();
-			$category_items = array();
-			$i=0;$j=0;
-			$oversample_id = 0;
-			foreach ($lists_data as $column => $data) {
-				if (!empty($master_code[$column])) {
-					// remove special characters and number
-					$data_str = preg_replace('/[^A-Za-z\s]/', "", $data);
-					switch ($master_code[$column]['type']) {
-						case 0:
-							// Check region exist
-							$data_str = $data_str[0] == " " ? substr($data_str,1) : $data_str;
-							$region_id = Region::checkData($data_str,$master_code[$column]['code_id']);
-							break;
-						case 1:
-							$cycle_type = strtolower($data) == 'baseline' ? 0 : 1;
-							// Check wave exist
-							$cycle_id = Cycle::checkData($data_str,$cycle_type);
-							break;
-						case 2:
-							// Check oversample
-							$oversample_id = preg_replace('/[^0-9]/', "", $data);
-							$oversample_id = $oversample_id == 1 ? 0 : 1;
-							break;
-						case 3:
-							$column_piece = explode("_", $column);
-							$code_label = !empty($column_piece[1]) ? $column_piece[1] : "";
-
-							// Check category exist
-							$category = Category::checkData($code_label,$master_code[$column]['code_id'],$survey->id);
-
-							$category_item_data = CategoryItem::checkData($data,$category->id);
-							$category_items[$i] = array(
-								'category_item_id' => $category_item_data
-								);
-							$i++;
-							break;
-						case 4:
-							if (!empty($data)) {
-							// Check answers exist
-							$question_category = Question::select(
-								DB::raw(
-									'question_categories.id as question_category_id'
-									)
-								)
-							->join('question_categories', 'question_categories.id', '=', 'questions.question_category_id')
-							->where('questions.code_id', '=', $master_code[$column]['code_id'])
-							->first();
-
-							$question = Question::where('code_id','=',$master_code[$column]['code_id'])->where('question_category_id','=',$question_category->question_category_id)->first();
-							$answer = Answer::checkData($data,$question->id,$cycle_id,1);
-
-							$questions_list[$j]['answer_id'] = $answer->id;
-							$questions_list[$j]['region_id'] = $region_id;
-							$questions_list[$j]['sample_type'] = $oversample_id;
-							$j++;
-							}
-							
-							break;
-
-						default:
-							continue;
-							break;
-					}
-				}
-			}
-
-			// Save participant
-			$participant = new Participant;
-			$participant->survey_id = $survey->id;
-			$participant->sample_type = $oversample_id;
-			$participant->save();
-
-			$question_participants_massive_save = array();
-			$amount_massive_save = array();
-			$l=0;
-			foreach ($questions_list as $key => $question_list) {
-
-				$question_participants_massive_save[$key] = array(
-						'answer_id' => $question_list['answer_id'],
-						'participant_id' => $participant->id,
-						'region_id' => $question_list['region_id'],
-						'sample_type' => $question_list['sample_type'],
-						);
-
-					if (!$question_list['sample_type']) {
-						$amount = Amount::where('answer_id', '=', $question_list['answer_id'])
-						->where('region_id','=', $question_list['region_id'])
-						->where('sample_type', '=', 0)
-						->first();
-
-						if(!isset($amount))
-						{
-							$amount_massive_save[$l] = array(
-								'answer_id' => $question_list['answer_id'],
-								'participant_id' => $participant->id,
-								'region_id' => $question_list['region_id'],
-								'sample_type' => $question_list['sample_type'],
-							);
-							$l++;
-						}
-						else
-						{
-							$amount->amount = $amount->amount+1;
-							$amount->save();	
-						}
-					}
-				}
-
-			$amount_massive_save = array();
-			foreach ($category_items as $key => $category_item) {
-				$amount_massive_save[$key] = array(
-					'participant_id'=>$participant->id,
-					'category_item_id'=>$category_item['category_item_id']
-				);
-			}
-			DB::table('question_participants')->insert($question_participants_massive_save);
-			DB::table('filter_participants')->insert($amount_massive_save);
-
-			AmountFilter::checkData($participant->id);
-			Log::info('Participant:'.$participant->id);
-		}
-
-    	return $status;
 	}
 
 	Public static function readHeaderCSV($survey,$delayed_jobs = array())
@@ -436,14 +346,28 @@ class Survey extends Eloquent {
 		foreach($frow as $key => $column) {
 			$schema_texts[$key] = $column;
 		}
-
 		Schema::create('temporary_headers', function($table) use ($schema_texts) {
 			foreach ($schema_texts as $key => $schema_text) {
 				$table->text($schema_text)->nullable();
 			}
 		}
 		);
-		DB::statement("LOAD DATA LOCAL INFILE '$inputFileName' into table temporary_headers FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ignore 1 lines");
+
+		$flag = true;
+		$i = 0;
+		$temporary_headers = array();
+		while (($emapData = fgetcsv($fp, 10000, ",")) !== FALSE)
+			if($flag) { 
+				foreach($frow as $key => $column) {
+					$temporary_headers[$i][(string)$column] = (string)$emapData[$key];
+				}
+				$i++;
+				continue; 
+			}
+
+		DB::table('temporary_headers')->insert(
+				$temporary_headers
+				);
 
 		return $data_label;
 	}

@@ -61,6 +61,7 @@ class MasterCode extends Eloquent {
 
 	public static function savingProcess($survey,$request=array())
 	{
+		$status = true;
 		// try{
 		// 	DB::beginTransaction();
 			$options_selected = $request;
@@ -102,6 +103,7 @@ class MasterCode extends Eloquent {
 			}
 			if ($options_selected['category'] == 4) {
 				// Save category question 
+				Log::info($options_selected['category_question']);
 				$question_category = QuestionCategory::checkData($options_selected['category_question'],$code->id,$survey->id);
 				// Save question
 				$question = Question::checkData($options_selected['label'],$code->id,$question_category->id);
@@ -114,7 +116,6 @@ class MasterCode extends Eloquent {
   //     DB::rollback();
   //     $status = false;
   //   }
-			$status = false;
 		return $status;
 	}
 	
