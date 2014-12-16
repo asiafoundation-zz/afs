@@ -58,6 +58,7 @@ class Participant extends Eloquent {
 			$participants[$participant_load->id]['questions'] =  DB::table('participants')
 			->select(
 				'participants.id as participant_id',
+				'participants.sample_type as sample_type',
 				'regions.name as region',
 				'answers.answer as answers',
 				'question_participants.sample_type as cycle',
@@ -69,7 +70,6 @@ class Participant extends Eloquent {
 			->join('question_participants','question_participants.participant_id','=','participants.id')
 			->join('regions','regions.id','=','question_participants.region_id')
 			->join('answers','answers.id','=','question_participants.answer_id')
-			->join('cycles','cycles.id','=','answers.cycle_id')
 			->join('questions','questions.id','=','answers.question_id')
 			->join('codes','codes.id','=','questions.code_id')
 			->join('master_codes','master_codes.id','=','codes.master_code_id')
@@ -96,7 +96,7 @@ class Participant extends Eloquent {
 			->orderBy('category_id', 'asc')
 			->get();
 
-			$cycle = DB::table('cycles')->where('cycle_type','=',$participants[$participant_load->id]['questions'][0]->cycle)->first();
+			$cycle = DB::table('cycles')->where('cycle_type','=',$participants[$participant_load->id]['questions'][0]->sample_type)->first();
 			$participants[$participant_load->id]['region'] = $participants[$participant_load->id]['questions'][0]->region;
 			$participants[$participant_load->id]['cycle'] = $cycle->name;
 			$participants[$participant_load->id]['sample_type'] = $participants[$participant_load->id]['filters'][0]->sample_type;
