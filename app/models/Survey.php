@@ -364,7 +364,12 @@ class Survey extends Eloquent {
 		while (($emapData = fgetcsv($fp, 10000, ",")) !== FALSE)
 			if($flag) { 
 				foreach($frow as $key => $column) {
-					$temporary_headers[$i][(string)$column] = (string)$emapData[$key];
+					$dataval = utf8_encode((string)$emapData[$key]);
+					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $dataval);
+					$dataval = str_replace('"', "", $dataval);
+					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
+
+					$temporary_headers[$i][(string)$column] = $dataval;
 				}
 				$i++;
 				continue; 
