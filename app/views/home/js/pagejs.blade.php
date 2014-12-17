@@ -254,7 +254,6 @@
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
-            // console.log(data.question.first_data[0].amount)
 
             FilterSelect.is_compare = 1;
             disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
@@ -277,13 +276,28 @@
             var total_amount_end = 0;
 
             for (i = 0; i < data.question.first_data.length; i++) {
-              first_list.push({ y: data.question.first_data[i].amount, label: data.question.first_data[i].answer});
+              var answer = data.question.first_data[i].answer;
+              var answer_label = answer.substring(20,0);
+
+              if(answer.length > 20){
+                  answer_label = answer_label+' ...';
+              }
+
+              first_list.push({ y: data.question.first_data[i].amount, label: answer_label, name: answer});
               baseline_text = data.question.first_data[0].cycle;
             }
 
+            var str_endline = "";
             for (i = 0; i < data.question.second_data.length; i++) {
-              end_list.push({ y: data.question.second_data[i].amount, label: data.question.second_data[i].answer});
-              endline_text = data.question.first_data[0].cycle;
+              var answer = data.question.first_data[i].answer;
+              var answer_label = answer.substring(20,0);
+
+              if(answer.length > 20){
+                  answer_label = answer_label+' ...';
+              }
+
+              end_list.push({ y: data.question.second_data[i].amount, label: answer_label, name: answer});
+              endline_text = data.question.second_data[0].cycle;
             }
 
             // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
