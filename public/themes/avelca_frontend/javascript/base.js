@@ -46,11 +46,11 @@ function chartjs(color_set,data_points,data_points_pie)
   if (data_points.length <= 10) {
     width = 300;
   }else if(data_points.length > 10 && data_points.length <= 20){
-    width = 1000;
+    width = 600;
     label_font_size = 14;
   }else{
     width = Math.floor(data_points.length / 10);
-    width = width * 1100;
+    width = width * 400;
     label_font_size = 18;
   }
 
@@ -68,6 +68,7 @@ function chartjs(color_set,data_points,data_points_pie)
         labelFontSize: 10,
       },
       axisX: {
+          interval: 1,
           tickThickness: 1,
           lineThickness: 1,
           labelFontSize: label_font_size,
@@ -108,7 +109,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
     label_font_size = 18;
   }else{
     width = Math.floor(first_list.length / 10);
-    width = width * 300;
+    width = width * 400;
     label_font_size = 20;
   }
 
