@@ -51,7 +51,7 @@ function chartjs(color_set,data_points,data_points_pie)
   }else{
     width = Math.floor(data_points.length / 10);
     width = width * 400;
-    label_font_size = 18;
+    label_font_size = 14;
   }
 
   // Apply width to chart
