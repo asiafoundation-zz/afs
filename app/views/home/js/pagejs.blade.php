@@ -541,9 +541,9 @@
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)){
             var answer = assign_answer[key]['answer'];
-            var answer_label = answer.substring(30,0);
+            var answer_label = answer.substring(20,0);
 
-            if(answer.length > 30){
+            if(answer.length > 20){
                 answer_label = answer_label+' ...';
             }
 
@@ -558,7 +558,7 @@
         var data_list = [//colorSet Array
           @foreach ($question as $key => $answer)
             <?php 
-              $answer_string = strlen($answer->answer) > 30 ? substr($answer->answer, 0,30)." ..." : $answer->answer;
+              $answer_string = strlen($answer->answer) > 20 ? substr($answer->answer, 0,20)." ..." : $answer->answer;
             ?>
             { label: "{{ $answer_string }}", name: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}",y: {{ $answer->indexlabel }} },
           @endforeach
@@ -613,9 +613,9 @@
         for (var key in assign_answer) {
           if (assign_answer.hasOwnProperty(key)) {
             var answer = assign_answer[key]['answer'];
-            var answer_label = answer.substring(30,0);
+            var answer_label = answer.substring(20,0);
 
-            if(answer.length > 30){
+            if(answer.length > 20){
                 answer_label = answer_label+' ...';
             }
 
@@ -630,7 +630,7 @@
         var data_list = [//colorSet Array
           @foreach ($question as $answer)
               <?php 
-                $answer_string = strlen($answer->answer) > 30 ? substr($answer->answer, 0,30)." ..." : $answer->answer;
+                $answer_string = strlen($answer->answer) > 20 ? substr($answer->answer, 0,20)." ..." : $answer->answer;
                ?>
               { y: {{ $answer->amount }}, label: "{{ $answer_string }}", name: "{{ $answer->answer }}", answer_id: "{{ $answer->id_answer }}"},
           @endforeach                  
