@@ -4,6 +4,7 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
+		$request = array();
 		$survey = DB::table('surveys')->where('is_default','=',1)->first();
 
 		if (!count($survey)) {
@@ -20,10 +21,11 @@ class HomeController extends BaseController {
 		}
 		$default_question = reset($default_questions);
 
-		$request = array('category' => $default_question->id_question_categories, 'cycle' => $default_question->id_cycle);
+		$request['category'] = $default_question->id_question_categories;
+		$request['cycle'] = $default_question->id_cycle;
 
 		// Get catefory and question list
-		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion();
+		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion($request);
 		$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
 		$question_by_category = QuestionCategory::questionByCategory($request);
 
