@@ -108,7 +108,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
     label_font_size = 18;
   }else{
     width = Math.floor(first_list.length / 10);
-    width = width * 1200;
+    width = width * 800;
     label_font_size = 20;
   }
 
