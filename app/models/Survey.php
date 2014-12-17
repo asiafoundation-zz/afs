@@ -33,6 +33,7 @@ class Survey extends Eloquent {
 		'baseline_file',
 		'header_file',
 		'publish',
+		'information',
 		'is_default'
 		);
 	protected $guarded = array('id');
@@ -74,7 +75,11 @@ class Survey extends Eloquent {
 			'is_default' => array(
 						'type' => 'number',
 						'onIndex' => true
-					)
+					),
+			'information' => array(
+						'type' => 'text',
+						'onIndex' => true
+					),
 		);
 
 		return compact('fields');
@@ -106,9 +111,7 @@ class Survey extends Eloquent {
 					// Is queue exist
 					$queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
 					if ((int)$queue->queue < (int)$queue->information) {
-						$participant_count = Participant::where('survey_id','=',$survey_list->id)->count();
-						$percentage = ((int)$participant_count / (int)$queue->information) * 100;
-						$percentage = round($percentage);
+						$percentage = round($queue->information);
 					}
 					elseif(!isset($queue) && Participant::count() > 0){
 						if ((int)$queue->queue >= (int)$queue->information){
@@ -204,6 +207,7 @@ class Survey extends Eloquent {
 			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM ".$file_name.")");
 		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
 			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM ".$file_name.")");
+		$count_participants = DB::table('participants')->count();
 
 		// Progress Bar Estimations
 		$delayed_jobs->information = 10;
@@ -278,7 +282,7 @@ class Survey extends Eloquent {
 
 					$sql_commands = "
 					INSERT INTO answers(answer, question_id, cycle_id)
-					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave FROM ".$file_name." WHERE ".$single_code['code']."!= '');
+					(SELECT DISTINCT CASE ".$single_code['code']." WHEN '' THEN 'Tidak Menjawab' ELSE ".$single_code['code']." END, ".$question_id.", sfl_wave FROM ".$file_name.");
 					";
 
 					DB::statement($sql_commands);
@@ -359,7 +363,12 @@ class Survey extends Eloquent {
 		while (($emapData = fgetcsv($fp, 10000, ",")) !== FALSE)
 			if($flag) { 
 				foreach($frow as $key => $column) {
-					$temporary_headers[$i][(string)$column] = (string)$emapData[$key];
+					$dataval = utf8_encode((string)$emapData[$key]);
+					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $dataval);
+					$dataval = str_replace('"', "", $dataval);
+					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
+
+					$temporary_headers[$i][(string)$column] = $dataval;
 				}
 				$i++;
 				continue; 
