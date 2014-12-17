@@ -5,7 +5,7 @@
     <!-- Map JS-->
     <script src="{{ Theme::asset('javascript/leaflet.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
-    <script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
+    <script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}.geojson"></script>
 
   <script type="text/javascript">
     window.onload = function () {
@@ -24,7 +24,7 @@
       // $('.li-region li.title-filters').removeAttr('onclick');
       // $('.li-region .title-filters').data('value', '0');
 
-      disable_anchor($('.clear-all'), 0);
+      disable_anchor($('.clear-all'),'#AA6071', 0);
 
       // $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
       // $('#select-category').prepend("<option value='0'>Pilih category</option>");

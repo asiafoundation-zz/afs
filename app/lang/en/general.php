@@ -85,12 +85,14 @@ return array(
 	"publish" => "Publish",
 	"manage_default_question" => "Manage Default Question",
 	"manage_file" => "Manage File",
-	"upload_file" => "Upload File",
+	"upload_file_geojson" => "Upload File Geojson",
 	"upload_map" => "Upload Map",
 	"is_default" => "Is Default",
 	"manage_filter" => "Manage Filter",
 	"remove_all_surveys" => "Remove All Survey",
 
 	"logs" => "Logs",
-	"manage_survey" => "Manage Survey"
+	"manage_survey" => "Manage Survey",
+	"information" => "Information",
+	"edit_information" => "Edit Information",
 );

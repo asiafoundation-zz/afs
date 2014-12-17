@@ -88,7 +88,8 @@ class Question extends Eloquent {
 					cycles.name as cycle,
 					(SELECT sum(amounts.amount) 
 						from amounts 
-						where amounts.answer_id = id_answer) AS amount,
+						where amounts.answer_id = id_answer
+						and amounts.sample_type = 0) AS amount,
 					0 AS indexlabel';
 
 		if(!empty($request['region'])){
@@ -107,7 +108,8 @@ class Question extends Eloquent {
 						regions.name as name,
 						(SELECT sum(amounts.amount) 
 							from amounts 
-							where amounts.answer_id = id_answer and region_id = id_region) AS amount,
+							where amounts.answer_id = id_answer and region_id = id_region
+							and amounts.sample_type = 0) AS amount,
 						0 AS indexlabel';	
 		}
 		
@@ -157,7 +159,7 @@ class Question extends Eloquent {
 				$questions =  $questions->join('regions','regions.id','=','amounts.region_id');
 			}
 
-			// $questions = $questions->where('amounts.sample_type', '=', 0);
+			$questions = $questions->where('amounts.sample_type', '=', 0);
 		}
 
 		return $questions;

@@ -161,23 +161,60 @@ class HomeController extends BaseController {
 						}
 					}
 
-					$first_index = 0;
-					$second_index = 0;
+					$baseline = array();
+					$endline = array();
 					foreach($default_questions as $row){
-						
+						$answer = strtolower($row->answer);
+						$answer = preg_replace('/^([^a-z0-9])*/', '', $answer);
+						$answer = str_replace('"', "", $answer);
+						$answer = str_replace('(', "", $answer);
+						$answer = str_replace(')', "", $answer);
+						$answer = preg_replace('/\s+/', '', $answer);
+						$answer = trim(preg_replace('/\s\s+/', ' ', $answer));
+
 						if($row->cycle_type == 0){
-							$answer_data['first_data'][$first_index]['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);	
-							$answer_data['first_data'][$first_index]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
-							$first_index++;
+							$baseline[$answer][$row->cycle_type]['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);
+							$baseline[$answer][$row->cycle_type]['cycle_type'] = $row->cycle_type;
+
+							$baseline[$answer][$row->cycle_type]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
 						}
 
 						if($row->cycle_type == 1){
-							$answer_data['second_data'][$second_index]['amount'] = !$second_amount_total ? 0 : round(($row->amount / $second_amount_total) * 100,2);	
-							$answer_data['second_data'][$second_index]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
-							$second_index++;
+							$endline[$answer][$row->cycle_type]['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);
+							$endline[$answer][$row->cycle_type]['cycle_type'] = $row->cycle_type;
+							$endline[$answer][$row->cycle_type]['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
 						}
 					}
 
+					$answer_normalizes = array_merge($baseline,$endline);
+					$answer_data = array();
+					$first_index = 0;
+					$second_index = 0;
+					foreach ($answer_normalizes as $key => $answer_normalize) {
+
+						if (!empty($answer_normalize[0])) {
+							$answer_data['first_data'][$first_index]['amount'] = $answer_normalize[0]['amount'];
+							$answer_data['first_data'][$first_index]['answer'] = $answer_normalize[0]['answer'];
+
+							if (empty($answer_normalize[1])) {
+								$answer_data['second_data'][$second_index]['amount'] = 0;
+								$answer_data['second_data'][$second_index]['answer'] = "Tidak Menjawab";
+								$second_index++;
+							}
+							$first_index ++;
+						}
+						if (!empty($answer_normalize[1])) {
+							$answer_data['second_data'][$second_index]['amount'] = $answer_normalize[1]['amount'];
+							$answer_data['second_data'][$second_index]['answer'] = $answer_normalize[1]['answer'];
+
+							if (empty($answer_normalize[0])) {
+								$answer_data['first_data'][$first_index]['amount'] = 0;
+								$answer_data['first_data'][$first_index]['answer'] = "Tidak Menjawab";
+								$first_index++;
+							}
+							$second_index ++;
+						}
+					}
 					$load_filter = array();
 					$load_filter = array(
 						"default_question" => $default_question,

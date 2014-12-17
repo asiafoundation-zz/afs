@@ -3,6 +3,8 @@
      function find_survey()
      {
       // Get cycles functions
+      disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter.png') }}) no-repeat right center transparent", 1);
+      disable_anchor($('.clear-all'), '#AA6071', 0);
       clear_all_filter_nosurvey();
       clear_text_notification();
       $(".chart-pagination").show();
@@ -16,6 +18,7 @@
           if (data != false) {
             // Re declare object filter data 
             cycle_id = FilterSelect.cycle;
+            FilterSelect.is_compare = 0;
 
             $("#question-name").html(data.default_question.question);
             $("#select_cycle_label").html(cycle_text);
@@ -60,7 +63,7 @@
 
             // Is Has Compare Cycle
             var is_has_compare = data_cycles_length > 1 ? '<li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>' : '';
-            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li>'+is_has_compare+'<li><a class="orange-bg" onclick="next_question(1)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>';
+            var chart_pagination = '<li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li>'+is_has_compare+'<li></li>';
 
             $(".chart-pagination").html(chart_pagination);
 
@@ -166,7 +169,7 @@
 
         if(option_filters.length != 0){
 
-          disable_anchor($('.clear-all'), 1);
+          disable_anchor($('.clear-all'), '', 1);
           $('#chart_canvas').hide();
           $('.loading-flag').show();
 
@@ -222,20 +225,40 @@
         }else{
           FilterSelect.filter_exist = 0;
           find_survey();
-          disable_anchor($('.clear-all'), 0);
+          disable_anchor($('.clear-all'),'#AA6071', 0);
         }
      }
 
     function compare_cycle(move)
     {
+
+      
       clear_text_notification();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
+
+      var value = 0;
+      if(FilterSelect.region != ""){
+        value = [FilterSelect.region, "region"];
+
+        text_area_filter_process = text_area_filter(value);
+        var filter_text = text_area_filter_process[1];
+
+        $("#filter-by-label").text(filter_text);
+      }else{
+        clear_all_filter_nosurvey();  
+        $("#filter-by-label").text("{{Lang::get('frontend.all_survey')}}");
+      }     
+
       // Get cycles functions
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
             // console.log(data.question.first_data[0].amount)
+
+            FilterSelect.is_compare = 1;
+            disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
+
             $('#chart_canvas').show();
             $('.loading-flag').hide();
             // Build chart
@@ -255,10 +278,12 @@
 
             for (i = 0; i < data.question.first_data.length; i++) {
               first_list.push({ y: data.question.first_data[i].amount, label: data.question.first_data[i].answer});
+              baseline_text = data.question.first_data[0].cycle;
             }
 
             for (i = 0; i < data.question.second_data.length; i++) {
               end_list.push({ y: data.question.second_data[i].amount, label: data.question.second_data[i].answer});
+              endline_text = data.question.first_data[0].cycle;
             }
 
             // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
@@ -269,9 +294,9 @@
             }else{
               $("#question-name").html(question_text);
 
-              if (Object.keys(data.cycles).length > 1) {
-                $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
-              }
+              // if (Object.keys(data.cycles).length > 1) {
+              //   $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+              // }
             }
 
             // Re assingn Filter data
@@ -291,7 +316,7 @@
     {
       clear_all_filter_nosurvey();
       clear_text_notification();
-      disable_anchor($('.clear-all'), 0);
+      disable_anchor($('.clear-all'),'#AA6071', 0);
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
@@ -381,7 +406,7 @@
       }
       
 
-      disable_anchor($('.clear-all'), 1);
+      disable_anchor($('.clear-all'), '', 1);
       text_area_filter_process = text_area_filter(value);
 
       var filter_text = text_area_filter_process[1];
@@ -613,6 +638,8 @@
     }
 
     function text_area_filter(value){
+
+      console.log(value);
       var option_filters = [];
 
       if(value[0] != 0){

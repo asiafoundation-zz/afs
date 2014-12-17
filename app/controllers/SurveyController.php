@@ -70,7 +70,8 @@ class SurveyController extends AvelcaController {
 			}
 			elseif (!empty($request['excel'])) {
 				$survey->publish = 3;
-				$survey->baseline_file = $request['excel'];
+				$survey->baseline_file = self::fileRename($request['baseline_file']);
+				$survey->header_file = self::fileRename($request['header_file']);
 				$survey->save();
 
 				self::postUpload($files);
@@ -89,6 +90,14 @@ class SurveyController extends AvelcaController {
 
 				Session::flash('alert-class', 'alert-success');
 				Session::flash('message', 'Save Succeed');
+
+				return Redirect::to('/admin/survey/managesurvey/'. $survey->id);
+			}elseif(isset($request['information'])){
+				$survey->information = $request['information'];
+				$survey->save();
+
+				Session::flash('alert-class', 'alert-success');
+				Session::flash('message', 'Save Succeed');
 			}
 		}else{
 			$rule = array('survey_name' => 'Required');
@@ -97,7 +106,7 @@ class SurveyController extends AvelcaController {
 
 			if($validator->passes())
 			{
-				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => Input::file('baseline_file')->getClientOriginalName(),'header_file' => Input::file('header_file')->getClientOriginalName(), 'geojson_file' => Input::file('geojson')->getClientOriginalName(),'publish' => 3));
+				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => self::fileRename(Input::file('baseline_file')->getClientOriginalName()),'header_file' => self::fileRename(Input::file('header_file')->getClientOriginalName()), 'geojson_file' => self::fileRename(Input::file('geojson')->getClientOriginalName()),'publish' => 3));
 
 				if($survey)
 				{
@@ -122,11 +131,11 @@ class SurveyController extends AvelcaController {
 		
 		foreach ($files as $key_files => $file) {
 			$filename = $file->getClientOriginalName();
-			File::delete(public_path()."/uploads/".$filename);
+			$file_name = $this->fileRename($filename);
 
-			if(!file_exists($filename))
+			if(!file_exists($file_name))
 			{
-				$uploaded = $file->move('uploads/', $filename);	
+				$uploaded = $file->move('uploads/', $file_name);	
 			}
 		}
 		
@@ -305,5 +314,18 @@ class SurveyController extends AvelcaController {
 	{
 		Survey::deleteSurvey($id);
 		return Redirect::to('/admin/survey');
+	}
+
+	public static function fileRename($file_name)
+	{
+		$file_name = explode(".",$file_name);
+		$file_name = $file_name[0];
+		$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
+		$file_name = str_replace('"', "", $file_name);
+		$file_name = preg_replace('/\s+/', '', $file_name);
+		$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
+		$file_name = strtolower($file_name);
+
+		return $file_name;
 	}
 }
