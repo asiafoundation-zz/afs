@@ -55,7 +55,7 @@ class QuestionCategory extends Eloquent {
 		return $question_category;
 	}
 
-	public static function QuestionCategoryFilterRegion()
+	public static function QuestionCategoryFilterRegion($request)
 	{
 		$question_categories =  DB::table('question_categories')
 			->select(
@@ -71,6 +71,10 @@ class QuestionCategory extends Eloquent {
 			if (empty($request['survey_id'])) {
 				$question_categories = $question_categories->where('surveys.is_default','=',1);
 			}
+			else{
+				$question_categories = $question_categories->where('surveys.id','=',$request['survey_id']);
+			}
+			
 			$question_categories = $question_categories->GroupBy('id_question_categories')->get();
 
 		return $question_categories;
