@@ -111,9 +111,7 @@ class Survey extends Eloquent {
 					// Is queue exist
 					$queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
 					if ((int)$queue->queue < (int)$queue->information) {
-						$participant_count = Participant::where('survey_id','=',$survey_list->id)->count();
-						$percentage = ((int)$participant_count / (int)$queue->information) * 100;
-						$percentage = round($percentage);
+						$percentage = round($queue->information);
 					}
 					elseif(!isset($queue) && Participant::count() > 0){
 						if ((int)$queue->queue >= (int)$queue->information){
@@ -209,6 +207,7 @@ class Survey extends Eloquent {
 			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM ".$file_name.")");
 		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
 			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM ".$file_name.")");
+		$count_participants = DB::table('participants')->count();
 
 		// Progress Bar Estimations
 		$delayed_jobs->information = 10;
@@ -283,7 +282,7 @@ class Survey extends Eloquent {
 
 					$sql_commands = "
 					INSERT INTO answers(answer, question_id, cycle_id)
-					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave FROM ".$file_name." WHERE ".$single_code['code']."!= '');
+					(SELECT DISTINCT CASE ".$single_code['code']." WHEN '' THEN 'Tidak Menjawab' ELSE ".$single_code['code']." END, ".$question_id.", sfl_wave FROM ".$file_name.");
 					";
 
 					DB::statement($sql_commands);
