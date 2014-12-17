@@ -70,7 +70,8 @@ class SurveyController extends AvelcaController {
 			}
 			elseif (!empty($request['excel'])) {
 				$survey->publish = 3;
-				$survey->baseline_file = $request['excel'];
+				$survey->baseline_file = self::fileRename($request['baseline_file']);
+				$survey->header_file = self::fileRename($request['header_file']);
 				$survey->save();
 
 				self::postUpload($files);
@@ -85,6 +86,14 @@ class SurveyController extends AvelcaController {
 				}
 				
 				$survey->is_default = $request['is_default'];
+				$survey->save();
+
+				Session::flash('alert-class', 'alert-success');
+				Session::flash('message', 'Save Succeed');
+
+				return Redirect::to('/admin/survey/managesurvey/'. $survey->id);
+			}elseif(isset($request['information'])){
+				$survey->information = $request['information'];
 				$survey->save();
 
 				Session::flash('alert-class', 'alert-success');

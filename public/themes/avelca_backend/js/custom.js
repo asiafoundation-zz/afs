@@ -3,6 +3,7 @@ $(document).ready(function(){
 	// $('.ms-visible').hide();
 	$('.progress').show();
 	$('.loading-flag').hide();
+	$('#loading-flag').hide();
 
 	// $('.excel-upload').change(function(){
 	// 	var file = this.files[0];

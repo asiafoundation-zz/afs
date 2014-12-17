@@ -123,7 +123,7 @@
               @if($cycles_count > 1)
               <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
               @endif
-              <li><a class="orange-bg" onclick="next_question(1)">{{ Lang::get('frontend.next_question') }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>
+              
             </ul>
             <span id="filter-by-label">{{ Lang::get('frontend.all_survey') }}</span><span id="region-label"></span>
           </div>
@@ -136,7 +136,7 @@
     <div class="container">
       <div class="col-md-6">
         <h4><b>{{ Lang::get('frontend.description') }}</b></h4>
-        {{ Lang::get('frontend.description_content') }}
+        {{ $survey->information }}
       </div>
       <div class="col-md-6">
         <div class="extras">
