@@ -282,7 +282,7 @@ class Survey extends Eloquent {
 
 					$sql_commands = "
 					INSERT INTO answers(answer, question_id, cycle_id)
-					(SELECT DISTINCT CASE ".$single_code['code']." WHEN '' THEN 'Tidak Menjawab' ELSE ".$single_code['code']." END, ".$question_id.", sfl_wave FROM ".$file_name.");
+					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave FROM ".$file_name." WHERE ifnull(trim(".$single_code['code']."),'') != '');
 					";
 
 					DB::statement($sql_commands);
