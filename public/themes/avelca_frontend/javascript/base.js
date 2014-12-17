@@ -46,12 +46,12 @@ function chartjs(color_set,data_points,data_points_pie)
   if (data_points.length <= 10) {
     width = 300;
   }else if(data_points.length > 10 && data_points.length <= 20){
-    width = 1000;
+    width = 600;
     label_font_size = 14;
   }else{
     width = Math.floor(data_points.length / 10);
-    width = width * 1100;
-    label_font_size = 18;
+    width = width * 400;
+    label_font_size = 14;
   }
 
   // Apply width to chart
@@ -68,6 +68,7 @@ function chartjs(color_set,data_points,data_points_pie)
         labelFontSize: 10,
       },
       axisX: {
+          interval: 1,
           tickThickness: 1,
           lineThickness: 1,
           labelFontSize: label_font_size,
@@ -99,16 +100,38 @@ function chartjs(color_set,data_points,data_points_pie)
 
 function compare_chart(first_list, end_list, colorSet, baseline_text,endline_text)
 {
+  var width = 0;
+  var label_font_size = 10;
+  if (first_list.length <= 10) {
+    width = 300;
+  }else if(first_list.length > 10 && first_list.length <= 20){
+    width = 600;
+    label_font_size = 18;
+  }else{
+    width = Math.floor(first_list.length / 10);
+    width = width * 400;
+    label_font_size = 20;
+  }
+
+  $("#compareChart").css({'height': width+'px', 'width':'100%'});
+
   CanvasJS.addColorSet("greenShades",colorSet);
   // console.log(first_list);
   var chart = new CanvasJS.Chart("compareChart",
   {
       title:{
-        text: 'Compare "'+baseline_text+'" dan "'+endline_text+'"'
+        text: 'Compare "'+baseline_text+'" dan "'+endline_text+'"',
+        fontSize: 24
+      },
+      axisX: {
+        labelFontSize: label_font_size,
+        interval:1
       },
       axisY: {
-        valueFormatString: " ",
-        tickLength: 0
+        labelFontSize: label_font_size
+      },
+      axisY2: {
+        labelFontSize: label_font_size
       },
       legend: {
         fontSize: 24,
@@ -120,7 +143,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
         showInLegend: true,
         legendText: baseline_text+" (Hasil survey 2013)",
         dataPoints: first_list,
-        toolTipContent: "{label}: <strong>{y}%</strong>"
+        toolTipContent: "{name}: <strong>{y}%</strong>"
       },
       {
         type: "bar",
@@ -128,7 +151,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
         axisYType: "secondary",
         legendText: endline_text+" (Hasil survey 2014)",
         dataPoints: end_list,
-        toolTipContent: "{label}: <strong>{y}%</strong>"
+        toolTipContent: "{name}: <strong>{y}%</strong>"
       }
       ]
   });
