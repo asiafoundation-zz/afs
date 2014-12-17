@@ -219,8 +219,9 @@ function change_page(move) {
 
 function post_category() {
 	$('#popup_modal').hide();
-	$('.loading-flag').show();
+	$('#loading-flag').show();
 	$('#button-footer').hide();
+	$('.close').hide();
 
 	var survey_id_val = $("#survey_id").val();
 	$.post( "survey/category", { survey_id: survey_id_val, options_selected: options_selected })
