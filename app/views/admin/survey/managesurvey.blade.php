@@ -4,7 +4,7 @@
 
 <script src="{{ Theme::asset('js/leaflet.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
-<script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}.geojson"></script>
+<script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
 
 @include('admin/survey/js/mapjs')
 

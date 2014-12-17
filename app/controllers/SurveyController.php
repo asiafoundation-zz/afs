@@ -196,22 +196,24 @@ class SurveyController extends AvelcaController {
 	public function getManagesurvey($id)
 	{
 		// Load survey
+		$request = array();
 		$survey = Survey::where('id', '=', $id)->first();
+		$request['survey_id'] = $survey->id;
 
 		// Get Default Question
-		$default_questions = Question::DefaultQuestion(Input::get());
+		$default_questions = Question::DefaultQuestion($request);
 
 		$default_question = reset($default_questions);
 
-		$request = array('category' => $default_question->id_question_categories);
+		$request['category'] = $default_question->id_question_categories;
 
 		// Get catefory and question list
-		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion(Input::get());
+		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion($request);
 		$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
 		$question_by_category = QuestionCategory::questionByCategory($request);
 
 		$cycles = array();
-		$loadcycles = Cycle::QuestionCycle($default_question);
+		$loadcycles = Cycle::all();
 		foreach ($loadcycles as $key_loadcycles => $loadcycle) {
 			$cycles[$loadcycle->id] = $loadcycle->name;
 		}
@@ -316,15 +318,22 @@ class SurveyController extends AvelcaController {
 		return Redirect::to('/admin/survey');
 	}
 
-	public static function fileRename($file_name)
+	public static function fileRename($file_names)
 	{
-		$file_name = explode(".",$file_name);
-		$file_name = $file_name[0];
-		$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
-		$file_name = str_replace('"', "", $file_name);
-		$file_name = preg_replace('/\s+/', '', $file_name);
-		$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
-		$file_name = strtolower($file_name);
+		$file_name_array = explode(".",$file_names);
+		$file_name = $file_name_array[0];
+
+		if(strtolower($file_name_array[1]) == "csv"){
+			$file_name = explode(".",$file_name);
+			$file_name = $file_name[0];
+			$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
+			$file_name = str_replace('"', "", $file_name);
+			$file_name = preg_replace('/\s+/', '', $file_name);
+			$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
+			$file_name = strtolower($file_name);
+		}else{
+			$file_name = $file_names;
+		}
 
 		return $file_name;
 	}
