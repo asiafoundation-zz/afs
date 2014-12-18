@@ -6,23 +6,7 @@
 <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
 <script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
 
-<link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/wysihtml5.css') }}">
-<script type="text/javascript" src="{{ Theme::asset('js/wysihtml5.js') }}"></script>
-<script type="text/javascript" src="{{ Theme::asset('js/wysihtml5script.js') }}"></script>
-
 @include('admin/survey/js/mapjs')
-<script>
-  $('.textarea').wysihtml5({
-    "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
-    "emphasis": true, //Italics, bold, etc. Default true
-    "lists": false, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
-    "html": false, //Button which allows you to edit the generated HTML. Default false
-    "link": false, //Button to insert a link. Default true
-    "image": false, //Button to insert an image. Default true,
-    "color": false //Button to change color of font  
-  });
-  </script>
-
 <div class="row">
 	<div class="col-md-12">
 		<div class="notification">
