@@ -170,7 +170,7 @@ class Survey extends Eloquent {
 		$status = true;
 		$columns = "";
 		$file_name = $survey->baseline_file;
-		$inputFileName = public_path().'/uploads/'.$survey->baseline_file;
+		$inputFileName = public_path().'/uploads/'.$survey->baseline_file.".csv";
 		$fp = fopen($inputFileName, 'r');
 		$frow = fgetcsv($fp,0, ',');
 
@@ -190,7 +190,7 @@ class Survey extends Eloquent {
 		$username = Config::get('database.connections.mysql.username');
 		$password = Config::get('database.connections.mysql.password');
 
-		shell_exec('mysqlimport  --ignore-lines=1 --fields-terminated-by=","  --local -u '.$username.' -p'.$password.' '.$database.' '.$inputFileName);
+		shell_exec("mysqlimport  --ignore-lines=1 --fields-optionally-enclosed-by='\"' --fields-terminated-by=, --local -u ".$username." -p".$password." ".$database." ".$inputFileName);
 
 		DB::table('participants')->truncate();
 
@@ -201,8 +201,8 @@ class Survey extends Eloquent {
 		DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
 		DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
 
-		DB::statement("INSERT INTO cycles(NAME, cycle_type,survey_id)
-			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type, ".$survey->id." FROM ".$file_name.")");
+		DB::statement("INSERT INTO cycles(NAME, cycle_type)
+			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM ".$file_name.")");
 		DB::statement("INSERT INTO regions(NAME, code_id)
 			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM ".$file_name.")");
 		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
@@ -341,8 +341,8 @@ class Survey extends Eloquent {
 		$data_label = array();
 
 		$columns = "";
-		$survey = Survey::where('id', '=', 1)->first();
-		$inputFileName = public_path().'/uploads/'.$survey->header_file;
+		$survey = Survey::where('id', '=', $survey->id)->first();
+		$inputFileName = public_path().'/uploads/'.$survey->header_file.'.csv';
 		$fp = fopen($inputFileName, 'r');
 		$frow = fgetcsv($fp,0, ',');
 
