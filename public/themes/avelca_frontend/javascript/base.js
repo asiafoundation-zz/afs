@@ -100,6 +100,9 @@ function chartjs(color_set,data_points,data_points_pie)
 
 function compare_chart(first_list, end_list, colorSet, baseline_text,endline_text)
 {
+  console.log(first_list);
+  console.log(end_list);
+
   var width = 0;
   var label_font_size = 10;
   if (first_list.length <= 10) {
@@ -130,9 +133,9 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
       axisY: {
         labelFontSize: label_font_size
       },
-      axisY2: {
-        labelFontSize: label_font_size
-      },
+      // axisY2: {
+      //   labelFontSize: label_font_size
+      // },
       legend: {
         fontSize: 24,
       },
@@ -148,7 +151,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
       {
         type: "bar",
         showInLegend: true,
-        axisYType: "secondary",
+        // axisYType: "secondary",
         legendText: endline_text+" (Hasil survey 2014)",
         dataPoints: end_list,
         toolTipContent: "{name}: <strong>{y}%</strong>"
