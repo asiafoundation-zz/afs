@@ -100,8 +100,8 @@ function chartjs(color_set,data_points,data_points_pie)
 
 function compare_chart(first_list, end_list, colorSet, baseline_text,endline_text)
 {
-  console.log(first_list);
-  console.log(end_list);
+  // console.log(first_list);
+  // console.log(end_list);
 
   var width = 0;
   var label_font_size = 10;
