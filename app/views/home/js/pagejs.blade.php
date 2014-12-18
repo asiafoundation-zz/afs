@@ -239,6 +239,8 @@
 
       var value = 0;
       if(FilterSelect.region != ""){
+        clear_all_filter_noregion();
+        
         value = [FilterSelect.region, "region"];
 
         text_area_filter_process = text_area_filter(value);
