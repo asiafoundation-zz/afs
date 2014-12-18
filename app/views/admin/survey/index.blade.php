@@ -60,13 +60,13 @@ setInterval(function() {
 						</td>
 						<td>
 							@if($survey['publish_style'] == "importing")
-							{{ $survey['publish_text'] }}
-							<div class="progress">
-								<div class="progress-bar" style="width: {{ $survey['percentage'] }}%;">
-									{{ $survey['percentage'] }}%
+							{{ $survey['percentage'] }}
+							<!-- <div class="progress">
+								<div class="progress-bar" style="width: 100%;">
+									%
 									<span class="sr-only"></span>
 								</div>
-							</div>
+							</div> -->
 							@else
 							{{ $survey['publish_text'] }}
 							@endif
