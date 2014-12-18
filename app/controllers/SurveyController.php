@@ -131,11 +131,10 @@ class SurveyController extends AvelcaController {
 		
 		foreach ($files as $key_files => $file) {
 			$filename = $file->getClientOriginalName();
-			$file_name = $this->fileRename($filename);
 
-			if(!file_exists($file_name))
+			if(!file_exists($filename))
 			{
-				$uploaded = $file->move('uploads/', $file_name);	
+				$uploaded = $file->move('uploads/', $filename);	
 			}
 		}
 		
