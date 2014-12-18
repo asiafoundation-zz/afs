@@ -107,21 +107,22 @@ class Survey extends Eloquent {
 					$surveys[$key_survey_lists]['publish_style'] = "published";
 					break;
 				case 2:
-					$percentage = 0;
-					// Is queue exist
 					$queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
-					if ((int)$queue->queue < (int)$queue->information) {
-						$percentage = round($queue->information);
-					}
-					elseif(!isset($queue) && Participant::count() > 0){
-						if ((int)$queue->queue >= (int)$queue->information){
-							$percentage = 99;
-						}
-					}
+					// $percentage = 0;
+					// // Is queue exist
+					// $queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
+					// if ((int)$queue->queue < (int)$queue->information) {
+					// 	$percentage = round($queue->information);
+					// }
+					// elseif(!isset($queue) && Participant::count() > 0){
+					// 	if ((int)$queue->queue >= (int)$queue->information){
+					// 		$percentage = 99;
+					// 	}
+					// }
 
 					$surveys[$key_survey_lists]['publish_text'] = "Importing ";
 					$surveys[$key_survey_lists]['publish_style'] = "importing";
-					$surveys[$key_survey_lists]['percentage'] = $percentage;
+					$surveys[$key_survey_lists]['percentage'] = $queue->information;
 					$is_refresh = true;
 					break;
 				case 3:
@@ -210,7 +211,7 @@ class Survey extends Eloquent {
 		$count_participants = DB::table('participants')->count();
 
 		// Progress Bar Estimations
-		$delayed_jobs->information = 10;
+		$delayed_jobs->information = "Saving Regions";
 		$delayed_jobs->save();
 		// Change Status
 		$survey->publish = 2;
@@ -236,7 +237,7 @@ class Survey extends Eloquent {
 		DB::statement($sql_commands);
 
 		// Progress Bar Estimations
-		$delayed_jobs->information = 20;
+		$delayed_jobs->information = "Saving Categories";
 		$delayed_jobs->save();
 
 		DB::table('answers')->truncate();
@@ -266,10 +267,6 @@ class Survey extends Eloquent {
 			Log::info('Category:'.$category->name);
 		}
 
-		// Progress Bar Estimations
-		$delayed_jobs->information = 30;
-		$delayed_jobs->save();
-
 		$temporary_participants = Schema::getColumnListing($file_name);
 		$temporary_participants = array_flip($temporary_participants);
 
@@ -277,6 +274,10 @@ class Survey extends Eloquent {
 		{
 			if($single_code['type'] == 4){
 				if (!empty($temporary_participants[$single_code['code']])) {
+
+					$delayed_jobs->information = "Saving ".$single_code['code'];
+					$delayed_jobs->save();
+
 					$question_id = DB::table('questions')->where('code_id','=',$single_code['code_id'])->first();
 					$question_id = $question_id->id;
 
@@ -305,27 +306,27 @@ class Survey extends Eloquent {
 			}
 		}
 		// Progress Bar Estimations
-		$delayed_jobs->information = 70;
+		$delayed_jobs->information = "Saving Amounts";
 		$delayed_jobs->save();
 
 		Log::info('amount');
 		DB::statement("INSERT INTO amounts(amount, answer_id, region_id, sample_type) (SELECT count(q.participant_id), q.answer_id, q.region_id, p.sample_type FROM question_participants q JOIN participants p ON p.id = q.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type);");
 		// Progress Bar Estimations
-		$delayed_jobs->information = 80;
+		$delayed_jobs->information = "Saving Filters";
 		$delayed_jobs->save();
 
 		Log::info('filters');
 		DB::statement("INSERT INTO amount_filters(amount, answer_id, region_id, sample_type, category_item_id)(SELECT count(q.participant_id), q.answer_id, q.region_id, p.sample_type, f.category_item_id FROM question_participants q JOIN participants p ON p.id = q.participant_id JOIN filter_participants f ON q.participant_id = f.participant_id GROUP BY q.answer_id, q.region_id, p.sample_type, f.category_item_id)");
 
 		// Progress Bar Estimations
-		$delayed_jobs->information = 90;
+		$delayed_jobs->information = "Saving Colors";
 		$delayed_jobs->save();
 
 		Log::info('color_id');
 		DB::statement("UPDATE answers, (SELECT @rownum:=0) r SET color_id = (CASE @rownum WHEN 30 THEN @rownum:=1 ELSE @rownum:=@rownum+1 END)");
 
 		// Progress Bar Estimations
-		$delayed_jobs->information = 95;
+		$delayed_jobs->information = "Almost Done, Please Wait....";
 		$delayed_jobs->save();
 
 		// Schema::drop('temporary_headers');
