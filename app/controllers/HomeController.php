@@ -187,7 +187,7 @@ class HomeController extends BaseController {
 						if($row->cycle_type == 1){
 							$second_label = $endline[$answer]['endline']['cycle_type'] = $row->cycle;
 
-							$endline[$answer]['endline']['amount'] = !$first_amount_total ? 0 : round(($row->amount / $first_amount_total) * 100,2);
+							$endline[$answer]['endline']['amount'] = !$first_amount_total ? 0 : round(($row->amount / $second_amount_total) * 100,2);
 							$endline[$answer]['endline']['cycle_type'] = $row->cycle;
 							$endline[$answer]['endline']['answer'] = trim(preg_replace('/\s\s+/', ' ', $row->answer));
 						}
