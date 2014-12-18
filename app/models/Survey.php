@@ -201,8 +201,8 @@ class Survey extends Eloquent {
 		DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
 		DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
 
-		DB::statement("INSERT INTO cycles(NAME, cycle_type)
-			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM ".$file_name.")");
+		DB::statement("INSERT INTO cycles(NAME, cycle_type,survey_id)
+			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type, ".$survey->id." FROM ".$file_name.")");
 		DB::statement("INSERT INTO regions(NAME, code_id)
 			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM ".$file_name.")");
 		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
