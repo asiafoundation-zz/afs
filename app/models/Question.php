@@ -205,10 +205,14 @@ class Question extends Eloquent {
 
 		// Count index label percentage
 		foreach ($questions as $key_questions => $question) {
-			$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $question->answer);
-			$dataval = str_replace('"', "", $dataval);
+			if (isset($question->answer)) {
+				$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $question->answer);
+				$dataval = str_replace('"', "", $dataval);
+				$question->answer = trim(preg_replace('/\s\s+/', ' ', $dataval));
+			}else{
+				$question->answer = 'Not answers';
+			}
 			
-			$question->answer = trim(preg_replace('/\s\s+/', ' ', $dataval));
 			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
 		}
 		// sort array based on amounts
