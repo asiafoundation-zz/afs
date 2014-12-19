@@ -369,6 +369,7 @@ class Question extends Eloquent {
 
 			// Count question amount
 			$total_amount = 0;
+
 			foreach ($questions as $key_questions => $question) {
 				$question->amount = FilterParticipant::FilterOptions($question->id_answer,$request);
 				$total_amount += $question->amount;

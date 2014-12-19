@@ -80,7 +80,7 @@ class FilterParticipant extends Eloquent {
 
 			$filter_queries = $filter_queries
 				->whereIn('filter_participants.category_item_id',$option_filters_array)
-				->where('participants.sample_type', '=', 1)
+				->where('participants.sample_type', '=', 0)
 				->groupBy('participants.id')
 				->get();
 				

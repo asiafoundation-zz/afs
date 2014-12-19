@@ -134,7 +134,7 @@ class HomeController extends BaseController {
 					break;
 
 				case 'filters':
-					$default_questions = Question::FilterQuestion(Input::get());;
+					$default_questions = Question::FilterQuestion(Input::get());
 					$load_filter = array("question" => $default_questions);
 					$return = count($default_questions) > 0 ? $load_filter : 0;
 
