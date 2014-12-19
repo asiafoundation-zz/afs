@@ -272,6 +272,27 @@ function clear_all_filter_nosurvey(){
   return false; 
 }
 
+function clear_all_filter_noregion(){
+  $(".dropdown-filter .li-filter .selected_filter_option").each(function(){
+     filter_text = $('.title-filters', $(this).parent('ul')).html();
+     if (filter_text != null) {
+       var display_text = filter_text.toUpperCase();
+       filter_text = filter_text.toUpperCase().split(' ').join('_');
+
+       /* Remove class selected li */
+       $(this).removeClass('selected_filter_option');
+       
+       /* Add class to first li */
+       $('#filter_option_label_'+ filter_text).addClass('selected_filter_option');
+
+       /* Change filter text */
+       $('#custom-text-title-'+filter_text).html("");
+       $('#custom-text-title-'+filter_text).html(display_text);
+     }
+  });
+  return false;
+}
+
 function find_survey_dynamic_select(region_id, type){
   var region = $("#filter_option_label_"+region_id);
   var value = [region_id, type];
@@ -339,6 +360,7 @@ function disable_anchor(selector, color, enable_flag){
 
 function clear_filter(){
   FilterSelect.region = "";
+  region_filters_default = [];
   option_filters_default = [];
   filter_option(0);
   clear_all_filter_nosurvey();
