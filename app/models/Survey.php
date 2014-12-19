@@ -202,8 +202,12 @@ class Survey extends Eloquent {
 		DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
 		DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=0) r SET participant_id = @rownum:=@rownum+1");
 
+		$distinct_cycles = DB::select(DB::raw("SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM ".$file_name." LIMIT 1"));
+
+		$distinct_cycles = reset($distinct_cycles);
+
 		DB::statement("INSERT INTO cycles(NAME, cycle_type)
-			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN 'Baseline' THEN 0 WHEN 'Endline' THEN 1 END cycle_type FROM ".$file_name.")");
+			(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN '".$distinct_cycles->sfl_wave."' THEN 0 ELSE 1 END cycle_type FROM ".$file_name.")");
 		DB::statement("INSERT INTO regions(NAME, code_id)
 			(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),1 FROM ".$file_name.")");
 		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
@@ -305,6 +309,106 @@ class Survey extends Eloquent {
 				}
 			}
 		}
+
+		// Multi Questions
+		// Progress Bar Estimations
+		$delayed_jobs->information = "Multi Questions";
+		$delayed_jobs->save();
+
+		$multi_questions = DB::select(DB::raw("SELECT questions.id as question_id, questions.question as question, questions.question_category_id as question_category_id FROM questions WHERE question IN (SELECT question FROM questions GROUP BY question, question_category_id HAVING COUNT(question) > 1)"));
+
+		if (count($multi_questions)) {
+			$question_deletes = array();
+			$code_deletes = array();
+			$mastercode_deletes = array();
+
+			$data_answers = array();
+			foreach ($multi_questions as $key => $value) {
+				$question = preg_replace('/[^A-Za-z0-9]/', '', $value->question);
+				$question = strtolower($question);
+				$question = preg_replace('/\s+/', '', $question);
+				$question = trim(preg_replace('/\s\s+/', ' ', $question));
+
+				$answers = DB::table('answers')->select('id as answer_id','answer')->where('question_id','=',$value->question_id)->get();
+
+				if(count($answers) > 0){
+					foreach ($answers as $key_answers => $answer) {
+						$answer_text = preg_replace('/[^A-Za-z0-9]/', '', $answer->answer);
+						$answer_text = strtolower($answer_text);
+						$answer_text = preg_replace('/\s+/', '', $answer_text);
+						$answer_text = trim(preg_replace('/\s\s+/', ' ', $answer_text));
+
+						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->answer_id]['question_id'] = $value->question_id;
+						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->answer_id]['answer_id'] = $answer->answer_id;
+						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->answer_id]['answer'] = $answer->answer;
+					}
+				}else{
+					array_push($question_deletes, $value->question_id);
+
+					$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+					->join('codes','codes.id','=','questions.code_id')
+					->join('master_codes','master_codes.id','=','codes.master_code_id')
+					->where('questions.id','=',$value->question_id)
+					->get();
+
+					foreach ($questions as $key_questions => $question_single) {
+						array_push($code_deletes, $question_single->code_id);
+						array_push($mastercode_deletes, $question_single->master_code_id);
+					}
+				}
+			}
+
+			$answer_savings = array();
+			$answer_id_data = "";
+			foreach ($data_answers as $key_data_answers => $data_answer) {
+				foreach ($data_answer as $key_data_answer => $value) {
+					// Normalize Array
+					$value = array_values($value);
+					for ($i=0; $i < count($value); $i++) {
+						if ($i == 0) {
+							$first_answer = $value[$i]['answer_id'];
+						}else{
+							$answer_savings[$value[$i]['answer_id']] = $first_answer;
+							$answer_id_data .= $value[$i]['answer_id'].",";
+
+							array_push($question_deletes, $value[$i]['question_id']);
+
+							$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+								->join('codes','codes.id','=','questions.code_id')
+								->join('master_codes','master_codes.id','=','codes.master_code_id')
+								->where('questions.id','=',$value[$i]['question_id'])
+								->get();
+							foreach ($questions as $key_questions => $question_single) {
+								array_push($code_deletes, $question_single->code_id);
+								array_push($mastercode_deletes, $question_single->master_code_id);
+							}
+						}
+					}
+				}
+			}
+			$question_deletes = array_unique($question_deletes);
+			$code_deletes = array_unique($code_deletes);
+			$mastercode_deletes = array_unique($mastercode_deletes);
+
+			$question_deletes = array_values($question_deletes);
+			$code_deletes = array_values($code_deletes);
+			$mastercode_deletes = array_values($mastercode_deletes);
+
+			$answer_id_data .= rtrim($answer_id_data, ',');
+			$answer_data_text = "UPDATE question_participants SET answer_id = CASE answer_id";
+
+			foreach ($answer_savings as $first_answer => $answer_saving) {
+				$answer_data_text .= " WHEN ".$first_answer." THEN ".$answer_saving;
+			}
+			$answer_data_text .= " END";
+			$answer_data_text .= " WHERE answer_id IN (".$answer_id_data.")";
+
+			DB::statement($answer_data_text);
+			DB::table('questions')->whereIn('id', $question_deletes)->delete();
+			DB::table('codes')->whereIn('id', $code_deletes)->delete();
+			DB::table('master_codes')->whereIn('id', $mastercode_deletes)->delete();
+		}
+
 		// Progress Bar Estimations
 		$delayed_jobs->information = "Saving Amounts";
 		$delayed_jobs->save();
@@ -329,8 +433,8 @@ class Survey extends Eloquent {
 		$delayed_jobs->information = "Almost Done, Please Wait....";
 		$delayed_jobs->save();
 
-		// Schema::drop('temporary_headers');
-		// Schema::drop($file_name);
+		Schema::drop('temporary_headers');
+		Schema::drop($file_name);
 		return $status;
 	}
 
