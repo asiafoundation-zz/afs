@@ -7,7 +7,6 @@
 <script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
 
 @include('admin/survey/js/mapjs')
-
 <div class="row">
 	<div class="col-md-12">
 		<div class="notification">
@@ -157,7 +156,7 @@
       		{{ Form::hidden('survey_id', $survey->id) }}
 					{{ Form::label("Add Information Column:", "", array("class" => "control-label col-md-3")) }}
 					<div class="col-md-3">
-						{{ Form::textarea('information', $survey->information) }}
+						{{ Form::textarea('information', $survey->information, array("class" => "textarea")) }}
 					</div>
 				</div>
       </div>

@@ -128,3 +128,7 @@
 	padding-top: 15px;
 	padding-bottom: 10px;
 }
+
+.canvasjs-chart-tooltip div {
+    white-space:normal !important;
+}

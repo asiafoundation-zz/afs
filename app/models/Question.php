@@ -661,7 +661,9 @@ class Question extends Eloquent {
 			->join('answers','answers.question_id','=','questions.id')
 			->join('codes','codes.id','=','questions.code_id')
 			->join('master_codes','master_codes.id','=','codes.master_code_id')
-			->where('answers.cycle_id', '=', $request['cycle_id'])->get();
+			->where('answers.cycle_id', '=', $request['cycle_id'])
+			->groupBy('question_id')
+			->get();
 
 		return $questions;
 	}
