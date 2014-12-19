@@ -360,6 +360,7 @@ function disable_anchor(selector, color, enable_flag){
 
 function clear_filter(){
   FilterSelect.region = "";
+  region_filters_default = [];
   option_filters_default = [];
   filter_option(0);
   clear_all_filter_nosurvey();

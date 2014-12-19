@@ -121,7 +121,9 @@
             <ul class="chart-pagination">
               <li><a class="orange-bg" onclick="next_question(0)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get('frontend.preveous_question') }}</a></li>
               @if($cycles_count > 1)
-              <li id="chart_pagination_text"><a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a></li>
+              <li id="chart_pagination_text">
+                <a class="orange-bg" onclick="compare_cycle(0)">{{Lang::get('frontend.compare_this_survey')}}</a>
+              </li>
               @endif
               
             </ul>

@@ -178,6 +178,9 @@
             $('.loading-flag').hide();
             $('#chart_canvas').show();
             if (data != false) {
+
+              $('.chart-flag .chart-pagination').show();
+
               FilterSelect.filter_exist = 1;
               // Build chart
               var color_set_data = color_set(data.question);
@@ -220,9 +223,13 @@
             }
           },"html");
         }else if(FilterSelect.region != ""){
+          $('.chart-flag .chart-pagination').show();
+
           FilterSelect.filter_exist = 0;
           find_survey_dynamic_select(parseInt(FilterSelect.region),'filter');
         }else{
+          $('.chart-flag .chart-pagination').show();
+
           FilterSelect.filter_exist = 0;
           find_survey();
           disable_anchor($('.clear-all'),'#AA6071', 0);
@@ -414,7 +421,6 @@
     function find_survey_dynamic(value)
     {
       // Show text information under graph
-
       if(value[1] != 'filter'){
         if(value[0] == region_filters_default){
           return false;
@@ -655,7 +661,7 @@
 
     function text_area_filter(value){
 
-      console.log(value);
+      // console.log(value);
       var option_filters = [];
 
       if(value[0] != 0){
