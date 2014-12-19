@@ -134,7 +134,7 @@ class HomeController extends BaseController {
 					break;
 
 				case 'filters':
-					$default_questions = Question::FilterQuestion(Input::get());;
+					$default_questions = Question::FilterQuestion(Input::get());
 					$load_filter = array("question" => $default_questions);
 					$return = count($default_questions) > 0 ? $load_filter : 0;
 
@@ -175,6 +175,11 @@ class HomeController extends BaseController {
 						$answer = str_replace(')', "", $answer);
 						$answer = preg_replace('/\s+/', '', $answer);
 						$answer = trim(preg_replace('/\s\s+/', ' ', $answer));
+
+						if ($answer == '') {
+							$row->answer = 'Not Answer';
+							$answer = 'not_answer';
+						}
 
 						if($row->cycle_type == 0){
 							$first_label = $baseline[$answer]['baseline']['cycle_type'] = $row->cycle;
