@@ -169,10 +169,7 @@ class HomeController extends BaseController {
 					$second_label = "";
 					foreach($default_questions as $row){
 						$answer = strtolower($row->answer);
-						$answer = preg_replace('/^([^a-z0-9])*/', '', $answer);
-						$answer = str_replace('"', "", $answer);
-						$answer = str_replace('(', "", $answer);
-						$answer = str_replace(')', "", $answer);
+						$answer = preg_replace('/[^A-Za-z0-9]/', '', $answer);
 						$answer = preg_replace('/\s+/', '', $answer);
 						$answer = trim(preg_replace('/\s\s+/', ' ', $answer));
 
