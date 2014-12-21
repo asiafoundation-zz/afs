@@ -19,7 +19,8 @@ class QuestionParticipant extends Eloquent {
 	protected $fillable = array(
 		'answer_id',
 		'participant_id',
-		'region_id'
+		'region_id',
+		'survey_id'
 		);
 	protected $guarded = array('id');
 

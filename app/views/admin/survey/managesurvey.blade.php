@@ -6,13 +6,6 @@
 <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
 <script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
 
-<<<<<<< HEAD
-=======
-<link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/wysihtml5.css') }}">
-<script type="text/javascript" src="{{ Theme::asset('js/wysihtml5.js') }}"></script>
-<script type="text/javascript" src="{{ Theme::asset('js/wysihtml5script.js') }}"></script>
-
->>>>>>> c81a7889dafa5581feeaf358622d08170b7d82fd
 @include('admin/survey/js/mapjs')
 <div class="row">
 	<div class="col-md-12">

@@ -20,7 +20,8 @@ class Question extends Eloquent {
 		'code_id',
 		'question',
 		'question_category_id',
-		'is_default'
+		'is_default',
+		'survey_id'
 		);
 	protected $guarded = array('id');
 
@@ -61,13 +62,13 @@ class Question extends Eloquent {
 		return compact('fields');
 	}
 	
-	public static function checkData($data,$code_id,$question_category_id)
+	public static function checkData($data,$code_id,$question_category_id,$survey_id)
 	{
-		$question = Question::where('code_id', '=', $code_id)->first();
+		$question = Question::where('code_id', '=', $code_id)->where('survey_id', '=', $survey_id)->first();
 		
 		if(!isset($question))
 		{
-			$question = Question::create(array('question' => $data, 'code_id' => $code_id, 'question_category_id' => $question_category_id));
+			$question = Question::create(array('question' => $data, 'code_id' => $code_id, 'survey_id' => $survey_id,'question_category_id' => $question_category_id));
 		}	
 		return $question;
 	}

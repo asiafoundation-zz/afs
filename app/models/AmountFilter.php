@@ -13,6 +13,7 @@ class AmountFilter extends Eloquent {
 		'category_item_id',
 		'region_id',
 		'sample_type',
+		'survey_id',
 		'amount'
 	);
 

@@ -19,7 +19,8 @@ class Region extends Eloquent {
 	/* Mass Assignment */
 	protected $fillable = array(
 		'name',
-		'code_id'
+		'code_id',
+		'survey_id',
 		);
 	protected $guarded = array('id');
 

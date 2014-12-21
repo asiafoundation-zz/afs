@@ -18,7 +18,8 @@ class Cycle extends Eloquent {
 	protected $fillable = array(
 		'name',
 		'excel_file',
-		'cycle_type'
+		'cycle_type',
+		'survey_id',
 		);
 	protected $guarded = array('id');
 
