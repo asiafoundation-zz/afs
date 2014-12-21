@@ -78,9 +78,7 @@ class MasterCode extends Eloquent {
 			$code_label = !empty($code_labels[1]) ? $code_labels[1] : "";
 
 			// Saving
-			$master_codes_data = DB::table('master_codes')->where('master_code','=',$master_code_label)->first();
-
-			
+			$master_codes_data = DB::table('master_codes')->where('master_code','=',$master_code_label)->where('survey_id','=',$survey->id)->first();
 
 			if (!isset($master_codes_data)) {
 				$master_code = new MasterCode;
@@ -106,7 +104,7 @@ class MasterCode extends Eloquent {
 				Log::info($options_selected['category_question']);
 				$question_category = QuestionCategory::checkData($options_selected['category_question'],$code->id,$survey->id);
 				// Save question
-				$question = Question::checkData($options_selected['label'],$code->id,$question_category->id);
+				$question = Question::checkData($options_selected['label'],$code->id,$question_category->id,$survey->id);
 			}
 
 		// 	DB::commit();

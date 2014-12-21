@@ -18,7 +18,8 @@ class FilterParticipant extends Eloquent {
 	/* Mass Assignment */
 	protected $fillable = array(
 		'category_item_id',
-		'participant_id'
+		'participant_id',
+		'survey_id'
 		);
 	protected $guarded = array('id');
 

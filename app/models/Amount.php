@@ -13,6 +13,7 @@ class Amount extends Eloquent {
 		'region_id',
 		'sample_type',
 		'amount',
+		'survey_id',
 		'category_item_id'
 	);
 
