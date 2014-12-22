@@ -222,7 +222,7 @@ class SurveyController extends AvelcaController {
 		$question_by_category = QuestionCategory::questionByCategory($request);
 
 		$cycles = array();
-		$loadcycles = Cycle::all();
+		$loadcycles = Cycle::where('survey_id','=',$survey->id)->get();
 		foreach ($loadcycles as $key_loadcycles => $loadcycle) {
 			$cycles[$loadcycle->id] = $loadcycle->name;
 		}
