@@ -26,6 +26,20 @@
 			</div>
 		</div>
 
+		<div class="form-group">
+			{{ Form::label("Language URL", "", array("class" => "control-label col-md-3")) }}
+			<div class="col-md-3">
+				{{ Form::text("url","", array("class" => "form-control")) }}
+			</div>
+		</div>
+
+		<div class="form-group">
+			{{ Form::label("Language Name", "", array("class" => "control-label col-md-3")) }}
+			<div class="col-md-3">
+				{{ Form::text("url_name","", array("class" => "form-control")) }}
+			</div>
+		</div>
+
 		<div class="form-group upload-field">
 			{{ Form::label("Add Header Survey CSV file", "", array("class" => "control-label col-md-3")) }}
 			<div class="col-md-3">
