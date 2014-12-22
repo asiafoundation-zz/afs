@@ -43,7 +43,7 @@ class Survey extends Eloquent {
 	/* Rules */
 	public static $rules = array(
 		'name' => 'required',
-		'geojson_file' => 'required|mimes:geojson',
+		//'geojson_file' => 'required|mimes:geojson',
 		'baseline_file' => 'required|mimes:csv',
 		'header_file' => 'required|mimes:csv',
 		'publish' => 'required',
@@ -538,71 +538,32 @@ class Survey extends Eloquent {
 		try{
 			DB::beginTransaction();
 
-			$question_categories = array();
-			$question_categories_data = DB::table('question_categories')->where('survey_id','=',$id);
-			$question_categories_loads = $question_categories_data->get();
-			foreach ($question_categories_loads as $question_categories_load) {
-				array_push($question_categories, $question_categories_load->id);
+			// Remove Survey and file
+			$survey = Survey::find($id);
+
+			File::delete(public_path()."/uploads/".$survey->baseline_file);
+			File::delete(public_path()."/uploads/".$survey->header_file);
+			File::delete(public_path()."/uploads/".$survey->geojson_file);
+
+			Schema::drop('temporary_headers');
+			Schema::drop($survey->baseline_file);
+
+			DB::table('delayed_jobs')->where('survey_id','=',$survey->id)->delete();
+			DB::table('regions')->where('survey_id','=',$survey->id)->delete();
+			DB::table('cycles')->where('survey_id','=',$survey->id)->delete();
+			DB::table('amounts')->where('survey_id','=',$survey->id)->delete();
+			DB::table('amount_filters')->where('survey_id','=',$survey->id)->delete();
+			DB::table('answers')->where('survey_id','=',$survey->id)->delete();
+
+			$category_data = DB::table('categories')->where('id','=',$survey->id);
+			$category_data_loads = $category_data->get();
+
+			$category_items = array();
+			foreach ($category_data_loads as $key_category_data_loads => $category_data_load) {
+				array_push($category_items, $category_items_load->category_id);
 			}
-
-			$questions = array();
-			if (count($question_categories) > 0) {
-				$question_datas = DB::table('questions')->whereIn('question_category_id',$question_categories);
-				$question_loads = $question_datas->get();
-				foreach ($question_loads as $question_load) {
-					array_push($questions, $question_load->id);
-				}
-
-				$answers = array();
-				$answer_data = DB::table('answers')->whereIn('question_id',$questions);
-				$answer_loads = $answer_data->get();
-				foreach ($answer_loads as $answer_load) {
-					array_push($answers, $answer_load->id);
-				}
-				$amounts = DB::table('amounts')->whereIn('answer_id',$answers)->delete();
-				$amount_filters = DB::table('amount_filters')->whereIn('answer_id',$answers)->delete();
-
-				$answer_data->delete();
-				$question_datas->delete();
-				$question_categories_data->delete();
-			}
-
-			$participants = array();
-			$participant_data = DB::table('participants')->where('survey_id','=',$id);
-			$participant_loads = $participant_data->get();
-			foreach ($participant_loads as $participant_load) {
-				array_push($participants, $participant_load->id);
-			}
-			if (count($participants) > 0) {
-				$filter_participants = array();
-				$filter_participant_data = DB::table('filter_participants')->whereIn('participant_id',$participants);
-				$filter_participant_loads = $filter_participant_data->get();
-
-				foreach ($filter_participant_loads as $filter_participant_load) {
-					array_push($filter_participants, $filter_participant_load->category_item_id);
-				}
-
-				$category_items = array();
-				$category_items_data = DB::table('category_items')->whereIn('id',$filter_participants);
-				$category_items_loads = $category_items_data->get();
-				foreach ($category_items_loads as $category_items_load) {
-					array_push($category_items, $category_items_load->category_id);
-				}
-				$category = DB::table('categories')->whereIn('id',$category_items)->delete();
-
-				$filter_participant_data->delete();
-				$category_items_data->delete();
-				$participant_data->delete();
-
-				$question_participants = array();
-				$question_participant_data = DB::table('question_participants')->whereIn('participant_id',$participants);
-				$question_participant_loads = $question_participant_data->get();
-				foreach ($question_participant_loads as $question_participant_load) {
-					array_push($question_participants, $question_participant_load->region_id);
-				}
-				$regions = Region::whereIn('id',$question_participants)->delete();
-				$question_participant_data->delete();
-			}
+			$category_data->delete();
+			DB::table('category_items')->whereIn('id', $category_items)->delete();
 
 			$master_codes = array();
 			$master_codes_data = DB::table('master_codes')->where('survey_id','=',$id);
@@ -619,20 +580,13 @@ class Survey extends Eloquent {
 				}
 				$codes_data->delete();
 			}
-
-
 			$master_codes_data->delete();
-			// Remove Survey and file
-			$survey = Survey::find($id);
 
-			File::delete(public_path()."/uploads/".$survey->baseline_file);
-			File::delete(public_path()."/uploads/".$survey->header_file);
-			File::delete(public_path()."/uploads/".$survey->geojson_file);
-
-			//Schema::drop('temporary_headers');
-			//Schema::drop($survey->baseline_file);
-
-			DB::table('delayed_jobs')->where('survey_id','=',$survey->id)->delete();
+			DB::table('filter_participants')->where('survey_id','=',$survey->id)->delete();
+			DB::table('participants')->where('survey_id','=',$survey->id)->delete();
+			DB::table('questions')->where('survey_id','=',$survey->id)->delete();
+			DB::table('question_categories')->where('survey_id','=',$survey->id)->delete();
+			DB::table('question_participants')->where('survey_id','=',$survey->id)->delete();
 
 			$survey->delete();
 			DB::commit();
