@@ -106,7 +106,14 @@ class SurveyController extends AvelcaController {
 
 			if($validator->passes())
 			{
-				$survey = Survey::create(array('name' => Input::get('survey_name'), 'baseline_file' => self::fileRename(Input::file('baseline_file')->getClientOriginalName()),'header_file' => self::fileRename(Input::file('header_file')->getClientOriginalName()), 'geojson_file' => self::fileRename(Input::file('geojson')->getClientOriginalName()),'publish' => 3));
+				$survey = Survey::create(array(
+					'name' => Input::get('survey_name'), 
+					'baseline_file' => self::fileRename(Input::file('baseline_file')->getClientOriginalName()),
+					'header_file' => self::fileRename(Input::file('header_file')->getClientOriginalName()), 
+					'geojson_file' => self::fileRename(Input::file('geojson')->getClientOriginalName()),
+					'url' => Input::get('url'),
+					'url_name' => Input::get('url_name'),
+					'publish' => 3));
 
 				if($survey)
 				{

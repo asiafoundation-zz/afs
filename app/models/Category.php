@@ -126,7 +126,7 @@ class Category extends Eloquent {
 		// If Category Empty
 		$data = !empty($data) ? $data : 'Other';
 
-		$category = Category::where('name', '=', $data)->first();
+		$category = Category::where('name', '=', $data)->where('survey_id', '=', $survey_id)->first();
 		if(!isset($category))
 		{
 			$category = Category::create(array('name' => $data, 'display_name' => $data,'code_id' => $code_id, 'survey_id' => $survey_id, 'is_active' => 1));

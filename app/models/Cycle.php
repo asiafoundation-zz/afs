@@ -18,7 +18,9 @@ class Cycle extends Eloquent {
 	protected $fillable = array(
 		'name',
 		'excel_file',
-		'cycle_type'
+		'cycle_type',
+		'display_name',
+		'survey_id'
 		);
 	protected $guarded = array('id');
 
@@ -64,7 +66,8 @@ class Cycle extends Eloquent {
 			->select(
 				'cycles.id',
 				'cycles.name',
-				'cycles.cycle_type'
+				'cycles.cycle_type',
+				'cycles.display_name'
 				)
 			->join('answers','answers.cycle_id','=','cycles.id')
 			->join('questions','questions.id','=','answers.question_id')

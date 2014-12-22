@@ -22,7 +22,8 @@ class Answer extends Eloquent {
 		'question_id',
 		'color_id',
 		'cycle_id',
-		'cycle_default'
+		'cycle_default',
+		'survey_id'
 		);
 	protected $guarded = array('id');
 
