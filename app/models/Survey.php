@@ -341,7 +341,11 @@ class Survey extends Eloquent {
 				$question = preg_replace('/\s+/', '', $question);
 				$question = trim(preg_replace('/\s\s+/', ' ', $question));
 
-				$answers = DB::table('answers')->select('id as answer_id','answer')->where('question_id','=',$value->question_id)->get();
+				$answers = DB::table('answers')
+					->select('answers.id as answer_id','answers.answer','cycles.cycle_type')
+					->join('cycles','cycles.id','=','answers.cycle_id')
+					->where('question_id','=',$value->question_id)
+					->get();
 
 				if(count($answers) > 0){
 					foreach ($answers as $key_answers => $answer) {
@@ -350,9 +354,9 @@ class Survey extends Eloquent {
 						$answer_text = preg_replace('/\s+/', '', $answer_text);
 						$answer_text = trim(preg_replace('/\s\s+/', ' ', $answer_text));
 
-						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->answer_id]['question_id'] = $value->question_id;
-						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->answer_id]['answer_id'] = $answer->answer_id;
-						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->answer_id]['answer'] = $answer->answer;
+						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->cycle_type][$answer->answer_id]['question_id'] = $value->question_id;
+						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->cycle_type][$answer->answer_id]['answer_id'] = $answer->answer_id;
+						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->cycle_type][$answer->answer_id]['answer'] = $answer->answer;
 					}
 				}else{
 					array_push($question_deletes, $value->question_id);
@@ -373,26 +377,56 @@ class Survey extends Eloquent {
 			$answer_savings = array();
 			$answer_id_data = "";
 			foreach ($data_answers as $key_data_answers => $data_answer) {
-				foreach ($data_answer as $key_data_answer => $value) {
-					// Normalize Array
-					$value = array_values($value);
-					for ($i=0; $i < count($value); $i++) {
-						if ($i == 0) {
-							$first_answer = $value[$i]['answer_id'];
-						}else{
-							$answer_savings[$value[$i]['answer_id']] = $first_answer;
-							$answer_id_data .= $value[$i]['answer_id'].",";
+				foreach ($data_answer as $key_data_answer => $value_cycle) {
+					if (!empty($value_cycle[0])) {
+						// Normalize Array
+						$value = array_values($value_cycle[0]);
+						
+						for ($i=0; $i < count($value); $i++) {
+							if ($i == 0) {
+								$first_answer = $value[$i]['answer_id'];
+							}else{
+								$answer_savings[$value[$i]['answer_id']] = $first_answer;
+								$answer_id_data .= $value[$i]['answer_id'].",";
 
-							array_push($question_deletes, $value[$i]['question_id']);
+								array_push($question_deletes, $value[$i]['question_id']);
 
-							$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
-								->join('codes','codes.id','=','questions.code_id')
-								->join('master_codes','master_codes.id','=','codes.master_code_id')
-								->where('questions.id','=',$value[$i]['question_id'])
-								->get();
-							foreach ($questions as $key_questions => $question_single) {
-								array_push($code_deletes, $question_single->code_id);
-								array_push($mastercode_deletes, $question_single->master_code_id);
+								$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+									->join('codes','codes.id','=','questions.code_id')
+									->join('master_codes','master_codes.id','=','codes.master_code_id')
+									->where('questions.id','=',$value[$i]['question_id'])
+									->get();
+
+								foreach ($questions as $key_questions => $question_single) {
+									array_push($code_deletes, $question_single->code_id);
+									array_push($mastercode_deletes, $question_single->master_code_id);
+								}
+							}
+						}
+					}
+					if (!empty($value_cycle[1])) {
+						// Normalize Array
+						$value = array_values($value_cycle[1]);
+
+						for ($j=0; $j < count($value); $j++) {
+							if ($j == 0) {
+								$first_answer = $value[$j]['answer_id'];
+							}else{
+								$answer_savings[$value[$j]['answer_id']] = $first_answer;
+								$answer_id_data .= $value[$j]['answer_id'].",";
+
+								array_push($question_deletes, $value[$j]['question_id']);
+
+								$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+									->join('codes','codes.id','=','questions.code_id')
+									->join('master_codes','master_codes.id','=','codes.master_code_id')
+									->where('questions.id','=',$value[$j]['question_id'])
+									->get();
+
+								foreach ($questions as $key_questions => $question_single) {
+									array_push($code_deletes, $question_single->code_id);
+									array_push($mastercode_deletes, $question_single->master_code_id);
+								}
 							}
 						}
 					}
