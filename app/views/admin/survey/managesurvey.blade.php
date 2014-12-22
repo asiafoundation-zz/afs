@@ -22,17 +22,19 @@
 			@foreach($cycles as $cycle_id_loop =>$cycle)
 			<a href="/admin/survey/cycle?cycle_id={{$cycle_id_loop}}&survey_id={{ $survey->id }}"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{$cycle}}</button></a>
 			@endforeach
-			<a data-toggle="modal" href="#upload_map" style="float:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.upload_file_geojson')}}</button></a>
+			<!-- GeoJson functions 
+      <a data-toggle="modal" href="#upload_map" style="float:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.upload_file_geojson')}}</button></a> -->
 		</div>
 
-		<div class="modal-body" style="position: relative; right: 0px; top: 0px; width: 100%; height: 690px">
-			<div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 680px"></div>
+<!-- GeoJson functions 
+		<div class="modal-body" style="position: relative; right: 0px; top: 0px; width: 100%; height: 690px">	
+      <div id="map" class="map-canvas" style="position: absolute; right: 0px; top: 0px; width: 100%; height: 680px"></div>
 		</div>
+  -->
 
 		<div class="modal-footer">
 			<a style="align:right;" data-toggle="modal" href="#manage_default_question" ><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_default_question')}}</button></a>
-			<a data-toggle="modal" href="#upload_file" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_file')}}</button></a>
-			<a data-toggle="modal" href="#information_column" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.edit_information')}}</button></a>
+      <a data-toggle="modal" href="#information_column" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.edit_information')}}</button></a>
 			<a href="/admin/survey/defaultquestion/{{ $survey->id }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.publish')}}</button></a>
 		</div>
 	</div>
@@ -78,7 +80,7 @@
       {{ Form::close() }}
     </div>
   </div>
-</div>
+</div><!-- 
 
 <div class="modal fade" id="upload_file" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -112,7 +114,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="upload_map" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+ <div class="modal fade" id="upload_map" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
 			<div class="modal-header">
@@ -142,6 +144,7 @@
     </div>
   </div>
 </div>
+-->
 
 <div class="modal fade" id="information_column" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">

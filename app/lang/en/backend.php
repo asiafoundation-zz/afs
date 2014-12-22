@@ -41,4 +41,5 @@ return array(
 	"oversample" => "oversample",
 	"cycle" => "Cycle",
 	"delete_survey" => "Delete Survey",
+	"system_process" => "Please Wait while system processing ...",
 );
