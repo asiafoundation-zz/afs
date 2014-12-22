@@ -37,6 +37,14 @@ function manage_filter_order(survey_id,category_id){
 	return false;
 }
 </script>
+<ul class="nav nav-tabs">
+  <li class="active">
+  	<a href="/admin/filter/{{ $survey_id }}">Manage Filter</a>
+  </li>
+  <li>
+  	<a href="/admin/cycle/{{ $survey_id }}">Manage Cycle</a>
+  </li>
+</ul>
 
 <div class="row">
 	<div class="col-md-12">
@@ -49,7 +57,7 @@ function manage_filter_order(survey_id,category_id){
 			@endif
 		</div>
 		<div class="modal-header">
-			<h1>{{Lang::get('general.select_filter')}}</h1>
+			<h4>{{Lang::get('general.select_filter')}}</h4>
 			<hr>
 		</div>
 

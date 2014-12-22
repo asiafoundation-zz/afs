@@ -54,12 +54,36 @@ class FilterParticipant extends Eloquent {
 	public static function FilterOptions($answer_id,$request = array())
 	{
 		$option_filters = "";
+		$region = $request['region'];
+		$sample_type = 0;
+		$category_exist = 0;
 
 		if (count($request['option_filters'])) {
 			$option_filters_trim = rtrim($request['option_filters'],",");
 			$option_filters_array = explode(",", $option_filters_trim);
 		}
 
+		if(!empty($region)){
+			$main_category = CategoryItem::select('category_id')->whereIn('id', $option_filters_array)->get();
+
+			foreach($main_category as $row){
+
+				if($row->category_id == 4){
+					$category_exist = 1;
+					$sample_type = 0;
+				}
+
+				if($row->category_id == 5 && $category_exist == 1){
+					$sample_type = 1;
+					$category_exist = 0;
+				}
+
+				if($row->category_id == 1 || $row->category_id == 2 || $row->category_id == 3){
+					$sample_type = 1;
+				}
+			}	
+		}
+		
 		$filter_queries =  DB::table('filter_participants')
 			->select(
 				DB::raw(
@@ -70,18 +94,15 @@ class FilterParticipant extends Eloquent {
 			->join('participants','participants.id','=','filter_participants.participant_id')
 			->join('question_participants','question_participants.participant_id','=','participants.id')
 			->join('regions','regions.id','=','question_participants.region_id')
-			->where('question_participants.answer_id', '=',$answer_id)
-			;
+			->where('question_participants.answer_id', '=',$answer_id);
 
 			if (!empty($request['region'])) {
-					$region = $request['region'];
-					$region_dapil = $request['region_dapil'];
 					$filter_queries =  $filter_queries->where('regions.id', '=', $region);
 				}
 
 			$filter_queries = $filter_queries
 				->whereIn('filter_participants.category_item_id',$option_filters_array)
-				->where('participants.sample_type', '=', 0)
+				->where('participants.sample_type', '=', $sample_type)
 				->groupBy('participants.id')
 				->get();
 				
