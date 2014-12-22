@@ -65,4 +65,32 @@ class CategoryController extends AvelcaController {
 		Session::flash('message', 'Save Succeed');
 		return Redirect::to('/admin/filter/'.$requests['survey_id']);
 	}
+
+	public function getCycle($id){
+		$cycles = Cycle::all();
+
+		return View::make('admin.filter.cycle')
+				->with('survey_id', $id)
+				->with('cycles', $cycles);
+	}
+
+	public function postCycle(){
+		$rules = array(
+				'display_name' => 'Required'
+			);
+
+		$validator = Validator::make(Input::all(), $rules);
+
+		if($validator->passes()){
+			$cycle = Cycle::where('id', '=', Input::get('cycle_id'))->first();
+
+			$cycle->display_name = Input::get('display_name');
+
+			$cycle->save();
+
+			return Redirect::to('/admin/cycle/'. Input::get('survey_id'))->with('message', 'Display name is updated');
+		}else{
+			return Redirect::to('/admin/cycle/'. Input::get('survey_id'))->withErrors($validator)->withInput();
+		}
+	}
 }

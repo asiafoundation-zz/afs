@@ -89,6 +89,15 @@ $(document).ready(function(){
 	$('#question_select_modal').select2({});
 	$('#cycle_select_modal').select2({});
 
+	$('.cycle-btn').click(function(e){
+		$cycle_id = $(this).data('id');
+		$cycle_name = $(this).parent().parent().parent().children('.cycle-name').children('span').text();
+
+		$('#edit-cycle').modal('show');
+		$('#edit-cycle #cycle-name-label').text($cycle_name);
+		$('#edit-cycle #form_cycle_id').val($cycle_id);
+	})
+
 });
 
 $('.survey_is_default').click(function(){

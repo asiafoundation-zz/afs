@@ -15,7 +15,7 @@
       <label>1) {{ Lang::get('frontend.choose_survey') }}</label>
       <select class="select2-custom select-cycle" id="select-cycle">
         @foreach ($cycles as $cycle)
-        <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->name }}</option>
+        <option value="{{ $cycle->id }}" @if( $default_question->id_cycle == $cycle->id) selected @endif>{{ $cycle->display_name }}</option>
         @endforeach
       </select><!-- Custom Select -->
     </div>
