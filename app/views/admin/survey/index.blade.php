@@ -31,8 +31,8 @@ setInterval(function() {
 			<hr>
 			@if($is_refresh == 0)
 			<a href="/admin/survey/create/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('backend.create_survey')}}</button></a>
-			<a href="/survey/reupload/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.remove_all_surveys')}}</button></a>
 			@endif
+			<a href="/survey/reupload/"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.remove_all_surveys')}}</button></a>
 		</div>
 
 		<div class="table-responsive">
