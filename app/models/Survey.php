@@ -327,7 +327,7 @@ class Survey extends Eloquent {
 		$delayed_jobs->information = "Multi Questions";
 		$delayed_jobs->save();
 
-		$multi_questions = DB::select(DB::raw("SELECT questions.id as question_id, questions.question as question, questions.question_category_id as question_category_id FROM questions WHERE question IN (SELECT question FROM questions WHERE survey_id = 0 GROUP BY question, question_category_id HAVING COUNT(question) > 1)"));
+		$multi_questions = DB::select(DB::raw("SELECT questions.id as question_id, questions.question as question, questions.question_category_id as question_category_id FROM questions WHERE question IN (SELECT question FROM questions WHERE survey_id = ".$survey->id." GROUP BY question, question_category_id HAVING COUNT(question) > 1)"));
 
 		if (count($multi_questions)) {
 			$question_deletes = array();
