@@ -441,18 +441,27 @@ class Survey extends Eloquent {
 			$mastercode_deletes = array_values($mastercode_deletes);
 
 			$answer_id_data .= rtrim($answer_id_data, ',');
-			$answer_data_text = "UPDATE question_participants SET answer_id = CASE answer_id";
 
-			foreach ($answer_savings as $first_answer => $answer_saving) {
-				$answer_data_text .= " WHEN ".$first_answer." THEN ".$answer_saving;
+			if (!empty($answer_id_data)) {
+				$answer_data_text = "UPDATE question_participants SET answer_id = CASE answer_id";
+
+				foreach ($answer_savings as $first_answer => $answer_saving) {
+					$answer_data_text .= " WHEN ".$first_answer." THEN ".$answer_saving;
+				}
+				$answer_data_text .= " END";
+				$answer_data_text .= " WHERE answer_id IN (".$answer_id_data.")";
+				DB::statement($answer_data_text);
 			}
-			$answer_data_text .= " END";
-			$answer_data_text .= " WHERE answer_id IN (".$answer_id_data.")";
-
-			DB::statement($answer_data_text);
-			DB::table('questions')->whereIn('id', $question_deletes)->delete();
-			DB::table('codes')->whereIn('id', $code_deletes)->delete();
-			DB::table('master_codes')->whereIn('id', $mastercode_deletes)->delete();
+			
+			if(count($question_deletes) > 0){
+				DB::table('questions')->whereIn('id', $question_deletes)->delete();
+			}
+			if(count($code_deletes) > 0){
+				DB::table('codes')->whereIn('id', $code_deletes)->delete();
+			}
+			if (count($mastercode_deletes) > 0) {
+				DB::table('master_codes')->whereIn('id', $mastercode_deletes)->delete();
+			}
 		}
 
 		// Progress Bar Estimations

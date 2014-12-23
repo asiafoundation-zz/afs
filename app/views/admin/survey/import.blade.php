@@ -52,9 +52,9 @@
       </div>
       <div class="modal-body" id="loading-flag">
       	<div class="col-md-4">&nbsp;</div>
-      	<div class="col-md-4">
-      		<h4>{{ Lang::get('backend.system_process') }}</h4>
+      	<div class="col-md-4" style="height:300px;">
       		<img src="{{ Theme::asset('img/ajax-loader.gif') }}">
+      		<h4>{{ Lang::get('backend.system_process') }}</h4>
       		<span>---------------------------------------</span>
       	</div>
       	<div class="col-md-4">&nbsp;</div>
