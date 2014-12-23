@@ -4,7 +4,9 @@
 
 <script src="{{ Theme::asset('js/leaflet.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ Theme::asset('css/leaflet.css') }}">
+<!--
 <script type="text/javascript" src="{{ URL::to('/uploads') }}/{{ $survey->geojson_file}}"></script>
+-->
 
 @include('admin/survey/js/mapjs')
 <div class="row">
@@ -64,7 +66,7 @@
 						<div class="form-group">
 							{{ Form::label("Question Name", "", array("class" => "control-label col-md-3")) }}
 							<div class="col-md-9">
-								{{ Form::select('question_select', $question_lists,$default_question->id_question, array("id" => "question_select_modal")) }}
+								{{ Form::select('question_select', $question_lists,$default_question->id_question, array("class" => "question_select_modal","id" => "question_select_modal")) }}
 							</div>
 						</div>
 					</div>
