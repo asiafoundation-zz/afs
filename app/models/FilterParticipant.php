@@ -62,8 +62,6 @@ class FilterParticipant extends Eloquent {
 			$option_filters_trim = rtrim($request['option_filters'],",");
 			$option_filters_array = explode(",", $option_filters_trim);
 		}
-
-		
 		$filter_queries =  DB::table('filter_participants')
 			->select(
 				DB::raw(
@@ -111,6 +109,8 @@ class FilterParticipant extends Eloquent {
 				}	
 			}
 
+			/* -- end -- */
+			
 			$filter_queries = $filter_queries->groupBy('participants.id')->get();
 			$data_merge = array();
 			$data_result = 0;

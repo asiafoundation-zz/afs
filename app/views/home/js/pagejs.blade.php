@@ -12,6 +12,7 @@
       $('.loading-flag').show();
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
         .done(function( data ) {
+          console.log(data);
           $('.region-name').remove();
           $('#chart_canvas').show();
           $('.loading-flag').hide();
@@ -25,11 +26,11 @@
             $("#select_category_label").html(data.default_question.question_categories.slice(0,15)+" ...");
             $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
 
-             if(data.empty_answer == 1){
-              $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}} <br>'+ data.default_question.question +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
-              $(".chart #chart_canvas").hide();
-              return false;
-            }
+            //  if(data.empty_answer == 1){
+            //   $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.empty_data')}} <br>'+ data.default_question.question +'</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
+            //   $(".chart #chart_canvas").hide();
+            //   return false;
+            // }
 
             FilterSelect.answers = [];
             for (var key in data.question) {
@@ -52,10 +53,28 @@
 
             // Build chart
             var color_set_data = color_set(data.question);
-            var data_points_data = data_points(data.question);
-            var data_points_pie_data = data_points_pie(data.question);
+            var data_points_data = data_points(data.question);           
 
-            $("#chart_canvas").html('<div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div><div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>');
+            $("#chart_canvas").html('<div class="col-md-5" id="pie-div"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div><div class="col-md-7" id="chart-div"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>');
+
+            /* check is the question is multi question or not by checking an attribute code */
+
+            if(data.default_question.attribute_code == 1){
+              var data_points_pie_data = 0;
+
+              $('#chart-div').removeClass();
+              $('#chart-div').addClass('col-md-12');
+              $('#pie-div').hide();
+            }else{
+              var data_points_pie_data = data_points_pie(data.question);
+
+              $('#chart-div').removeClass();
+              $('#chart-div').addClass('col-md-7');
+              $('#pie-div').show();
+            }
+
+            /* end */
+
             chartjs(color_set_data,data_points_data,data_points_pie_data);
 
             var cycle_text = $("#cycle_select_"+cycle_id).text();
@@ -386,7 +405,22 @@
 
               var color_set_data = color_set(data.question);
               var data_points_data = data_points(data.question);
-              var data_points_pie_data = data_points_pie(data.question);
+              // var data_points_pie_data = data_points_pie(data.question);
+
+              if(data.default_question.attribute_code == 1){
+                var data_points_pie_data = 0;
+
+                $('#chart-div').removeClass();
+                $('#chart-div').addClass('col-md-12');
+                $('#pie-div').hide();
+              }else{
+                var data_points_pie_data = data_points_pie(data.question);
+
+                $('#chart-div').removeClass();
+                $('#chart-div').addClass('col-md-7');
+                $('#pie-div').show();
+              }
+              
               chartjs(color_set_data,data_points_data,data_points_pie_data);
 
               // Re assign map
