@@ -218,7 +218,7 @@ class Question extends Eloquent {
 				$total_amount = DB::table('questions')
 				->join('answers','answers.question_id','=','questions.id')
 				->join('question_participants','question_participants.answer_id','=','answers.id')
-				->where('questions.id',$question->id)
+				->where('questions.id',$question->id_question)
 				->groupBy('question_participants.participant_id')
 				->get();
 
