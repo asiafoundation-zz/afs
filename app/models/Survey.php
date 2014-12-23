@@ -120,6 +120,7 @@ class Survey extends Eloquent {
 					break;
 				case 2:
 					$queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
+
 					$surveys[$key_survey_lists]['publish_text'] = "Importing ";
 					$surveys[$key_survey_lists]['publish_style'] = "importing";
 					$surveys[$key_survey_lists]['percentage'] = $queue->information;
