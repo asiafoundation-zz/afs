@@ -120,17 +120,6 @@ class Survey extends Eloquent {
 					break;
 				case 2:
 					$queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
-					// $percentage = 0;
-					// // Is queue exist
-					// $queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
-					// if ((int)$queue->queue < (int)$queue->information) {
-					// 	$percentage = round($queue->information);
-					// }
-					// elseif(!isset($queue) && Participant::count() > 0){
-					// 	if ((int)$queue->queue >= (int)$queue->information){
-					// 		$percentage = 99;
-					// 	}
-					// }
 
 					$surveys[$key_survey_lists]['publish_text'] = "Importing ";
 					$surveys[$key_survey_lists]['publish_style'] = "importing";
@@ -383,19 +372,22 @@ class Survey extends Eloquent {
 						$value = array_values($value_cycle[0]);
 						
 						for ($i=0; $i < count($value); $i++) {
+							$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+									->join('codes','codes.id','=','questions.code_id')
+									->join('master_codes','master_codes.id','=','codes.master_code_id')
+									->where('questions.id','=',$value[$i]['question_id'])
+									->get();
+
 							if ($i == 0) {
 								$first_answer = $value[$i]['answer_id'];
+
+								$question = reset($questions);
+								DB::table('master_codes')->where('id', $question->master_code_id)->update(array('attribute_code' => 1));
 							}else{
 								$answer_savings[$value[$i]['answer_id']] = $first_answer;
 								$answer_id_data .= $value[$i]['answer_id'].",";
 
 								array_push($question_deletes, $value[$i]['question_id']);
-
-								$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
-									->join('codes','codes.id','=','questions.code_id')
-									->join('master_codes','master_codes.id','=','codes.master_code_id')
-									->where('questions.id','=',$value[$i]['question_id'])
-									->get();
 
 								foreach ($questions as $key_questions => $question_single) {
 									array_push($code_deletes, $question_single->code_id);
@@ -408,9 +400,18 @@ class Survey extends Eloquent {
 						// Normalize Array
 						$value = array_values($value_cycle[1]);
 
+						$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+									->join('codes','codes.id','=','questions.code_id')
+									->join('master_codes','master_codes.id','=','codes.master_code_id')
+									->where('questions.id','=',$value[$i]['question_id'])
+									->get();
+
 						for ($j=0; $j < count($value); $j++) {
 							if ($j == 0) {
 								$first_answer = $value[$j]['answer_id'];
+
+								$question = reset($questions);
+								DB::table('master_codes')->where('id', $question->master_code_id)->update(array('attribute_code' => 1));
 							}else{
 								$answer_savings[$value[$j]['answer_id']] = $first_answer;
 								$answer_id_data .= $value[$j]['answer_id'].",";
@@ -540,6 +541,7 @@ class Survey extends Eloquent {
 
 			// Remove Survey and file
 			$survey = Survey::find($id);
+<<<<<<< HEAD
 
 			File::delete(public_path()."/uploads/".$survey->baseline_file);
 			File::delete(public_path()."/uploads/".$survey->header_file);
@@ -558,6 +560,26 @@ class Survey extends Eloquent {
 			$category_data = DB::table('categories')->where('id','=',$survey->id);
 			$category_data_loads = $category_data->get();
 
+=======
+
+			File::delete(public_path()."/uploads/".$survey->baseline_file);
+			File::delete(public_path()."/uploads/".$survey->header_file);
+			File::delete(public_path()."/uploads/".$survey->geojson_file);
+
+			// Schema::drop('temporary_headers');
+			// Schema::drop($survey->baseline_file);
+
+			DB::table('delayed_jobs')->where('survey_id','=',$survey->id)->delete();
+			DB::table('regions')->where('survey_id','=',$survey->id)->delete();
+			DB::table('cycles')->where('survey_id','=',$survey->id)->delete();
+			DB::table('amounts')->where('survey_id','=',$survey->id)->delete();
+			DB::table('amount_filters')->where('survey_id','=',$survey->id)->delete();
+			DB::table('answers')->where('survey_id','=',$survey->id)->delete();
+
+			$category_data = DB::table('categories')->where('id','=',$survey->id);
+			$category_data_loads = $category_data->get();
+
+>>>>>>> developer
 			$category_items = array();
 			foreach ($category_data_loads as $key_category_data_loads => $category_data_load) {
 				array_push($category_items, $category_items_load->category_id);

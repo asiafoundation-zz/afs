@@ -87,6 +87,8 @@ class Question extends Eloquent {
 					cycles.id  as id_cycle,
 					cycles.cycle_type  as cycle_type,
 					cycles.name as cycle,
+					master_codes.id as master_code_id,
+					master_codes.attribute_code as attribute_code,
 					(SELECT sum(amounts.amount) 
 						from amounts 
 						where amounts.answer_id = id_answer
@@ -107,6 +109,8 @@ class Question extends Eloquent {
 						cycles.name as cycle,
 						regions.id as id_region,
 						regions.name as name,
+						master_codes.id as master_code_id,
+						master_codes.attribute_code as attribute_code,
 						(SELECT sum(amounts.amount) 
 							from amounts 
 							where amounts.answer_id = id_answer and region_id = id_region
@@ -122,6 +126,8 @@ class Question extends Eloquent {
 						questions.question as question,
 						question_categories.id as id_question_categories,
 						question_categories.name as question_categories,
+						master_codes.id as master_code_id,
+						master_codes.attribute_code as attribute_code,
 						0 AS indexlabel';			
 
 			if(!empty($request['region'])){
@@ -133,6 +139,8 @@ class Question extends Eloquent {
 							question_categories.name as question_categories,
 							regions.id as id_region,
 							regions.name,
+							master_codes.attribute_code as attribute_code,
+							master_codes.id as master_code_id,
 							0 AS indexlabel';
 			}
 		}
@@ -142,6 +150,8 @@ class Question extends Eloquent {
 		if(!empty($request['empty']) && $request['empty'] == 1){
 			if(!empty($request['region'])){
 				$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id')
+										 ->join('codes','codes.id','=','questions.code_id')
+										 ->join('master_codes','master_codes.id','=','codes.master_code_id')
 									   ->join('answers','answers.question_id','=','questions.id')
 									   ->join('amounts','amounts.answer_id','=','answers.id')
 									   ->join('regions','regions.id','=','amounts.region_id');
@@ -151,6 +161,8 @@ class Question extends Eloquent {
 			
 		}else{
 			$questions = $questions->join('question_categories','questions.question_category_id','=','question_categories.id')
+							->join('codes','codes.id','=','questions.code_id')
+							->join('master_codes','master_codes.id','=','codes.master_code_id')
 							->join('answers','answers.question_id','=','questions.id')
 							->join('cycles','cycles.id','=','answers.cycle_id')
 							->join('amounts','amounts.answer_id','=','answers.id')
@@ -201,7 +213,19 @@ class Question extends Eloquent {
 		// Count question amount
 		$total_amount = 0;
 		foreach ($questions as $key_questions => $question) {
-			$total_amount += $question->amount;
+			if ($question->attribute_code) {
+				$total_amount = DB::table('questions')
+				->join('answers','answers.question_id','=','questions.id')
+				->join('question_participants','question_participants.answer_id','=','answers.id')
+				->where('questions.id',$question->id)
+				->groupBy('question_participants.participant_id')
+				->get();
+
+				$total_amount = count($total_amount);
+				break;
+			}else{
+				$total_amount += $question->amount;
+			}
 		}
 
 		// Count index label percentage
