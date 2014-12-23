@@ -63,26 +63,6 @@ class FilterParticipant extends Eloquent {
 			$option_filters_array = explode(",", $option_filters_trim);
 		}
 
-		if(!empty($region)){
-			$main_category = CategoryItem::select('category_id')->whereIn('id', $option_filters_array)->get();
-
-			foreach($main_category as $row){
-
-				if($row->category_id == 4){
-					$category_exist = 1;
-					$sample_type = 0;
-				}
-
-				if($row->category_id == 5 && $category_exist == 1){
-					$sample_type = 1;
-					$category_exist = 0;
-				}
-
-				if($row->category_id == 1 || $row->category_id == 2 || $row->category_id == 3){
-					$sample_type = 1;
-				}
-			}	
-		}
 		
 		$filter_queries =  DB::table('filter_participants')
 			->select(
@@ -100,11 +80,38 @@ class FilterParticipant extends Eloquent {
 					$filter_queries =  $filter_queries->where('regions.id', '=', $region);
 				}
 
-			$filter_queries = $filter_queries
-				->whereIn('filter_participants.category_item_id',$option_filters_array)
-				->where('participants.sample_type', '=', $sample_type)
-				->groupBy('participants.id')
-				->get();
+			$filter_queries = $filter_queries->whereIn('filter_participants.category_item_id',$option_filters_array);
+				
+			/* If region is exist then do zero sample type in where clause else check the filter availability, flag it then if oversample flag is not 1 then don't do where clause */
+
+			if(empty($region)){
+				$filter_queries = $filter_queries->where('participants.sample_type', '=', 0);
+			}else{
+				$main_category = CategoryItem::select('category_id')->whereIn('id', $option_filters_array)->get();
+
+				foreach($main_category as $row){
+
+					if($row->category_id == 4){
+						$category_exist = 1;
+						$sample_type = 0;
+					}
+
+					if($row->category_id == 5 && $category_exist == 1){
+						$sample_type = 1;
+						$category_exist = 0;
+					}
+
+					if($row->category_id == 1 || $row->category_id == 2 || $row->category_id == 3){
+						$sample_type = 1;
+					}
+				}
+
+				if($sample_type != 1){
+					$filter_queries = $filter_queries->where('participants.sample_type', '=', 0);	
+				}	
+			}
+
+			$filter_queries = $filter_queries->groupBy('participants.id')->get();
 				
 			$data_merge = array();
 			$data_result = 0;
