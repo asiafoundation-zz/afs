@@ -63,6 +63,7 @@ class FilterParticipant extends Eloquent {
 			$option_filters_array = explode(",", $option_filters_trim);
 		}
 
+		
 		$filter_queries =  DB::table('filter_participants')
 			->select(
 				DB::raw(
@@ -80,7 +81,7 @@ class FilterParticipant extends Eloquent {
 				}
 
 			$filter_queries = $filter_queries->whereIn('filter_participants.category_item_id',$option_filters_array);
-				
+
 			/* If region is exist then do zero sample type in where clause else check the filter availability, flag it then if oversample flag is not 1 then don't do where clause */
 
 			if(empty($region)){
