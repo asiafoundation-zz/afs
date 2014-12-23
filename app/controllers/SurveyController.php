@@ -215,6 +215,7 @@ class SurveyController extends AvelcaController {
 		$default_question = reset($default_questions);
 
 		$request['category'] = $default_question->id_question_categories;
+		$request['cycle'] = $default_question->id_cycle;
 
 		// Get catefory and question list
 		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion($request);

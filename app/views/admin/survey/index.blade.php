@@ -11,7 +11,7 @@ $( document ).ready(function() {
 @if($is_refresh)
 setInterval(function() {
   window.location.reload();
-}, 3000);
+}, 20000);
 @endif
 
 </script>
@@ -81,8 +81,9 @@ setInterval(function() {
 							<a href="/admin/survey/category/{{$survey['id']}}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{$survey['publish_text']}}</button></a>
 							@elseif($survey['publish_style'] == "completed" || $survey['publish_style'] == "publish" || $survey['publish_style'] == "unpublish")
 							<a href="/admin/filter/{{ $survey['id'] }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_filter')}}</button></a>
-							@endif
+
 							<a href="/survey/singledelete/{{ $survey['id'] }}" style="aligh:right;"><button class="btn btn-danger">{{Lang::get('backend.delete_survey')}}</button></a>
+							@endif
 						</td>
 					</tr>
 				<?php $no = $no+1; ?>
