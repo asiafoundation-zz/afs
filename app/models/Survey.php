@@ -120,18 +120,6 @@ class Survey extends Eloquent {
 					break;
 				case 2:
 					$queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
-					// $percentage = 0;
-					// // Is queue exist
-					// $queue = DelayedJob::where('survey_id','=',$survey_list->id)->first();
-					// if ((int)$queue->queue < (int)$queue->information) {
-					// 	$percentage = round($queue->information);
-					// }
-					// elseif(!isset($queue) && Participant::count() > 0){
-					// 	if ((int)$queue->queue >= (int)$queue->information){
-					// 		$percentage = 99;
-					// 	}
-					// }
-
 					$surveys[$key_survey_lists]['publish_text'] = "Importing ";
 					$surveys[$key_survey_lists]['publish_style'] = "importing";
 					$surveys[$key_survey_lists]['percentage'] = $queue->information;
@@ -327,7 +315,7 @@ class Survey extends Eloquent {
 		$delayed_jobs->information = "Multi Questions";
 		$delayed_jobs->save();
 
-		$multi_questions = DB::select(DB::raw("SELECT questions.id as question_id, questions.question as question, questions.question_category_id as question_category_id FROM questions WHERE question IN (SELECT question FROM questions WHERE survey_id = 0 GROUP BY question, question_category_id HAVING COUNT(question) > 1)"));
+		$multi_questions = DB::select(DB::raw("SELECT questions.id as question_id, questions.question as question, questions.question_category_id as question_category_id FROM questions WHERE question IN (SELECT question FROM questions WHERE survey_id = ".$survey->id." GROUP BY question, question_category_id HAVING COUNT(question) > 1)"));
 
 		if (count($multi_questions)) {
 			$question_deletes = array();
@@ -383,19 +371,22 @@ class Survey extends Eloquent {
 						$value = array_values($value_cycle[0]);
 						
 						for ($i=0; $i < count($value); $i++) {
+							$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+									->join('codes','codes.id','=','questions.code_id')
+									->join('master_codes','master_codes.id','=','codes.master_code_id')
+									->where('questions.id','=',$value[$i]['question_id'])
+									->get();
+
 							if ($i == 0) {
 								$first_answer = $value[$i]['answer_id'];
+
+								$question = reset($questions);
+								DB::table('master_codes')->where('id', $question->master_code_id)->update(array('attribute_code' => 1));
 							}else{
 								$answer_savings[$value[$i]['answer_id']] = $first_answer;
 								$answer_id_data .= $value[$i]['answer_id'].",";
 
 								array_push($question_deletes, $value[$i]['question_id']);
-
-								$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
-									->join('codes','codes.id','=','questions.code_id')
-									->join('master_codes','master_codes.id','=','codes.master_code_id')
-									->where('questions.id','=',$value[$i]['question_id'])
-									->get();
 
 								foreach ($questions as $key_questions => $question_single) {
 									array_push($code_deletes, $question_single->code_id);
@@ -409,8 +400,17 @@ class Survey extends Eloquent {
 						$value = array_values($value_cycle[1]);
 
 						for ($j=0; $j < count($value); $j++) {
+							$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+									->join('codes','codes.id','=','questions.code_id')
+									->join('master_codes','master_codes.id','=','codes.master_code_id')
+									->where('questions.id','=',$value[$j]['question_id'])
+									->get();
+
 							if ($j == 0) {
 								$first_answer = $value[$j]['answer_id'];
+
+								$question = reset($questions);
+								DB::table('master_codes')->where('id', $question->master_code_id)->update(array('attribute_code' => 1));
 							}else{
 								$answer_savings[$value[$j]['answer_id']] = $first_answer;
 								$answer_id_data .= $value[$j]['answer_id'].",";
@@ -545,8 +545,8 @@ class Survey extends Eloquent {
 			File::delete(public_path()."/uploads/".$survey->header_file);
 			File::delete(public_path()."/uploads/".$survey->geojson_file);
 
-			Schema::drop('temporary_headers');
-			Schema::drop($survey->baseline_file);
+			DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
+			DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
 
 			DB::table('delayed_jobs')->where('survey_id','=',$survey->id)->delete();
 			DB::table('regions')->where('survey_id','=',$survey->id)->delete();
