@@ -31,9 +31,12 @@
 		</div>
 
     <div class="modal-footer">-->
+      <a style="align:right;" data-toggle="modal" href="#manage_default_question" ><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.manage_default_question')}}</button></a>
 
       <a data-toggle="modal" href="#information_column" style="align:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.edit_information')}}</button></a>
-			<a href="/admin/survey/defaultquestion/{{ $survey->id }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.publish')}}</button></a>
+
+      
+			<!-- <a href="/admin/survey/defaultquestion/{{ $survey->id }}" style="aligh:right;"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.publish')}}</button></a> -->
 		</div>
 	</div>
 </div>
