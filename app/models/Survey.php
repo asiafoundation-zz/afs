@@ -541,7 +541,6 @@ class Survey extends Eloquent {
 
 			// Remove Survey and file
 			$survey = Survey::find($id);
-<<<<<<< HEAD
 
 			File::delete(public_path()."/uploads/".$survey->baseline_file);
 			File::delete(public_path()."/uploads/".$survey->header_file);
@@ -560,26 +559,6 @@ class Survey extends Eloquent {
 			$category_data = DB::table('categories')->where('id','=',$survey->id);
 			$category_data_loads = $category_data->get();
 
-=======
-
-			File::delete(public_path()."/uploads/".$survey->baseline_file);
-			File::delete(public_path()."/uploads/".$survey->header_file);
-			File::delete(public_path()."/uploads/".$survey->geojson_file);
-
-			// Schema::drop('temporary_headers');
-			// Schema::drop($survey->baseline_file);
-
-			DB::table('delayed_jobs')->where('survey_id','=',$survey->id)->delete();
-			DB::table('regions')->where('survey_id','=',$survey->id)->delete();
-			DB::table('cycles')->where('survey_id','=',$survey->id)->delete();
-			DB::table('amounts')->where('survey_id','=',$survey->id)->delete();
-			DB::table('amount_filters')->where('survey_id','=',$survey->id)->delete();
-			DB::table('answers')->where('survey_id','=',$survey->id)->delete();
-
-			$category_data = DB::table('categories')->where('id','=',$survey->id);
-			$category_data_loads = $category_data->get();
-
->>>>>>> developer
 			$category_items = array();
 			foreach ($category_data_loads as $key_category_data_loads => $category_data_load) {
 				array_push($category_items, $category_items_load->category_id);
