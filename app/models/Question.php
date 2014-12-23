@@ -218,12 +218,13 @@ class Question extends Eloquent {
 				$total_amount = DB::table('questions')
 				->join('answers','answers.question_id','=','questions.id')
 				->join('question_participants','question_participants.answer_id','=','answers.id')
+				->join('participants','participants.id','=','question_participants.participant_id')
 				->where('questions.id',$question->id_question)
+				->where('participants.sample_type',0)
 				->groupBy('question_participants.participant_id')
 				->get();
 
-				$total_amount = count($total_amount);
-				break;
+				$total_amount = count($total_amount);break;
 			}else{
 				$total_amount += $question->amount;
 			}
@@ -245,7 +246,6 @@ class Question extends Eloquent {
 		usort($questions, function($a, $b) {
 			return $a->amount - $b->amount;
 		});
-		
 		return $questions;
 	}
 
@@ -256,25 +256,12 @@ class Question extends Eloquent {
 
 			if (!empty($request['cycle'])) {
 
-				if($request['empty'] == 0){
-					$questions = $questions->where('answers.cycle_id', '=',$request['cycle']);	
-				}
-				
-				if (!empty($request['category'])) {
-					$questions =  $questions->where('question_categories.id', '=', $request['category']);
-				}
-				if (!empty($request['question'])) {
-					$questions =  $questions->where('questions.id', '=', $request['question']);
-				}
-				if (!empty($request['region'])) {
-					$region = $request['region'];
-					$region_dapil = $request['region_dapil'];
-					$questions = $questions->where('regions.id', '=', $region);
-				}
+				$questions = $questions->where('questions.id', '=', 28)
+							;
 			}
 			else{
-				$questions = $questions->where('questions.is_default', '=', 1)
-							->where('answers.cycle_default', '=', 1);
+				$questions = $questions->where('questions.id', '=', 28)
+							;
 			}
 
 			$questions = $questions
