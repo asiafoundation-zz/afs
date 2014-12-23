@@ -65,8 +65,10 @@ class Participant extends Eloquent {
 				'questions.id as question_id',
 				'questions.question as questions',
 				'codes.code',
-				'master_codes.master_code'
+				'master_codes.master_code',
+				'surveys.name as survey'
 				)
+			->join('surveys','surveys.id','=','participants.survey_id')
 			->join('question_participants','question_participants.participant_id','=','participants.id')
 			->join('regions','regions.id','=','question_participants.region_id')
 			->join('answers','answers.id','=','question_participants.answer_id')
@@ -100,6 +102,8 @@ class Participant extends Eloquent {
 			$participants[$participant_load->id]['region'] = $participants[$participant_load->id]['questions'][0]->region;
 			$participants[$participant_load->id]['cycle'] = $cycle->name;
 			$participants[$participant_load->id]['sample_type'] = $participants[$participant_load->id]['filters'][0]->sample_type;
+
+			$participants[$participant_load->id]['survey'] = $participants[$participant_load->id]['questions'][0]->survey;
 		}
 		return $participants;
 	}

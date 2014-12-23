@@ -43,63 +43,64 @@
       };
     }
 $( document ).ready(function() {
-    // Removed last clicked area
-    var lastClickedLayer;
-    // Map Centering
-    var map = L.map('map');
+    // // Removed last clicked area
+    // var lastClickedLayer;
+    // // Map Centering
+    // var map = L.map('map');
 
-    L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      zoomControl:false,
-      id: 'examples.map-20v6611k'
-    }).addTo(map);
+    // L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+    //   maxZoom: 18,
+    //   zoomControl:false,
+    //   id: 'examples.map-20v6611k'
+    // }).addTo(map);
 
-    // get color depending on highest maximum vote
-    function getColor(d) {
-      var color = 'white';
-      @foreach ($regions as $key_region => $region)
-        if (d === '{{ $region["name"] }}')
-        {
-          color = '{{ $region["color"] }}';
-        }
-      @endforeach
-      return color;
-    }
-    function style(feature) {
-      return {
-        weight: 2,
-        opacity: 0.7,
-        color: '#8E73F1',
-        dashArray: '3',
-        fillOpacity: 0.7,
-        fillColor: getColor(feature.properties.nm_provinsi)
-      };
-    }
-    var geojson;
-    var popupRegion;
+    // // get color depending on highest maximum vote
+    // function getColor(d) {
+    //   var color = 'white';
+    //   @foreach ($regions as $key_region => $region)
+    //     if (d === '{{ $region["name"] }}')
+    //     {
+    //       color = '{{ $region["color"] }}';
+    //     }
+    //   @endforeach
+    //   return color;
+    // }
+    // function style(feature) {
+    //   return {
+    //     weight: 2,
+    //     opacity: 0.7,
+    //     color: '#8E73F1',
+    //     dashArray: '3',
+    //     fillOpacity: 0.7,
+    //     fillColor: getColor(feature.properties.nm_provinsi)
+    //   };
+    // }
+    // var geojson;
+    // var popupRegion;
 
-    function onEachFeature(feature, layer) {
-      // layer.on({
-      //   mouseover: hoverHightlight,
-      //   mouseout: outHightlight,
-      //   click: AddHighlight
-      // });
-    }
+    // function onEachFeature(feature, layer) {
+    //   // layer.on({
+    //   //   mouseover: hoverHightlight,
+    //   //   mouseout: outHightlight,
+    //   //   click: AddHighlight
+    //   // });
+    // }
 
-    geojson = L.geoJson(statesData, {
-      style: style,
-      onEachFeature: onEachFeature,
-    }).addTo(map);
+    // geojson = L.geoJson(statesData, {
+    //   style: style,
+    //   onEachFeature: onEachFeature,
+    // }).addTo(map);
 
 
-    map.attributionControl.addAttribution('Asia Foundation Survey');
-    // Auto Center
-    map.fitBounds(geojson.getBounds());
-    // Disable drag and zoom handlers.
-    map.touchZoom.disable();
-    map.doubleClickZoom.disable();
-    map.scrollWheelZoom.disable();
-});
+    // map.attributionControl.addAttribution('Asia Foundation Survey');
+    // // Auto Center
+    // map.fitBounds(geojson.getBounds());
+    // // Disable drag and zoom handlers.
+    // map.touchZoom.disable();
+    // map.doubleClickZoom.disable();
+    // map.scrollWheelZoom.disable();
+
+    });
     /*
      * -----------------------------------------End Map JS-----------------------------------------
      */

@@ -2,6 +2,29 @@
 
 class HomeController extends BaseController {
 
+	public function getLang($lang){
+		// Session::put('lang', $lang);
+
+		$rules = [
+        	'language' => 'in:en,in' //list of supported languages of your application.
+        ];
+
+        // $language = Input::get('lang'); //lang is name of form select field.
+
+        $validator = Validator::make(compact($lang),$rules);
+
+        if($validator->passes())
+        {
+            Session::put('language',$lang);
+            App::setLocale($lang);
+        }
+        else
+        {/**/ }
+
+		return Redirect::route('home');
+
+	}
+
 	public function getIndex()
 	{
 		$request = array();
@@ -375,15 +398,12 @@ class HomeController extends BaseController {
 								->where('amounts.sample_type', '=', 0)
 								->get();
 
-					$empty_question = Question::select(DB::raw('distinct min(questions.id) as id, questions.question'))
-								->leftJoin('answers','answers.question_id', '=', 'questions.id')
-								->where('question_category_id', '=', Input::get('category'))	 
-								->where('answers.cycle_id', '=', Input::get('cycle'))
-								->first();
+					$question_label = Lang::get('frontend.choose_question');
+					$cycle_info = Lang::get('frontend.question_info');
 
-					$question_exist = isset($empty_question) ? $empty_question->id : 0;
+					$label = array($question_label, $cycle_info);
 
-					return Response::json(array($question, $question_exist));
+					return Response::json(array($question, $label));
 					break;
 
 				default:

@@ -86,7 +86,7 @@ $(document).ready(function(){
 	    $('#select-question').select2({});
 	});
 
-	$('#question_select_modal').select2({});
+	$('.question_select_modal').select2({});
 	$('#cycle_select_modal').select2({});
 
 	$('.cycle-btn').click(function(e){

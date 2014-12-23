@@ -24,6 +24,8 @@
 					<td rowspan="4">{{Lang::get('backend.participant_no')}}{{$log['id']}}</td>
 				</tr>
 				<tr>
+				<tr>
+					<td>Survey: {{$log['survey']}}</td>
 					<td>
 						<table class="datatable table-striped table-bordered" >
 								<thead>

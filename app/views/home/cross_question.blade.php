@@ -39,7 +39,7 @@
   </div>
 
   <div class="col-md-12">
-    <a href="#" class="orange-bg cross-back"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get('frontend.back') }}</a>
+    <a href="#" class="orange-bg cross-back"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get('frontend.return') }}</a>
   </div>
 </div>
 

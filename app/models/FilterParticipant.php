@@ -111,6 +111,8 @@ class FilterParticipant extends Eloquent {
 				}	
 			}
 
+			/* -- end -- */
+			
 			$filter_queries = $filter_queries->groupBy('participants.id')->get();
 				
 			$data_merge = array();

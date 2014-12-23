@@ -77,7 +77,7 @@ function manage_filter_order(survey_id,category_id){
 						<td><span id="filter_category_name_{{ $category->id }}">{{ strtoupper($category->name) }}</span></td>
 						<td><span id="filter_category_display_name_{{ $category->id }}">{{ $category->display_name }}</span></td>
 						<td>
-							{{ Form::select('is_active', array(0 => 'Disable',1 => 'Enable'),$category->is_active, array("id" => "question_select_modal","class" => "control-label","onchange" => "is_active_filter( $survey_id,$category->id )")) }}
+							{{ Form::select('is_active', array(0 => 'Disable',1 => 'Enable'),$category->is_active, array("id" => "question_select_modal","class" => "question_select_modal","onchange" => "is_active_filter( $survey_id,$category->id )")) }}
 						</td>
 						<td>
 							<a href="#" onclick="popup_filter({{ $survey_id }},{{ $category->id }})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.view')}}</button></a>
