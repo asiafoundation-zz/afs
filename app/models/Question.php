@@ -199,6 +199,7 @@ class Question extends Eloquent {
 				$answer_diff[$question->id_answer]->id_cycle = $question->id_cycle;
 				$answer_diff[$question->id_answer]->id_region = !empty($question->id_region) ? $question->id_region : "";
 				$answer_diff[$question->id_answer]->region_name = !empty($question->name) ? $question->name : "";
+				$answer_diff[$question->id_answer]->attribute_code = $question->attribute_code;
 
 				$answer_diff[$question->id_answer]->amount = 0;
 			}

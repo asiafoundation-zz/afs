@@ -400,13 +400,13 @@ class Survey extends Eloquent {
 						// Normalize Array
 						$value = array_values($value_cycle[1]);
 
-						$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
+						for ($j=0; $j < count($value); $j++) {
+							$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
 									->join('codes','codes.id','=','questions.code_id')
 									->join('master_codes','master_codes.id','=','codes.master_code_id')
-									->where('questions.id','=',$value[$i]['question_id'])
+									->where('questions.id','=',$value[$j]['question_id'])
 									->get();
 
-						for ($j=0; $j < count($value); $j++) {
 							if ($j == 0) {
 								$first_answer = $value[$j]['answer_id'];
 
@@ -546,8 +546,8 @@ class Survey extends Eloquent {
 			File::delete(public_path()."/uploads/".$survey->header_file);
 			File::delete(public_path()."/uploads/".$survey->geojson_file);
 
-			Schema::drop('temporary_headers');
-			Schema::drop($survey->baseline_file);
+			DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
+			DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
 
 			DB::table('delayed_jobs')->where('survey_id','=',$survey->id)->delete();
 			DB::table('regions')->where('survey_id','=',$survey->id)->delete();
