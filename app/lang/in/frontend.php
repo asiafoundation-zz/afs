@@ -40,4 +40,6 @@ return array(
 	"choose_category" => "Pilih Kategori",
 	"choose_question" => "Pilih Pertanyaan",
 	"all_survey" => "Menampilkan hasil survey untuk Seluruh Wilayah",
+	"cycle_info" => "Silahkan pilih kategori dan pertanyaan diatas untuk menampilkan hasil survey",
+	"question_info" => "Silahkan pilih pertanyaan diatas untuk menampilkan hasil survey"
 );

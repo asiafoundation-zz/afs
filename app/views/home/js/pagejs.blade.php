@@ -10,7 +10,7 @@
       $(".chart-pagination").show();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
-      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, survey_id: FilterSelect.survey} )
         .done(function( data ) {
           console.log(data);
           $('.region-name').remove();
@@ -192,7 +192,7 @@
           $('#chart_canvas').hide();
           $('.loading-flag').show();
 
-          $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
+          $.get( "filter-select", { SelectedFilter:"filters", survey_id: FilterSelect.survey, region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
           .done(function( data ) {
             $('.loading-flag').hide();
             $('#chart_canvas').show();
@@ -283,6 +283,9 @@
         .done(function( data ) {
           if (data != false) {
 
+            $('.cross-question').hide().css('display', 'none').fadeOut('slow');
+            $('.chart-flag').show();
+
             FilterSelect.is_compare = 1;
             disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
 
@@ -331,15 +334,18 @@
             // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
             compare_chart(first_list,end_list, ["#FA0C0C", "#E600FF"], baseline_text,endline_text);
 
-            if (move == 0) {
+            $('.chart-pagination').html('<li>&nbsp;</li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li>&nbsp;</li>');
+            
+            // Just for testing
+            /*if (move == 0 || move == 3) {
               $('.chart-pagination').html('<li>&nbsp;</li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li>&nbsp;</li>');
             }else{
               $("#question-name").html(question_text);
 
-              // if (Object.keys(data.cycles).length > 1) {
-              //   $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
-              // }
-            }
+              if (Object.keys(data.cycles).length > 1) {
+                $(".chart-pagination").html('<li><a class="orange-bg" onclick="compare_cycle(1)"><img src="{{ Theme::asset('img/arrow-l.png') }}"> {{ Lang::get("frontend.preveous_question") }}</a></li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li><a class="orange-bg" onclick="compare_cycle(2)">{{ Lang::get("frontend.next_question") }} <img src="{{ Theme::asset('img/arrow.png') }}"></a></li>');
+              }
+            }*/
 
             // Re assingn Filter data
             DefaultSelectAssign(FilterSelect);
@@ -461,7 +467,6 @@
         };  
       }
       
-
       disable_anchor($('.clear-all'), '', 1);
       text_area_filter_process = text_area_filter(value);
 
@@ -473,7 +478,7 @@
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, survey_id: FilterSelect.survey} )
         .done(function( data ) {
           if (data != false) {
             

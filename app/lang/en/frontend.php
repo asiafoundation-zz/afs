@@ -27,5 +27,14 @@ return array(
 	"filter_participant_by" => "Filter Participant By",
 	"all_region" => "All Region",
 	"next_question" => "Next question",
-	"prevous_question" => "Preveous question"
+	"prevous_question" => "Preveous question",
+	"choose_survey" =>"Choose survey type",
+	"choose_category" => "Choose category",
+	"choose_question" => "Choose question",
+	"all_survey" => "Show all region survey",
+	"description" => "Description",
+	"show_responnden_filter_result" => "Show survey result based on : ",
+	"cycle_info" => "Please choose question and category below to show survey results",
+	"question_info" => "Please choose question below to show survey results",
+	"detail_chart_failed" => "Failed to show detail chart",
 );

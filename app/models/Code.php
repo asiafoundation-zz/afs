@@ -63,7 +63,7 @@ class Code extends Eloquent {
 		return $this->belongsTo('MasterCode');
 	}
 
-	public static function getFilter()
+	public static function getFilter($survey_id)
 	{
 		$filter_queries = self::select(
 				'categories.id as category_id',
@@ -78,6 +78,7 @@ class Code extends Eloquent {
 			->where('codes.code', '!=', 'REGION')
 			->where('master_codes.attribute_code', '=', 0)
 			->where('categories.is_active', '=', 1)
+			->where('categories.survey_id', '=', $survey_id)
 			->get();
 
 		$filters = array();
