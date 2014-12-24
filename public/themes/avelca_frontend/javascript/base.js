@@ -316,6 +316,7 @@ function find_survey_dynamic_select(region_id, type){
   }
   else{
     FilterSelect.region = "";
+    region_filters_default = [];
     disable_anchor($('.clear-all'), '#AA6071', 0);
 
     if(FilterSelect.is_compare == 1){

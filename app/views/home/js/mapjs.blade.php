@@ -6,6 +6,7 @@
     var FilterSelect = {
       region:"",
       region_dapil:"",
+      survey: {{ $survey->id }},
       category:{{ $default_question->id_question_categories }},
       default_category:{{ $default_question->id_question_categories }},
       question: {{ $default_question->id_question }},

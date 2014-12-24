@@ -10,7 +10,7 @@
       $(".chart-pagination").show();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
-      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, survey_id: FilterSelect.survey} )
         .done(function( data ) {
           console.log(data);
           $('.region-name').remove();
@@ -192,7 +192,7 @@
           $('#chart_canvas').hide();
           $('.loading-flag').show();
 
-          $.get( "filter-select", { SelectedFilter:"filters",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
+          $.get( "filter-select", { SelectedFilter:"filters", survey_id: FilterSelect.survey, region: FilterSelect.region, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, option_filters: option_filters} )
           .done(function( data ) {
             $('.loading-flag').hide();
             $('#chart_canvas').show();
@@ -461,7 +461,6 @@
         };  
       }
       
-
       disable_anchor($('.clear-all'), '', 1);
       text_area_filter_process = text_area_filter(value);
 
@@ -473,7 +472,7 @@
       $('#chart_canvas').hide();
       $('.loading-flag').show();
       // Get cycles functions
-      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle} )
+      $.get( "filter-select", { SelectedFilter:"survey_area_dynamic",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, survey_id: FilterSelect.survey} )
         .done(function( data ) {
           if (data != false) {
             
