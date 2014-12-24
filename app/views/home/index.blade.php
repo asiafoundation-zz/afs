@@ -4,9 +4,22 @@
 
   @include('partial/homeasset')
 
-  <section class="header">
-      <p>{{ $survey->name }}</p>
-  </section>
+<?php 
+  $survey_select = Survey::all();  
+?>
+<section class="header">
+    <div class="flag">
+      {{ Form::open(['action' => 'HomeController@postLang'] ) }}
+      <span>language : </span>
+      <select onchange="this.form.submit()" name="lang">
+        @foreach($survey_select as $row)
+          <option value="{{ $row->id }}" @if($survey->id == $row->id) selected @endif>{{ $row->url_name }}</option>
+        @endforeach
+      </select>
+      {{ Form::close()}}
+    </div>
+    <p>{{ $survey->name }}</p>
+</section>
 
 <!--Update-->
 <div class="elheader-wrapper"> <!-- add element wrapper - 28112014 -->
@@ -114,8 +127,8 @@
             <img src="{{ Theme::asset('img/ajax-loader.gif') }}">
           </div>
           <div id="chart_canvas">
-            <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
-            <div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>
+            <div class="col-md-5" id="pie-div"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
+            <div class="col-md-7" id="chart-div"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>
           </div>
           <div class="col-md-12">
             <ul class="chart-pagination">
