@@ -222,10 +222,10 @@ class Survey extends Eloquent {
 		$update_filter_sql = "";
 		foreach ($master_code as $key_master_code => $single_code) {
 			if ($single_code['type'] == 0) {
-				$update_filter_sql .= "sfl_prov = (SELECT id FROM regions WHERE name = substr(a.sfl_prov, 4, length(a.sfl_prov)) and survey_id = ".$survey->id."),";
+				$update_filter_sql .= "sfl_prov = (SELECT id FROM regions WHERE name = sfl_prov and survey_id = ".$survey->id."),";
 
 				DB::statement("INSERT INTO regions(NAME, code_id,survey_id)
-					(SELECT DISTINCT substr(sfl_prov, 4, length(sfl_prov)),".$single_code["code_id"].",".$survey->id." FROM ".$file_name.")");
+					(SELECT DISTINCT sfl_prov,".$single_code["code_id"].",".$survey->id." FROM ".$file_name.")");
 			}
 			if ($single_code['type'] == 1) {
 
@@ -322,8 +322,10 @@ class Survey extends Eloquent {
 			$question_deletes = array();
 			$code_deletes = array();
 			$mastercode_deletes = array();
+			$answer_deletes = array();
 
 			$data_answers = array();
+			$first_questions = array();
 			foreach ($multi_questions as $key => $value) {
 				$question = preg_replace('/[^A-Za-z0-9]/', '', $value->question);
 				$question = strtolower($question);
@@ -331,12 +333,13 @@ class Survey extends Eloquent {
 				$question = trim(preg_replace('/\s\s+/', ' ', $question));
 
 				$answers = DB::table('answers')
-					->select('answers.id as answer_id','answers.answer','cycles.cycle_type')
+					->select('answers.question_id as question_id','answers.id as answer_id','answers.answer','cycles.cycle_type','cycles.id as cycle_id')
 					->join('cycles','cycles.id','=','answers.cycle_id')
 					->where('question_id','=',$value->question_id)
 					->get();
 
 				if(count($answers) > 0){
+					$key_answers = 0;
 					foreach ($answers as $key_answers => $answer) {
 						$answer_text = preg_replace('/[^A-Za-z0-9]/', '', $answer->answer);
 						$answer_text = strtolower($answer_text);
@@ -346,6 +349,10 @@ class Survey extends Eloquent {
 						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->cycle_type][$answer->answer_id]['question_id'] = $value->question_id;
 						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->cycle_type][$answer->answer_id]['answer_id'] = $answer->answer_id;
 						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->cycle_type][$answer->answer_id]['answer'] = $answer->answer;
+						$data_answers["category".$value->question_category_id.$question][$answer_text][$answer->cycle_type][$answer->answer_id]['cycle_id'] = $answer->cycle_id;
+						if (empty($first_questions["category".$value->question_category_id.$question])) {
+							$first_questions["category".$value->question_category_id.$question] = $value->question_id;
+						}
 					}
 				}else{
 					array_push($question_deletes, $value->question_id);
@@ -364,7 +371,9 @@ class Survey extends Eloquent {
 			}
 
 			$answer_savings = array();
+			$first_answer_savings = array();
 			$answer_id_data = "";
+			$question_id_data = "";
 			foreach ($data_answers as $key_data_answers => $data_answer) {
 				foreach ($data_answer as $key_data_answer => $value_cycle) {
 					if (!empty($value_cycle[0])) {
@@ -381,13 +390,24 @@ class Survey extends Eloquent {
 							if ($i == 0) {
 								$first_answer = $value[$i]['answer_id'];
 
-								$question = reset($questions);
-								DB::table('master_codes')->where('id', $question->master_code_id)->update(array('attribute_code' => 1));
+								if ($first_questions[$key_data_answers] != $value[$i]['question_id']) {
+									$first_answer_savings[$first_answer]['question_id'] = $first_questions[$key_data_answers];
+									$first_answer_savings[$first_answer]['answer_id'] = $first_answer;
+									$question_id_data .= $first_answer.",";
+								}
+								if (!empty($questions)) {
+									$question = reset($questions);
+									DB::table('master_codes')->where('id', $question->master_code_id)->update(array('attribute_code' => 1));
+								}
 							}else{
-								$answer_savings[$value[$i]['answer_id']] = $first_answer;
+								$answer_savings[$value[$i]['answer_id']]['answer_id'] = $first_answer;
+								$answer_savings[$value[$i]['answer_id']]['answer'] = $value[$i]['answer'];
+								$answer_savings[$value[$i]['answer_id']]['question_id'] = $first_questions[$key_data_answers];
+								$answer_savings[$value[$i]['answer_id']]['cycle_id'] = $value[$i]['cycle_id'];
 								$answer_id_data .= $value[$i]['answer_id'].",";
 
 								array_push($question_deletes, $value[$i]['question_id']);
+								array_push($answer_deletes, $value[$i]['answer_id']);
 
 								foreach ($questions as $key_questions => $question_single) {
 									array_push($code_deletes, $question_single->code_id);
@@ -410,13 +430,25 @@ class Survey extends Eloquent {
 							if ($j == 0) {
 								$first_answer = $value[$j]['answer_id'];
 
-								$question = reset($questions);
-								DB::table('master_codes')->where('id', $question->master_code_id)->update(array('attribute_code' => 1));
+								if ($first_questions[$key_data_answers] != $value[$j]['question_id']) {
+									$first_answer_savings[$first_answer]['question_id'] = $first_questions[$key_data_answers];
+									$first_answer_savings[$first_answer]['answer_id'] = $first_answer;
+									$question_id_data .= $first_answer.",";
+								}
+
+								if (!empty($questions)) {
+									$question = reset($questions);
+									DB::table('master_codes')->where('id', $question->master_code_id)->update(array('attribute_code' => 1));
+								}
 							}else{
-								$answer_savings[$value[$j]['answer_id']] = $first_answer;
+								$answer_savings[$value[$j]['answer_id']]['answer_id'] = $first_answer;
+								$answer_savings[$value[$j]['answer_id']]['answer'] = $value[$j]['answer'];
+								$answer_savings[$value[$j]['answer_id']]['question_id'] = $first_questions[$key_data_answers];
+								$answer_savings[$value[$j]['answer_id']]['cycle_id'] = $value[$j]['cycle_id'];
 								$answer_id_data .= $value[$j]['answer_id'].",";
 
 								array_push($question_deletes, $value[$j]['question_id']);
+								array_push($answer_deletes, $value[$j]['answer_id']);
 
 								$questions = DB::table('questions')->select('codes.id as code_id','master_codes.id as master_code_id')
 									->join('codes','codes.id','=','questions.code_id')
@@ -434,24 +466,40 @@ class Survey extends Eloquent {
 				}
 			}
 			$question_deletes = array_unique($question_deletes);
+			$answer_deletes = array_unique($answer_deletes);
 			$code_deletes = array_unique($code_deletes);
 			$mastercode_deletes = array_unique($mastercode_deletes);
 
 			$question_deletes = array_values($question_deletes);
+			$answer_deletes = array_values($answer_deletes);
 			$code_deletes = array_values($code_deletes);
 			$mastercode_deletes = array_values($mastercode_deletes);
 
 			$answer_id_data .= rtrim($answer_id_data, ',');
+			$question_id_data .= rtrim($question_id_data, ',');
+
+			if (!empty($first_answer_savings)) {
+				$question_answer_savings = "UPDATE answers SET question_id = CASE id";
+
+				foreach ($first_answer_savings as $first_answer => $first_answer_saving) {
+					$question_answer_savings .= " WHEN ".$first_answer_saving['answer_id']." THEN ".$first_answer_saving['question_id'];
+				}
+				$question_answer_savings .= " END";
+				$question_answer_savings .= " WHERE id IN (".$question_id_data.")";
+
+				DB::statement($question_answer_savings);
+			}
 
 			if (!empty($answer_id_data)) {
 				$answer_data_text = "UPDATE question_participants SET answer_id = CASE answer_id";
 
 				foreach ($answer_savings as $first_answer => $answer_saving) {
-					$answer_data_text .= " WHEN ".$first_answer." THEN ".$answer_saving;
+					$answer_data_text .= " WHEN ".$first_answer." THEN ".$answer_saving['answer_id'];
 				}
 				$answer_data_text .= " END";
 				$answer_data_text .= " WHERE answer_id IN (".$answer_id_data.")";
 				DB::statement($answer_data_text);
+				DB::table('answers')->whereIn('id', $answer_deletes)->delete();
 			}
 			
 			if(count($question_deletes) > 0){
@@ -565,32 +613,44 @@ class Survey extends Eloquent {
 			DB::table('amount_filters')->where('survey_id','=',$survey->id)->delete();
 			DB::table('answers')->where('survey_id','=',$survey->id)->delete();
 
-			$category_data = DB::table('categories')->where('id','=',$survey->id);
+			$category_data = DB::table('categories')->where('survey_id','=',$survey->id);
 			$category_data_loads = $category_data->get();
 
-			$category_items = array();
-			foreach ($category_data_loads as $key_category_data_loads => $category_data_load) {
-				array_push($category_items, $category_items_load->category_id);
+			if (!empty($category_data_loads)) {
+				$categories = array();
+				foreach ($category_data_loads as $key_category_data_loads => $category_data_load) {
+					array_push($categories, $category_data_load->id);
+
+					$category_items = array();
+					$category_item_datas = DB::table('category_items')->where('category_id', $category_data_load->id)->get();
+					foreach ($category_item_datas as $key => $category_item_data) {
+						array_push($category_items, $category_item_data->id);
+					}
+					DB::table('category_items')->whereIn('id', $category_items)->delete();
+				}
+				$category_data->delete();
 			}
-			$category_data->delete();
-			DB::table('category_items')->whereIn('id', $category_items)->delete();
 
 			$master_codes = array();
 			$master_codes_data = DB::table('master_codes')->where('survey_id','=',$id);
 			$master_codes_loads = $master_codes_data->get();
-			foreach ($master_codes_loads as $master_code) {
-				array_push($master_codes, $master_code->id);
-			}
-			if (count($master_codes) > 0) {
-				$codes = array();
-				$codes_data = DB::table('codes')->whereIn('master_code_id',$master_codes);
-				$codes_loads = $codes_data->get();
+
+			if (!empty($master_codes_loads)) {
 				foreach ($master_codes_loads as $master_code) {
-					array_push($codes, $master_code->id);
+					array_push($master_codes, $master_code->id);
 				}
-				$codes_data->delete();
+				if (count($master_codes) > 0) {
+					$codes = array();
+					$codes_data = DB::table('codes')->whereIn('master_code_id',$master_codes);
+					$codes_loads = $codes_data->get();
+
+					foreach ($master_codes_loads as $master_code) {
+						array_push($codes, $master_code->id);
+					}
+					$codes_data->delete();
+				}
+				$master_codes_data->delete();
 			}
-			$master_codes_data->delete();
 
 			DB::table('filter_participants')->where('survey_id','=',$survey->id)->delete();
 			DB::table('participants')->where('survey_id','=',$survey->id)->delete();

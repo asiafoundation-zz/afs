@@ -52,6 +52,8 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 	Route::get('/survey/singledelete/{id}', 'SurveyController@deleteSurvey');
 	Route::get('/admin/cycle/{id}', 'CategoryController@getCycle');
 	Route::post('/admin/cycle', 'CategoryController@postCycle');
+	Route::get('/region/{id}', 'CategoryController@getRegion');
+	Route::post('/region/', 'CategoryController@postRegion');
 
 	Route::get('/admin/questioncategory', function(){
 		$question_category = QuestionCategory::all();

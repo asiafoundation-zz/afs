@@ -44,6 +44,9 @@ function manage_filter_order(survey_id,category_id){
   <li>
   	<a href="/admin/cycle/{{ $survey_id }}">Manage Cycle</a>
   </li>
+  <li>
+  	<a href="/admin/region/edit/{{ $survey_id }}">Manage Region</a>
+  </li>
 </ul>
 
 <div class="row">

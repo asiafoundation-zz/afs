@@ -98,6 +98,15 @@ $(document).ready(function(){
 		$('#edit-cycle #form_cycle_id').val($cycle_id);
 	})
 
+	$('.region-btn').click(function(e){
+		$region_id = $(this).data('id');
+		$region_name = $(this).parent().parent().parent().children('.region-name').children('span').text();
+
+		$('#edit-region').modal('show');
+		$('#edit-region #region-name-label').text($region_name);
+		$('#edit-region #form_region_id').val($region_id);
+	})
+
 });
 
 $('.survey_is_default').click(function(){

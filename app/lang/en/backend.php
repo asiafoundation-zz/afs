@@ -42,4 +42,5 @@ return array(
 	"cycle" => "Cycle",
 	"delete_survey" => "Delete Survey",
 	"system_process" => "Please Wait while system processing ...",
+	"region_filter" => "Region Name",
 );
