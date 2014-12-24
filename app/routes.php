@@ -52,6 +52,8 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 	Route::get('/survey/singledelete/{id}', 'SurveyController@deleteSurvey');
 	Route::get('/admin/cycle/{id}', 'CategoryController@getCycle');
 	Route::post('/admin/cycle', 'CategoryController@postCycle');
+	Route::get('/region/{id}', 'CategoryController@getRegion');
+	Route::post('/region/', 'CategoryController@postRegion');
 
 	Route::get('/admin/questioncategory', function(){
 		$question_category = QuestionCategory::all();
@@ -71,7 +73,17 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 | Frontend
 |--------------------------------------------------------------------------
 */
-Route::get('/', 'HomeController@getIndex');
+// Route::get('language/{lang}', 
+//            array(
+//                   'as' => 'language.select', 
+//                   'uses' => 'HomeController@getLang'
+//                  )
+//           );
+
+Route::post('language', 'HomeController@postLang');
+
+Route::get('/', array('as' => 'home', 'uses'=>'HomeController@getIndex'));
+
 Route::group(array('prefix' => LaravelLocalization::setLocale(), 'before' => 'frontend_theme'), function()
 {
 	Route::get('/', 'HomeController@getIndex');
@@ -84,3 +96,13 @@ Route::post('loadcategory', function(){
 	$question = Question::where('question_category_id', '=', Input::get('id_cat'))->get();
 	return Response::json($question);
 });
+
+Route::post('cycleLang', function(){
+	$category = Lang::get('frontend.choose_category');
+	$question = Lang::get('frontend.choose_question');
+	$cycle_info = Lang::get('frontend.cycle_info');
+
+	return array($category, $question, $cycle_info);
+});
+
+

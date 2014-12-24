@@ -21,7 +21,25 @@ function page_flag(move){
 	return page;
 }
 // Declared Category filter page flag
-
+function page_category(page){
+	var current_category;
+	if (page == 0) {
+		current_category = 'region';
+	}
+	if (page == 1) {
+		current_category = 'wave';
+	}
+	if (page == 2) {
+		current_category = 'oversample';
+	}
+	if (page == 3) {
+		current_category = 'filter';
+	}
+	if (page == 4) {
+		current_category = 'question';
+	}
+	return current_category;
+}
 // Declared Options Selected
 var options_selected = [];
 function category_clicked(category,category_question,code,number,label,base) {
@@ -33,6 +51,7 @@ function category_clicked(category,category_question,code,number,label,base) {
 		label:label
 	});
 
+	category = page;
 	// Remove option selected from header select
 	$("#header-select #header-option-"+code).remove();
 	$("#header-selected").append("<option class='header-options-clicked' id='header-option-"+code+"' value='"+code+"' ondblclick=\"category_unclicked('"+category+"','"+category_question+"','"+code+"','"+number+"','"+label+"','"+base+"')\">"+label+"</option>");
@@ -42,10 +61,11 @@ function category_unclicked(category,category_question,code,number,label,base) {
 	// Remove option selected from header select
 	for (i = 0; i < options_selected.length; i++) {
 		if (options_selected[i].code == code) {
-			options_selected.splice(i, options_selected.length);
+			options_selected.splice(i, 1);
 		};
 	};
 	
+	category = page_category(page);
 	$("#header-selected option[value='"+code+"']").remove();
 	$("#header-select").prepend("<option class='header-options' id='header-option-"+code+"' value='"+code+"' ondblclick=\"category_clicked('"+category+"','"+category_question+"','"+code+"','"+number+"','"+label+"','"+base+"')\">"+label+"</option>");
 }
@@ -194,7 +214,10 @@ function change_page(move) {
 			text = text.replace(/Category/g, "Question");
 
 			view_table_category();
-			$('#view_table_category').modal('show');
+			$('#view_table_category').modal({
+				show:true,
+				backdrop:"static"
+				});
 		};
 		if (move == 'back') {
 			title = title.replace(/Question/g, "Category");

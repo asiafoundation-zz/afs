@@ -103,21 +103,21 @@ $(document).ready(function(){
     clear_all_filter_nosurvey();
     disable_anchor($('.clear-all'),'#AA6071', 0);
 
-    $.get( "filter-select", { SelectedFilter:"loadcategory", category: $(this).val(), cycle : FilterSelect.cycle} )
+    $.get( "filter-select", { SelectedFilter:"loadcategory", survey_id: FilterSelect.survey, category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
-      
+      console.log(data);
       /* Switch selected option to pilih pertanyaan */
       $('#select-question').val(0);
-      $('.select-question .select2-chosen').text("Pilih pertanyaan");  
+      $('.select-question .select2-chosen').text(data[1][0]);  
 
       /* clear chart and create warning */
-      $(".notification").html('<div class="alert alert-info"><div><h4> Silahkan pilih pertanyaan diatas untuk menampilkan hasil survey</h4></div></div>');
+      $(".notification").html('<div class="alert alert-info"><div><h4>' + data[1][1] + '</h4></div></div>');
       $("#chart_canvas").hide();
       $(".chart-pagination").hide();
       $("#filter-by-label").text("");
 
       $('.header-select #select-question option').remove();
-      $('.header-select #select-question').append($("<option></option>").attr("value","0").text("Pilih pertanyaan"))
+      $('.header-select #select-question').append($("<option></option>").attr("value","0").text(data[1][0]))
       $.each(data[0], function(index, obj){
         $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
       });
@@ -163,26 +163,39 @@ $(document).ready(function(){
 
     disable_anchor($('.clear-all'),'#AA6071', 0);
 
-    if($('#select-question option:first-child').val() == 0){
-      $('#select-question option:first-child').remove();
-      $('#select-category option:first-child').remove();  
-    }
+    $.ajax({
+      type : 'post',
+      url : 'cycleLang',
+      data : {},
+      success : function(data){
+        // console.log(data);
 
-    $('#select-question').prepend("<option value='0'>Pilih pertanyaan</option>");
-    $('#select-category').prepend("<option value='0'>Pilih category</option>");
+        if($('#select-question option:first-child').val() == 0){
+          $('#select-question option:first-child').remove();
+          $('#select-category option:first-child').remove();  
+        }
+
+        $('#select-question').prepend("<option value='0'>"+ data[0] +"</option>");
+        $('#select-category').prepend("<option value='0'>"+ data[1] +"</option>");
 
 
-    $('#select-question').val(0);
-    $('.select-question .select2-chosen').text("Pilih pertanyaan");  
+        $('#select-question').val(0);
+        $('.select-question .select2-chosen').text(data[1]);  
 
-    $('#select-category').val(0);
-    $('.select-category .select2-chosen').text("Pilih category");
+        $('#select-category').val(0);
+        $('.select-category .select2-chosen').text(data[0]);
 
-    $(".notification").html('<div class="alert alert-info"><div><h4> Silahkan pilih kategori dan pertanyaan diatas untuk menampilkan hasil survey</h4></div></div>');
-    $("#chart_canvas").hide();
-    $(".chart-pagination").hide();
-    $("#filter-by-label").text("");
+        $(".notification").html('<div class="alert alert-info"><div><h4> '+ data[2] +' </h4></div></div>');
+        $("#chart_canvas").hide();
+        $(".chart-pagination").hide();
+        $("#filter-by-label").text("");
+      }
+
+    })
+   
   });
+
+  // $('#lang-en').tooltip('show');
 
   // $('#select-region').change(function(){
   //   if($(this).val() != null){

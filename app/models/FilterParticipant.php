@@ -72,6 +72,7 @@ class FilterParticipant extends Eloquent {
 			->join('participants','participants.id','=','filter_participants.participant_id')
 			->join('question_participants','question_participants.participant_id','=','participants.id')
 			->join('regions','regions.id','=','question_participants.region_id')
+			->where('participants.survey_id', '=',$request['survey_id'])
 			->where('question_participants.answer_id', '=',$answer_id);
 
 			if (!empty($request['region'])) {

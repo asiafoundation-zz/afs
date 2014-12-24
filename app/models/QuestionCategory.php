@@ -85,12 +85,13 @@ class QuestionCategory extends Eloquent {
 			$question = Question::select(DB::raw('distinct questions.id, questions.question'))
 						->join('answers', 'answers.question_id', '=', 'questions.id')
 						->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+						->where('questions.survey_id', '=', $request['survey_id'])
 						->where('question_category_id', '=', $request['category']);
 			if (!empty($request['cycle'])) {
 				$question = $question->where('answers.cycle_id', '=', $request['cycle'])->get();
 			}
 		}else{
-			$question = Question::all();
+			$question = Question::where('questions.survey_id', '=', $request['survey_id']);
 		}
 		
 		return $question;

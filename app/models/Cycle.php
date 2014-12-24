@@ -72,7 +72,7 @@ class Cycle extends Eloquent {
 			->join('answers','answers.cycle_id','=','cycles.id')
 			->join('questions','questions.id','=','answers.question_id')
 			->join('question_categories','question_categories.id','=','questions.question_category_id')
-			->where('question_categories.survey_id', '=',$survey_id)
+			->where('cycles.survey_id', '=',$survey_id)
 			->GroupBy('name')
 			->orderBy('cycle_type', 'asc')
 			->get();

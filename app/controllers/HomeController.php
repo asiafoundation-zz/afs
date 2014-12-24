@@ -2,33 +2,44 @@
 
 class HomeController extends BaseController {
 
-	public function getLang($lang){
+	public function postLang(){
 		// Session::put('lang', $lang);
+		$survey = DB::table('surveys')->where('id','=',Input::get('lang'))->first();	
 
 		$rules = [
-        	'language' => 'in:en,in' //list of supported languages of your application.
+        	'language' => 'in:in,en' //list of supported languages of your application.
         ];
 
-        // $language = Input::get('lang'); //lang is name of form select field.
+        $lang = $survey->url; //lang is name of form select field.
 
         $validator = Validator::make(compact($lang),$rules);
 
         if($validator->passes())
         {
             Session::put('language',$lang);
+            Session::put('survey_id',$survey->id);
             App::setLocale($lang);
         }
         else
         {/**/ }
 
-		return Redirect::route('home');
+		return Redirect::route('home');	
 
 	}
 
 	public function getIndex()
 	{
+
+		// $language = Session::get('language', 'in');
+		$survey_id = Session::get('survey_id');
+
 		$request = array();
-		$survey = DB::table('surveys')->where('is_default','=',1)->first();
+		
+		if(isset($survey_id)){
+			$survey = DB::table('surveys')->where('id','=',$survey_id)->first();	
+		}else{
+			$survey = DB::table('surveys')->where('is_default','=',1)->first();	
+		}
 
 		if (!count($survey)) {
 			return View::make('error.404');
@@ -36,6 +47,8 @@ class HomeController extends BaseController {
 		if (!$survey->publish) {
 			return View::make('error.404');
 		}
+
+		$request['survey_id'] = $survey->id;
 		// Get Default Question
 		$default_questions = Question::DefaultQuestion(Input::get());
 
@@ -54,7 +67,7 @@ class HomeController extends BaseController {
 
 		$data = array(
 			"survey" => $survey,
-			"filters" => Code::getFilter(),
+			"filters" => Code::getFilter($survey->id),
 			"cycles" => Cycle::AllCycle($survey->id),
 			"question_categories" => $split_data['question_categories'],
 			"question_lists" => $question_by_category,
@@ -393,7 +406,8 @@ class HomeController extends BaseController {
 					$question = Question::select(DB::raw('distinct questions.id, questions.question'))
 								->join('answers','answers.question_id', '=', 'questions.id')
 								->join('amounts', 'amounts.answer_id', '=', 'answers.id')
-								->where('question_category_id', '=', Input::get('category'))
+								->where('questions.survey_id', '=', Input::get('survey_id'))
+								->where('questions.question_category_id', '=', Input::get('category'))
 								->where('answers.cycle_id', '=', Input::get('cycle'))
 								->where('amounts.sample_type', '=', 0)
 								->get();

@@ -19,7 +19,7 @@
 						@if($base_header == true)
 							@foreach ($header as $header_single)
 									<option  class="header-options" id="header-option-{{ $header_single['header1']}}" value="{{ $header_single['header1']}};{{ $header_single['header2']}}" ondblclick="category_clicked(
-									'region',
+									'0',
 									'{{ $header_single['header0'] }}',
 									'{{ $header_single['header1'] }}',
 									'{{ $header_single['header2'] }}',
@@ -51,13 +51,14 @@
         <h4 class="modal-title" id="myModalLabel">{{ Lang::get('backend.category_selected') }}</h4>
       </div>
       <div class="modal-body" id="loading-flag">
-      	<div class="col-md-4">&nbsp;</div>
-      	<div class="col-md-4" style="height:300px;">
-      		<img src="{{ Theme::asset('img/ajax-loader.gif') }}">
+      	<div class="row">
+      	<div class="col-md-3">&nbsp;</div>
+      	<div class="col-md-6">
       		<h4>{{ Lang::get('backend.system_process') }}</h4>
-      		<span>---------------------------------------</span>
+      		<img src="{{ Theme::asset('img/ajax-loader.gif') }}">
       	</div>
-      	<div class="col-md-4">&nbsp;</div>
+      	<div class="col-md-3">&nbsp;</div>
+      </div>
       </div>
       <div class="modal-body" id="popup_modal">
       	<div class="row">

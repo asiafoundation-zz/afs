@@ -4,9 +4,38 @@
 
   @include('partial/homeasset')
 
-  <section class="header">
-      <p>{{ $survey->name }}</p>
-  </section>
+<?php 
+  $survey_select = Survey::all();  
+?>
+<section class="header">
+  <p>{{ $survey->name }}</p>
+  @if(count($survey_select) > 1)
+  <div class="selectLang">
+    {{ Form::open(['action' => 'HomeController@postLang'] ) }}
+    <label>Language:</label>
+    <!-- <img src="images/ind.png" class="indFlag" style="display:block" />
+    <img src="images/eng.png" class="engFlag" /> -->
+    <select id="Lang" onchange="this.form.submit()" name="lang">
+      @foreach($survey_select as $row)
+        <option value="{{ $row->id }}" @if($survey->id == $row->id) selected @endif>{{ $row->url_name }}</option>
+      @endforeach
+    </select>
+    {{ Form::close()}}
+  </div>
+  @endif
+    <!-- <div class="flag">
+      {{ Form::open(['action' => 'HomeController@postLang'] ) }}
+      <span>language : </span>
+      <label>
+        <select onchange="this.form.submit()" name="lang">
+          @foreach($survey_select as $row)
+            <option value="{{ $row->id }}" @if($survey->id == $row->id) selected @endif>{{ $row->url_name }}</option>
+          @endforeach
+        </select>
+      </label>
+      {{ Form::close()}}
+    </div> --> 
+</section>
 
 <!--Update-->
 <div class="elheader-wrapper"> <!-- add element wrapper - 28112014 -->
@@ -114,8 +143,8 @@
             <img src="{{ Theme::asset('img/ajax-loader.gif') }}">
           </div>
           <div id="chart_canvas">
-            <div class="col-md-5"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
-            <div class="col-md-7"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>
+            <div class="col-md-5" id="pie-div"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div>
+            <div class="col-md-7" id="chart-div"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>
           </div>
           <div class="col-md-12">
             <ul class="chart-pagination">

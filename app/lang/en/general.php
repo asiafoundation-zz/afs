@@ -78,6 +78,7 @@ return array(
 	"cancel" => "Cancel",
 	"select_all" => "Select All",
 	"select_filter" => "Select Filter",
+	"select_region" => "Select Region",
 	"action" => "Action",
 	"baseline" => "Baseline",
 	"endline" => "Endline",

@@ -71,7 +71,7 @@ class BackgroundCommand extends Command {
 				  $active_delayed_job = DelayedJob::find($active_delayed_job_id);
 				  $active_delayed_job->delete();
 
-			    $question_default = Question::where('is_default','=',1)->count();
+			    $question_default = Question::where('is_default','=',1)->where('survey_id','=',$survey->id)->count();
 			    if ($question_default == 0) {
 			    	$default_question_query = Question::select('questions.id','answers.cycle_id')->join('question_categories', 'question_categories.id','=','questions.question_category_id')->join('answers', 'answers.question_id','=','questions.id')->where('question_categories.survey_id','=',$survey->id)->orderBy('questions.id', 'DESC')->first();
 

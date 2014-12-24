@@ -93,4 +93,32 @@ class CategoryController extends AvelcaController {
 			return Redirect::to('/admin/cycle/'. Input::get('survey_id'))->withErrors($validator)->withInput();
 		}
 	}
+
+	public function getRegion($id){
+		$regions = Region::all();
+
+		return View::make('admin.filter.region')
+				->with('survey_id', $id)
+				->with('regions', $regions);
+	}
+
+	public function postRegion(){
+		$rules = array(
+				'display_name' => 'Required'
+			);
+
+		$validator = Validator::make(Input::all(), $rules);
+
+		if($validator->passes()){
+			$region = Region::where('id', '=', Input::get('region_id'))->first();
+
+			$region->name = Input::get('display_name');
+
+			$region->save();
+
+			return Redirect::to('/region/'. Input::get('survey_id'))->with('message', 'Display name is updated');
+		}else{
+			return Redirect::to('/admin/region/'. Input::get('survey_id'))->withErrors($validator)->withInput();
+		}
+	}
 }
