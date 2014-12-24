@@ -8,6 +8,21 @@
   $survey_select = Survey::all();  
 ?>
 <section class="header">
+  <p>{{ $survey->name }}</p>
+  @if(count($survey_select) > 1)
+  <div class="selectLang">
+    {{ Form::open(['action' => 'HomeController@postLang'] ) }}
+    <label>Language:</label>
+    <!-- <img src="images/ind.png" class="indFlag" style="display:block" />
+    <img src="images/eng.png" class="engFlag" /> -->
+    <select id="Lang" onchange="this.form.submit()" name="lang">
+      @foreach($survey_select as $row)
+        <option value="{{ $row->id }}" @if($survey->id == $row->id) selected @endif>{{ $row->url_name }}</option>
+      @endforeach
+    </select>
+    {{ Form::close()}}
+  </div>
+  @endif
     <!-- <div class="flag">
       {{ Form::open(['action' => 'HomeController@postLang'] ) }}
       <span>language : </span>
@@ -19,8 +34,7 @@
         </select>
       </label>
       {{ Form::close()}}
-    </div> -->
-    <p>{{ $survey->name }}</p>
+    </div> --> 
 </section>
 
 <!--Update-->

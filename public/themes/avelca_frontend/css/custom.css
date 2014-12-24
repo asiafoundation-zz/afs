@@ -146,6 +146,11 @@
 	font-size: 14px;
 }*/
 
+/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .flag select {padding-right:18px}
+}
+
 .flag select {
     padding:3px;
     margin: 0;
@@ -166,11 +171,6 @@
     cursor:pointer;
     font-size: 14px;
     height: 21px;
-}
-
-/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    .flag select {padding-right:18px}
 }
 
 .flag label {
@@ -199,4 +199,43 @@
     position:absolute;
     pointer-events:none;
     display:block;
+}
+
+.selectLang{
+	position: absolute;
+	right: 0;
+	background: #1fb7b8;
+	font-size: 14px;
+	border-radius: 0 0 5px 5px;
+	/*width: 170px;*/
+	padding: 0 10px;
+}
+
+.selectLang img{
+	display: none;position: relative;
+	top: 14px;
+	left: 8px;
+}
+
+.selectLang label,.selectLang img{float: left;}
+
+select#Lang{
+	border:none;
+	background: none;
+	font-size: 14px;
+	-webkit appearance:none;
+	appearance:none;
+	box-shadow: none !Important;
+	outline: none !Important;
+	cursor:pointer;
+}
+
+select#Lang option{
+	color: #000; 
+	cursor:pointer;
+}
+
+.header{
+	position: relative;
+	z-index: 999999;
 }
