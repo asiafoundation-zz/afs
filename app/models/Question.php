@@ -172,7 +172,12 @@ class Question extends Eloquent {
 				$questions =  $questions->join('regions','regions.id','=','amounts.region_id');
 			}
 
+			if(!empty($request['survey_id'])){
+				$questions = $questions->where('questions.survey_id', '=', $request['survey_id']);
+			}
+
 			$questions = $questions->where('amounts.sample_type', '=', 0);
+						
 		}
 
 		return $questions;
@@ -249,6 +254,43 @@ class Question extends Eloquent {
 		return $questions;
 	}
 
+	public static function loadRegion($request = array())
+	{
+		if (!empty($request['cycle'])) {
+
+			$questions =  self::DefaultLoad($request);
+			$questions = $questions->where('answers.cycle_id', '=',$request['cycle']);    
+	
+			if (!empty($request['category'])) {
+				$questions =  $questions->where('question_categories.id', '=', $request['category']);
+			}
+
+			if (!empty($request['question'])) {
+				$questions =  $questions->where('questions.id', '=', $request['question']);
+			}
+
+			if (!empty($request['region'])) {
+				$region = $request['region'];
+				$questions = $questions->where('regions.id', '=', $region);
+			}
+
+		}else{
+			$questions = $questions->where('questions.is_default', '=', 1)
+			->where('answers.cycle_default', '=', 1);
+		}
+
+		$questions = $questions
+					->groupBy('answer')
+					->get();
+
+		if (count($questions)) {
+			$questions = self::DifferentAnswer($questions,$request);
+			$questions = self::IndexLabel($questions);
+		}
+
+		return $questions;
+
+	}
 	/*
 	// -- FOR TESTING --
 	public static function DefaultQuestion($request = array())
@@ -378,7 +420,8 @@ class Question extends Eloquent {
 			->join('question_categories','questions.question_category_id','=','question_categories.id')
 			->join('answers','answers.question_id','=','questions.id')
 			->join('cycles','cycles.id','=','answers.cycle_id')
-			->join('colors','answers.color_id','=','colors.id');
+			->join('colors','answers.color_id','=','colors.id')
+			->where('questions.survey_id', '=', $request['survey_id']);
 
 			if (count($request)) {
 				if (!empty($request['category'])) {
@@ -441,6 +484,20 @@ class Question extends Eloquent {
 			$request['question'] = $request['question']->id;
 		}
 
+		if (($request['FilterMove'] == 3)) {
+			$request['question'] = Question::select(DB::raw('min(questions.id)'))
+									->join('answers','answers.question_id', '=', 'questions.id')
+									->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+									->where('question_category_id', '=', $request['category'])
+									->where('answers.cycle_id', '=', $request['cycle'])
+									->first();
+			// If no forard
+			if (!count($request['question'])) {
+				$request['question'] = DB::table('questions')->select('questions.id')->orderBy('questions.id', 'asc')->first();
+			}
+			$request['question'] = $request['question']->id;
+		}		
+
 		// Load Question
 		$questions = self::DefaultLoad($request);
 
@@ -453,7 +510,6 @@ class Question extends Eloquent {
 			}
 			if (!empty($request['region'])) {
 				$region = $request['region'];
-				$region_dapil = $request['region_dapil'];
 				$questions = $questions->where('regions.id', '=', $region);
 			}
 		}
