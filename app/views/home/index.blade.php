@@ -175,7 +175,7 @@
           <div>
             <h4>{{Lang::get('frontend.compare_survey_results')}}</h4>
             <p>{{ Lang::get('frontend.compare_survey_results_content') }}</p>
-            <a onclick='compare_cycle(0)' class="orange-bg">{{Lang::get('frontend.compare_survey')}}</a>
+            <a onclick='compare_cycle(2)' class="orange-bg">{{Lang::get('frontend.compare_survey')}}</a>
           </div>
         </div>
         <div class="extras">

@@ -484,6 +484,20 @@ class Question extends Eloquent {
 			$request['question'] = $request['question']->id;
 		}
 
+		if (($request['FilterMove'] == 3)) {
+			$request['question'] = Question::select(DB::raw('min(questions.id)'))
+									->join('answers','answers.question_id', '=', 'questions.id')
+									->join('amounts', 'amounts.answer_id', '=', 'answers.id')
+									->where('question_category_id', '=', $request['category'])
+									->where('answers.cycle_id', '=', $request['cycle'])
+									->first();
+			// If no forard
+			if (!count($request['question'])) {
+				$request['question'] = DB::table('questions')->select('questions.id')->orderBy('questions.id', 'asc')->first();
+			}
+			$request['question'] = $request['question']->id;
+		}		
+
 		// Load Question
 		$questions = self::DefaultLoad($request);
 
