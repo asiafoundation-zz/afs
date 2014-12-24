@@ -123,7 +123,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
   var chart = new CanvasJS.Chart("compareChart",
   {
       title:{
-        text: 'Compare "'+baseline_text+'" dan "'+endline_text+'"',
+        text: 'Compare "'+baseline_text+'" - "'+endline_text+'"',
         fontSize: 24
       },
       axisX: {

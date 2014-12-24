@@ -8,16 +8,18 @@
   $survey_select = Survey::all();  
 ?>
 <section class="header">
-    <div class="flag">
+    <!-- <div class="flag">
       {{ Form::open(['action' => 'HomeController@postLang'] ) }}
       <span>language : </span>
-      <select onchange="this.form.submit()" name="lang">
-        @foreach($survey_select as $row)
-          <option value="{{ $row->id }}" @if($survey->id == $row->id) selected @endif>{{ $row->url_name }}</option>
-        @endforeach
-      </select>
+      <label>
+        <select onchange="this.form.submit()" name="lang">
+          @foreach($survey_select as $row)
+            <option value="{{ $row->id }}" @if($survey->id == $row->id) selected @endif>{{ $row->url_name }}</option>
+          @endforeach
+        </select>
+      </label>
       {{ Form::close()}}
-    </div>
+    </div> -->
     <p>{{ $survey->name }}</p>
 </section>
 
@@ -159,7 +161,7 @@
           <div>
             <h4>{{Lang::get('frontend.compare_survey_results')}}</h4>
             <p>{{ Lang::get('frontend.compare_survey_results_content') }}</p>
-            <a onclick='compare_cycle(2)' class="orange-bg">{{Lang::get('frontend.compare_survey')}}</a>
+            <a onclick='compare_cycle(0)' class="orange-bg">{{Lang::get('frontend.compare_survey')}}</a>
           </div>
         </div>
         <div class="extras">

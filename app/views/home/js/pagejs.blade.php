@@ -283,6 +283,9 @@
         .done(function( data ) {
           if (data != false) {
 
+            $('.cross-question').hide().css('display', 'none').fadeOut('slow');
+            $('.chart-flag').show();
+            
             FilterSelect.is_compare = 1;
             disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
 

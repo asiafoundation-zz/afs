@@ -117,7 +117,7 @@ $(document).ready(function(){
       $("#filter-by-label").text("");
 
       $('.header-select #select-question option').remove();
-      $('.header-select #select-question').append($("<option></option>").attr("value","0").text("Pilih pertanyaan"))
+      $('.header-select #select-question').append($("<option></option>").attr("value","0").text(data[1][0]))
       $.each(data[0], function(index, obj){
         $('.header-select #select-question').append($("<option></option>").attr("value",obj.id).text(obj.question))
       });

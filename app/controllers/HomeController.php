@@ -47,6 +47,8 @@ class HomeController extends BaseController {
 		if (!$survey->publish) {
 			return View::make('error.404');
 		}
+
+		$request['survey_id'] = $survey->id;
 		// Get Default Question
 		$default_questions = Question::DefaultQuestion(Input::get());
 
@@ -57,7 +59,6 @@ class HomeController extends BaseController {
 
 		$request['category'] = $default_question->id_question_categories;
 		$request['cycle'] = $default_question->id_cycle;
-		$request['survey_id'] = $survey->id;
 
 		// Get catefory and question list
 		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion($request);
