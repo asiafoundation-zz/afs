@@ -235,12 +235,18 @@ Route::filter('csrf', function()
 Route::filter('frontend_theme', function()
 {
 	Theme::init('avelca_frontend');
-	App::setLocale('in');
+	// App::setLocale('en');
 });
 
 Route::filter('backend_theme', function()
 {
 	Theme::init('avelca_backend');
+});
+
+App::before(function($request){
+	$lang = Session::get('language', 'in');
+
+	App::setLocale($lang);
 });
 
 /*

@@ -132,3 +132,11 @@
 .canvasjs-chart-tooltip div {
     white-space:normal !important;
 }
+
+.flag{
+	text-align: right;
+	font-size: 19px;
+	height: 25px;
+	margin-right:20px;
+	padding:0;
+}
