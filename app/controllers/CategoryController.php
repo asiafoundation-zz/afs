@@ -95,7 +95,7 @@ class CategoryController extends AvelcaController {
 	}
 
 	public function getRegion($id){
-		$regions = Region::all();
+		$regions = Region::where('survey_id','=',$id)->get();
 
 		return View::make('admin.filter.region')
 				->with('survey_id', $id)

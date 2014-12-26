@@ -10,7 +10,7 @@
   	<a href="/admin/cycle/{{ $survey_id }}">Manage Cycle</a>
   </li>
   <li class="active">
-  	<a href="/admin/region/edit/{{ $survey_id }}">Manage Region</a>
+  	<a href="/region/{{ $survey_id }}">Manage Region</a>
   </li>
 </ul>
 
@@ -75,7 +75,7 @@
 						<div class="form-group">
 							{{ Form::label("Display Name:", "", array("class" => "control-label col-md-3")) }}
 							<div class="col-md-9">
-								{{ Form::text("New Name","", array("class" => "form-control","id" => "form_display_name")) }}
+								{{ Form::text("display_name","", array("class" => "form-control","id" => "form_display_name")) }}
 								{{ Form::hidden("region_id","", array("class" => "form-control","id" => "form_region_id")) }}
 								{{ Form::hidden("survey_id",$survey_id, array("class" => "form-control","id" => "form_survey_id")) }}
 							</div>
