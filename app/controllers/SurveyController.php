@@ -237,7 +237,7 @@ class SurveyController extends AvelcaController {
 
 		$data = array(
 			"survey" => $survey,
-			"filters" => Code::getFilter(),
+			"filters" => Code::getFilter($survey->id),
 			"cycles" => $cycles,
 			"question_categories" => $split_data['question_categories'],
 			"question_lists" => $questions_all,

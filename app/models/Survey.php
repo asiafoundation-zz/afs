@@ -599,9 +599,18 @@ class Survey extends Eloquent {
 			// Remove Survey and file
 			$survey = Survey::find($id);
 
-			File::delete(public_path()."/uploads/".$survey->baseline_file);
-			File::delete(public_path()."/uploads/".$survey->header_file);
-			File::delete(public_path()."/uploads/".$survey->geojson_file);
+			if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+			{
+				File::delete(public_path()."/uploads/".$survey->baseline_file.".csv");
+			}
+			if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+			{
+				File::delete(public_path()."/uploads/".$survey->header_file.".csv");
+			}
+			if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+			{
+				File::delete(public_path()."/uploads/".$survey->geojson_file.".csv");
+			}
 
 			DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
 			DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");

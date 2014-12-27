@@ -88,7 +88,7 @@ class BackgroundCommand extends Command {
 			    }
 
 			    // Update publish status
-			    $survey->publish = 4;
+			    $survey->publish = 1;
 			    $survey->save();
 
 			 //    DB::commit();
