@@ -3,6 +3,9 @@
      function find_survey()
      {
       // Get cycles functions
+      $('.cross-question').hide();
+      $('.chart-flag').show();
+      
       disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter.png') }}) no-repeat right center transparent", 1);
       disable_anchor($('.clear-all'), '#AA6071', 0);
       clear_all_filter_nosurvey();
