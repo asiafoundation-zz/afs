@@ -67,7 +67,7 @@ class CategoryController extends AvelcaController {
 	}
 
 	public function getCycle($id){
-		$cycles = Cycle::all();
+		$cycles = Cycle::where('survey_id','=',$id)->get();
 
 		return View::make('admin.filter.cycle')
 				->with('survey_id', $id)
@@ -96,6 +96,7 @@ class CategoryController extends AvelcaController {
 
 	public function getRegion($id){
 		$regions = Region::where('survey_id','=',$id)->get();
+
 		return View::make('admin.filter.region')
 				->with('survey_id', $id)
 				->with('regions', $regions);
