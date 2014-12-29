@@ -37,4 +37,7 @@ return array(
 	"cycle_info" => "Please choose question and category below to show survey results",
 	"question_info" => "Please choose question below to show survey results",
 	"detail_chart_failed" => "Failed to show detail chart",
+	"language" => "Language",
+	"and" => "and",
+	"survey_result" => "Survey result in"
 );

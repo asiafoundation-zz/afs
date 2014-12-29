@@ -11,7 +11,7 @@
   @if(count($survey_select) > 1)
   <div class="selectLang">
     {{ Form::open(['action' => 'HomeController@postLang'] ) }}
-    <label>Language:</label>
+    <label>{{ Lang::get('frontend.language') }} :</label>
     <!-- <img src="images/ind.png" class="indFlag" style="display:block" />
     <img src="images/eng.png" class="engFlag" /> -->
     <select id="Lang" onchange="this.form.submit()" name="lang">

@@ -98,7 +98,7 @@ function chartjs(color_set,data_points,data_points_pie)
   chartbar.render();
 }
 
-function compare_chart(first_list, end_list, colorSet, baseline_text,endline_text)
+function compare_chart(first_list, end_list, colorSet, baseline_text,endline_text, lang)
 {
   // console.log(first_list);
   // console.log(end_list);
@@ -123,7 +123,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
   var chart = new CanvasJS.Chart("compareChart",
   {
       title:{
-        text: 'Compare "'+baseline_text+'" - "'+endline_text+'"',
+        text: 'Compare "'+baseline_text+'" '+ lang[0] +' "'+endline_text+'"',
         fontSize: 24
       },
       axisX: {
@@ -144,7 +144,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
       {
         type: "bar",
         showInLegend: true,
-        legendText: baseline_text+" (Hasil survey 2013)",
+        legendText: baseline_text+" ("+ lang[1] +" 2013)",
         dataPoints: first_list,
         toolTipContent: "{name}: <strong>{y}%</strong>"
       },
@@ -152,7 +152,7 @@ function compare_chart(first_list, end_list, colorSet, baseline_text,endline_tex
         type: "bar",
         showInLegend: true,
         // axisYType: "secondary",
-        legendText: endline_text+" (Hasil survey 2014)",
+        legendText: endline_text+" ("+ lang[1] +" 2014)",
         dataPoints: end_list,
         toolTipContent: "{name}: <strong>{y}%</strong>"
       }
