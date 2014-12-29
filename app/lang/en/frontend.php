@@ -41,5 +41,6 @@ return array(
 	"and" => "and",
 	"survey_result" => "Survey result in",
 	"filter_label" => "Filter survey result",
-	"survey_question" => "SURVEY QUESTION"
+	"survey_question" => "SURVEY QUESTION",
+	"comparing_cycle_failed" => "There is no question could compare"
 );
