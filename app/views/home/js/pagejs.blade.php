@@ -331,8 +331,10 @@
               endline_text = data.question.second_data[0].cycle;
             }
 
+            var lang = ["{{ Lang::get('frontend.and') }}", "{{ Lang::get('frontend.survey_result') }}"];
+
             // compare_chart(first_list,end_list, colorSet, baseline_text,endline_text);
-            compare_chart(first_list,end_list, ["#FA0C0C", "#E600FF"], baseline_text,endline_text);
+            compare_chart(first_list,end_list, ["#FA0C0C", "#E600FF"], baseline_text,endline_text, lang);
 
             $('.chart-pagination').html('<li>&nbsp;</li><li id="chart_pagination_text"><a class="orange-bg" onclick="find_survey()">{{Lang::get('frontend.return')}}</a></li><li>&nbsp;</li>');
             

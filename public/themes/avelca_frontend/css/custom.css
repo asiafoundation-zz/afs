@@ -201,10 +201,14 @@
     display:block;
 }
 
-.selectLang{
-	position: absolute;
-	right: 0;
-	background: #1fb7b8;
+.topHead{
+	background: #4D9494;
+	padding: 5px 0 0;
+}
+
+.selectLang{position: relative;
+	float:right;
+	color: #fff;
 	font-size: 14px;
 	border-radius: 0 0 5px 5px;
 	/*width: 170px;*/
@@ -212,29 +216,30 @@
 }
 
 .selectLang img{
-	display: none;position: relative;
-	top: 14px;
+	display: none;
+	position: relative;
+	top: 3px;
 	left: 8px;
 }
 
-.selectLang label,.selectLang img{float: left;}
+.selectLang label,.selectLang img{
+	float: left;
+}
 
 select#Lang{
+	margin-left:10px;
 	border:none;
 	background: none;
 	font-size: 14px;
 	-webkit appearance:none;
 	appearance:none;
 	box-shadow: none !Important;
-	outline: none !Important;
-	cursor:pointer;
+	outline: none !Important
 }
 
 select#Lang option{
 	color: #000; 
-	cursor:pointer;
 }
-
 .header{
 	position: relative;
 	z-index: 999999;

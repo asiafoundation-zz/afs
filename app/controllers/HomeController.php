@@ -4,7 +4,11 @@ class HomeController extends BaseController {
 
 	public function postLang(){
 		// Session::put('lang', $lang);
-		$survey = DB::table('surveys')->where('id','=',Input::get('lang'))->first();	
+		$survey = DB::table('surveys')->where('id','=',Input::get('lang'))->first();
+
+		// $update_survey = DB::table('surveys')
+		// 				->where('id','=',Input::get('lang'))
+		// 				->update('')
 
 		$rules = [
         	'language' => 'in:in,en' //list of supported languages of your application.
@@ -50,7 +54,7 @@ class HomeController extends BaseController {
 
 		$request['survey_id'] = $survey->id;
 		// Get Default Question
-		$default_questions = Question::DefaultQuestion(Input::get());
+		$default_questions = Question::DefaultQuestion($request);
 
 		if (empty($default_questions)) {
 			return View::make('error.404');
