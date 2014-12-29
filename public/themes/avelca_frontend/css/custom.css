@@ -234,7 +234,8 @@ select#Lang{
 	-webkit appearance:none;
 	appearance:none;
 	box-shadow: none !Important;
-	outline: none !Important
+	outline: none !Important;
+	cursor:pointer;
 }
 
 select#Lang option{

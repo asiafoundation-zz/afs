@@ -527,7 +527,7 @@
       $('#chart_canvas').hide();
       $('.loading-flag').show();
         // Get cycles functions
-        $.get( "filter-select", { SelectedFilter:"detail_chart",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answer_id:answer_id, category_filter: category_id, FilterMove:move} )
+        $.get( "filter-select", { SelectedFilter:"detail_chart",region: FilterSelect.region,survey_id: FilterSelect.survey, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answer_id:answer_id, category_filter: category_id, FilterMove:move} )
           .done(function( data ) {
             if (data != false) {
               $('#chart_canvas').show();

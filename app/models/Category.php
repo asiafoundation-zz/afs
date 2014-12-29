@@ -68,7 +68,7 @@ class Category extends Eloquent {
 	{
 		// If first load
 		if (($request['FilterMove'] == 0)) {
-			$request['category_filter'] =  DB::table('categories')->select('id')->first();
+			$request['category_filter'] =  DB::table('categories')->select('id')->where('survey_id', '=', $request['survey_id'])->first();
 			$request['category_filter'] = $request['category_filter']->id;
 		}
 		// If Backward
