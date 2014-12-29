@@ -7,8 +7,7 @@
 <?php 
   $survey_select = Survey::all();  
 ?>
-<section class="header">
-  <p>{{ $survey->name }}</p>
+ <section class="topHead clearfix">
   @if(count($survey_select) > 1)
   <div class="selectLang">
     {{ Form::open(['action' => 'HomeController@postLang'] ) }}
@@ -23,6 +22,9 @@
     {{ Form::close()}}
   </div>
   @endif
+</section>
+<section class="header">
+  <p>{{ $survey->name }}</p>
     <!-- <div class="flag">
       {{ Form::open(['action' => 'HomeController@postLang'] ) }}
       <span>language : </span>
