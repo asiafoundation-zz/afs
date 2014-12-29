@@ -237,11 +237,6 @@ class Question extends Eloquent {
 
 				$total_amount = count($total_amount);
 				break;
-
-				// $total_amount = DB::select(DB::raw("SELECT COUNT(answer_id) as count FROM question_participants WHERE survey_id=".$question->survey_id." AND answer_id IN (SELECT id FROM answers WHERE answers.cycle_id = ".$question->id_cycle." and question_id = ".$question->id_question.")"));
-
-				// $total_amount = reset($total_amount);
-				// $total_amount = $total_amount->count;
 			}else{
 				$total_amount += $question->amount;
 			}
@@ -305,72 +300,72 @@ class Question extends Eloquent {
 	}
 	
 	// -- FOR TESTING --
-	public static function DefaultQuestion($request = array())
-	{
-		// Load Question
-		$questions = self::DefaultLoad($request);
-
-			if (!empty($request['cycle'])) {
-
-				$questions = $questions->where('questions.id', '=', 55)
-				->where('answers.cycle_id', '=', 1);
-			}
-			else{
-				$questions = $questions->where('questions.id', '=', 55)
-				->where('answers.cycle_id', '=', 1);
-			}
-
-			$questions = $questions
-			->groupBy('answer')
-			->get();
-
-			if (count($questions)) {
-				$questions = self::DifferentAnswer($questions,$request);
-				$questions = self::IndexLabel($questions);
-			}
-
-		return $questions;
-	}
-
 	// public static function DefaultQuestion($request = array())
- //    {
- //        // Load Question
- //        $questions =  self::DefaultLoad($request);
+	// {
+	// 	// Load Question
+	// 	$questions = self::DefaultLoad($request);
 
- //            if (!empty($request['cycle'])) {
+	// 		if (!empty($request['cycle'])) {
 
- //                if($request['empty'] == 0){
- //                    $questions = $questions->where('answers.cycle_id', '=',$request['cycle']);    
- //                }
+	// 			$questions = $questions->where('questions.id', '=', 55)
+	// 			->where('answers.cycle_id', '=', 1);
+	// 		}
+	// 		else{
+	// 			$questions = $questions->where('questions.id', '=', 55)
+	// 			->where('answers.cycle_id', '=', 1);
+	// 		}
+
+	// 		$questions = $questions
+	// 		->groupBy('answer')
+	// 		->get();
+
+	// 		if (count($questions)) {
+	// 			$questions = self::DifferentAnswer($questions,$request);
+	// 			$questions = self::IndexLabel($questions);
+	// 		}
+
+	// 	return $questions;
+	// }
+
+	public static function DefaultQuestion($request = array())
+    {
+        // Load Question
+        $questions =  self::DefaultLoad($request);
+
+            if (!empty($request['cycle'])) {
+
+                if($request['empty'] == 0){
+                    $questions = $questions->where('answers.cycle_id', '=',$request['cycle']);    
+                }
                 
- //                if (!empty($request['category'])) {
- //                    $questions =  $questions->where('question_categories.id', '=', $request['category']);
- //                }
- //                if (!empty($request['question'])) {
- //                    $questions =  $questions->where('questions.id', '=', $request['question']);
- //                }
- //                if (!empty($request['region'])) {
- //                    $region = $request['region'];
- //                    $region_dapil = $request['region_dapil'];
- //                    $questions = $questions->where('regions.id', '=', $region);
- //                }
- //            }
- //            else{
- //                $questions = $questions->where('questions.is_default', '=', 1)
- //                            ->where('answers.cycle_default', '=', 1);
- //            }
+                if (!empty($request['category'])) {
+                    $questions =  $questions->where('question_categories.id', '=', $request['category']);
+                }
+                if (!empty($request['question'])) {
+                    $questions =  $questions->where('questions.id', '=', $request['question']);
+                }
+                if (!empty($request['region'])) {
+                    $region = $request['region'];
+                    $region_dapil = $request['region_dapil'];
+                    $questions = $questions->where('regions.id', '=', $region);
+                }
+            }
+            else{
+                $questions = $questions->where('questions.is_default', '=', 1)
+                            ->where('answers.cycle_default', '=', 1);
+            }
 
- //            $questions = $questions
- //            ->groupBy('answer')
- //            ->get();
+            $questions = $questions
+            ->groupBy('answer')
+            ->get();
 
- //            if (count($questions)) {
- //                $questions = self::DifferentAnswer($questions,$request);
- //                $questions = self::IndexLabel($questions);
- //            }
+            if (count($questions)) {
+                $questions = self::DifferentAnswer($questions,$request);
+                $questions = self::IndexLabel($questions);
+            }
 
- //        return $questions;
- //    }
+        return $questions;
+    }
 
 	public static function LoadQuestion($request = array())
 	{
