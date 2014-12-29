@@ -44,5 +44,7 @@ return array(
 	"question_info" => "Silahkan pilih pertanyaan diatas untuk menampilkan hasil survey",
 	"language" => "Bahasa",
 	"and" => "dan",
-	"survey_result" => "Hasil survey"
+	"survey_result" => "Hasil survey",
+	"filter_label" => "Saring hasil survey",
+	"survey_question" => "PERTANYAAN SURVEY"
 );

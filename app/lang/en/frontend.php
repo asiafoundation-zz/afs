@@ -39,5 +39,7 @@ return array(
 	"detail_chart_failed" => "Failed to show detail chart",
 	"language" => "Language",
 	"and" => "and",
-	"survey_result" => "Survey result in"
+	"survey_result" => "Survey result in",
+	"filter_label" => "Filter survey result",
+	"survey_question" => "SURVEY QUESTION"
 );
