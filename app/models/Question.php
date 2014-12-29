@@ -79,6 +79,7 @@ class Question extends Eloquent {
 		$query = 'questions.id as id_question,
 					questions.code_id as question_code,
 					questions.question as question,
+					questions.survey_id,
 					question_categories.id as id_question_categories,
 					question_categories.name as question_categories,
 					answers.id  as id_answer,
@@ -99,6 +100,7 @@ class Question extends Eloquent {
 			$query = 'questions.id as id_question,
 						questions.code_id as question_code,
 						questions.question as question,
+						questions.survey_id,
 						question_categories.id as id_question_categories,
 						question_categories.name as question_categories,
 						answers.id  as id_answer,
@@ -124,6 +126,7 @@ class Question extends Eloquent {
 			$query = 'questions.id as id_question,
 						questions.code_id as question_code,
 						questions.question as question,
+						questions.survey_id,
 						question_categories.id as id_question_categories,
 						question_categories.name as question_categories,
 						master_codes.id as master_code_id,
@@ -135,6 +138,7 @@ class Question extends Eloquent {
 				$query = 'questions.id as id_question,
 							questions.code_id as question_code,
 							questions.question as question,
+							questions.survey_id,
 							question_categories.id as id_question_categories,
 							question_categories.name as question_categories,
 							regions.id as id_region,
@@ -205,6 +209,7 @@ class Question extends Eloquent {
 				$answer_diff[$question->id_answer]->id_region = !empty($question->id_region) ? $question->id_region : "";
 				$answer_diff[$question->id_answer]->region_name = !empty($question->name) ? $question->name : "";
 				$answer_diff[$question->id_answer]->attribute_code = $question->attribute_code;
+				$answer_diff[$question->id_answer]->survey_id = $question->attribute_code;
 
 				$answer_diff[$question->id_answer]->amount = 0;
 			}
@@ -226,10 +231,12 @@ class Question extends Eloquent {
 				->join('participants','participants.id','=','question_participants.participant_id')
 				->where('questions.id',$question->id_question)
 				->where('participants.sample_type',0)
+				->where('answers.cycle_id',$question->id_cycle)
 				->groupBy('question_participants.participant_id')
 				->get();
 
-				$total_amount = count($total_amount);break;
+				$total_amount = count($total_amount);
+				break;
 			}else{
 				$total_amount += $question->amount;
 			}
@@ -291,33 +298,35 @@ class Question extends Eloquent {
 		return $questions;
 
 	}
-	/*
+	
 	// -- FOR TESTING --
-	public static function DefaultQuestion($request = array())
-	{
-		// Load Question
-		$questions = self::DefaultLoad($request);
+	// public static function DefaultQuestion($request = array())
+	// {
+	// 	// Load Question
+	// 	$questions = self::DefaultLoad($request);
 
-			if (!empty($request['cycle'])) {
+	// 		if (!empty($request['cycle'])) {
 
-				$questions = $questions->where('questions.id', '=', 28);
-			}
-			else{
-				$questions = $questions->where('questions.id', '=', 28);
-			}
+	// 			$questions = $questions->where('questions.id', '=', 55)
+	// 			->where('answers.cycle_id', '=', 1);
+	// 		}
+	// 		else{
+	// 			$questions = $questions->where('questions.id', '=', 55)
+	// 			->where('answers.cycle_id', '=', 1);
+	// 		}
 
-			$questions = $questions
-			->groupBy('answer')
-			->get();
+	// 		$questions = $questions
+	// 		->groupBy('answer')
+	// 		->get();
 
-			if (count($questions)) {
-				$questions = self::DifferentAnswer($questions,$request);
-				$questions = self::IndexLabel($questions);
-			}
+	// 		if (count($questions)) {
+	// 			$questions = self::DifferentAnswer($questions,$request);
+	// 			$questions = self::IndexLabel($questions);
+	// 		}
 
-		return $questions;
-	}
-*/
+	// 	return $questions;
+	// }
+
 	public static function DefaultQuestion($request = array())
     {
         // Load Question
@@ -405,6 +414,7 @@ class Question extends Eloquent {
 					'questions.id as id_question,
 					questions.code_id as question_code,
 					questions.question as question,
+					questions.survey_id,
 					question_categories.id as id_question_categories,
 					question_categories.name as question_categories,
 					answers.id  as id_answer,
@@ -740,6 +750,7 @@ class Question extends Eloquent {
 				'question_categories.name as question_category',
 				'questions.id as question_id',
 				'questions.question as question',
+				'questions.survey_id',
 				'codes.code',
 				'master_codes.master_code'
 				)
