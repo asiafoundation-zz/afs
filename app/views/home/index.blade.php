@@ -7,12 +7,11 @@
 <?php 
   $survey_select = Survey::all();  
 ?>
-<section class="header">
-  <p>{{ $survey->name }}</p>
+ <section class="topHead clearfix">
   @if(count($survey_select) > 1)
   <div class="selectLang">
     {{ Form::open(['action' => 'HomeController@postLang'] ) }}
-    <label>Language:</label>
+    <label>{{ Lang::get('frontend.language') }} :</label>
     <!-- <img src="images/ind.png" class="indFlag" style="display:block" />
     <img src="images/eng.png" class="engFlag" /> -->
     <select id="Lang" onchange="this.form.submit()" name="lang">
@@ -23,6 +22,9 @@
     {{ Form::close()}}
   </div>
   @endif
+</section>
+<section class="header">
+  <p>{{ $survey->name }}</p>
     <!-- <div class="flag">
       {{ Form::open(['action' => 'HomeController@postLang'] ) }}
       <span>language : </span>
@@ -87,7 +89,7 @@
   </section>
   <section class="survey-pemilu">
     <div class="survey-question">
-      <label>PERTANYAAN SURVEY</label>
+      <label>{{ Lang::get('frontend.survey_question') }}</label>
       <div class="container center">
         <div class="col-xs-1 center"><a class="arrowleft" onclick="next_question(0)"></a></div>
         <p id="question-name" class="col-xs-10">" {{ $default_question->question }} "</p>
@@ -98,7 +100,7 @@
         <div class="container">
          <div class="row">
             <div class="col-md-11">
-               <span class="custom-select-control-custom-text" style="color:white;">Saring Hasil Survey:</span>
+               <span class="custom-select-control-custom-text" style="color:white;">{{ Lang::get('frontend.filter_label') }} :</span>
             </div>
          </div>
         <div class="row">
