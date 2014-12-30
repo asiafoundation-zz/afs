@@ -491,7 +491,13 @@ class Question extends Eloquent {
 		}
 		// If Forward
 		if (($request['FilterMove'] == 2)) {
-			$request['question'] = DB::table('questions')->select('id')->whereRaw("questions.id = (select min(questions.id) from questions where questions.id > ".$request['question'].")")->first();
+			$request['question'] = DB::table('questions')
+									->select('questions.id')
+									->join('answers', 'answers.question_id', '=', 'questions.id')
+									->whereRaw("questions.id = (select min(questions.id) from questions 
+										where questions.id > ".$request['question']."
+										and question_category_id = ". $request['category'] ."
+										and answers.cycle_id = ". $request['cycle'] .")")->first();
 			// If no forard
 			if (!count($request['question'])) {
 				$request['question'] = DB::table('questions')->select('questions.id')->orderBy('questions.id', 'asc')->first();

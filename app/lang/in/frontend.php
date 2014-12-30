@@ -24,7 +24,7 @@ return array(
 	"empty_data" => "Tidak ada data survey untuk pertanyaan: ",
 	"empty_filter_data" => "Tidak ada data survey untuk filter ",
 	"comparing_cycle" => "Membandingkan",
-	"comparing_cycle_failed" => "Membandingkan Gagal",
+	"comparing_cycle_failed" => "Tidak ada pertanyaan yang dapat dibandingkan",
 	"cross_by_another_variable" => "Data tabulasi silang",
 	"cross_by_another_variable_p" => "Data tabulasi silang untuk membandingkan jawaban dua pertanyaan dari survey yang sama",
 	"filter_participant_by" => "Saring partisipan dengan",

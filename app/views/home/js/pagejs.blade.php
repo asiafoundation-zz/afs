@@ -3,6 +3,9 @@
      function find_survey()
      {
       // Get cycles functions
+      $('.cross-question').hide();
+      $('.chart-flag').show();
+      
       disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter.png') }}) no-repeat right center transparent", 1);
       disable_anchor($('.clear-all'), '#AA6071', 0);
       clear_all_filter_nosurvey();
@@ -257,11 +260,13 @@
 
     function compare_cycle(move)
     {
-
-      
+     
       clear_text_notification();
-      $('#chart_canvas').hide();
+      $('.cross-question').hide();
+      $('.chart-flag').show();
+      
       $('.loading-flag').show();
+      $('#chart_canvas').hide();
 
       var value = 0;
       if(FilterSelect.region != ""){
@@ -282,9 +287,6 @@
       $.get( "filter-select", { SelectedFilter:"compare_cycle",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, FilterMove: move} )
         .done(function( data ) {
           if (data != false) {
-
-            $('.cross-question').hide().css('display', 'none').fadeOut('slow');
-            $('.chart-flag').show();
 
             FilterSelect.is_compare = 1;
             disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
@@ -353,6 +355,7 @@
             DefaultSelectAssign(FilterSelect);
           }else
           {
+
             var last_question = $('#s2id_select-question').children().children().html();
             $('.loading-flag').hide();
             $(".notification").html('<div class="alert alert-info"><h4>{{Lang::get('frontend.comparing_cycle_failed')}}</h4></div><div id="chart_canvas"></div><div class="col-md-12"><ul class="chart-pagination"></div>');
@@ -527,7 +530,7 @@
       $('#chart_canvas').hide();
       $('.loading-flag').show();
         // Get cycles functions
-        $.get( "filter-select", { SelectedFilter:"detail_chart",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answer_id:answer_id, category_filter: category_id, FilterMove:move} )
+        $.get( "filter-select", { SelectedFilter:"detail_chart",region: FilterSelect.region,survey_id: FilterSelect.survey, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, answer_id:answer_id, category_filter: category_id, FilterMove:move} )
           .done(function( data ) {
             if (data != false) {
               $('#chart_canvas').show();
