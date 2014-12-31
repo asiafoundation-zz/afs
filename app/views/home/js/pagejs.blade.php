@@ -3,16 +3,26 @@
      function find_survey()
      {
       // Get cycles functions
+
+      $('.arrowright').removeAttr('onclick');
+      $('.arrowleft').removeAttr('onclick');
+
+      $('.arrowright').attr('onclick', 'next_question(1)');
+      $('.arrowleft').attr('onclick', 'next_question(0)');
+
       $('.cross-question').hide();
       $('.chart-flag').show();
       
       disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter.png') }}) no-repeat right center transparent", 1);
       disable_anchor($('.clear-all'), '#AA6071', 0);
+
       clear_all_filter_nosurvey();
       clear_text_notification();
+
       $(".chart-pagination").show();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
+
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, survey_id: FilterSelect.survey} )
         .done(function( data ) {
           console.log(data);
@@ -290,6 +300,15 @@
 
             FilterSelect.is_compare = 1;
             disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
+
+            $('#select-question').val(data.default_question.id_question);
+            $('.select-question .select2-chosen').text(data.default_question.question);
+
+            $("#question-name").html(data.default_question.question);
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
+            $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
+
+            FilterSelect.question = parseInt(data.default_question.id_question);
 
             $('#chart_canvas').show();
             $('.loading-flag').hide();
