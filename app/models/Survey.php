@@ -540,8 +540,8 @@ class Survey extends Eloquent {
 		$delayed_jobs->information = "Almost Done, Please Wait....";
 		$delayed_jobs->save();
 
-		Schema::drop('temporary_headers');
-		Schema::drop($file_name);
+		DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
+		DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
 
 		if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
 		{
