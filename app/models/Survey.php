@@ -547,7 +547,7 @@ class Survey extends Eloquent {
 		{
 			File::delete(public_path()."/uploads/".$survey->baseline_file.".csv");
 		}
-		if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+		if (File::exists(public_path()."/uploads/".$survey->header_file.".csv"))
 		{
 			File::delete(public_path()."/uploads/".$survey->header_file.".csv");
 		}
@@ -618,7 +618,7 @@ class Survey extends Eloquent {
 			{
 				File::delete(public_path()."/uploads/".$survey->baseline_file.".csv");
 			}
-			if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+			if (File::exists(public_path()."/uploads/".$survey->header_file.".csv"))
 			{
 				File::delete(public_path()."/uploads/".$survey->header_file.".csv");
 			}
