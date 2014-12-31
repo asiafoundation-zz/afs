@@ -46,6 +46,13 @@ class SurveyController extends AvelcaController {
 			if(is_file($file))
 			unlink($file);
 		}
+
+		DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
+		$surveys = Survey::all();
+		foreach ($surveys as $key_surveys => $survey) {
+			DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
+		}
+		
 		Session::flash('survey_deleted', 'Survey Deleted');
 		return Redirect::to('/admin/survey');
 	}
