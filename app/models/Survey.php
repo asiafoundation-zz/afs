@@ -590,6 +590,7 @@ class Survey extends Eloquent {
 					$dataval = utf8_encode((string)$emapData[$key]);
 					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $dataval);
 					$dataval = str_replace('"', "", $dataval);
+					$dataval = str_replace("'", "", $dataval);
 					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
 
 					$temporary_headers[$i][(string)$column] = $dataval;
