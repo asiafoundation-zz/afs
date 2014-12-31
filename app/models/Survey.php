@@ -181,6 +181,9 @@ class Survey extends Eloquent {
 			$schema_texts[$key] = $column;
 		}
 
+		DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
+		DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
+
 		Schema::create($file_name, function($table) use ($schema_texts) {
 			foreach ($schema_texts as $key => $schema_text) {
 				$table->text($schema_text)->nullable();
@@ -537,8 +540,18 @@ class Survey extends Eloquent {
 		$delayed_jobs->information = "Almost Done, Please Wait....";
 		$delayed_jobs->save();
 
-		Schema::drop('temporary_headers');
-		Schema::drop($file_name);
+		DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
+		DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
+
+		if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+		{
+			File::delete(public_path()."/uploads/".$survey->baseline_file.".csv");
+		}
+		if (File::exists(public_path()."/uploads/".$survey->header_file.".csv"))
+		{
+			File::delete(public_path()."/uploads/".$survey->header_file.".csv");
+		}
+
 		return $status;
 	}
 
@@ -559,6 +572,8 @@ class Survey extends Eloquent {
 		foreach($frow as $key => $column) {
 			$schema_texts[$key] = $column;
 		}
+		
+		DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
 		Schema::create('temporary_headers', function($table) use ($schema_texts) {
 			foreach ($schema_texts as $key => $schema_text) {
 				$table->text($schema_text)->nullable();
@@ -575,6 +590,7 @@ class Survey extends Eloquent {
 					$dataval = utf8_encode((string)$emapData[$key]);
 					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $dataval);
 					$dataval = str_replace('"', "", $dataval);
+					$dataval = str_replace("'", "", $dataval);
 					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
 
 					$temporary_headers[$i][(string)$column] = $dataval;
@@ -603,7 +619,7 @@ class Survey extends Eloquent {
 			{
 				File::delete(public_path()."/uploads/".$survey->baseline_file.".csv");
 			}
-			if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+			if (File::exists(public_path()."/uploads/".$survey->header_file.".csv"))
 			{
 				File::delete(public_path()."/uploads/".$survey->header_file.".csv");
 			}

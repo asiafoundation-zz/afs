@@ -46,6 +46,13 @@ class SurveyController extends AvelcaController {
 			if(is_file($file))
 			unlink($file);
 		}
+
+		DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
+		$surveys = Survey::all();
+		foreach ($surveys as $key_surveys => $survey) {
+			DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
+		}
+		
 		Session::flash('survey_deleted', 'Survey Deleted');
 		return Redirect::to('/admin/survey');
 	}
@@ -142,6 +149,7 @@ class SurveyController extends AvelcaController {
 		
 		foreach ($files as $key_files => $file) {
 			$filename = $file->getClientOriginalName();
+			$filename = self::fileRename($filename).'.csv';
 
 			if(!file_exists($filename))
 			{
@@ -164,6 +172,7 @@ class SurveyController extends AvelcaController {
 				foreach ($temporary_header as $key => $value) {
 					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $value);
 					$dataval = str_replace('"', "", $dataval);
+					$dataval = str_replace("'", "", $dataval);
 					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
 
 					$header[$key_temporary_headers]['header'.$row] = $dataval;
@@ -338,8 +347,9 @@ class SurveyController extends AvelcaController {
 		if(strtolower($file_name_array[1]) == "csv"){
 			$file_name = explode(".",$file_name);
 			$file_name = $file_name[0];
-			$file_name = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\];,.:<>|]\n\r/', '', $file_name);
+			$file_name = preg_replace('/[^A-Za-z0-9]/', '', $file_name);
 			$file_name = str_replace('"', "", $file_name);
+			$file_name = str_replace("'", "", $file_name);
 			$file_name = preg_replace('/\s+/', '', $file_name);
 			$file_name = trim(preg_replace('/\s\s+/', ' ', $file_name));
 			$file_name = strtolower($file_name);

@@ -231,8 +231,13 @@ class Question extends Eloquent {
 				->join('participants','participants.id','=','question_participants.participant_id')
 				->where('questions.id',$question->id_question)
 				->where('participants.sample_type',0)
-				->where('answers.cycle_id',$question->id_cycle)
-				->groupBy('question_participants.participant_id')
+				->where('answers.cycle_id',$question->id_cycle);
+
+				if(!empty($question->id_region)){
+					$total_amount = $total_amount->where('question_participants.region_id',$question->id_region);
+				}
+
+				$total_amount = $total_amount->groupBy('question_participants.participant_id')
 				->get();
 
 				$total_amount = count($total_amount);
