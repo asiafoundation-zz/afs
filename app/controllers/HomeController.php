@@ -6,10 +6,6 @@ class HomeController extends BaseController {
 		// Session::put('lang', $lang);
 		$survey = DB::table('surveys')->where('id','=',Input::get('lang'))->first();
 
-		// $update_survey = DB::table('surveys')
-		// 				->where('id','=',Input::get('lang'))
-		// 				->update('')
-
 		$rules = [
         	'language' => 'in:in,en' //list of supported languages of your application.
         ];
@@ -33,8 +29,7 @@ class HomeController extends BaseController {
 
 	public function getIndex()
 	{
-
-		// $language = Session::get('language', 'in');
+		// echo Session::get('language', 'in');
 		$survey_id = Session::get('survey_id');
 
 		$request = array();
@@ -43,6 +38,8 @@ class HomeController extends BaseController {
 			$survey = DB::table('surveys')->where('id','=',$survey_id)->first();	
 		}else{
 			$survey = DB::table('surveys')->where('is_default','=',1)->first();	
+			$lang = $survey->url;
+			Session::put('language',$lang);
 		}
 
 		if (!count($survey)) {
@@ -209,9 +206,7 @@ class HomeController extends BaseController {
 					$second_label = "";
 					foreach($default_questions as $row){
 						$answer = strtolower($row->answer);
-						$answer = preg_replace('/[^A-Za-z0-9]/', '', $answer);
-						$dataval = str_replace("'", "", $dataval);
-						$answer = preg_replace('/\s+/', '', $answer);
+						$answer = preg_replace('/[^A-Za-z0-9]/', '', $answer);$dataval = str_replace("'", "", $dataval);$answer = preg_replace('/\s+/', '', $answer);
 						$answer = trim(preg_replace('/\s\s+/', ' ', $answer));
 
 						if ($answer == '') {

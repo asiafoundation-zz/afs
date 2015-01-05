@@ -24,7 +24,6 @@ function is_active_filter(survey_id,category_id){
 function manage_filter_order(survey_id,category_id){
 
  	var category_text = $("#filter_category_name_"+category_id).text();
- 	console.log(category_text);
  	var category_display_text = $("#filter_category_display_name_"+category_id).text();
  	$("#popup_order_filter_participant_name").html(category_text);
  	$("#form_filter_category_id").val(category_id);

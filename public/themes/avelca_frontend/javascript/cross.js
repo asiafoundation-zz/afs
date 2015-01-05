@@ -195,6 +195,17 @@ $(document).ready(function(){
    
   });
 
+
+  $('.compare-all').click(function(){
+    
+    $('.arrowright').removeAttr('onclick');
+    $('.arrowleft').removeAttr('onclick');
+
+    $('.arrowright').attr('onclick', 'compare_cycle(2)');
+    $('.arrowleft').attr('onclick', 'compare_cycle(1)');
+
+    compare_cycle(2)
+  });
   // $('#lang-en').tooltip('show');
 
   // $('#select-region').change(function(){
