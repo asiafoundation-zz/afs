@@ -200,18 +200,14 @@ class Survey extends Eloquent {
 		/*
 		 * Mass Insert
 		 */
+		 DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
 
-		DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
+		 $last_participant = DB::table('participants')->orderBy('id', 'desc')->first();
+		 $last_participant = empty($last_participant) ? 0 : $last_participant->id;
 
-		$last_participant = DB::table('participants')->orderBy('id', 'desc')->first();
-		$last_participant = empty($last_participant) ? 0 : $last_participant->id;
+		 DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=".$last_participant.") r SET participant_id = @rownum:=@rownum+1");
 
-		DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=".$last_participant.") r SET participant_id = @rownum:=@rownum+1");
-
-		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
-			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM ".$file_name.")");
-
-		// Progress Bar Estimations
+		 // Progress Bar Estimations
 		$delayed_jobs->information = "Saving Regions";
 		$delayed_jobs->save();
 		// Change Status
@@ -240,6 +236,13 @@ class Survey extends Eloquent {
 					(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN '".$distinct_cycles->sfl_wave."' THEN 0 ELSE 1 END cycle_type,".$survey->id." FROM ".$file_name.")");
 
 				$update_filter_sql .= "sfl_wave = (SELECT id FROM cycles WHERE name = a.sfl_wave and survey_id = ".$survey->id."),";
+			}
+			if ($single_code['type'] == 2) {
+
+				DB::statement("INSERT INTO participants(id, sample_type,survey_id)
+					(SELECT participant_id, CASE substring_index(".$single_code['code'].", '.', 1) WHEN 1 THEN 0 ELSE 1 END sample_type,".$survey->id." FROM ".$file_name.")");
+			}
+			if ($single_code['type'] == 3) {
 				break;
 			}
 		}
@@ -290,8 +293,8 @@ class Survey extends Eloquent {
 					$question_id = $question_id->id;
 
 					$sql_commands = "
-					INSERT INTO answers(answer, question_id, cycle_id,survey_id)
-					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave,".$survey->id." FROM ".$file_name." WHERE ifnull(trim(".$single_code['code']."),'') != '');
+					INSERT INTO answers(answer, question_id, cycle_id,survey_id,order)
+					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave,".$survey->id.",0 FROM ".$file_name." WHERE ifnull(trim(".$single_code['code']."),'') != '');
 					";
 
 					DB::statement($sql_commands);

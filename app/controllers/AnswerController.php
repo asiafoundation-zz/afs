@@ -57,5 +57,33 @@ class AnswerController extends AvelcaController {
 		
 		return array('question_rows' => $arr_row, 'question_headers' => $arr_header);
 	}
-		
+	public function getAnswer($id)
+	{
+		$answer = Answer::where('question_id','=',$id)->where('cycle_id','=',Input::get('cycle_id'));
+		// Is ordered
+		$is_ordered = DB::table('answers')->where('question_id','=',$id)->where('cycle_id','=',Input::get('cycle_id'))->orderBy('order', 'ASC')->first();
+
+		if ($is_ordered->order != 0) {
+			$answers = $answer->orderBy('order', 'ASC')->get();
+		}else{
+			$answers = $answer->get();
+		}
+
+		$view = View::make('admin.survey.answer_order')->with('answers', $answers);
+		$view =(string) $view;
+
+		return $view;
+	}
+	public function postAnswer()
+	{
+		$requests = Input::get();
+
+		foreach ($requests['order'] as $key_requests => $request) {
+			DB::table('answers')->where('id', $key_requests)->update(array('order' => $request));
+		}
+
+		Session::flash('alert-class', 'alert-success'); 
+		Session::flash('message', 'Save Succeed');
+		return Redirect::to('admin/survey/cycle?cycle_id=1&survey_id='.$requests['survey_id']);
+	}
 }

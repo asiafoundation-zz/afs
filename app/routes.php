@@ -55,6 +55,9 @@ Route::group(array('before' => 'backend_theme|auth.sentry|password-expiry'), fun
 	Route::get('/region/{id}', 'CategoryController@getRegion');
 	Route::post('/region/', 'CategoryController@postRegion');
 
+	Route::get('answeredit/{id}', 'AnswerController@getAnswer');
+	Route::post('answerpost', 'AnswerController@postAnswer');
+
 	Route::get('/admin/questioncategory', function(){
 		$question_category = QuestionCategory::all();
 		return Response::json($question_category);

@@ -19,6 +19,21 @@
 	});
 	return false;
 }
+
+function manage_answer_order(survey_id,question_id,cycle_id){
+
+ 	var questions = $("#question_test_"+question_id).text();
+ 	$("#questions-text").html(questions);
+ 	$("#form_filter_category_id").val(question_id);
+ 	$("#form_filter_cycle_id").val(cycle_id);
+ 	$('#manage_answer_order').modal('show');
+
+ 	$.get( "{{ URL::to('answeredit') }}/"+question_id, { question_id:question_id,cycle_id:cycle_id })
+	.done(function( data ) {
+		$("#popup_order_detail_question_body").html(data);
+	});
+	return false;
+}
 </script>
 <div class="row">
 	<div class="col-md-12">
@@ -52,32 +67,74 @@
 						<td><span id="question_test_{{ $question->question_id }}">{{ $question->question }}</span></td>
 						<td>
 							<a href="#" onclick="popup_question({{ $question->question_id }},{{ $survey->id }},{{$cycle->id}})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.view')}}</button></a>
+							<a href="#" onclick="manage_answer_order({{ $survey->id }},{{ $question->question_id }},{{ $cycle->id }} )"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('backend.answer_order')}}</button></a>
 						</td>
 					</tr>
 				@endforeach
 				</tbody>
 			</table>
 		</div>
+		<?php echo $questions->links(); ?>
 
 	</div>			
 </div>
 
-<div class="modal fade" id="popup_detail_question" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade" id="manage_answer_order" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
 			<div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="question-label-popup">{{ Lang::get('backend.question') }}</h4>
+        <h4 class="modal-title" id="question-label-popup"><span id="questions-text"></span></h4>
       </div>
+      {{ Form::open(array('url' => 'answerpost', 'class' => 'form-horizontal')) }}
+      <div id="popup_order_detail_question_body"></div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.back')}}</a>
+        <button class="btn" type="submit" class="btn btn-primary">{{Lang::get('general.save')}}</button>
+      </div>
+      {{ Form::hidden("question_id","", array("class" => "form-control","id" => "form_filter_category_id")) }}
+      {{ Form::hidden("cycle_id","", array("class" => "form-control","id" => "form_filter_cycle_id")) }}
+      {{ Form::hidden("survey_id",$survey->id, array("class" => "form-control","id" => "form_filter_survey_id")) }}
+			{{ Form::close() }}
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="edit-cycle" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+			<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="question-label-popup">{{ Lang::get('backend.manage_display_name') }}</h4>
+      </div>
+      {{ Form::open(array('url' => '/admin/cycle', 'class' => 'form-horizontal')) }}
       <div class="modal-body" id="popup_detail_question_body">
-      	<div class="loading-flag">
-      		<img src="{{ Theme::asset('img/ajax-loader.gif') }}">
-      	</div>
-      	<table class="datatable table table-striped table-bordered" id="question_popup_table"></table>
+      	<div class="col-md-12">
+      		<div class="row">
+						<div class="form-group">
+							{{ Form::label("Cycle Name:", "", array("class" => "control-label col-md-3")) }}
+							<div class="col-md-9">
+								<span id="cycle-name-label"></span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group">
+							{{ Form::label("Display Name:", "", array("class" => "control-label col-md-3")) }}
+							<div class="col-md-9">
+								{{ Form::text("display_name","", array("class" => "form-control","id" => "form_display_name")) }}
+								{{ Form::hidden("cycle_id","", array("class" => "form-control","id" => "form_cycle_id")) }}
+								{{ Form::hidden("survey_id",$survey->id, array("class" => "form-control","id" => "form_survey_id")) }}
+							</div>
+						</div>
+					</div>
+				</div>
       </div>
       <div class="modal-footer">
         <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.back')}}</a>
+        <button class="btn" type="submit" class="btn btn-primary">{{Lang::get('general.save')}}</button>
       </div>
+				{{ Form::close() }}
     </div>
   </div>
 </div>
