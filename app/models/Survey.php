@@ -634,12 +634,30 @@ class Survey extends Eloquent {
 			DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
 			DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
 
-			DB::table('delayed_jobs')->where('survey_id','=',$survey->id)->delete();
-			DB::table('regions')->where('survey_id','=',$survey->id)->delete();
-			DB::table('cycles')->where('survey_id','=',$survey->id)->delete();
-			DB::table('amounts')->where('survey_id','=',$survey->id)->delete();
-			DB::table('amount_filters')->where('survey_id','=',$survey->id)->delete();
-			DB::table('answers')->where('survey_id','=',$survey->id)->delete();
+			$delete = DB::table('delayed_jobs')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('regions')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('cycles')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('amounts')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('amount_filters')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('answers')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
 
 			$category_data = DB::table('categories')->where('survey_id','=',$survey->id);
 			$category_data_loads = $category_data->get();
@@ -680,11 +698,26 @@ class Survey extends Eloquent {
 				$master_codes_data->delete();
 			}
 
-			DB::table('filter_participants')->where('survey_id','=',$survey->id)->delete();
-			DB::table('participants')->where('survey_id','=',$survey->id)->delete();
-			DB::table('questions')->where('survey_id','=',$survey->id)->delete();
-			DB::table('question_categories')->where('survey_id','=',$survey->id)->delete();
-			DB::table('question_participants')->where('survey_id','=',$survey->id)->delete();
+			$delete = DB::table('filter_participants')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('participants')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('questions')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('question_categories')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('question_participants')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
 
 			$survey->delete();
 			DB::commit();

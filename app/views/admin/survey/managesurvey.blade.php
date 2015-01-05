@@ -22,7 +22,7 @@
 			@endif
 			<hr>
 			@foreach($cycles as $cycle_id_loop =>$cycle)
-			<a href="/admin/survey/cycle?cycle_id={{$cycle_id_loop}}&survey_id={{ $survey->id }}"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{$cycle}}</button></a>
+			<a href="/admin/survey/cycle?cycle_id={{$cycle_id_loop}}&survey_id={{ $survey->id }}"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">Manage {{$cycle}}</button></a>
 			@endforeach
 
       <!-- GeoJson functions 
