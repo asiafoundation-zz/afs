@@ -832,8 +832,7 @@ class Question extends Eloquent {
 
 	public static function loadQuestionCycle($request=array())
 	{
-		$questions = DB::table('questions')
-			->select(
+		$questions = Question::select(
 				'question_categories.name as question_category',
 				'questions.id as question_id',
 				'questions.question as question',
@@ -847,7 +846,7 @@ class Question extends Eloquent {
 			->join('master_codes','master_codes.id','=','codes.master_code_id')
 			->where('answers.cycle_id', '=', $request['cycle_id'])
 			->groupBy('question_id')
-			->get();
+			->paginate();
 
 		return $questions;
 	}
