@@ -56,6 +56,7 @@ class HomeController extends BaseController {
 		$default_questions = Question::DefaultQuestion($request);
 
 		if (empty($default_questions)) {
+			Session::forget('survey_id');
 			return View::make('error.404');
 		}
 		$default_question = reset($default_questions);
