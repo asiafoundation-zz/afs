@@ -84,6 +84,6 @@ class AnswerController extends AvelcaController {
 
 		Session::flash('alert-class', 'alert-success'); 
 		Session::flash('message', 'Save Succeed');
-		return Redirect::to('admin/survey/cycle?cycle_id=1&survey_id='.$requests['survey_id']);
+		return Redirect::to('admin/survey/cycle?cycle_id='.$requests['cycle_id'].'&survey_id='.$requests['survey_id']);
 	}
 }
