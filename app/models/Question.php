@@ -219,8 +219,6 @@ class Question extends Eloquent {
 			$answer_diff[$question->id_answer]->amount = $question->amount;
 		}
 
-		// print_r($answer_diff);
-
 		return $answer_diff;
 	}
 
@@ -283,7 +281,6 @@ class Question extends Eloquent {
 			});
 		}
 
-		// print_r($questions);
 		return $questions;
 	}
 
@@ -524,7 +521,6 @@ class Question extends Eloquent {
 
 			
 			$result = DB::select(DB::raw($query));
-			// print_r($result);
 			if(!empty($result)){
 				$request['question'] = $result[0];	
 			}else{
@@ -634,9 +630,10 @@ class Question extends Eloquent {
 		}
 
 		// $is_cycles = $questions->groupBy('cycle_type')->get();
+
 		$questions = $questions->groupBy('cycle_type')
 			->groupBy('id_answer')
-			->orderBy('answer')
+			->orderBy('answer_order', 'desc')
 			->get();
 		
 		return array($questions,$request);

@@ -94,6 +94,8 @@ class SurveyController extends AvelcaController {
 				
 				$survey->is_default = $request['is_default'];
 				$survey->save();
+				
+				Session::forget('survey_id');
 
 				Session::flash('alert-class', 'alert-success');
 				Session::flash('message', 'Save Succeed');

@@ -30,15 +30,17 @@ class HomeController extends BaseController {
 	public function getIndex()
 	{
 		// echo Session::get('language', 'in');
+		$request = array();
+		
 		$survey_id = Session::get('survey_id');
 
-		$request = array();
 		
 		if(isset($survey_id)){
 			$survey = DB::table('surveys')->where('id','=',$survey_id)->first();	
 		}else{
-			$survey = DB::table('surveys')->where('is_default','=',1)->first();	
+			$survey = DB::table('surveys')->where('is_default','=',1)->first();
 			$lang = $survey->url;
+
 			Session::put('language',$lang);
 		}
 
@@ -193,8 +195,14 @@ class HomeController extends BaseController {
 
 					$first_amount_total = 0;
 					$second_amount_total = 0;
+					$is_order = 0;
 					$answer_data = array();
 					foreach($default_questions as $row){
+
+						if($row->answer_order != 0){
+							$is_order = 1;
+						}
+
 						if($row->cycle_type == 0){
 							$first_amount_total += $row->amount;
 						}
@@ -204,13 +212,21 @@ class HomeController extends BaseController {
 						}
 					}
 
+					// if($is_order != 1){
+					// 	usort($default_questions, function($a, $b) {
+					// 		return $a->amount - $b->amount;
+					// 	});	
+					// }
+
 					$baseline = array();
 					$endline = array();
 					$first_label = "";
 					$second_label = "";
 					foreach($default_questions as $row){
 						$answer = strtolower($row->answer);
-						$answer = preg_replace('/[^A-Za-z0-9]/', '', $answer);$dataval = str_replace("'", "", $dataval);$answer = preg_replace('/\s+/', '', $answer);
+						$answer = preg_replace('/[^A-Za-z0-9]/', '', $answer);
+						// $dataval = str_replace("'", "", $dataval);
+						$answer = preg_replace('/\s+/', '', $answer);
 						$answer = trim(preg_replace('/\s\s+/', ' ', $answer));
 
 						if ($answer == '') {
@@ -235,7 +251,9 @@ class HomeController extends BaseController {
 						}
 					}
 
-					$answer_normalizes = array_merge_recursive($baseline,$endline);
+
+					$answer_normalizes = array_merge_recursive($endline,$baseline);
+
 					$answer_data = array();
 					$first_index = 0;
 					$second_index = 0;
