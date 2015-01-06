@@ -43,5 +43,5 @@ return array(
 	"filter_label" => "Filter survey result",
 	"survey_question" => "SURVEY QUESTION",
 	"comparing_cycle_failed" => "There is no question could compare",
-	"area" => "Area"
+	"area" => "Region"
 );
