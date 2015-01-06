@@ -244,9 +244,21 @@ Route::filter('backend_theme', function()
 });
 
 App::before(function($request){
-	$lang = Session::get('language', 'in');
+	$survey_id = Session::get('survey_id');
 
-	App::setLocale($lang);
+		
+	if(isset($survey_id)){
+		$survey = DB::table('surveys')->where('id','=',$survey_id)->first();	
+	}else{
+		$survey = DB::table('surveys')->where('is_default','=',1)->first();
+		$lang = $survey->url;
+		// echo $lang;
+		Session::put('language',$lang);
+	}
+
+	$locale = Session::get('language', 'in');
+
+	App::setLocale($locale);
 });
 
 /*

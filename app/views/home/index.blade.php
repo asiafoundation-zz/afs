@@ -5,7 +5,7 @@
   @include('partial/homeasset')
 
 <?php 
-  $survey_select = Survey::where('publish', '!=', 3)->get();  
+  $survey_select = Survey::where('publish', '=', 1)->get();  
 ?>
  <section class="topHead clearfix">
   @if(count($survey_select) > 1)
@@ -108,7 +108,7 @@
             <ul>
             <li class="li-region">
                <select class="select-control" id="select-region">
-                  <option class="selectik-filter-region">Wilayah</option>
+                  <option class="selectik-filter-region">{{ Lang::get('frontend.area') }}</option>
                   @foreach ($regions as $region)
                   <option value="{{ $region['region_id'] }}" class="selectik-filter-region">{{ $region['name'] }}</option>
                   @endforeach

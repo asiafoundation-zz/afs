@@ -46,5 +46,6 @@ return array(
 	"and" => "dan",
 	"survey_result" => "Hasil survey",
 	"filter_label" => "Saring hasil survey",
-	"survey_question" => "PERTANYAAN SURVEY"
+	"survey_question" => "PERTANYAAN SURVEY",
+	"area" => "Wilayah"
 );
