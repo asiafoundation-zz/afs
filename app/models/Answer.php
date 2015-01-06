@@ -23,7 +23,8 @@ class Answer extends Eloquent {
 		'color_id',
 		'cycle_id',
 		'cycle_default',
-		'survey_id'
+		'survey_id',
+		'order'
 		);
 	protected $guarded = array('id');
 
@@ -33,7 +34,8 @@ class Answer extends Eloquent {
 		'question_id' => 'required|numeric',
 		'color_id' => 'required|numeric',
 		'cycle_id' => 'required|numeric',
-		'cycle_default' => 'required|numeric'
+		'cycle_default' => 'required|numeric',
+		'order' => 'required|numeric'
 		);
 
 	/* Database Structure */
@@ -57,6 +59,10 @@ class Answer extends Eloquent {
 						'onIndex' => true
 			),
 			'cycle_default' => array(
+						'type' => 'number',
+						'onIndex' => true
+			),
+			'order' => array(
 						'type' => 'number',
 						'onIndex' => true
 			)

@@ -3,19 +3,28 @@
      function find_survey()
      {
       // Get cycles functions
+
+      $('.arrowright').removeAttr('onclick');
+      $('.arrowleft').removeAttr('onclick');
+
+      $('.arrowright').attr('onclick', 'next_question(1)');
+      $('.arrowleft').attr('onclick', 'next_question(0)');
+
       $('.cross-question').hide();
       $('.chart-flag').show();
       
       disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter.png') }}) no-repeat right center transparent", 1);
       disable_anchor($('.clear-all'), '#AA6071', 0);
+
       clear_all_filter_nosurvey();
       clear_text_notification();
+
       $(".chart-pagination").show();
       $('#chart_canvas').hide();
       $('.loading-flag').show();
+
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, survey_id: FilterSelect.survey} )
         .done(function( data ) {
-          console.log(data);
           $('.region-name').remove();
           $('#chart_canvas').show();
           $('.loading-flag').hide();
@@ -56,7 +65,8 @@
 
             // Build chart
             var color_set_data = color_set(data.question);
-            var data_points_data = data_points(data.question);           
+            var data_points_data = data_points(data.question);       
+
 
             $("#chart_canvas").html('<div class="col-md-5" id="pie-div"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div><div class="col-md-7" id="chart-div"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>');
 
@@ -290,6 +300,15 @@
 
             FilterSelect.is_compare = 1;
             disable_anchor($('.li-filter .custom-select-control .custom-text, .custom-select-control.disabled span.custom-text:hover'), "url({{ Theme::asset('img/filter-disable.png') }}) no-repeat right center transparent", 0);
+
+            $('#select-question').val(data.default_question.id_question);
+            $('.select-question .select2-chosen').text(data.default_question.question);
+
+            $("#question-name").html(data.default_question.question);
+            $("#select_category_label").html(data.default_question.question_categories.slice(0,10)+" ...");
+            $("#select_question_label").html(data.default_question.question.slice(0,40)+" ...");
+
+            FilterSelect.question = parseInt(data.default_question.id_question);
 
             $('#chart_canvas').show();
             $('.loading-flag').hide();
@@ -623,6 +642,7 @@
             data_points.push(data_list[i]);    
           }
         }
+
       return data_points;
     }
 
@@ -654,6 +674,7 @@
             data_points.push(data_list[i].color);    
           }
         }
+
       return data_points;
     }
 
@@ -705,7 +726,6 @@
 
     function text_area_filter(value){
 
-      // console.log(value);
       var option_filters = [];
 
       if(value[0] != 0){
@@ -725,7 +745,6 @@
         $(".dropdown-filter .selected_filter_option").each(function(){
           if ($(this).attr("data-type") === 'region'){
             var data_value = $(this).attr("data-value");
-            // console.log('id->'+value);
             if(data_value % 1 === 0){
 
               region_filters_default.push(data_value);

@@ -200,18 +200,14 @@ class Survey extends Eloquent {
 		/*
 		 * Mass Insert
 		 */
+		 DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
 
-		DB::statement("ALTER TABLE ".$file_name." ADD(participant_id int)");
+		 $last_participant = DB::table('participants')->orderBy('id', 'desc')->first();
+		 $last_participant = empty($last_participant) ? 0 : $last_participant->id;
 
-		$last_participant = DB::table('participants')->orderBy('id', 'desc')->first();
-		$last_participant = empty($last_participant) ? 0 : $last_participant->id;
+		 DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=".$last_participant.") r SET participant_id = @rownum:=@rownum+1");
 
-		DB::statement("UPDATE ".$file_name.", (SELECT @rownum:=".$last_participant.") r SET participant_id = @rownum:=@rownum+1");
-
-		DB::statement("INSERT INTO participants(id, sample_type,survey_id)
-			(SELECT participant_id, CASE substring_index(sfl_cat, '.', 1) WHEN 1 THEN 0 ELSE 1 END sample,".$survey->id." FROM ".$file_name.")");
-
-		// Progress Bar Estimations
+		 // Progress Bar Estimations
 		$delayed_jobs->information = "Saving Regions";
 		$delayed_jobs->save();
 		// Change Status
@@ -240,6 +236,13 @@ class Survey extends Eloquent {
 					(SELECT DISTINCT sfl_wave, CASE sfl_wave WHEN '".$distinct_cycles->sfl_wave."' THEN 0 ELSE 1 END cycle_type,".$survey->id." FROM ".$file_name.")");
 
 				$update_filter_sql .= "sfl_wave = (SELECT id FROM cycles WHERE name = a.sfl_wave and survey_id = ".$survey->id."),";
+			}
+			if ($single_code['type'] == 2) {
+
+				DB::statement("INSERT INTO participants(id, sample_type,survey_id)
+					(SELECT participant_id, CASE substring_index(".$single_code['code'].", '.', 1) WHEN 1 THEN 0 ELSE 1 END sample_type,".$survey->id." FROM ".$file_name.")");
+			}
+			if ($single_code['type'] == 3) {
 				break;
 			}
 		}
@@ -290,8 +293,8 @@ class Survey extends Eloquent {
 					$question_id = $question_id->id;
 
 					$sql_commands = "
-					INSERT INTO answers(answer, question_id, cycle_id,survey_id)
-					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave,".$survey->id." FROM ".$file_name." WHERE ifnull(trim(".$single_code['code']."),'') != '');
+					INSERT INTO answers(answer, question_id, cycle_id,survey_id,order)
+					(SELECT distinct ".$single_code['code'].", ".$question_id.", sfl_wave,".$survey->id.",0 FROM ".$file_name." WHERE ifnull(trim(".$single_code['code']."),'') != '');
 					";
 
 					DB::statement($sql_commands);
@@ -540,14 +543,14 @@ class Survey extends Eloquent {
 		$delayed_jobs->information = "Almost Done, Please Wait....";
 		$delayed_jobs->save();
 
-		Schema::drop('temporary_headers');
-		Schema::drop($file_name);
+		DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
+		DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
 
 		if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
 		{
 			File::delete(public_path()."/uploads/".$survey->baseline_file.".csv");
 		}
-		if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+		if (File::exists(public_path()."/uploads/".$survey->header_file.".csv"))
 		{
 			File::delete(public_path()."/uploads/".$survey->header_file.".csv");
 		}
@@ -590,6 +593,7 @@ class Survey extends Eloquent {
 					$dataval = utf8_encode((string)$emapData[$key]);
 					$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $dataval);
 					$dataval = str_replace('"', "", $dataval);
+					$dataval = str_replace("'", "", $dataval);
 					$dataval = trim(preg_replace('/\s\s+/', ' ', $dataval));
 
 					$temporary_headers[$i][(string)$column] = $dataval;
@@ -618,7 +622,7 @@ class Survey extends Eloquent {
 			{
 				File::delete(public_path()."/uploads/".$survey->baseline_file.".csv");
 			}
-			if (File::exists(public_path()."/uploads/".$survey->baseline_file.".csv"))
+			if (File::exists(public_path()."/uploads/".$survey->header_file.".csv"))
 			{
 				File::delete(public_path()."/uploads/".$survey->header_file.".csv");
 			}
@@ -630,12 +634,30 @@ class Survey extends Eloquent {
 			DB::statement("DROP TABLE IF EXISTS `temporary_headers`;");
 			DB::statement("DROP TABLE IF EXISTS ".$survey->baseline_file.";");
 
-			DB::table('delayed_jobs')->where('survey_id','=',$survey->id)->delete();
-			DB::table('regions')->where('survey_id','=',$survey->id)->delete();
-			DB::table('cycles')->where('survey_id','=',$survey->id)->delete();
-			DB::table('amounts')->where('survey_id','=',$survey->id)->delete();
-			DB::table('amount_filters')->where('survey_id','=',$survey->id)->delete();
-			DB::table('answers')->where('survey_id','=',$survey->id)->delete();
+			$delete = DB::table('delayed_jobs')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('regions')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('cycles')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('amounts')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('amount_filters')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('answers')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
 
 			$category_data = DB::table('categories')->where('survey_id','=',$survey->id);
 			$category_data_loads = $category_data->get();
@@ -676,11 +698,26 @@ class Survey extends Eloquent {
 				$master_codes_data->delete();
 			}
 
-			DB::table('filter_participants')->where('survey_id','=',$survey->id)->delete();
-			DB::table('participants')->where('survey_id','=',$survey->id)->delete();
-			DB::table('questions')->where('survey_id','=',$survey->id)->delete();
-			DB::table('question_categories')->where('survey_id','=',$survey->id)->delete();
-			DB::table('question_participants')->where('survey_id','=',$survey->id)->delete();
+			$delete = DB::table('filter_participants')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('participants')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('questions')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('question_categories')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
+			$delete = DB::table('question_participants')->where('survey_id','=',$survey->id);
+			if (!is_null($delete->get())) {
+				$delete->delete();
+			}
 
 			$survey->delete();
 			DB::commit();

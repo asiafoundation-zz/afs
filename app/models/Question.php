@@ -84,6 +84,7 @@ class Question extends Eloquent {
 					question_categories.name as question_categories,
 					answers.id  as id_answer,
 					answers.answer as answer,
+					answers.order as answer_order,
 					colors.color,
 					cycles.id  as id_cycle,
 					cycles.cycle_type  as cycle_type,
@@ -105,6 +106,7 @@ class Question extends Eloquent {
 						question_categories.name as question_categories,
 						answers.id  as id_answer,
 						answers.answer as answer,
+						answers.order as answer_order,
 						colors.color,
 						cycles.id  as id_cycle,
 						cycles.cycle_type  as cycle_type,
@@ -210,11 +212,14 @@ class Question extends Eloquent {
 				$answer_diff[$question->id_answer]->region_name = !empty($question->name) ? $question->name : "";
 				$answer_diff[$question->id_answer]->attribute_code = $question->attribute_code;
 				$answer_diff[$question->id_answer]->survey_id = $question->attribute_code;
+				$answer_diff[$question->id_answer]->answer_order = $question->answer_order;
 
 				$answer_diff[$question->id_answer]->amount = 0;
 			}
 			$answer_diff[$question->id_answer]->amount = $question->amount;
 		}
+
+		// print_r($answer_diff);
 
 		return $answer_diff;
 	}
@@ -238,6 +243,7 @@ class Question extends Eloquent {
 				}
 
 				$total_amount = $total_amount->groupBy('question_participants.participant_id')
+				// ->orderBy('answers.order')
 				->get();
 
 				$total_amount = count($total_amount);
@@ -248,7 +254,13 @@ class Question extends Eloquent {
 		}
 
 		// Count index label percentage
+		$is_order = 0;
 		foreach ($questions as $key_questions => $question) {
+
+			if($question->answer_order != 0){
+				$is_order = 1;
+			}
+
 			if (isset($question->answer)) {
 				$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $question->answer);
 				$dataval = str_replace('"', "", $dataval);
@@ -260,9 +272,18 @@ class Question extends Eloquent {
 			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
 		}
 		// sort array based on amounts
-		usort($questions, function($a, $b) {
-			return $a->amount - $b->amount;
-		});
+		if($is_order != 1){
+			usort($questions, function($a, $b) {
+				return $a->amount - $b->amount;
+			});	
+		}
+		else{
+			usort($questions, function($a, $b) {
+				return $b->answer_order - $a->answer_order;
+			});
+		}
+
+		// print_r($questions);
 		return $questions;
 	}
 
@@ -362,6 +383,7 @@ class Question extends Eloquent {
 
             $questions = $questions
             ->groupBy('answer')
+            ->orderBy('answer_order')
             ->get();
 
             if (count($questions)) {
@@ -479,45 +501,121 @@ class Question extends Eloquent {
 	}
 	public static function CompareCycle($request = array())
 	{
+		$question_id = $request['question'];
 		$questions = array();
+		$result = array();
 		// If Backward
 		if (($request['FilterMove'] == 1)) {
-			$request['question'] = DB::table('questions')->select('id')->whereRaw("questions.id = (select max(questions.id) from questions where questions.id < ".$request['question'].")")->first();
+			$query = "select id as id
+						FROM
+						    (SELECT DISTINCT
+						        q.id, c.cycle_type
+						    FROM
+						        questions q
+						    JOIN answers a ON a.question_id = q.id
+						    JOIN cycles c ON a.cycle_id = c.id
+						    WHERE
+						        q.id < '". $request['question'] ."'
+						            and q.question_category_id = '". $request['category'] ."') question_cycles
+						GROUP BY id
+						HAVING count(id) > 1 
+						order by id desc 
+						limit 1";
+
+			
+			$result = DB::select(DB::raw($query));
+			// print_r($result);
+			if(!empty($result)){
+				$request['question'] = $result[0];	
+			}else{
+				$request['question'] = array();
+			}
+			
 			// If no backward
 			if (!count($request['question'])) {
-				$request['question'] = DB::table('questions')->select('questions.id')->orderBy('questions.id', 'desc')->first();
+				// echo "I am here";
+				$query = "select id as id
+						FROM
+						    (SELECT DISTINCT
+						        q.id, c.cycle_type
+						    FROM
+						        questions q
+						    JOIN answers a ON a.question_id = q.id
+						    JOIN cycles c ON a.cycle_id = c.id
+						    WHERE
+						        q.id >= '". $question_id ."'
+						            and q.question_category_id = '". $request['category'] ."') question_cycles
+						GROUP BY id
+						HAVING count(id) > 1 
+						order by id desc 
+						limit 1";
+
+			
+				$result = DB::select(DB::raw($query));
+
+				if(!empty($result)){
+					$request['question'] = $result[0];	
+				}else{
+					$request['question'] = array();
+				}
+
 			}
 			$request['question'] = $request['question']->id;
 		}
 		// If Forward
 		if (($request['FilterMove'] == 2)) {
-			$request['question'] = DB::table('questions')
-									->select('questions.id')
-									->join('answers', 'answers.question_id', '=', 'questions.id')
-									->whereRaw("questions.id = (select min(questions.id) from questions 
-										where questions.id > ".$request['question']."
-										and question_category_id = ". $request['category'] ."
-										and answers.cycle_id = ". $request['cycle'] .")")->first();
+			$query = "select id as id
+						FROM
+						    (SELECT DISTINCT
+						        q.id, c.cycle_type
+						    FROM
+						        questions q
+						    JOIN answers a ON a.question_id = q.id
+						    JOIN cycles c ON a.cycle_id = c.id
+						    WHERE
+						        q.id > '". $request['question'] ."'
+						            and q.question_category_id = '". $request['category'] ."') question_cycles
+						GROUP BY id
+						HAVING count(id) > 1 
+						order by id asc 
+						limit 1";
+
+						
+			$result = DB::select(DB::raw($query));
+
+			if(!empty($result)){
+				$request['question'] = $result[0];	
+			}else{
+				$request['question'] = array();
+			}
 			// If no forard
 			if (!count($request['question'])) {
-				$request['question'] = DB::table('questions')->select('questions.id')->orderBy('questions.id', 'asc')->first();
+				// echo $question_id;
+
+				$query = "select id as id
+							FROM
+							    (SELECT DISTINCT
+							        q.id, c.cycle_type
+							    FROM
+							        questions q
+							    JOIN answers a ON a.question_id = q.id
+							    JOIN cycles c ON a.cycle_id = c.id
+							    WHERE
+							        q.id <= '". $question_id ."'
+							            and q.question_category_id = '". $request['category'] ."') question_cycles
+							GROUP BY id
+							HAVING count(id) > 1 
+							order by id asc 
+							limit 1";
+
+							
+				$result = DB::select(DB::raw($query));
+
+				$request['question'] = $result[0];	
 			}
+
 			$request['question'] = $request['question']->id;
 		}
-
-		if (($request['FilterMove'] == 3)) {
-			$request['question'] = Question::select(DB::raw('min(questions.id)'))
-									->join('answers','answers.question_id', '=', 'questions.id')
-									->join('amounts', 'amounts.answer_id', '=', 'answers.id')
-									->where('question_category_id', '=', $request['category'])
-									->where('answers.cycle_id', '=', $request['cycle'])
-									->first();
-			// If no forard
-			if (!count($request['question'])) {
-				$request['question'] = DB::table('questions')->select('questions.id')->orderBy('questions.id', 'asc')->first();
-			}
-			$request['question'] = $request['question']->id;
-		}		
 
 		// Load Question
 		$questions = self::DefaultLoad($request);
@@ -756,8 +854,7 @@ class Question extends Eloquent {
 
 	public static function loadQuestionCycle($request=array())
 	{
-		$questions = DB::table('questions')
-			->select(
+		$questions = Question::select(
 				'question_categories.name as question_category',
 				'questions.id as question_id',
 				'questions.question as question',
@@ -771,7 +868,7 @@ class Question extends Eloquent {
 			->join('master_codes','master_codes.id','=','codes.master_code_id')
 			->where('answers.cycle_id', '=', $request['cycle_id'])
 			->groupBy('question_id')
-			->get();
+			->paginate();
 
 		return $questions;
 	}
