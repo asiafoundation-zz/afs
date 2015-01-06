@@ -47,34 +47,62 @@ function manage_answer_order(survey_id,question_id,cycle_id){
 		</div>
 		<div class="modal-header">
 			<h1>{{ $survey->name }} ( {{$cycle->name}} )</h1>
-			<hr>
 		</div>
-		<div class="table-responsive">
-			<table class="datatable table table-striped table-bordered">
-				<thead>
-					<tr>
-						<th width="10%">{{Lang::get('backend.survey_name')}}</th>
-						<th width="30%">{{Lang::get('backend.category_question')}}</th>
-						<th width="40%">{{Lang::get('backend.question')}}</th>
-						<th width="20%">{{Lang::get('general.action')}}</th>
-					</tr>
-				</thead>
-				<tbody>
-				@foreach($questions as $question)
-					<tr>
-						<td>{{$question->master_code}}@if(!empty($question->code))_{{ $question->code }} @endif </td>
-						<td><span id="category_question_test_{{ $question->question_id }}">{{ $question->question_category }}</span></td>
-						<td><span id="question_test_{{ $question->question_id }}">{{ $question->question }}</span></td>
-						<td>
-							<a href="#" onclick="popup_question({{ $question->question_id }},{{ $survey->id }},{{$cycle->id}})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.view')}}</button></a>
-							<a href="#" onclick="manage_answer_order({{ $survey->id }},{{ $question->question_id }},{{ $cycle->id }} )"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('backend.answer_order')}}</button></a>
-						</td>
-					</tr>
-				@endforeach
-				</tbody>
-			</table>
-		</div>
-		<?php echo $questions->links(); ?>
+		<div class="modal-body">
+			{{ Form::open(array('url' => '/admin/survey/cycle', 'method' => 'get','class' => 'form-horizontal')) }}
+			<div class="col-md-4">
+				<div class="form-group">
+					{{ Form::label("Codes", "", array("class" => "control-label col-md-3")) }}
+					<div class="col-md-9">
+						{{ Form::select('codes_select', (array(NULL => 'Select All') + $codes),$request['codes_select'], array("class" => "question_select_modal","id" => "question_select_modal")) }}
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					{{ Form::label("Questions", "", array("class" => "control-label col-md-3")) }}
+					<div class="col-md-9">
+						{{ Form::select('question_select', (array(NULL => 'Select All') + $questions_list),$request['question_select'], array("class" => "question_select_modal","id" => "question_select_modal")) }}
+					</div>
+				</div>
+			</div>
+			{{ Form::hidden('survey_id', $survey->id) }}
+			{{ Form::hidden('cycle_id', $cycle->id) }}
+			{{ Form::hidden('reload', 0) }}
+			<div class="col-md-2">
+				<button type="submit" class="btn pull-right" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;"> Search</button>
+			</div>
+			<div class="col-md-2">
+				<a href="/admin/survey/cycle?cycle_id={{$cycle->id}}&survey_id={{$survey->id}}&reload=1" ><button class="btn btn-info">{{Lang::get('general.select_all')}}</button></a>
+			</div>
+			{{ Form::close() }}
+	    <div class="table-responsive">
+				<table class="datatable table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th width="10%">{{Lang::get('backend.survey_name')}}</th>
+							<th width="30%">{{Lang::get('backend.category_question')}}</th>
+							<th width="40%">{{Lang::get('backend.question')}}</th>
+							<th width="20%">{{Lang::get('general.action')}}</th>
+						</tr>
+					</thead>
+					<tbody>
+					@foreach($questions as $question)
+						<tr>
+							<td>{{$question->master_code}}@if(!empty($question->code))_{{ $question->code }} @endif </td>
+							<td><span id="category_question_test_{{ $question->question_id }}">{{ $question->question_category }}</span></td>
+							<td><span id="question_test_{{ $question->question_id }}">{{ $question->question }}</span></td>
+							<td>
+								<a href="#" onclick="popup_question({{ $question->question_id }},{{ $survey->id }},{{$cycle->id}})"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('general.view')}}</button></a>
+								<a href="#" onclick="manage_answer_order({{ $survey->id }},{{ $question->question_id }},{{ $cycle->id }} )"><button class="btn" style="background-color: {{ Setting::meta_data('general', 'theme_color')->value }}; color: #ffffff;">{{Lang::get('backend.answer_order')}}</button></a>
+							</td>
+						</tr>
+					@endforeach
+					</tbody>
+				</table>
+			</div>
+			<?php echo $questions->appends(array('cycle_id' => $cycle->id, 'survey_id' => $survey->id))->links(); ?>
+    </div>
 
 	</div>			
 </div>
