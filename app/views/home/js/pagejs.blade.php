@@ -25,7 +25,6 @@
 
       $.get( "filter-select", { SelectedFilter:"survey",region: FilterSelect.region,region_dapil: FilterSelect.region_dapil, category: FilterSelect.category,question: FilterSelect.question, cycle: FilterSelect.cycle, survey_id: FilterSelect.survey} )
         .done(function( data ) {
-          console.log(data);
           $('.region-name').remove();
           $('#chart_canvas').show();
           $('.loading-flag').hide();
@@ -66,7 +65,8 @@
 
             // Build chart
             var color_set_data = color_set(data.question);
-            var data_points_data = data_points(data.question);           
+            var data_points_data = data_points(data.question);       
+
 
             $("#chart_canvas").html('<div class="col-md-5" id="pie-div"><div id="chartContainerPie" style="height: 300px; width: 100%;"></div></div><div class="col-md-7" id="chart-div"><div id="chartContainer" style="height: 300px; width: 100%;"></div></div>');
 
@@ -642,6 +642,7 @@
             data_points.push(data_list[i]);    
           }
         }
+
       return data_points;
     }
 
@@ -673,6 +674,7 @@
             data_points.push(data_list[i].color);    
           }
         }
+
       return data_points;
     }
 
@@ -724,7 +726,6 @@
 
     function text_area_filter(value){
 
-      // console.log(value);
       var option_filters = [];
 
       if(value[0] != 0){
@@ -744,7 +745,6 @@
         $(".dropdown-filter .selected_filter_option").each(function(){
           if ($(this).attr("data-type") === 'region'){
             var data_value = $(this).attr("data-value");
-            // console.log('id->'+value);
             if(data_value % 1 === 0){
 
               region_filters_default.push(data_value);
