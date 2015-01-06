@@ -53,10 +53,10 @@ function manage_answer_order(survey_id,question_id,cycle_id){
 			<table class="datatable table table-striped table-bordered">
 				<thead>
 					<tr>
-						<th>{{Lang::get('backend.survey_name')}}</th>
-						<th>{{Lang::get('backend.category_question')}}</th>
-						<th>{{Lang::get('backend.question')}}</th>
-						<th>{{Lang::get('general.action')}}</th>
+						<th width="10%">{{Lang::get('backend.survey_name')}}</th>
+						<th width="30%">{{Lang::get('backend.category_question')}}</th>
+						<th width="40%">{{Lang::get('backend.question')}}</th>
+						<th width="20%">{{Lang::get('general.action')}}</th>
 					</tr>
 				</thead>
 				<tbody>
