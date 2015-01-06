@@ -5,7 +5,7 @@
   @include('partial/homeasset')
 
 <?php 
-  $survey_select = Survey::all();  
+  $survey_select = Survey::where('publish', '!=', 3)->get();  
 ?>
  <section class="topHead clearfix">
   @if(count($survey_select) > 1)

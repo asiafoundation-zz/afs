@@ -43,11 +43,11 @@ class HomeController extends BaseController {
 		}
 
 		if (!count($survey)) {
-			Session::forget('language');
+			Session::forget('survey_id');
 			return View::make('error.404');
 		}
 		if (!$survey->publish) {
-			Session::forget('language');
+			Session::forget('survey_id');
 			return View::make('error.404');
 		}
 
