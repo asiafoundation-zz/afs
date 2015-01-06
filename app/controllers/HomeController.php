@@ -43,9 +43,11 @@ class HomeController extends BaseController {
 		}
 
 		if (!count($survey)) {
+			Session::forget('survey_id');
 			return View::make('error.404');
 		}
 		if (!$survey->publish) {
+			Session::forget('survey_id');
 			return View::make('error.404');
 		}
 
@@ -54,6 +56,7 @@ class HomeController extends BaseController {
 		$default_questions = Question::DefaultQuestion($request);
 
 		if (empty($default_questions)) {
+			Session::forget('survey_id');
 			return View::make('error.404');
 		}
 		$default_question = reset($default_questions);
@@ -65,7 +68,7 @@ class HomeController extends BaseController {
 		$question_categories_query = QuestionCategory::QuestionCategoryFilterRegion($request);
 		$split_data = QuestionCategory::SplitQuestionsCategory($question_categories_query);
 		$question_by_category = QuestionCategory::questionByCategory($request);
-
+		
 		$data = array(
 			"survey" => $survey,
 			"filters" => Code::getFilter($survey->id),
@@ -151,6 +154,7 @@ class HomeController extends BaseController {
 
 					$default_question = reset($default_questions);
 
+
 					$cycle_data = Input::get('empty') == 0 ? Cycle::QuestionCycle($default_question) : 0;
 					$region_color = Input::get('empty') == 0 ? QuestionParticipant::RegionColor($default_question->id_cycle,$default_questions) : 0;
 					$empty_answer = Input::get('empty') == 0 ? 0 : 1;
@@ -206,9 +210,7 @@ class HomeController extends BaseController {
 					$second_label = "";
 					foreach($default_questions as $row){
 						$answer = strtolower($row->answer);
-						$answer = preg_replace('/[^A-Za-z0-9]/', '', $answer);
-						// $dataval = str_replace("'", "", $dataval);
-						$answer = preg_replace('/\s+/', '', $answer);
+						$answer = preg_replace('/[^A-Za-z0-9]/', '', $answer);$dataval = str_replace("'", "", $dataval);$answer = preg_replace('/\s+/', '', $answer);
 						$answer = trim(preg_replace('/\s\s+/', ' ', $answer));
 
 						if ($answer == '') {

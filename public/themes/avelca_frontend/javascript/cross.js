@@ -105,7 +105,6 @@ $(document).ready(function(){
 
     $.get( "filter-select", { SelectedFilter:"loadcategory", survey_id: FilterSelect.survey, category: $(this).val(), cycle : FilterSelect.cycle} )
     .done(function(data){
-      console.log(data);
       /* Switch selected option to pilih pertanyaan */
       $('#select-question').val(0);
       $('.select-question .select2-chosen').text(data[1][0]);  
@@ -168,7 +167,6 @@ $(document).ready(function(){
       url : 'cycleLang',
       data : {},
       success : function(data){
-        // console.log(data);
 
         if($('#select-question option:first-child').val() == 0){
           $('#select-question option:first-child').remove();

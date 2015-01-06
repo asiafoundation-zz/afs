@@ -84,6 +84,7 @@ class Question extends Eloquent {
 					question_categories.name as question_categories,
 					answers.id  as id_answer,
 					answers.answer as answer,
+					answers.order as answer_order,
 					colors.color,
 					cycles.id  as id_cycle,
 					cycles.cycle_type  as cycle_type,
@@ -105,6 +106,7 @@ class Question extends Eloquent {
 						question_categories.name as question_categories,
 						answers.id  as id_answer,
 						answers.answer as answer,
+						answers.order as answer_order,
 						colors.color,
 						cycles.id  as id_cycle,
 						cycles.cycle_type  as cycle_type,
@@ -210,11 +212,14 @@ class Question extends Eloquent {
 				$answer_diff[$question->id_answer]->region_name = !empty($question->name) ? $question->name : "";
 				$answer_diff[$question->id_answer]->attribute_code = $question->attribute_code;
 				$answer_diff[$question->id_answer]->survey_id = $question->attribute_code;
+				$answer_diff[$question->id_answer]->answer_order = $question->answer_order;
 
 				$answer_diff[$question->id_answer]->amount = 0;
 			}
 			$answer_diff[$question->id_answer]->amount = $question->amount;
 		}
+
+		// print_r($answer_diff);
 
 		return $answer_diff;
 	}
@@ -238,6 +243,7 @@ class Question extends Eloquent {
 				}
 
 				$total_amount = $total_amount->groupBy('question_participants.participant_id')
+				// ->orderBy('answers.order')
 				->get();
 
 				$total_amount = count($total_amount);
@@ -248,7 +254,13 @@ class Question extends Eloquent {
 		}
 
 		// Count index label percentage
+		$is_order = 0;
 		foreach ($questions as $key_questions => $question) {
+
+			if($question->answer_order != 0){
+				$is_order = 1;
+			}
+
 			if (isset($question->answer)) {
 				$dataval = preg_replace('/[^A-Za-z0-9\-\s?\/#$%^&*()+=\-\[\],.:<>|]\n\r/', '', $question->answer);
 				$dataval = str_replace('"', "", $dataval);
@@ -260,9 +272,18 @@ class Question extends Eloquent {
 			$question->indexlabel = !$total_amount ? 0 : round(($question->amount / $total_amount) * 100,2);
 		}
 		// sort array based on amounts
-		usort($questions, function($a, $b) {
-			return $a->amount - $b->amount;
-		});
+		if($is_order != 1){
+			usort($questions, function($a, $b) {
+				return $a->amount - $b->amount;
+			});	
+		}
+		else{
+			usort($questions, function($a, $b) {
+				return $b->answer_order - $a->answer_order;
+			});
+		}
+
+		// print_r($questions);
 		return $questions;
 	}
 
@@ -362,6 +383,7 @@ class Question extends Eloquent {
 
             $questions = $questions
             ->groupBy('answer')
+            ->orderBy('answer_order')
             ->get();
 
             if (count($questions)) {
