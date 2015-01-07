@@ -321,10 +321,13 @@ class SurveyController extends AvelcaController {
 		$request = Input::get();
 
 		if (empty($request['codes_select'])) {
-			$request['codes_select'] = NULL;
+			$request['codes_select'] = 0;
 		}
 		if (empty($request['question_select'])) {
-			$request['question_select'] = NULL;
+			$request['question_select'] = 0;
+		}
+		if (empty($request['search_by'])) {
+			$request['search_by'] = 0;
 		}
 
 		$data = array(
