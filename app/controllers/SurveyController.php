@@ -101,11 +101,11 @@ class SurveyController extends AvelcaController {
 				// Delete previous default
 				$previous_default = Survey::where('is_default','=',1)->first();
 				if (isset($previous_default)) {
-					$previous_default->is_default = 0;
+					$previous_default->is_default = $survey->id == $previous_default->id ? 1 : 0;
 					$previous_default->save();
 				}
 				
-				$survey->is_default = $request['is_default'];
+				$survey->is_default = 1;
 				$survey->save();
 				
 				Session::forget('survey_id');
