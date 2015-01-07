@@ -39,9 +39,13 @@ class HomeController extends BaseController {
 			$survey = DB::table('surveys')->where('id','=',$survey_id)->first();	
 		}else{
 			$survey = DB::table('surveys')->where('is_default','=',1)->first();
-			$lang = $survey->url;
+			if(isset($survey)){
+				$lang = $survey->url;
 
-			Session::put('language',$lang);
+				Session::put('language',$lang);	
+			}else{
+				return View::make('error.404');
+			}
 		}
 
 		if (!count($survey)) {
