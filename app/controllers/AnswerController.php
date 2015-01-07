@@ -79,7 +79,9 @@ class AnswerController extends AvelcaController {
 		$requests = Input::get();
 
 		foreach ($requests['order'] as $key_requests => $request) {
-			DB::table('answers')->where('id', $key_requests)->update(array('order' => $request));
+			$reset_data = $requests['reset'] == 1 ? 0 : $request;
+
+			DB::table('answers')->where('id', $key_requests)->update(array('order' => $reset_data));
 		}
 
 		Session::flash('alert-class', 'alert-success'); 
