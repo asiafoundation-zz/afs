@@ -529,7 +529,6 @@ class Question extends Eloquent {
 			
 			// If no backward
 			if (!count($request['question'])) {
-				// echo "I am here";
 				$query = "select id as id
 						FROM
 						    (SELECT DISTINCT
@@ -586,7 +585,6 @@ class Question extends Eloquent {
 			}
 			// If no forard
 			if (!count($request['question'])) {
-				// echo $question_id;
 
 				$query = "select id as id
 							FROM
@@ -628,8 +626,6 @@ class Question extends Eloquent {
 				$questions = $questions->where('regions.id', '=', $region);
 			}
 		}
-
-		// $is_cycles = $questions->groupBy('cycle_type')->get();
 
 		$questions = $questions->groupBy('cycle_type')
 			->groupBy('id_answer')
@@ -863,10 +859,29 @@ class Question extends Eloquent {
 			->join('answers','answers.question_id','=','questions.id')
 			->join('codes','codes.id','=','questions.code_id')
 			->join('master_codes','master_codes.id','=','codes.master_code_id')
-			->where('answers.cycle_id', '=', $request['cycle_id'])
-			->groupBy('question_id')
+			->where('answers.cycle_id', '=', $request['cycle_id']);
+
+			if (!empty($request['codes_select'])) {
+				$questions = $questions->where('codes.id',$request['codes_select']);
+			}
+			if (!empty($request['question_select'])) {
+				$questions = $questions->where('questions.id',$request['question_select']);
+			}
+
+			$questions = $questions->groupBy('question_id')
 			->paginate();
 
 		return $questions;
+	}
+	public static function questionPagination()
+	{
+		$questions = Question::all();
+
+		$question_list = array();
+		foreach ($questions as $key_questions => $question) {
+			$question_list[$question->id] = $question->question;
+		}
+
+		return $question_list;
 	}
 }

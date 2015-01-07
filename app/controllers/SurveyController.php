@@ -319,12 +319,22 @@ class SurveyController extends AvelcaController {
 	{
 		// Load Question
 		$request = Input::get();
+
+		if (empty($request['codes_select'])) {
+			$request['codes_select'] = NULL;
+		}
+		if (empty($request['question_select'])) {
+			$request['question_select'] = NULL;
+		}
+
 		$data = array(
 			'cycle' => Cycle::where('id','=',$request['cycle_id'])->first(),
 			'survey' => Survey::where('id', '=', $request['survey_id'])->first(),
 			'questions' => Question::loadQuestionCycle(Input::get()),
+			'questions_list' => Question::questionPagination(),
+			'codes' => Code::codePagination(),
+			'request' => $request
 		);
-
 		return View::make('admin.survey.cycle', $data);
 	}
 

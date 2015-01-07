@@ -96,4 +96,18 @@ class Code extends Eloquent {
 		}
 		return $filters;
 	}
+
+	public static function codePagination()
+	{
+		$codes = Code::with('master_code')->where('type',4)->get();
+
+		$codes_list = array();
+		foreach ($codes as $key_codess => $code) {
+			if (!empty($code->master_code->master_code)) {
+				$codes_list[$code->id] = !empty($code->code) ? $code->master_code->master_code."_".$code->code : $code->master_code->master_code;
+			}
+		}
+
+		return $codes_list;
+	}
 }
