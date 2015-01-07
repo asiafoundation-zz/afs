@@ -529,7 +529,6 @@ class Question extends Eloquent {
 			
 			// If no backward
 			if (!count($request['question'])) {
-				// echo "I am here";
 				$query = "select id as id
 						FROM
 						    (SELECT DISTINCT
@@ -586,7 +585,6 @@ class Question extends Eloquent {
 			}
 			// If no forard
 			if (!count($request['question'])) {
-				// echo $question_id;
 
 				$query = "select id as id
 							FROM
@@ -628,8 +626,6 @@ class Question extends Eloquent {
 				$questions = $questions->where('regions.id', '=', $region);
 			}
 		}
-
-		// $is_cycles = $questions->groupBy('cycle_type')->get();
 
 		$questions = $questions->groupBy('cycle_type')
 			->groupBy('id_answer')

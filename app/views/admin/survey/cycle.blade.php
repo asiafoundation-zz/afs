@@ -3,7 +3,15 @@
 @section('content')
 <script type="text/javascript">
 $( document ).ready(function() {
-	searchBy(0);
+	@if($request['codes_select'] > 0)
+	var select = {value:1};
+	@elseif($request['question_select'] > 0)
+	var select = {value:2};
+	@else
+	var select = {value:0};
+	@endif
+	console.log(select);
+	searchBy(select);
 });
 
  function popup_question(question_id,survey_id,cycle_id){
@@ -76,7 +84,7 @@ function searchBy(sel){
 				<div class="form-group">
 					{{ Form::label("Search By", "", array("class" => "control-label col-md-4")) }}
 					<div class="col-md-8">
-						{{ Form::select('search_by', (array(0 => 'All',1 => 'Code',2 => 'Question')),0, array("class" => "question_select_modal","id" => "question_select_modal","onchange" => "searchBy(this)")) }}
+						{{ Form::select('search_by', (array(0 => 'All',1 => 'Code',2 => 'Question')),$request['search_by'], array("class" => "question_select_modal","id" => "question_select_modal","onchange" => "searchBy(this)")) }}
 					</div>
 				</div>
 			</div>
