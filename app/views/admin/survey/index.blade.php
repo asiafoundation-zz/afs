@@ -74,7 +74,7 @@ setInterval(function() {
 							@endif
 						</td>
 						<td align="center">
-							{{ Form::checkbox('is_default', $survey['id'],$survey['is_default'],array('class' => 'survey_is_default')) }}
+							{{ Form::radio('is_default', $survey['id'],$survey['is_default'],array('class' => 'survey_is_default')) }}
 						</td>
 						<td>
 							@if($survey['publish_style'] == "category")

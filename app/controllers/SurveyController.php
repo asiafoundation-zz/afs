@@ -9,6 +9,7 @@ class SurveyController extends AvelcaController {
 	
 	public function getIndex()
 	{
+		$session_error = true;
 		list(
 			$data['surveys'],
 			$data['is_refresh'],
@@ -16,6 +17,18 @@ class SurveyController extends AvelcaController {
 			$data['survey_category_id']) = Survey::getSurveys();
 		// Paginations
 		$data['no'] = (Input::get('page') -1) * 10 +1;
+
+		if (count($data['surveys']) > 0) {
+			foreach ($data['surveys'] as $key_survey_category_id => $survey) {
+				if ($survey['is_default'] == 1) {
+					$session_error = false;
+				}
+			}
+		}
+		if ($session_error) {
+			Session::flash('alert-class', 'alert-danger');
+			Session::flash('message', 'Please, should choose survey as a default survey');
+		}
 
 		return View::make('admin.survey.index',$data);
 	}
