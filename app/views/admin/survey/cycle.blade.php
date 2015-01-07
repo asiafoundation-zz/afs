@@ -64,6 +64,10 @@ function searchBy(sel){
 		$("#codes_select").val(0);
 	}
 }
+function reset(){
+$("#is_reset").val(1);
+$("#answer_order").submit();
+}
 </script>
 <div class="row">
 	<div class="col-md-12">
@@ -146,15 +150,17 @@ function searchBy(sel){
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="question-label-popup"><span id="questions-text"></span></h4>
       </div>
-      {{ Form::open(array('url' => 'answerpost', 'class' => 'form-horizontal')) }}
+      {{ Form::open(array('url' => 'answerpost', 'class' => 'form-horizontal','id'=>'answer_order')) }}
       <div id="popup_order_detail_question_body"></div>
       <div class="modal-footer">
+      	<a href="#"  class="btn btn-info" onclick="reset()">{{Lang::get('general.reset_order')}}</a>
         <a type="button" class="btn btn-default" data-dismiss="modal">{{Lang::get('general.back')}}</a>
         <button class="btn" type="submit" class="btn btn-primary">{{Lang::get('general.save')}}</button>
       </div>
       {{ Form::hidden("question_id","", array("class" => "form-control","id" => "form_filter_category_id")) }}
       {{ Form::hidden("cycle_id","", array("class" => "form-control","id" => "form_filter_cycle_id")) }}
       {{ Form::hidden("survey_id",$survey->id, array("class" => "form-control","id" => "form_filter_survey_id")) }}
+      {{ Form::hidden("reset",0, array("class" => "form-control","id" => "is_reset")) }}
 			{{ Form::close() }}
     </div>
   </div>

@@ -96,4 +96,5 @@ return array(
 	"manage_survey" => "Manage Survey",
 	"information" => "Information",
 	"edit_information" => "Edit Information",
+	"reset_order" => "Reset Order",
 );
