@@ -250,10 +250,12 @@ App::before(function($request){
 	if(isset($survey_id)){
 		$survey = DB::table('surveys')->where('id','=',$survey_id)->first();	
 	}else{
+
 		$survey = DB::table('surveys')->where('is_default','=',1)->first();
-		$lang = $survey->url;
-		// echo $lang;
-		Session::put('language',$lang);
+		if(isset($survey)){
+			$lang = $survey->url;
+			Session::put('language',$lang);	
+		}
 	}
 
 	$locale = Session::get('language', 'in');
