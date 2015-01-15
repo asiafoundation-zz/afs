@@ -2,7 +2,7 @@
 
 Route::group(array('before' => 'backend_theme'), function()
 {
-	// Route::controller('install', 'App\Modules\Avelca_Installer\Controllers\InstallerController');
+	Route::controller('install', 'App\Modules\Avelca_Installer\Controllers\InstallerController');
 });
 
 View::creator('partial.sidemenu', function($view)
